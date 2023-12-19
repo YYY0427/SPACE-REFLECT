@@ -21,6 +21,9 @@
     <Filter Include="ソース ファイル\Math">
       <UniqueIdentifier>{78df742e-aebb-4dce-af45-640edaec6356}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Transitor">
+      <UniqueIdentifier>{6cbfbcba-2ea7-493c-ba62-954b9efe2120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -79,6 +82,27 @@
     </ClCompile>
     <ClCompile Include="Math\Matrix.cpp">
       <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\TransitorBase.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\FadeTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\PushTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\IrisTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\WipeTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\StripTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\TileTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +165,27 @@
     </ClInclude>
     <ClInclude Include="Math\Matrix.h">
       <Filter>ソース ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\TransitorBase.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\FadeTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\PushTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\IrisTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\WipeTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\StripTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\TileTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

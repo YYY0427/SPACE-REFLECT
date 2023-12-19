@@ -145,7 +145,13 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Effekseer3DEffectManager.cpp" />
+    <ClCompile Include="Transitor\TileTransitor.cpp" />
+    <ClCompile Include="Transitor\StripTransitor.cpp" />
+    <ClCompile Include="Transitor\IrisTransitor.cpp" />
+    <ClCompile Include="Transitor\PushTransitor.cpp" />
+    <ClCompile Include="Transitor\FadeTransitor.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
+    <ClCompile Include="Transitor\TransitorBase.cpp" />
     <ClCompile Include="UI\Fade.cpp" />
     <ClCompile Include="InputState.cpp" />
     <ClCompile Include="main.cpp" />
@@ -162,11 +168,18 @@
     <ClCompile Include="Util\Easing.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
+    <ClCompile Include="Transitor\WipeTransitor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Effekseer3DEffectManager.h" />
+    <ClInclude Include="Transitor\TileTransitor.h" />
+    <ClInclude Include="Transitor\StripTransitor.h" />
+    <ClInclude Include="Transitor\IrisTransitor.h" />
+    <ClInclude Include="Transitor\PushTransitor.h" />
+    <ClInclude Include="Transitor\FadeTransitor.h" />
     <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="Transitor\TransitorBase.h" />
     <ClInclude Include="UI\Fade.h" />
     <ClInclude Include="InputState.h" />
     <ClInclude Include="Model.h" />
@@ -184,6 +197,7 @@
     <ClInclude Include="Util\Timer.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Transitor\WipeTransitor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
