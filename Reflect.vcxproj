@@ -143,7 +143,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Effekseer3DEffectManager.cpp" />
+    <ClCompile Include="Math\Matrix.cpp" />
+    <ClCompile Include="UI\Fade.cpp" />
+    <ClCompile Include="InputState.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="SaveData.cpp" />
+    <ClCompile Include="Scene\DebugScene.cpp" />
+    <ClCompile Include="Scene\SceneBase.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp" />
+    <ClCompile Include="Scene\TestScene.cpp" />
+    <ClCompile Include="Scene\TitleScene.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
+    <ClCompile Include="StringManager.cpp" />
+    <ClCompile Include="Util\DrawFunctions.cpp" />
+    <ClCompile Include="Util\Easing.cpp" />
+    <ClCompile Include="Math\Vector2.cpp" />
+    <ClCompile Include="Math\Vector3.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Effekseer3DEffectManager.h" />
+    <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="UI\Fade.h" />
+    <ClInclude Include="InputState.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="SaveData.h" />
+    <ClInclude Include="Scene\DebugScene.h" />
+    <ClInclude Include="Scene\SceneBase.h" />
+    <ClInclude Include="Scene\SceneManager.h" />
+    <ClInclude Include="Scene\TestScene.h" />
+    <ClInclude Include="Scene\TitleScene.h" />
+    <ClInclude Include="SoundManager.h" />
+    <ClInclude Include="StringManager.h" />
+    <ClInclude Include="Util\DrawFunctions.h" />
+    <ClInclude Include="Util\Easing.h" />
+    <ClInclude Include="Util\Range.h" />
+    <ClInclude Include="Util\Timer.h" />
+    <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Math\Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
