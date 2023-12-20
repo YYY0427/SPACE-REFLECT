@@ -8,7 +8,10 @@
 class FadeTransitor final : public TransitorBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="interval">切り替え時間</param>
 	FadeTransitor(int interval = 60);
 
 	// デストラクタ

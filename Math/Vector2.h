@@ -1,8 +1,12 @@
 #pragma once
 
+/// <summary>
+/// Vector2
+/// </summary>
 class Vector2
 {
 public:
+	// コンストラクタ
 	Vector2();
 	Vector2(float x, float y);
 
@@ -35,6 +39,12 @@ public:
 
 	// Vec2 = (Vec2 /= float)
 	void operator/=(float div);
+
+	// Vec2 == Vec2
+	bool operator==(const Vector2& rval) const;
+
+	// Vec2 != Vec2
+	bool operator!=(const Vector2& rval) const;
 
 	// ベクター逆転(-)
 	Vector2 operator-() const;

@@ -14,7 +14,8 @@ std::vector<bool> InputState::m_lastInput;
 void InputState::Init()
 {
 	// ボタンの入力タイプをどのボタンにするかの設定
-	m_inputMapTable[InputType::DECISION] = { {InputCategory::PAD,  XINPUT_BUTTON_A } };			// Aボタン
+	m_inputMapTable[InputType::DECISION] = { {InputCategory::PAD, XINPUT_BUTTON_A },			// Aボタン	
+											 {InputCategory::KEYBORD, KEY_INPUT_RETURN} };
 	m_inputMapTable[InputType::BACK] = { {InputCategory::PAD, XINPUT_BUTTON_B} };				// Bボタン
 	m_inputMapTable[InputType::PAUSE] = { {InputCategory::PAD, XINPUT_BUTTON_START } };			// スタートボタン
 	m_inputMapTable[InputType::SLOW] = { {InputCategory::PAD, XINPUT_BUTTON_B } };				// スロー

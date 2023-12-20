@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
+#include "../Transitor/TransitorBase.h"
 
 // プロトタイプ宣言
 class SceneManager;
-class Fade;
 
 /// <summary>
 /// シーンの基底クラス
@@ -30,6 +30,6 @@ protected:
 	// シーンマネーシャーの参照
 	SceneManager& m_manager;
 
-	// フェード
-	std::unique_ptr<Fade> m_pFade;
+	// 画面切り替え演出のインスタンス
+	std::unique_ptr<TransitorBase> m_pTransitor;
 };

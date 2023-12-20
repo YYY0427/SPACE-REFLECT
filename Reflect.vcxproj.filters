@@ -9,9 +9,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Scene">
-      <UniqueIdentifier>{a169a769-c11d-457d-b1bc-4b2574a83c1c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Util">
       <UniqueIdentifier>{5e6a2e6d-2a25-4b70-9540-fc7e0015365b}</UniqueIdentifier>
     </Filter>
@@ -23,6 +20,9 @@
     </Filter>
     <Filter Include="ソース ファイル\Transitor">
       <UniqueIdentifier>{6cbfbcba-2ea7-493c-ba62-954b9efe2120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Scene">
+      <UniqueIdentifier>{a169a769-c11d-457d-b1bc-4b2574a83c1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -71,9 +71,6 @@
     <ClCompile Include="Scene\SceneBase.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="UI\Fade.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
       <Filter>ソース ファイル\Math</Filter>
     </ClCompile>
@@ -102,6 +99,9 @@
       <Filter>ソース ファイル\Transitor</Filter>
     </ClCompile>
     <ClCompile Include="Transitor\TileTransitor.cpp">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClCompile>
+    <ClCompile Include="Transitor\Fade.cpp">
       <Filter>ソース ファイル\Transitor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -151,9 +151,6 @@
     <ClInclude Include="Scene\SceneBase.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="UI\Fade.h">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Math\Vector2.h">
       <Filter>ソース ファイル\Math</Filter>
     </ClInclude>
@@ -185,6 +182,9 @@
       <Filter>ソース ファイル\Transitor</Filter>
     </ClInclude>
     <ClInclude Include="Transitor\TileTransitor.h">
+      <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Transitor\Fade.h">
       <Filter>ソース ファイル\Transitor</Filter>
     </ClInclude>
   </ItemGroup>

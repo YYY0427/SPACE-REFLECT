@@ -2,9 +2,13 @@
 
 class Matrix;
 
+/// <summary>
+/// Vector3
+/// </summary>
 class Vector3
 {
 public:
+	// コンストラクタ
 	Vector3();
 	Vector3(float x, float y, float z);
 

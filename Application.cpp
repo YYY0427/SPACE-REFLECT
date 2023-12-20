@@ -15,8 +15,8 @@
 namespace
 {
     // 画面サイズ
-    constexpr int window_width = 1280;
-    constexpr int window_height = 720;
+    constexpr int window_width = 1280;	
+    constexpr int window_height = 720;	
 
     // ウィンドウタイトル
     const std::string window_title = "REFLECT";
@@ -31,7 +31,8 @@ namespace
 	constexpr int fps = 60;
 }
 
-Application::Application()
+Application::Application() :
+	m_screenSize{ window_width, window_height }
 {
 }
 
@@ -47,8 +48,9 @@ Application& Application::GetInstance()
 bool Application::Init()
 {
 	// Windowモード設定
-	auto& saveData = SaveData::GetInstance();
-	ChangeWindowMode(saveData.GetSaveData().windowMode);
+//	auto& saveData = SaveData::GetInstance();
+//	ChangeWindowMode(saveData.GetSaveData().windowMode);
+	ChangeWindowMode(TRUE);
 
 	// Window名設定
 	SetMainWindowText(window_title.c_str());
@@ -144,11 +146,11 @@ void Application::Run()
 		LONGLONG time = GetNowHiPerformanceCount();
 
 		// 画面のクリア
-		ClearDrawScreen();
+	//	ClearDrawScreen();
 
 		// Windowモード設定
-		auto& saveData = SaveData::GetInstance();
-		ChangeWindowMode(saveData.GetSaveData().windowMode);
+	//	auto& saveData = SaveData::GetInstance();
+	//	ChangeWindowMode(saveData.GetSaveData().windowMode);
 
 		// 入力の更新
 		InputState::Update();
@@ -194,9 +196,7 @@ void Application::End()
 	DxLib_End();
 }
 
-Size& Application::GetWindowSize() const
+const Size& Application::GetWindowSize() const
 {
-	// ウィンドウサイズを取得
-	Size windowSize = { window_width, window_height };
-	return windowSize;
+	return m_screenSize;
 }

@@ -29,7 +29,7 @@ public:
 	void End();
 	
 	// ウィンドウのサイズを取得
-	Size& GetWindowSize() const;
+	const Size& GetWindowSize() const;
 
 private:
 	// コンストラクタ
@@ -41,4 +41,7 @@ private:
 
 	// シングルトンのため代入禁止
 	void operator=(const Application& app) = delete;
+
+	// ウィンドウのサイズ
+	Size m_screenSize;
 };

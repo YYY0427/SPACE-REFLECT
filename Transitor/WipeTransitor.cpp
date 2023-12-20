@@ -2,13 +2,17 @@
 #include "../Application.h"
 #include "DxLib.h"
 #include <array>
+#include <cassert>
 
+// コンストラクタ
 WipeTransitor::WipeTransitor(TransitDirection dir, int interval) :
 	TransitorBase(interval)
 {
+	// ワイプする方向によってグラデーションの色を変える
 	float left, right, top, bottom;
 	left = right = top = bottom = 1.0f;
 
+	// ワイプする方向には色を付けない
 	switch (dir) 
 	{
 	case TransitDirection::UP:
@@ -24,8 +28,10 @@ WipeTransitor::WipeTransitor(TransitDirection dir, int interval) :
 		left = 0.0f;
 		break;
 	default:
+		assert(false);
 		break;
 	}
+
 	// ウィンドウサイズの取得
 	const auto& size = Application::GetInstance().GetWindowSize();
 
@@ -90,29 +96,47 @@ WipeTransitor::WipeTransitor(TransitDirection dir, int interval) :
 	SetDrawScreen(bkScrH);
 }
 
+// デストラクタ
 WipeTransitor::~WipeTransitor()
 {
+	// グラデーションのハンドルを削除
 	DeleteGraph(m_gradationH);
 }
 
+// 更新
 void WipeTransitor::Update()
 {
+	// 演出時間内なら
 	if (m_frame < m_interval)
 	{
+		// フレームを進める
 		m_frame++;
+
+		// 描画先を切り替え先に変更
 		SetDrawScreen(m_nextScene);
 	}
 	else if (m_frame == m_interval)
 	{
+		// 描画先を裏画面に変更
 		SetDrawScreen(DX_SCREEN_BACK);
 	}
 }
 
+// 描画
 void WipeTransitor::Draw()
 {
+	// 演出が終了していたら描画しない
 	if (IsEnd()) return;
+
+	// 描画先を裏画面に変更
 	SetDrawScreen(DX_SCREEN_BACK);
+
+	// 切り替え先の画面を描画
 	DrawGraph(0, 0, m_nextScene, true);
+
+	// 割合の計算
 	auto rate = static_cast<float>(m_frame) / static_cast<float>(m_interval);
-	auto result = DrawBlendGraph(0, 0, m_oldScene, true, m_gradationH, 255 * rate, 64);
+
+	// 切り替え前の画面をグラデーションでブレンドして描画
+	DrawBlendGraph(0, 0, m_oldScene, true, m_gradationH, 255 * rate, 64);
 }

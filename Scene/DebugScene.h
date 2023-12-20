@@ -5,7 +5,7 @@
 /// デバッグシーン
 /// このシーンから全てのシーンに遷移できる
 /// </summary>
-class DebugScene : public SceneBase
+class DebugScene final : public SceneBase
 {
 public:
 	 /// </summary>
@@ -18,8 +18,8 @@ public:
 	 ~DebugScene();
 	 
 	 // 更新
-	 void Update() override;
+	 void Update() override final;
 	 
 	 // 描画
-	 void Draw() override;
+	 void Draw() override final;
 };

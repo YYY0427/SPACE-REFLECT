@@ -7,8 +7,8 @@
 TransitorBase::TransitorBase(int interval) : 
 	m_interval(interval),
 	m_frame(0),
-	m_oldScene(0),
-	m_nextScene(0)
+	m_oldScene(-1),
+	m_nextScene(-1)
 {
 }
 
@@ -27,11 +27,11 @@ void TransitorBase::Start()
 	const auto& size = Application::GetInstance().GetWindowSize();
 
 	// 画面を作成
-	m_oldScene = MakeScreen(size.width, size.height);
+	m_oldScene = MakeGraph(size.width, size.height);
 	m_nextScene = MakeScreen(size.width, size.height);
 
 	// 描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ
-	int result = GetDrawScreenGraph(0, 0, size.width, size.height, m_oldScene);
+	int result = GetDrawScreenGraph(0, 0, size.width, size.height, m_oldScene, true);
 	assert(result != -1);
 
 	// 初期化

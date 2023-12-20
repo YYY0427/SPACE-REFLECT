@@ -152,7 +152,7 @@
     <ClCompile Include="Transitor\FadeTransitor.cpp" />
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Transitor\TransitorBase.cpp" />
-    <ClCompile Include="UI\Fade.cpp" />
+    <ClCompile Include="Transitor\Fade.cpp" />
     <ClCompile Include="InputState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -180,7 +180,7 @@
     <ClInclude Include="Transitor\FadeTransitor.h" />
     <ClInclude Include="Math\Matrix.h" />
     <ClInclude Include="Transitor\TransitorBase.h" />
-    <ClInclude Include="UI\Fade.h" />
+    <ClInclude Include="Transitor\Fade.h" />
     <ClInclude Include="InputState.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SaveData.h" />

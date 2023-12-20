@@ -1,12 +1,14 @@
 #include "Vector2.h"
 #include <cmath>
 
+// コンストラクタ
 Vector2::Vector2() :
 	x(0.0f),
 	y(0.0f)
 {
 }
 
+// コンストラクタ
 Vector2::Vector2(float x, float y):
 	x(x),
 	y(y)
@@ -51,6 +53,18 @@ void Vector2::operator/=(float div)
 {
 	x /= div;
 	y /= div;
+}
+
+// Vec2 == Vec2
+bool Vector2::operator==(const Vector2& rval) const
+{
+	return x == rval.x && y == rval.y;
+}
+
+// Vec2 != Vec2
+bool Vector2::operator!=(const Vector2& rval) const
+{
+	return x != rval.x || y != rval.y;
 }
 
 // Vec2 = -Vec2

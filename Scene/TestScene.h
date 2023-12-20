@@ -5,6 +5,6 @@
 /// テスト用シーン
 /// 色々試すときに使う
 /// </summary>
-class TestScene : public SceneBase
+class TestScene final : public SceneBase
 {
 };
