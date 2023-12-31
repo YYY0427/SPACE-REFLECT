@@ -68,7 +68,7 @@ bool Vector2::operator!=(const Vector2& rval) const
 }
 
 // Vec2 = -Vec2
-Vector2 Vector2::operator-()const
+Vector2 Vector2::operator-() const
 {
 	return { -x, -y };
 }

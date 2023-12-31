@@ -24,12 +24,12 @@ public:
 
 	// 実行
 	void Run();
-
-	// 後処理
-	void End();
 	
 	// ウィンドウのサイズを取得
 	const Size& GetWindowSize() const;
+
+	// 終了
+	void Exit();
 
 private:
 	// コンストラクタ
@@ -42,6 +42,13 @@ private:
 	// シングルトンのため代入禁止
 	void operator=(const Application& app) = delete;
 
+	// 後処理
+	void End();
+
+private:
 	// ウィンドウのサイズ
 	Size m_screenSize;
+
+	// 終了フラグ
+	bool m_isExit;
 };

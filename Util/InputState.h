@@ -21,7 +21,7 @@ enum class InputType
 	BOSS_DETH_DEBUG,	// ボスの死亡
 
 	// ボタンの入力タイプの合計値
-	TOTAL_VALUE	
+	NUM	
 };
 
 // パッドのトリガーの左か右かまたはパッドのスティックの左か右か
@@ -58,36 +58,35 @@ struct InputInfo
 /// <summary>
 /// 入力状態を管理する
 /// </summary>
-class InputState
+namespace InputState
 {
-public:
 	// 初期化
-	static void Init();
+	void Init();
 
 	// 入力情報の更新
 	// 毎フレームUpdateを呼ばないと入力状態は更新されない
-	static void Update();
+	void Update();
 
 	/// <summary>
 	/// ボタンが押された瞬間の入力情報の取得
 	/// </summary>
 	/// <param name="type">取得したい入力タイプ</param>
 	/// <returns>true : 入力、false : 非入力</returns>
-	static bool IsTriggered(InputType type);
+	bool IsTriggered(InputType type);
 
 	/// <summary>
 	/// ボタンが押されている間の入力情報の取得
 	/// </summary>
 	/// <param name="type">取得したい入力タイプ</param>
 	/// <returns>true : 入力中、false : 非入力</returns>
-	static bool IsPressed(InputType type);
+	bool IsPressed(InputType type);
 
 	/// <summary>
 	/// パッドのトリガーの入力情報の取得
 	/// </summary>
 	/// <param name="type">取得したい入力タイプ</param>
 	/// <returns>true : 入力中、false : 非入力</returns>
-	static bool IsPadTrigger(PadLR type);
+	bool IsPadTrigger(PadLR type);
 
 	/// <summary>
 	/// パッドのスティックの入力情報を取得
@@ -95,15 +94,18 @@ public:
 	/// <param name="stick">スティックの右か左か</param>
 	/// <param name="input">スティックのどの入力タイプか</param>
 	/// <returns>スティックの傾きぐわい(0のときは入力なし)　傾いている角度が大きいほど大きい数字が返ってくる</returns>
-	static int IsPadStick(PadLR stic, PadStickInputType type);
+	int IsPadStick(PadLR stic, PadStickInputType type);
 
-private:
-	// 仮想入力情報と実際の入力のテーブル
-	static std::map<InputType, std::vector<InputInfo>> m_inputMapTable;
+	// private
+	namespace
+	{
+		// 仮想入力情報と実際の入力のテーブル
+		std::map<InputType, std::vector<InputInfo>> m_inputMapTable;
 
-	// 現在の入力情報(押してるか押してないか)
-	static std::vector<bool> m_currentInput;
+		// 現在の入力情報(押してるか押してないか)
+		std::vector<bool> m_currentInput;
 
-	// 直前の入力情報(直前押してるか押してないか)
-	static std::vector<bool> m_lastInput;
-};
+		// 直前の入力情報(直前押してるか押してないか)
+		std::vector<bool> m_lastInput;
+	}
+}

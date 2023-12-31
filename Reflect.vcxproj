@@ -144,7 +144,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Editor\DataReaderFromUnity.cpp" />
     <ClCompile Include="Effekseer3DEffectManager.cpp" />
+    <ClCompile Include="Math\MathUtil.cpp" />
+    <ClCompile Include="Scene\GameScene.cpp" />
+    <ClCompile Include="Scene\OptionScene.cpp" />
+    <ClCompile Include="Scene\StageSelectScene.cpp" />
     <ClCompile Include="Transitor\TileTransitor.cpp" />
     <ClCompile Include="Transitor\StripTransitor.cpp" />
     <ClCompile Include="Transitor\IrisTransitor.cpp" />
@@ -153,7 +158,7 @@
     <ClCompile Include="Math\Matrix.cpp" />
     <ClCompile Include="Transitor\TransitorBase.cpp" />
     <ClCompile Include="Transitor\Fade.cpp" />
-    <ClCompile Include="InputState.cpp" />
+    <ClCompile Include="Util\InputState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="SaveData.cpp" />
@@ -172,7 +177,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Editor\DataReaderFromUnity.h" />
     <ClInclude Include="Effekseer3DEffectManager.h" />
+    <ClInclude Include="Math\MathUtil.h" />
+    <ClInclude Include="Scene\GameScene.h" />
+    <ClInclude Include="Scene\OptionScene.h" />
+    <ClInclude Include="Scene\StageSelectScene.h" />
     <ClInclude Include="Transitor\TileTransitor.h" />
     <ClInclude Include="Transitor\StripTransitor.h" />
     <ClInclude Include="Transitor\IrisTransitor.h" />
@@ -181,7 +191,7 @@
     <ClInclude Include="Math\Matrix.h" />
     <ClInclude Include="Transitor\TransitorBase.h" />
     <ClInclude Include="Transitor\Fade.h" />
-    <ClInclude Include="InputState.h" />
+    <ClInclude Include="Util\InputState.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="Scene\DebugScene.h" />

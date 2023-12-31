@@ -8,7 +8,7 @@
 #include "Scene/TitleScene.h"
 #include "SoundManager.h"
 #include "StringManager.h"
-#include "InputState.h"
+#include "Util/InputState.h"
 #include <string>
 #include <memory>
 
@@ -31,11 +31,14 @@ namespace
 	constexpr int fps = 60;
 }
 
+// コンストラクタ
 Application::Application() :
-	m_screenSize{ window_width, window_height }
+	m_screenSize{ window_width, window_height },
+	m_isExit(false)
 {
 }
 
+// Applicationクラスのインスタンスを取得
 Application& Application::GetInstance()
 {
 	// 自分自身の静的オブジェクトを作成
@@ -45,12 +48,15 @@ Application& Application::GetInstance()
 	return instance;
 }
 
+// 初期化
 bool Application::Init()
 {
+	// セーブデータの読み込み
+	auto& saveData = SaveData::GetInstance();
+	saveData.Load();
+
 	// Windowモード設定
-//	auto& saveData = SaveData::GetInstance();
-//	ChangeWindowMode(saveData.GetSaveData().windowMode);
-	ChangeWindowMode(TRUE);
+	ChangeWindowMode(saveData.GetSaveData().windowMode);
 
 	// Window名設定
 	SetMainWindowText(window_title.c_str());
@@ -131,6 +137,7 @@ bool Application::Init()
 	return true;
 }
 
+// ゲームループ
 void Application::Run()
 {
 	// 最初のシーンを設定
@@ -140,17 +147,15 @@ void Application::Run()
 #else
 	sceneManager.ChangeScene(std::make_shared<TitleScene>(sceneManager));
 #endif
+
 	// ゲームループ
 	while (ProcessMessage() == 0)
 	{
 		LONGLONG time = GetNowHiPerformanceCount();
 
-		// 画面のクリア
-	//	ClearDrawScreen();
-
 		// Windowモード設定
-	//	auto& saveData = SaveData::GetInstance();
-	//	ChangeWindowMode(saveData.GetSaveData().windowMode);
+		auto& saveData = SaveData::GetInstance();
+		ChangeWindowMode(saveData.GetSaveData().windowMode);
 
 		// 入力の更新
 		InputState::Update();
@@ -168,6 +173,10 @@ void Application::Run()
 		// escキーを押したら終了する
 		if (CheckHitKey(KEY_INPUT_ESCAPE))	break;
 #endif
+
+		// ゲーム終了フラグが立っていたら終了
+		if(m_isExit) break;
+
 		// fpsを固定
 		while (GetNowHiPerformanceCount() - time < (static_cast<long long>((1000 / fps)) * 1000))
 		{
@@ -178,6 +187,7 @@ void Application::Run()
 	End();
 }
 
+// 終了処理
 void Application::End()
 {
 	// サウンドをすべて止める
@@ -196,7 +206,14 @@ void Application::End()
 	DxLib_End();
 }
 
+// ウィンドウサイズの取得
 const Size& Application::GetWindowSize() const
 {
 	return m_screenSize;
+}
+
+// 終了
+void Application::Exit()
+{
+	m_isExit = true;
 }

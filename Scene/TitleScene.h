@@ -21,4 +21,18 @@ public:
 	
 	// 描画
 	void Draw() override final;
+
+private:
+	// ここから飛べるシーン項目
+	enum class SceneItem
+	{
+		GAME,	// ゲーム
+		OPTION,	// オプション
+		EXIT,	// 終了
+		NUM		// 項目数
+	};
+
+private:
+	// 現在選択しているシーン項目
+	int m_currentSelectSceneItem;
 };

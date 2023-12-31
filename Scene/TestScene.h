@@ -7,4 +7,19 @@
 /// </summary>
 class TestScene final : public SceneBase
 {
+public:
+	/// </summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="manager">シーンマネージャーの参照</param>
+	 TestScene(SceneManager& manager);
+	 
+	 // デストラクタ
+	 ~TestScene();
+	 
+	 // 更新
+	 void Update() override final;
+	 
+	 // 描画
+	 void Draw() override final;
 };

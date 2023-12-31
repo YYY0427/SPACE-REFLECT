@@ -24,6 +24,12 @@
     <Filter Include="ソース ファイル\Scene">
       <UniqueIdentifier>{a169a769-c11d-457d-b1bc-4b2574a83c1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Stage">
+      <UniqueIdentifier>{24b9da70-e092-46d3-8097-971984ba0fc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Editor">
+      <UniqueIdentifier>{74fb05ef-e293-4f31-9a12-499bd735c249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,7 +62,7 @@
     <ClCompile Include="Util\Easing.cpp">
       <Filter>ソース ファイル\Util</Filter>
     </ClCompile>
-    <ClCompile Include="InputState.cpp">
+    <ClCompile Include="Util\InputState.cpp">
       <Filter>ソース ファイル\Util</Filter>
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
@@ -104,6 +110,21 @@
     <ClCompile Include="Transitor\Fade.cpp">
       <Filter>ソース ファイル\Transitor</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\OptionScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\StageSelectScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\GameScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\MathUtil.cpp">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\DataReaderFromUnity.cpp">
+      <Filter>ソース ファイル\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -133,7 +154,7 @@
     <ClInclude Include="Util\Easing.h">
       <Filter>ソース ファイル\Util</Filter>
     </ClInclude>
-    <ClInclude Include="InputState.h">
+    <ClInclude Include="Util\InputState.h">
       <Filter>ソース ファイル\Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Range.h">
@@ -186,6 +207,21 @@
     </ClInclude>
     <ClInclude Include="Transitor\Fade.h">
       <Filter>ソース ファイル\Transitor</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\OptionScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\StageSelectScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\GameScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MathUtil.h">
+      <Filter>ソース ファイル\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\DataReaderFromUnity.h">
+      <Filter>ソース ファイル\Editor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

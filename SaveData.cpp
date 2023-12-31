@@ -1,7 +1,7 @@
 #include "SaveData.h"
 #include "SoundManager.h"
 #include "Util/Range.h"
-#include "InputState.h"
+#include "Util/InputState.h"
 #include <string>
 #include <cassert>
 #include <fstream>

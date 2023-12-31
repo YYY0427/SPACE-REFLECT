@@ -355,7 +355,7 @@ void Model::StopAnim()
 }
 
 // ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹‚ÌŽæ“¾
-int Model::GetModelHandle() const
+const int& Model::GetModelHandle() const
 {
 	return m_modelHandle;		
 }

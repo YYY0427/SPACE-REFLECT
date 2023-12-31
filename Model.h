@@ -69,7 +69,7 @@ public:
 	void StopAnim();
 
 	// ゲッター
-	int GetModelHandle() const;		// モデルのハンドルの取得
+	const int& GetModelHandle() const;		// モデルのハンドルの取得
 	int GetColFrameIndex() const;	// 当たり判定に使用するフレームインデックスを取得する
 	int GetMaterialNum() const;		// モデルのマテリアルの数の取得
 

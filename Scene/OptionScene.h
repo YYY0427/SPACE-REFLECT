@@ -2,8 +2,10 @@
 #include "SceneBase.h"
 #include <vector>
 
-// 設定シーン
-class OptionScene : public SceneBase
+/// <summary>
+/// 設定シーン
+/// </summary>
+class OptionScene final : public SceneBase
 {
 public:
 	/// <summary>
@@ -11,37 +13,35 @@ public:
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
 	OptionScene(SceneManager& manager);
-
+	
 	// デストラクタ
 	~OptionScene();
-
+	
 	// 更新
-	void Update() override;
-
+	void Update() override final;
+	
 	// 描画
-	void Draw() override;
+	void Draw() override final;
 
 private:
-	// 項目
-	enum class Item
+	// 設定項目
+	enum class OptionItem
 	{
-		LANGUAGE,			// 言語
-		WINDOW_MODE,		// ウィンドウモード
-		MASTER_VOLUME,		// 全体音量
-		BGM_VOLUME,			// BGM音量
-		SE_VOLUME,			// SE音量
-		PAD_SETTING,		// パッド設定シーン
-		BACK,				// 戻る
-		TOTAL_VALUE			// 項目の合計値
+		WINDOW_MODE,	// ウィンドウモード
+		MASTER_VOLUME,	// マスターボリューム
+		BGM_VOLUME,		// BGMボリューム
+		SE_VOLUME,		// SEボリューム
+		EXIT,			// 終了
+		NUM				// 項目数
 	};
 
 private:
-	// 現在選択中の項目
-	int currentSelectItem_;
+	// 選択中の項目
+	int m_currentSelectItem;
+
+	// サウンドアイコン画像ハンドル
+	int m_soundIconHandle;
 
 	// 項目の描画色データ
-	std::vector<int> itemColorTable_;
-
-	// 音量アイコンの画像ハンドル
-	int soundIconImgHandle_;
+	std::vector<int> m_itemColorTable;
 };

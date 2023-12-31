@@ -1,209 +1,214 @@
 #include "OptionScene.h"
 #include "SceneManager.h"
-#include "DebugScene.h"
-#include "PadSettingScene.h"
-#include "../Util/InputState.h"
-#include "../Util/SoundManager.h"
-#include "../Util/SaveData.h"
-#include "../Util/StringManager.h"
 #include "../Util/DrawFunctions.h"
-#include "../common.h"
-#include <DxLib.h>
-#include <array>
+#include "../Util/InputState.h"
+#include "../SaveData.h"
+#include "../StringManager.h"
+#include "../Application.h"
+#include "../Transitor/FadeTransitor.h"
+#include "DxLib.h"
 #include <cassert>
+#include <string>
+#include <array>
 
 namespace
 {
-	// 表示するテキストの全体の位置
-	constexpr int draw_text_pos_x = 350;
-	constexpr int draw_text_pos_y = common::screen_height / 2 - 150;
-
-	// テキストの文字間
-	constexpr int text_space_y = 64;
+	// 画像ファイルのパス
+	const std::string sound_icon_img_file_path = "Data/Image/Sound.png";
 
 	// 選択されていないときの描画色
 	constexpr int normal_color = 0x666666;
 
 	// 選択されているときの描画色
 	constexpr int choose_color = 0xffffff;
+
+	// 表示するテキストの全体の位置
+	constexpr int draw_text_pos_x = 350;
+	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 150;
+
+	// テキストの文字間
+	constexpr int text_space_y = 64;
+
+	// 音量を何段階に分けるか
+	constexpr int volume_division = 5;
 }
 
 // コンストラクタ
 OptionScene::OptionScene(SceneManager& manager) :
 	SceneBase(manager),
-	currentSelectItem_(0),
-	soundIconImgHandle_(-1)
+	m_currentSelectItem(0)
 {
-	// フェードインを行わない
-	SetFadeBright(0);
+	m_pTransitor = std::make_unique<FadeTransitor>();
+	m_pTransitor->Start();
 
 	// 画像のロード
-	soundIconImgHandle_ = my::MyLoadGraph("Data/Image/Sound.png");
+	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
 
 	// 項目の描画色を選択されていないときの色に初期化
-	for (int i = 0; i < static_cast<int>(Item::TOTAL_VALUE); i++)
+	for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
 	{
-		itemColorTable_.push_back(normal_color);
+		m_itemColorTable.push_back(normal_color);
 	}
 }
 
 // デストラクタ
 OptionScene::~OptionScene()
 {
-	// 画像ハンドルの削除
-	DeleteGraph(soundIconImgHandle_);
+	// 画像のアンロード
+	DeleteGraph(m_soundIconHandle);
 }
 
 // 更新
 void OptionScene::Update()
 {
 	// カラーの初期化
-	for (auto& itemColor : itemColorTable_)
+	for (auto& itemColor : m_itemColorTable)
 	{
 		itemColor = normal_color;
 	}
 
 	// 選択肢を回す処理
-	int itemTotalValue = static_cast<int>(Item::TOTAL_VALUE);
+	int itemTotalValue = static_cast<int>(OptionItem::NUM);
 	if (InputState::IsTriggered(InputType::UP))
 	{
-		currentSelectItem_ = ((currentSelectItem_ - 1) + itemTotalValue) % itemTotalValue;
+		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
 	}
 	else if (InputState::IsTriggered(InputType::DOWN))
 	{
-		currentSelectItem_ = (currentSelectItem_ + 1) % itemTotalValue;
+		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
 	}
 
 	// 選択されている項目の色を変える
-	itemColorTable_[currentSelectItem_] = choose_color;
+	m_itemColorTable[m_currentSelectItem] = choose_color;
 
 	// 選択されている項目がどれか
-	switch (static_cast<Item>(currentSelectItem_))
-	{
-	// 言語設定
-	case Item::LANGUAGE:
-		break;
-
+	switch(static_cast<OptionItem>(m_currentSelectItem))
+	{ 
 	// ウィンドウモードの設定
-	case Item::WINDOW_MODE:
+	case OptionItem::WINDOW_MODE:
 		SaveData::GetInstance().SetWindowMode();
 		break;
 
-	// 全体音量の調整
-	case Item::MASTER_VOLUME:
-		SaveData::GetInstance().SetMasterVolume();
+		// 全体音量の調整
+	case OptionItem::MASTER_VOLUME:
+		SaveData::GetInstance().SetMasterVolume(volume_division);
 		break;
 
-	// BGM音量の調整
-	case Item::BGM_VOLUME:
-		SaveData::GetInstance().SetBgmVolume();
+		// BGM音量の調整
+	case OptionItem::BGM_VOLUME:
+		SaveData::GetInstance().SetBgmVolume(volume_division);
 		break;
 
-	// SE音量の調整
-	case Item::SE_VOLUME:
-		SaveData::GetInstance().SetSeVolume();
+		// SE音量の調整
+	case OptionItem::SE_VOLUME:
+		SaveData::GetInstance().SetSeVolume(volume_division);
 		break;
 
-	// パッドの設定シーンに遷移するためにフェードアウト開始
-	case Item::PAD_SETTING:
-		if(InputState::IsTriggered(InputType::DECISION)) StartFadeOut(255, 16);
-		break;
-
-	// ひとつ前のシーンに戻る
-	case Item::BACK:
-		if (InputState::IsTriggered(InputType::DECISION)) manager_.PopScene();
+		// 終了
+	case OptionItem::EXIT:
+		if (InputState::IsTriggered(InputType::DECISION)) m_manager.PopScene();
 		return;
 
-	// ありえないので止める
 	default:
-		assert(0);
-	}
-	
-	// フェードアウトが終了したか
-	if (IsStartFadeOutAfterFadingOut())
-	{
-		// PushSceneした場合シーンが残るのでフェードイン設定
-		StartFadeIn();
-
-		// パッド設定シーンへ遷移
-		manager_.PushScene(new PadSettingScene(manager_));
-		return;
+		// ありえないので止める
+		assert(false);
 	}
 
 	// 戻るボタンが押されたとき
 	if (InputState::IsTriggered(InputType::BACK))
 	{
-		// ひとつ前のシーンに戻る
-		manager_.PopScene();
+		// 終了
+		m_manager.PopScene();
 		return;
 	}
 
-	// フェードの更新
-	UpdateFade();
+	// 画面切り替え演出の更新
+	m_pTransitor->Update();
 }
 
 // 描画
 void OptionScene::Draw()
 {
+	// ウィンドウサイズの取得
+	const auto& size = Application::GetInstance().GetWindowSize();
+
 	// インスタンスの取得
 	auto& stringManager = StringManager::GetInstance();
-	auto& saveData = SaveData::GetInstance();
 
-	// 描画透明度の設定
-	int fade = 255 - GetFadeBright();
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade);
+	// 背景色の描画
+	SetDrawBlendMode(DX_BLENDMODE_MULA, 220);
+	DrawBox(0, 0, size.width, size.height, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// シーンタイトルの描画
-	stringManager.DrawStringCenter("OptionTitle", common::screen_width / 2, 100, 0xffffff);
+	stringManager.DrawStringCenter("OptionTitle", size.width / 2, 100, 0xffffff);
 
 	// 項目の描画
-	int language = static_cast<int>(Item::LANGUAGE);
-	int windowMode = static_cast<int>(Item::WINDOW_MODE);
-	int masterVolume = static_cast<int>(Item::MASTER_VOLUME);
-	int bgmVolume = static_cast<int>(Item::BGM_VOLUME);
-	int seVolume = static_cast<int>(Item::SE_VOLUME);
-	int padSetting = static_cast<int>(Item::PAD_SETTING);
-	int back = static_cast<int>(Item::BACK);
-	stringManager.DrawStringCenter("OptionItemLanguage", draw_text_pos_x, draw_text_pos_y + text_space_y * language, itemColorTable_[language]);
-	stringManager.DrawStringCenter("OptionItemWindowMode", draw_text_pos_x, draw_text_pos_y + text_space_y * windowMode, itemColorTable_[windowMode]);
-	stringManager.DrawStringCenter("OptionItemMasterVolume", draw_text_pos_x, draw_text_pos_y + text_space_y * masterVolume, itemColorTable_[masterVolume]);
-	stringManager.DrawStringCenter("OptionItemBgmVolume", draw_text_pos_x, draw_text_pos_y + text_space_y * bgmVolume, itemColorTable_[bgmVolume]);
-	stringManager.DrawStringCenter("OptionItemSeVolume", draw_text_pos_x, draw_text_pos_y + text_space_y * seVolume, itemColorTable_[seVolume]);
-	stringManager.DrawStringCenter("OptionItemPadSetting", common::screen_width / 2, draw_text_pos_y + text_space_y * padSetting, itemColorTable_[padSetting]);
-	stringManager.DrawStringCenter("OptionItemBack", common::screen_width / 2, draw_text_pos_y + text_space_y * back, itemColorTable_[back]);
+	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
+	stringManager.DrawStringCenter("OptionItemWindowMode", draw_text_pos_x, 
+		draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
+
+	int masterVolume = static_cast<int>(OptionItem::MASTER_VOLUME);
+	stringManager.DrawStringCenter("OptionItemMasterVolume", draw_text_pos_x, 
+		draw_text_pos_y + text_space_y * masterVolume, m_itemColorTable[masterVolume]);
+
+	int bgmVolume = static_cast<int>(OptionItem::BGM_VOLUME);
+	stringManager.DrawStringCenter("OptionItemBgmVolume", draw_text_pos_x, 
+		draw_text_pos_y + text_space_y * bgmVolume, m_itemColorTable[bgmVolume]);
+
+	int seVolume = static_cast<int>(OptionItem::SE_VOLUME);
+	stringManager.DrawStringCenter("OptionItemSeVolume", draw_text_pos_x, 
+		draw_text_pos_y + text_space_y * seVolume, m_itemColorTable[seVolume]);
+
+	int exit = static_cast<int>(OptionItem::EXIT);
+	stringManager.DrawStringCenter("OptionItemBack", size.width / 2, 
+		draw_text_pos_y + text_space_y * exit, m_itemColorTable[exit]);
 
 	// ウィンドウモードの状態の表示
-	if (saveData.GetSaveData().windowMode)
-	{
-		stringManager.DrawStringCenter("OptionItemWindowModeOff", common::screen_width / 2, draw_text_pos_y + text_space_y * windowMode, itemColorTable_[windowMode]);
-	}
-	else
-	{
-		stringManager.DrawStringCenter("OptionItemWindowModeOn", common::screen_width / 2, draw_text_pos_y + text_space_y * windowMode, itemColorTable_[windowMode]);
-	}
+	auto& saveData = SaveData::GetInstance();
+	(saveData.GetSaveData().windowMode) ?
+		stringManager.DrawStringCenter("OptionItemWindowModeOff", size.width / 2, 
+			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]):
+		stringManager.DrawStringCenter("OptionItemWindowModeOn", size.width / 2,
+			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
-	// 各サウンド音量の表示
-	std::array<int, 3> volume = {};
-	volume[0] = SaveData::GetInstance().GetSaveData().masterVolume;
-	volume[1] = SaveData::GetInstance().GetSaveData().bgmVolume;
-	volume[2] = SaveData::GetInstance().GetSaveData().seVolume;
-	int item = masterVolume;
-	for(int i = 0; i < volume.size(); i++)
+	// 音量の表示
+	int masterVolumeValue = saveData.GetSaveData().masterVolume;
+	int bgmVolumeValue = saveData.GetSaveData().bgmVolume;
+	int seVolumeValue = saveData.GetSaveData().seVolume;
+
+	// 音量の配列
+	std::array<int, 3> volumeValue = 
+	{ masterVolumeValue, bgmVolumeValue, seVolumeValue };
+
+	// 音量の項目
+	int volumeItem = static_cast<int>(OptionItem::MASTER_VOLUME);
+
+	// BGM音量の描画
+	for (int i = 0; i < volumeValue.size(); i++)
 	{
-		for (int j = 0; j < volume[i]; j++)
+		for (int j = 0; j < volumeValue[i]; j++)
 		{
+			// 描画輝度を設定
+			// 暗く描画
 			SetDrawBright(70, 70, 70);
-			if (currentSelectItem_ == item)
-			{
-				SetDrawBright(255, 255, 255);
-			}
-			int textSpaceX = j * 70;
-			DrawRotaGraph(draw_text_pos_x + 170 + textSpaceX, draw_text_pos_y + text_space_y * item + 10, 0.2, 0.0, soundIconImgHandle_, true);
-		}
-		item++;
-	}
-	SetDrawBright(255, 255, 255);
 
-	// 描画の設定の初期化
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			// 選択されている項目の場合は描画輝度を戻す
+			if (m_currentSelectItem == volumeItem) SetDrawBright(255, 255, 255);
+
+			// 音量の間隔を計算
+			int textSpaceX = j * 70;
+
+			// 音量のアイコンを描画
+			DrawRotaGraph(draw_text_pos_x + 170 + textSpaceX,
+				draw_text_pos_y + text_space_y * volumeItem + 10, 0.2, 0.0, m_soundIconHandle, true);
+		}
+		volumeItem++;
+	}
+
+	// 描画輝度をもとに戻す
+	SetDrawBright(255, 255, 255);
+	
+	// 画面切り替え演出の描画
+	m_pTransitor->Draw();
 }
