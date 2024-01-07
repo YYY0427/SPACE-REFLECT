@@ -1,390 +1,538 @@
 ﻿0:ChangeWindowMode実行 
 0:ウインドウモードフラグが立てられました
-2:ＤＸライブラリの初期化処理開始
+3:ＤＸライブラリの初期化処理開始
 3:	システムの情報を出力します
-4:		ＤＸライブラリ Ver3.24b
-4:		論理プロセッサの数 : 6
-4:		ＯＳ  Windows11 ( Build 22621  )
-106:		現時点のＣＰＵ動作速度：大体3.57GHz
-106:		ＭＭＸ命令を使用します
-107:		ＳＳＥ命令が使用可能です
-108:		ＳＳＥ２命令が使用可能です
-108:		ＣＰＵベンダ：AuthenticAMD
-112:		ＣＰＵ名：AMD Ryzen 5 3500 6-Core Processor              
-112:	ＣＯＭの初期化... 成功
-117:	非同期読み込み処理の初期化...成功
-118:	ファイルアクセス処理の初期化...成功
-119:	メモリ総量:16316.72MB  空きメモリ領域:3312.05MB 
-120:	タイマーの精度を検査します
-120:	精度結果 更新回数 マルチメディアタイマー：0  パフォーマンスカウンター：60
-121:	 パフォーマンスカウンターを使用します タイマー精度 : 10000.000000 KHz 
-121:	 
-122:	ソフトの二重起動検査... 二重起動はされていませんでした
-123:	ウインドウクラスを登録します... 登録に成功しました
-124:	ウインドウモード起動用のウインドウを作成します
-124:	ディスプレイ情報のセットアップ開始
-125:		モニターの数：2  ディスプレイデバイスの数：4
-125:		No.0  モニター名：\\.\DISPLAY1　1920x1080　32bit　144Hz  96x96dpi
-125:		No.1  モニター名：\\.\DISPLAY2　1920x1080　32bit　75Hz  96x96dpi
-156:	ディスプレイ情報のセットアップ完了
-157:	ウインドウ矩形 ( 304, 129 )-( 1600, 888 )
-165:	ウインドウの作成に成功しました
-165:	ウインドウを表示します
-229:	ＩＭＥを無効にしました
-234:	ウインドウスタイルをウインドウモード用に変更します... 完了
-307:	XInput DLL の読み込み中... 成功
-312:	DirectInput関係初期化処理
-313:		DirectInput8 の取得を試みます...成功
-358:			引き続き初期化処理... 初期化成功
-363:		ジョイパッドの初期化... 
-364:			XInput 対応コントローラーのチェックを開始します
-366:				XInput 対応コントローラー No.0 をチェック
-366:				XInput 対応コントローラー No.0 の接続は確認できませんでした
-366:				XInput 対応コントローラー No.1 をチェック
-367:				XInput 対応コントローラー No.1 の接続は確認できませんでした
-367:				XInput 対応コントローラー No.2 をチェック
-368:				XInput 対応コントローラー No.2 の接続は確認できませんでした
-368:				XInput 対応コントローラー No.3 をチェック
-368:				XInput 対応コントローラー No.3 の接続は確認できませんでした
-369:			XInput 対応コントローラーのチェック完了
-369:			DirectInput 対応ジョイパッドの列挙を開始します
-468:			DirectInput 対応ジョイパッドの列挙終了
-470:		ジョイパッドの初期化は正常に終了しました
-470:		マウスデバイスの初期化... 初期化成功
-474:		キーボードデバイスの初期化... 初期化成功
-482:	DirectInput 関連の初期化は正常に終了しました
-490:	XAudio2 の初期化を行います
-508:		XAudio2_8.dll を使用します
-512:		XAudio2 インターフェースの取得と初期化を行います....  成功 Ver2.8
-690:	XAudio2 の初期化は正常に終了しました
-696:	d3d11.dll の読み込み.... 成功
-705:	dxgi.dll の読み込み.... 成功
-706:	API CreateDXGIFactory2 のアドレスを取得します.... 成功
-707:	IDXGIFactory2 を作成します.... 成功
-719:	API CreateDXGIFactory6 のアドレスを取得します.... 成功
-722:	IDXGIAdapter を列挙
-723:		Adapter No.0 Desc:NVIDIA GeForce RTX 2060  VRAM:5980MB
-723:			Output Device No.0 Name:\\.\DISPLAY1 ( 0, 0 )-( 1920, 1080 )
-726:			Output Device No.1 Name:\\.\DISPLAY2 ( 4, -1080 )-( 1924, 0 )
-728:		Adapter No.1 Desc:Microsoft Basic Render Driver  VRAM:0MB
-729:	API D3D11CreateDevice のアドレスを取得します.... 成功
-730:	IDXGIAdapter を取得します.... 成功
-731:	IDXGIAdapter1 を取得します.... 成功
-732:	IDXGIAdapter2 を取得します.... 成功
-732:	IDXGIAdapter3 を取得します.... 成功
-733:	IDXGIAdapter4 を取得します.... 成功
-734:	Direct3D 11 FeatureLevel 11_0 以上を対象とします
-734:	ID3D11Device オブジェクトを取得します.... 成功
-1004:	IDXGIDevice1 を取得します.... 成功
-1005:	IDXGIDevice1->SetMaximunFrameLatency( 1 ); を実行しました
-1006:	[ウインドウモード 1280x720 ( 320, 167 )-( 1600, 887 )]
-1007:	IDXGISwapChain2 を作成します.... 成功
-1028:	IDXGIFactory2->CreateSwapChainForHwnd の戻り値：0x00000000
-1028:	IDXGIOutput を取得します.... 成功
-1029:	Graphics Device:NVIDIA GeForce RTX 2060
-1030:	画面のフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-1030:	16bit Zバッファフォーマットは DXGI_FORMAT_D16_UNORM です
-1030:	24bit Zバッファフォーマットは DXGI_FORMAT_D24_UNORM_S8_UINT です
-1031:	32bit Zバッファフォーマットは DXGI_FORMAT_D32_FLOAT です
-1031:	16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
-1031:	32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
-1032:	アルファ付き 16bit カラーフォーマットは DXGI_FORMAT_B4G4R4A4_UNORM です
-1032:	アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-1032:	アルファテスト用 16bit カラーフォーマットは DXGI_FORMAT_B5G5R5A1_UNORM です
-1033:	アルファテスト用 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-1033:	ＤＸＴ１テクスチャフォーマットは DXGI_FORMAT_BC1_UNORM です
-1034:	ＤＸＴ２テクスチャフォーマットは使えません
-1034:	ＤＸＴ３テクスチャフォーマットは DXGI_FORMAT_BC2_UNORM です
-1034:	ＤＸＴ４テクスチャフォーマットは使えません
-1035:	ＤＸＴ５テクスチャフォーマットは DXGI_FORMAT_BC3_UNORM です
-1035:	BC7_UNORM テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM です
-1035:	BC7_UNORM_SRGB テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM_SRGB です
-1036:	ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
-1036:	ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
-1036:	ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
-1036:	１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
-1037:	１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
-1037:	１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
-1037:	１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
-1038:	２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
-1038:	２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
-1038:	２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
-1038:	２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
-1041:	描画用 16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
-1041:	描画用 32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
-1041:	描画用アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
-1042:	描画用 ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
-1042:	描画用 ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
-1042:	描画用 ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
-1043:	描画用１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
-1043:	描画用１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
-1043:	描画用１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
-1043:	描画用１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
-1044:	描画用２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
-1045:	描画用２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
-1045:	描画用２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
-1045:	描画用２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
-1045:	使用する機能レベル:D3D_FEATURE_LEVEL_11_1
-1046:	同時にレンダリングできるバッファの数:8
-1046:	最大テクスチャサイズ　幅:16384 高さ:16384
-1046:	標準描画用の頂点バッファの作成.... 成功
-1048:	シェーダーコード関係の初期化.... 成功
-1080:	各種シェーダー用定数バッファの作成.... 成功
-1082:	各種 ID3D11InputLayout の作成.... 成功
-1107:	画像の単純転送処理の初期化... 成功
-1109:	深度バッファを作成します.... 成功
-1113:	フォントの初期化を行います
-1116:	フォントの初期化は正常に終了しました
-1180:	文字コードバッファの初期化を行います... 完了しました
-1188:ＤＸライブラリの初期化処理終了
-2884:ChangeWindowMode実行 
-2921:ChangeWindowMode実行 
-2937:ChangeWindowMode実行 
-2952:ChangeWindowMode実行 
-2968:ChangeWindowMode実行 
-2985:ChangeWindowMode実行 
-3001:ChangeWindowMode実行 
-3017:ChangeWindowMode実行 
-3033:ChangeWindowMode実行 
-3049:ChangeWindowMode実行 
-3065:ChangeWindowMode実行 
-3081:ChangeWindowMode実行 
-3097:ChangeWindowMode実行 
-3113:ChangeWindowMode実行 
-3129:ChangeWindowMode実行 
-3145:ChangeWindowMode実行 
-3161:ChangeWindowMode実行 
-3177:ChangeWindowMode実行 
-3194:ChangeWindowMode実行 
-3210:ChangeWindowMode実行 
-3226:ChangeWindowMode実行 
-3241:ChangeWindowMode実行 
-3258:ChangeWindowMode実行 
-3273:ChangeWindowMode実行 
-3290:ChangeWindowMode実行 
-3306:ChangeWindowMode実行 
-3322:ChangeWindowMode実行 
-3338:ChangeWindowMode実行 
-3353:ChangeWindowMode実行 
-3370:ChangeWindowMode実行 
-3388:ChangeWindowMode実行 
-3404:ChangeWindowMode実行 
-3420:ChangeWindowMode実行 
-3437:ChangeWindowMode実行 
-3453:ChangeWindowMode実行 
-3470:ChangeWindowMode実行 
-3488:ChangeWindowMode実行 
-3504:ChangeWindowMode実行 
-3521:ChangeWindowMode実行 
-3538:ChangeWindowMode実行 
-3555:ChangeWindowMode実行 
-3571:ChangeWindowMode実行 
-3587:ChangeWindowMode実行 
-3603:ChangeWindowMode実行 
-3620:ChangeWindowMode実行 
-3636:ChangeWindowMode実行 
-3652:ChangeWindowMode実行 
-3668:ChangeWindowMode実行 
-3684:ChangeWindowMode実行 
-3699:ChangeWindowMode実行 
-3715:ChangeWindowMode実行 
-3731:ChangeWindowMode実行 
-3748:ChangeWindowMode実行 
-3763:ChangeWindowMode実行 
-3780:ChangeWindowMode実行 
-3795:ChangeWindowMode実行 
-3812:ChangeWindowMode実行 
-3828:ChangeWindowMode実行 
-3844:ChangeWindowMode実行 
-3860:ChangeWindowMode実行 
-3877:ChangeWindowMode実行 
-3893:ChangeWindowMode実行 
-3908:ChangeWindowMode実行 
-3925:ChangeWindowMode実行 
-3941:ChangeWindowMode実行 
-3957:ChangeWindowMode実行 
-3973:ChangeWindowMode実行 
-3989:ChangeWindowMode実行 
-4004:ChangeWindowMode実行 
-4021:ChangeWindowMode実行 
-4037:ChangeWindowMode実行 
-4053:ChangeWindowMode実行 
-4069:ChangeWindowMode実行 
-4085:ChangeWindowMode実行 
+3:		ＤＸライブラリ Ver3.24b
+3:		論理プロセッサの数 : 12
+3:		ＯＳ  Windows11 ( Build 22621  )
+105:		現時点のＣＰＵ動作速度：大体2.69GHz
+105:		ＭＭＸ命令を使用します
+105:		ＳＳＥ命令が使用可能です
+106:		ＳＳＥ２命令が使用可能です
+106:		ＣＰＵベンダ：GenuineIntel
+107:		ＣＰＵ名：11th Gen Intel(R) Core(TM) i5-11400H @ 2.70GHz
+107:	ＣＯＭの初期化... 成功
+150:	非同期読み込み処理の初期化...成功
+151:	ファイルアクセス処理の初期化...成功
+151:	メモリ総量:16069.67MB  空きメモリ領域:6200.23MB 
+152:	タイマーの精度を検査します
+152:	精度結果 更新回数 マルチメディアタイマー：0  パフォーマンスカウンター：60
+152:	 パフォーマンスカウンターを使用します タイマー精度 : 10000.000000 KHz 
+153:	 
+154:	ソフトの二重起動検査... 二重起動はされていませんでした
+154:	ウインドウクラスを登録します... 登録に成功しました
+155:	ウインドウモード起動用のウインドウを作成します
+155:	ディスプレイ情報のセットアップ開始
+157:		モニターの数：1  ディスプレイデバイスの数：4
+157:		No.0  モニター名：\\.\DISPLAY1　1920x1080　32bit　144Hz  120x120dpi
+172:	ディスプレイ情報のセットアップ完了
+172:	ウインドウ矩形 ( 142, 28 )-( 1760, 975 )
+177:	ウインドウの作成に成功しました
+178:	ウインドウを表示します
+207:	ＩＭＥを無効にしました
+208:	ウインドウスタイルをウインドウモード用に変更します... 完了
+241:	XInput DLL の読み込み中... 成功
+247:	DirectInput関係初期化処理
+247:		DirectInput8 の取得を試みます...成功
+271:			引き続き初期化処理... 初期化成功
+272:		ジョイパッドの初期化... 
+273:			XInput 対応コントローラーのチェックを開始します
+273:				XInput 対応コントローラー No.0 をチェック
+276:				XInput 対応コントローラー No.0 の接続を確認しました
+276:				XInput 対応コントローラー No.0 を入力ナンバー 0 で登録します
+276:				XInput 対応コントローラー No.1 をチェック
+278:				XInput 対応コントローラー No.1 の接続は確認できませんでした
+278:				XInput 対応コントローラー No.2 をチェック
+278:				XInput 対応コントローラー No.2 の接続は確認できませんでした
+279:				XInput 対応コントローラー No.3 をチェック
+279:				XInput 対応コントローラー No.3 の接続は確認できませんでした
+280:			XInput 対応コントローラーのチェック完了
+280:			DirectInput 対応ジョイパッドの列挙を開始します
+313:				DirectInput 対応入力装置を検出しました
+314:						Device Product GUID  : 0b13045e,0000,0000,00,00,50,49,44,56,49,44
+314:						Device Instance GUID : b0ad5010,3a35,11ee,80,05,44,45,53,54,00,00
+314:					DirectInputDevice8 の作成... 成功
+315:					DirectInputDevice の情報を取得します... 成功
+316:						Device Product Name  : Bluetooth LE XINPUT 互換入力デバイス
+316:						Device Instance Name : Bluetooth LE XINPUT 互換入力デバイス
+317:					検出した DirectInput 対応入力装置が Xbox360コントローラーか確認... 不一致
+317:					検出した DirectInput 対応入力装置が XboxOneコントローラーか確認... 不一致
+318:					検出した DirectInput 対応入力装置が XInput 対応コントローラーか確認... 一致
+624:				検出した DirectInput 対応入力装置の初期化を中断します
+625:			DirectInput 対応ジョイパッドの列挙終了
+625:		ジョイパッドの初期化は正常に終了しました
+625:		マウスデバイスの初期化... 初期化成功
+626:		キーボードデバイスの初期化... 初期化成功
+629:	DirectInput 関連の初期化は正常に終了しました
+632:	XAudio2 の初期化を行います
+635:		XAudio2_8.dll を使用します
+641:		XAudio2 インターフェースの取得と初期化を行います....  成功 Ver2.8
+1013:	XAudio2 の初期化は正常に終了しました
+1018:	d3d11.dll の読み込み.... 成功
+1022:	dxgi.dll の読み込み.... 成功
+1023:	API CreateDXGIFactory2 のアドレスを取得します.... 成功
+1023:	IDXGIFactory2 を作成します.... 成功
+1037:	API CreateDXGIFactory6 のアドレスを取得します.... 成功
+1038:	IDXGIAdapter を列挙
+1038:		Adapter No.0 Desc:NVIDIA GeForce RTX 3050 Laptop GPU  VRAM:3993MB
+1038:			Output Device No.0 Name:\\.\DISPLAY1 ( 0, 0 )-( 1920, 1080 )
+1038:		Adapter No.1 Desc:Intel(R) UHD Graphics  VRAM:128MB
+1039:		Adapter No.2 Desc:Microsoft Basic Render Driver  VRAM:0MB
+1039:	API D3D11CreateDevice のアドレスを取得します.... 成功
+1040:	IDXGIAdapter を取得します.... 成功
+1040:	IDXGIAdapter1 を取得します.... 成功
+1041:	IDXGIAdapter2 を取得します.... 成功
+1041:	IDXGIAdapter3 を取得します.... 成功
+1041:	IDXGIAdapter4 を取得します.... 成功
+1042:	Direct3D 11 FeatureLevel 11_0 以上を対象とします
+1042:	ID3D11Device オブジェクトを取得します.... 成功
+1142:	IDXGIDevice1 を取得します.... 成功
+1143:	IDXGIDevice1->SetMaximunFrameLatency( 1 ); を実行しました
+1143:	[ウインドウモード 1280x720 ( 160, 74 )-( 1760, 974 )]
+1143:	IDXGISwapChain2 を作成します.... 成功
+1158:	IDXGIFactory2->CreateSwapChainForHwnd の戻り値：0x00000000
+1159:	IDXGIOutput を取得します.... 成功
+1160:	Graphics Device:NVIDIA GeForce RTX 3050 Laptop GPU
+1160:	画面のフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+1160:	16bit Zバッファフォーマットは DXGI_FORMAT_D16_UNORM です
+1160:	24bit Zバッファフォーマットは DXGI_FORMAT_D24_UNORM_S8_UINT です
+1161:	32bit Zバッファフォーマットは DXGI_FORMAT_D32_FLOAT です
+1161:	16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
+1161:	32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
+1161:	アルファ付き 16bit カラーフォーマットは DXGI_FORMAT_B4G4R4A4_UNORM です
+1161:	アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+1162:	アルファテスト用 16bit カラーフォーマットは DXGI_FORMAT_B5G5R5A1_UNORM です
+1162:	アルファテスト用 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+1162:	ＤＸＴ１テクスチャフォーマットは DXGI_FORMAT_BC1_UNORM です
+1162:	ＤＸＴ２テクスチャフォーマットは使えません
+1162:	ＤＸＴ３テクスチャフォーマットは DXGI_FORMAT_BC2_UNORM です
+1163:	ＤＸＴ４テクスチャフォーマットは使えません
+1163:	ＤＸＴ５テクスチャフォーマットは DXGI_FORMAT_BC3_UNORM です
+1163:	BC7_UNORM テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM です
+1163:	BC7_UNORM_SRGB テクスチャフォーマットは DXGI_FORMAT_BC7_UNORM_SRGB です
+1163:	ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
+1164:	ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
+1164:	ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
+1164:	１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
+1164:	１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
+1164:	１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
+1165:	１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
+1165:	２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
+1165:	２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
+1165:	２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
+1166:	２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
+1166:	描画用 16bit カラーフォーマットは DXGI_FORMAT_B5G6R5_UNORM です
+1166:	描画用 32bit カラーフォーマットは DXGI_FORMAT_B8G8R8X8_UNORM です
+1166:	描画用アルファ付き 32bit カラーフォーマットは DXGI_FORMAT_R8G8B8A8_UNORM です
+1166:	描画用 ABGR 整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_UNORM です
+1167:	描画用 ABGR 浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16B16A16_FLOAT です
+1167:	描画用 ABGR 浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32B32A32_FLOAT です
+1167:	描画用１チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8_UNORM です
+1167:	描画用１チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_UNORM です
+1167:	描画用１チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16_FLOAT です
+1168:	描画用１チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32_FLOAT です
+1168:	描画用２チャンネル整数 8 ビット型カラーフォーマットは DXGI_FORMAT_R8G8_UNORM です
+1168:	描画用２チャンネル整数 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_UNORM です
+1168:	描画用２チャンネル浮動小数点 16 ビット型カラーフォーマットは DXGI_FORMAT_R16G16_FLOAT です
+1168:	描画用２チャンネル浮動小数点 32 ビット型カラーフォーマットは DXGI_FORMAT_R32G32_FLOAT です
+1169:	使用する機能レベル:D3D_FEATURE_LEVEL_11_1
+1169:	同時にレンダリングできるバッファの数:8
+1169:	最大テクスチャサイズ　幅:16384 高さ:16384
+1169:	標準描画用の頂点バッファの作成.... 成功
+1169:	シェーダーコード関係の初期化.... 成功
+1180:	各種シェーダー用定数バッファの作成.... 成功
+1181:	各種 ID3D11InputLayout の作成.... 成功
+1197:	画像の単純転送処理の初期化... 成功
+1198:	深度バッファを作成します.... 成功
+1200:	フォントの初期化を行います
+1204:	フォントの初期化は正常に終了しました
+1287:	文字コードバッファの初期化を行います... 完了しました
+1297:ＤＸライブラリの初期化処理終了
+2948:ChangeWindowMode実行 
+2965:ChangeWindowMode実行 
+2982:ChangeWindowMode実行 
+2999:ChangeWindowMode実行 
+3016:ChangeWindowMode実行 
+3034:ChangeWindowMode実行 
+3051:ChangeWindowMode実行 
+3068:ChangeWindowMode実行 
+3086:ChangeWindowMode実行 
+3103:ChangeWindowMode実行 
+3120:ChangeWindowMode実行 
+3139:ChangeWindowMode実行 
+3155:ChangeWindowMode実行 
+3172:ChangeWindowMode実行 
+3189:ChangeWindowMode実行 
+3207:ChangeWindowMode実行 
+3225:ChangeWindowMode実行 
+3242:ChangeWindowMode実行 
+3259:ChangeWindowMode実行 
+3276:ChangeWindowMode実行 
+3293:ChangeWindowMode実行 
+3311:ChangeWindowMode実行 
+3328:ChangeWindowMode実行 
+3346:ChangeWindowMode実行 
+3364:ChangeWindowMode実行 
+3381:ChangeWindowMode実行 
+3399:ChangeWindowMode実行 
+3418:ChangeWindowMode実行 
+3436:ChangeWindowMode実行 
+3454:ChangeWindowMode実行 
+3473:ChangeWindowMode実行 
+3490:ChangeWindowMode実行 
+3506:ChangeWindowMode実行 
+3524:ChangeWindowMode実行 
+3542:ChangeWindowMode実行 
+3560:ChangeWindowMode実行 
+3580:ChangeWindowMode実行 
+3598:ChangeWindowMode実行 
+3615:ChangeWindowMode実行 
+3632:ChangeWindowMode実行 
+3650:ChangeWindowMode実行 
+3667:ChangeWindowMode実行 
+3685:ChangeWindowMode実行 
+3702:ChangeWindowMode実行 
+3719:ChangeWindowMode実行 
+3736:ChangeWindowMode実行 
+3754:ChangeWindowMode実行 
+3771:ChangeWindowMode実行 
+3788:ChangeWindowMode実行 
+3805:ChangeWindowMode実行 
+3822:ChangeWindowMode実行 
+3840:ChangeWindowMode実行 
+3856:ChangeWindowMode実行 
+3875:ChangeWindowMode実行 
+3892:ChangeWindowMode実行 
+3909:ChangeWindowMode実行 
+3927:ChangeWindowMode実行 
+3945:ChangeWindowMode実行 
+3962:ChangeWindowMode実行 
+3979:ChangeWindowMode実行 
+3997:ChangeWindowMode実行 
+4015:ChangeWindowMode実行 
+4032:ChangeWindowMode実行 
+4049:ChangeWindowMode実行 
+4066:ChangeWindowMode実行 
+4084:ChangeWindowMode実行 
 4101:ChangeWindowMode実行 
-4117:ChangeWindowMode実行 
-4133:ChangeWindowMode実行 
-4149:ChangeWindowMode実行 
-4166:ChangeWindowMode実行 
-4193:ChangeWindowMode実行 
-4210:ChangeWindowMode実行 
-4224:ChangeWindowMode実行 
-4241:ChangeWindowMode実行 
-4258:ChangeWindowMode実行 
+4120:ChangeWindowMode実行 
+4136:ChangeWindowMode実行 
+4154:ChangeWindowMode実行 
+4171:ChangeWindowMode実行 
+4189:ChangeWindowMode実行 
+4205:ChangeWindowMode実行 
+4223:ChangeWindowMode実行 
+4240:ChangeWindowMode実行 
+4256:ChangeWindowMode実行 
 4273:ChangeWindowMode実行 
-4289:ChangeWindowMode実行 
-4306:ChangeWindowMode実行 
-4321:ChangeWindowMode実行 
-4337:ChangeWindowMode実行 
-4353:ChangeWindowMode実行 
-4370:ChangeWindowMode実行 
-4385:ChangeWindowMode実行 
-4402:ChangeWindowMode実行 
-4418:ChangeWindowMode実行 
-4434:ChangeWindowMode実行 
-4449:ChangeWindowMode実行 
-4466:ChangeWindowMode実行 
-4482:ChangeWindowMode実行 
-4497:ChangeWindowMode実行 
-4514:ChangeWindowMode実行 
+4291:ChangeWindowMode実行 
+4308:ChangeWindowMode実行 
+4324:ChangeWindowMode実行 
+4343:ChangeWindowMode実行 
+4360:ChangeWindowMode実行 
+4376:ChangeWindowMode実行 
+4393:ChangeWindowMode実行 
+4410:ChangeWindowMode実行 
+4427:ChangeWindowMode実行 
+4445:ChangeWindowMode実行 
+4461:ChangeWindowMode実行 
+4479:ChangeWindowMode実行 
+4496:ChangeWindowMode実行 
+4512:ChangeWindowMode実行 
 4530:ChangeWindowMode実行 
-4546:ChangeWindowMode実行 
-4562:ChangeWindowMode実行 
-4578:ChangeWindowMode実行 
-4594:ChangeWindowMode実行 
-4610:ChangeWindowMode実行 
-4627:ChangeWindowMode実行 
-4643:ChangeWindowMode実行 
-4658:ChangeWindowMode実行 
-4674:ChangeWindowMode実行 
-4691:ChangeWindowMode実行 
-4706:ChangeWindowMode実行 
-4722:ChangeWindowMode実行 
-4739:ChangeWindowMode実行 
-4755:ChangeWindowMode実行 
+4547:ChangeWindowMode実行 
+4564:ChangeWindowMode実行 
+4582:ChangeWindowMode実行 
+4599:ChangeWindowMode実行 
+4615:ChangeWindowMode実行 
+4633:ChangeWindowMode実行 
+4650:ChangeWindowMode実行 
+4666:ChangeWindowMode実行 
+4684:ChangeWindowMode実行 
+4701:ChangeWindowMode実行 
+4719:ChangeWindowMode実行 
+4736:ChangeWindowMode実行 
+4753:ChangeWindowMode実行 
 4771:ChangeWindowMode実行 
 4787:ChangeWindowMode実行 
-4803:ChangeWindowMode実行 
-4819:ChangeWindowMode実行 
-4835:ChangeWindowMode実行 
-4851:ChangeWindowMode実行 
-4867:ChangeWindowMode実行 
-4883:ChangeWindowMode実行 
-4900:ChangeWindowMode実行 
-4916:ChangeWindowMode実行 
-4931:ChangeWindowMode実行 
-4947:ChangeWindowMode実行 
-4963:ChangeWindowMode実行 
-4979:ChangeWindowMode実行 
-4995:ChangeWindowMode実行 
-5011:ChangeWindowMode実行 
+4805:ChangeWindowMode実行 
+4821:ChangeWindowMode実行 
+4838:ChangeWindowMode実行 
+4856:ChangeWindowMode実行 
+4873:ChangeWindowMode実行 
+4890:ChangeWindowMode実行 
+4906:ChangeWindowMode実行 
+4924:ChangeWindowMode実行 
+4942:ChangeWindowMode実行 
+4959:ChangeWindowMode実行 
+4975:ChangeWindowMode実行 
+4992:ChangeWindowMode実行 
+5009:ChangeWindowMode実行 
 5027:ChangeWindowMode実行 
-5043:ChangeWindowMode実行 
-5059:ChangeWindowMode実行 
-5076:ChangeWindowMode実行 
-5092:ChangeWindowMode実行 
-5108:ChangeWindowMode実行 
-5124:ChangeWindowMode実行 
-5140:ChangeWindowMode実行 
-5156:ChangeWindowMode実行 
-5172:ChangeWindowMode実行 
-5188:ChangeWindowMode実行 
-5205:ChangeWindowMode実行 
-5220:ChangeWindowMode実行 
-5237:ChangeWindowMode実行 
-5253:ChangeWindowMode実行 
-5268:ChangeWindowMode実行 
+5044:ChangeWindowMode実行 
+5061:ChangeWindowMode実行 
+5078:ChangeWindowMode実行 
+5095:ChangeWindowMode実行 
+5113:ChangeWindowMode実行 
+5130:ChangeWindowMode実行 
+5147:ChangeWindowMode実行 
+5165:ChangeWindowMode実行 
+5182:ChangeWindowMode実行 
+5199:ChangeWindowMode実行 
+5216:ChangeWindowMode実行 
+5233:ChangeWindowMode実行 
+5250:ChangeWindowMode実行 
+5267:ChangeWindowMode実行 
 5284:ChangeWindowMode実行 
-5301:ChangeWindowMode実行 
-5317:ChangeWindowMode実行 
-5332:ChangeWindowMode実行 
-5348:ChangeWindowMode実行 
-5364:ChangeWindowMode実行 
-5380:ChangeWindowMode実行 
-5397:ChangeWindowMode実行 
-5412:ChangeWindowMode実行 
-5429:ChangeWindowMode実行 
-5445:ChangeWindowMode実行 
-5461:ChangeWindowMode実行 
-5477:ChangeWindowMode実行 
-5493:ChangeWindowMode実行 
-5509:ChangeWindowMode実行 
-5525:ChangeWindowMode実行 
-5541:ChangeWindowMode実行 
-5557:ChangeWindowMode実行 
-5573:ChangeWindowMode実行 
-5589:ChangeWindowMode実行 
-5605:ChangeWindowMode実行 
-5621:ChangeWindowMode実行 
-5637:ChangeWindowMode実行 
-5653:ChangeWindowMode実行 
-5669:ChangeWindowMode実行 
-5686:ChangeWindowMode実行 
-5701:ChangeWindowMode実行 
-5718:ChangeWindowMode実行 
-5734:ChangeWindowMode実行 
-5749:ChangeWindowMode実行 
-5766:ChangeWindowMode実行 
-5782:ChangeWindowMode実行 
-5798:ChangeWindowMode実行 
+5302:ChangeWindowMode実行 
+5318:ChangeWindowMode実行 
+5335:ChangeWindowMode実行 
+5352:ChangeWindowMode実行 
+5370:ChangeWindowMode実行 
+5386:ChangeWindowMode実行 
+5403:ChangeWindowMode実行 
+5421:ChangeWindowMode実行 
+5438:ChangeWindowMode実行 
+5455:ChangeWindowMode実行 
+5472:ChangeWindowMode実行 
+5490:ChangeWindowMode実行 
+5507:ChangeWindowMode実行 
+5524:ChangeWindowMode実行 
+5542:ChangeWindowMode実行 
+5558:ChangeWindowMode実行 
+5575:ChangeWindowMode実行 
+5593:ChangeWindowMode実行 
+5610:ChangeWindowMode実行 
+5626:ChangeWindowMode実行 
+5643:ChangeWindowMode実行 
+5661:ChangeWindowMode実行 
+5678:ChangeWindowMode実行 
+5695:ChangeWindowMode実行 
+5712:ChangeWindowMode実行 
+5730:ChangeWindowMode実行 
+5746:ChangeWindowMode実行 
+5763:ChangeWindowMode実行 
+5780:ChangeWindowMode実行 
+5796:ChangeWindowMode実行 
 5814:ChangeWindowMode実行 
-5829:ChangeWindowMode実行 
-5845:ChangeWindowMode実行 
-5861:ChangeWindowMode実行 
-5878:ChangeWindowMode実行 
-5894:ChangeWindowMode実行 
-5910:ChangeWindowMode実行 
-5926:ChangeWindowMode実行 
-5942:ChangeWindowMode実行 
-5958:ChangeWindowMode実行 
-5974:ChangeWindowMode実行 
-5990:ChangeWindowMode実行 
-6006:ChangeWindowMode実行 
-6022:ChangeWindowMode実行 
-6038:ChangeWindowMode実行 
-6054:ChangeWindowMode実行 
+5831:ChangeWindowMode実行 
+5848:ChangeWindowMode実行 
+5866:ChangeWindowMode実行 
+5882:ChangeWindowMode実行 
+5899:ChangeWindowMode実行 
+5917:ChangeWindowMode実行 
+5933:ChangeWindowMode実行 
+5950:ChangeWindowMode実行 
+5967:ChangeWindowMode実行 
+5984:ChangeWindowMode実行 
+6001:ChangeWindowMode実行 
+6019:ChangeWindowMode実行 
+6036:ChangeWindowMode実行 
+6053:ChangeWindowMode実行 
 6070:ChangeWindowMode実行 
-6086:ChangeWindowMode実行 
-6102:ChangeWindowMode実行 
-6118:ChangeWindowMode実行 
-6135:ChangeWindowMode実行 
-6150:ChangeWindowMode実行 
-6167:ChangeWindowMode実行 
-6183:ChangeWindowMode実行 
-6199:ChangeWindowMode実行 
-6214:ChangeWindowMode実行 
-6231:ChangeWindowMode実行 
-6247:ChangeWindowMode実行 
-6262:ChangeWindowMode実行 
-6279:ChangeWindowMode実行 
-6295:ChangeWindowMode実行 
-6310:ChangeWindowMode実行 
+6087:ChangeWindowMode実行 
+6104:ChangeWindowMode実行 
+6121:ChangeWindowMode実行 
+6138:ChangeWindowMode実行 
+6156:ChangeWindowMode実行 
+6173:ChangeWindowMode実行 
+6190:ChangeWindowMode実行 
+6206:ChangeWindowMode実行 
+6224:ChangeWindowMode実行 
+6242:ChangeWindowMode実行 
+6258:ChangeWindowMode実行 
+6275:ChangeWindowMode実行 
+6292:ChangeWindowMode実行 
+6308:ChangeWindowMode実行 
 6326:ChangeWindowMode実行 
 6344:ChangeWindowMode実行 
 6361:ChangeWindowMode実行 
-6376:ChangeWindowMode実行 
-6393:ChangeWindowMode実行 
-6409:ChangeWindowMode実行 
-6425:ChangeWindowMode実行 
-6441:ChangeWindowMode実行 
-6457:ChangeWindowMode実行 
-6473:ChangeWindowMode実行 
-6489:ChangeWindowMode実行 
-6505:ChangeWindowMode実行 
-6521:ChangeWindowMode実行 
-6537:ChangeWindowMode実行 
-6553:ChangeWindowMode実行 
-6569:ChangeWindowMode実行 
-6585:ChangeWindowMode実行 
+6378:ChangeWindowMode実行 
+6394:ChangeWindowMode実行 
+6411:ChangeWindowMode実行 
+6429:ChangeWindowMode実行 
+6447:ChangeWindowMode実行 
+6464:ChangeWindowMode実行 
+6481:ChangeWindowMode実行 
+6497:ChangeWindowMode実行 
+6515:ChangeWindowMode実行 
+6532:ChangeWindowMode実行 
+6549:ChangeWindowMode実行 
+6565:ChangeWindowMode実行 
+6582:ChangeWindowMode実行 
 6601:ChangeWindowMode実行 
 6617:ChangeWindowMode実行 
-6633:ChangeWindowMode実行 
-6649:ChangeWindowMode実行 
-6665:ChangeWindowMode実行 
-6691:フォントの初期化を行います
-6693:フォントの初期化は正常に終了しました
-6725:d3d11.dll の解放 1
-6727:dxgi.dll の解放 1
-6728:Direct3D11 のオブジェクト数を出力
-6728:Direct3D11 のオブジェクト合計数 : 0
-6729:DirectInput 関連の終了処理... 完了
-6729:サウンド関連の終了処理... 完了
-6754:ウィンドウ関連の終了処理... ウインドウを閉じようとしています
-6770:ウインドウが破棄されようとしています
-6782:ソフトを終了する準備が整いました
-6877:完了
-6890:ＣＯＭを終了... 完了
-6891:
-6891:Alloc memory dump
-6891:	Total size:0(0.000kb)  Alloc num:0
-6892:
+6634:ChangeWindowMode実行 
+6651:ChangeWindowMode実行 
+6668:ChangeWindowMode実行 
+6686:ChangeWindowMode実行 
+6702:ChangeWindowMode実行 
+6720:ChangeWindowMode実行 
+6737:ChangeWindowMode実行 
+6753:ChangeWindowMode実行 
+6772:ChangeWindowMode実行 
+6789:ChangeWindowMode実行 
+6806:ChangeWindowMode実行 
+6822:ChangeWindowMode実行 
+6839:ChangeWindowMode実行 
+6857:ChangeWindowMode実行 
+6874:ChangeWindowMode実行 
+6891:ChangeWindowMode実行 
+6908:ChangeWindowMode実行 
+6925:ChangeWindowMode実行 
+6942:ChangeWindowMode実行 
+6959:ChangeWindowMode実行 
+6977:ChangeWindowMode実行 
+6994:ChangeWindowMode実行 
+7011:ChangeWindowMode実行 
+7028:ChangeWindowMode実行 
+7046:ChangeWindowMode実行 
+7063:ChangeWindowMode実行 
+7079:ChangeWindowMode実行 
+7097:ChangeWindowMode実行 
+7114:ChangeWindowMode実行 
+7130:ChangeWindowMode実行 
+7148:ChangeWindowMode実行 
+7165:ChangeWindowMode実行 
+7182:ChangeWindowMode実行 
+7200:ChangeWindowMode実行 
+7216:ChangeWindowMode実行 
+7234:ChangeWindowMode実行 
+7251:ChangeWindowMode実行 
+7268:ChangeWindowMode実行 
+7285:ChangeWindowMode実行 
+7303:ChangeWindowMode実行 
+7320:ChangeWindowMode実行 
+7337:ChangeWindowMode実行 
+7354:ChangeWindowMode実行 
+7371:ChangeWindowMode実行 
+7387:ChangeWindowMode実行 
+7405:ChangeWindowMode実行 
+7422:ChangeWindowMode実行 
+7439:ChangeWindowMode実行 
+7456:ChangeWindowMode実行 
+7474:ChangeWindowMode実行 
+7491:ChangeWindowMode実行 
+7507:ChangeWindowMode実行 
+7525:ChangeWindowMode実行 
+7542:ChangeWindowMode実行 
+7560:ChangeWindowMode実行 
+7576:ChangeWindowMode実行 
+7594:ChangeWindowMode実行 
+7611:ChangeWindowMode実行 
+7627:ChangeWindowMode実行 
+7645:ChangeWindowMode実行 
+7662:ChangeWindowMode実行 
+7679:ChangeWindowMode実行 
+7695:ChangeWindowMode実行 
+7712:ChangeWindowMode実行 
+7730:ChangeWindowMode実行 
+7746:ChangeWindowMode実行 
+7764:ChangeWindowMode実行 
+7781:ChangeWindowMode実行 
+7798:ChangeWindowMode実行 
+7815:ChangeWindowMode実行 
+7833:ChangeWindowMode実行 
+7850:ChangeWindowMode実行 
+7866:ChangeWindowMode実行 
+7884:ChangeWindowMode実行 
+7901:ChangeWindowMode実行 
+7918:ChangeWindowMode実行 
+7935:ChangeWindowMode実行 
+7952:ChangeWindowMode実行 
+7969:ChangeWindowMode実行 
+7987:ChangeWindowMode実行 
+8003:ChangeWindowMode実行 
+8020:ChangeWindowMode実行 
+8038:ChangeWindowMode実行 
+8055:ChangeWindowMode実行 
+8072:ChangeWindowMode実行 
+8089:ChangeWindowMode実行 
+8106:ChangeWindowMode実行 
+8123:ChangeWindowMode実行 
+8140:ChangeWindowMode実行 
+8157:ChangeWindowMode実行 
+8175:ChangeWindowMode実行 
+8192:ChangeWindowMode実行 
+8209:ChangeWindowMode実行 
+8226:ChangeWindowMode実行 
+8243:ChangeWindowMode実行 
+8261:ChangeWindowMode実行 
+8278:ChangeWindowMode実行 
+8295:ChangeWindowMode実行 
+8312:ChangeWindowMode実行 
+8330:ChangeWindowMode実行 
+8346:ChangeWindowMode実行 
+8363:ChangeWindowMode実行 
+8380:ChangeWindowMode実行 
+8397:ChangeWindowMode実行 
+8414:ChangeWindowMode実行 
+8431:ChangeWindowMode実行 
+8448:ChangeWindowMode実行 
+8465:ChangeWindowMode実行 
+8482:ChangeWindowMode実行 
+8499:ChangeWindowMode実行 
+8517:ChangeWindowMode実行 
+8534:ChangeWindowMode実行 
+8551:ChangeWindowMode実行 
+8567:ChangeWindowMode実行 
+8584:ChangeWindowMode実行 
+8601:ChangeWindowMode実行 
+8619:ChangeWindowMode実行 
+8636:ChangeWindowMode実行 
+8653:ChangeWindowMode実行 
+8671:ChangeWindowMode実行 
+8687:ChangeWindowMode実行 
+8705:ChangeWindowMode実行 
+8722:ChangeWindowMode実行 
+8740:ChangeWindowMode実行 
+8756:ChangeWindowMode実行 
+8774:ChangeWindowMode実行 
+8791:ChangeWindowMode実行 
+8808:ChangeWindowMode実行 
+8825:ChangeWindowMode実行 
+8842:ChangeWindowMode実行 
+8860:ChangeWindowMode実行 
+8876:ChangeWindowMode実行 
+8893:ChangeWindowMode実行 
+8910:ChangeWindowMode実行 
+8927:ChangeWindowMode実行 
+8944:ChangeWindowMode実行 
+8962:ChangeWindowMode実行 
+8979:ChangeWindowMode実行 
+8995:ChangeWindowMode実行 
+9012:ChangeWindowMode実行 
+9030:ChangeWindowMode実行 
+9047:ChangeWindowMode実行 
+9064:ChangeWindowMode実行 
+9081:ChangeWindowMode実行 
+9097:ChangeWindowMode実行 
+9114:ChangeWindowMode実行 
+9131:ChangeWindowMode実行 
+9149:ChangeWindowMode実行 
+9166:ChangeWindowMode実行 
+9184:ChangeWindowMode実行 
+9200:ChangeWindowMode実行 
+9218:ChangeWindowMode実行 
+9234:ChangeWindowMode実行 
+9252:ChangeWindowMode実行 
+9269:ChangeWindowMode実行 
+9286:ChangeWindowMode実行 
+9303:ChangeWindowMode実行 
+9320:ChangeWindowMode実行 
+9337:ChangeWindowMode実行 
+9354:ChangeWindowMode実行 
+9371:ChangeWindowMode実行 
+9389:ChangeWindowMode実行 
+9407:ChangeWindowMode実行 
+9423:ChangeWindowMode実行 
+9440:ChangeWindowMode実行 
+9456:ChangeWindowMode実行 
+9473:ChangeWindowMode実行 
+9491:ChangeWindowMode実行 
+9508:ChangeWindowMode実行 
+9524:ChangeWindowMode実行 
+9542:ChangeWindowMode実行 
+9560:ChangeWindowMode実行 
+9576:ChangeWindowMode実行 
+9593:ChangeWindowMode実行 

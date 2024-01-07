@@ -1,4 +1,5 @@
 #pragma once
+#include <DxLib.h>
 
 // プロトタイプ宣言
 class Vector3;
@@ -29,25 +30,34 @@ public:
 
 	// 行列の転置
 	Matrix Transpose() const;
-	Matrix Transpose();
-
-	// ある向きからある向きへ変換する回転行列を取得する
-	Matrix GetRotationMatrix(const Vector3& from, const Vector3& to);
-
-	// 平行移動行列を取得する
-	Matrix GetTranslate(const Vector3& v);
-
-	// x軸回転行列を取得する
-	Matrix GetRotationX(float angle);
-
-	// y軸回転行列を取得する
-	Matrix GetRotationY(float angle);
-
-	// z軸回転行列を取得する
-	Matrix GetRotationZ(float angle);
 
 	// 行列からオイラー角に変換
 	Vector3 ToEulerAngle() const;
+
+	// DXライブラリの行列に変換
+	MATRIX ToDxLibMatrix() const;
+
+	/* 静的メンバ関数 */
+	// ある向きからある向きへ変換する回転行列を取得する
+	static Matrix GetRotationMatrix(const Vector3& from, const Vector3& to);
+
+	// 平行移動行列を取得する
+	static Matrix GetTranslate(const Vector3& v);
+
+	// 拡大縮小行列を取得する
+	static Matrix GetScale(const Vector3& v);
+
+	// x軸回転行列を取得する
+	static Matrix GetRotationX(float angle);
+
+	// y軸回転行列を取得する
+	static Matrix GetRotationY(float angle);
+
+	// z軸回転行列を取得する
+	static Matrix GetRotationZ(float angle);
+
+	// 行列からオイラー角に変換
+	static Vector3 ToEulerAngle(const Matrix& m);
 
 public:
 	float m[4][4];

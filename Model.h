@@ -2,6 +2,8 @@
 #include <DxLib.h>
 #include <string>
 #include <vector>
+#include "Math/Vector3.h"
+#include "Math/Matrix.h"
 
 // TODO : 当たり判定関係の関数の追加
 
@@ -74,10 +76,10 @@ public:
 	int GetMaterialNum() const;		// モデルのマテリアルの数の取得
 
 	// モデル設定
-	void SetPos(VECTOR pos);			// 表示位置の設定
-	void SetRot(VECTOR rot);			// 回転状態の設定
-	void SetRotMtx(MATRIX mtx);			// 回転行列の設定
-	void SetScale(VECTOR scale);		// 拡大率の設定
+	void SetPos(Vector3 pos);			// 表示位置の設定
+	void SetRot(Vector3 rot);			// 回転状態の設定
+	void SetRotMtx(Matrix mtx);			// 回転行列の設定
+	void SetScale(Vector3 scale);		// 拡大率の設定
 	void SetOpacity(float opacity);		// 不透明度の設定(0.0~1.0)
 
 	// 描画モード設定

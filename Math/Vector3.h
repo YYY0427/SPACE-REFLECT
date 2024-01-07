@@ -1,4 +1,5 @@
 #pragma once
+#include <DxLib.h>
 
 class Matrix;
 
@@ -60,26 +61,33 @@ public:
 	// 正規化したベクトルを返す
 	Vector3 Normalized() const;
 
+	// DXライブラリのベクトルに変換
+	VECTOR ToDxLibVector3() const;
+
+	/* 静的メンバー関数 */ 
+	// DXライブラリのベクトルからベクトルに変換
+	static Vector3 FromDxLibVector3(const VECTOR& vec);
+
 	// 外積
-	Vector3 Cross(const Vector3& v1, const Vector3& v2) const;
+	static Vector3 Cross(const Vector3& v1, const Vector3& v2);
 
 	// 内積
-	float Dot(const Vector3& v1, const Vector3& v2) const;
+	static float Dot(const Vector3& v1, const Vector3& v2);
 
 	// 反射ベクトル
-	Vector3 Reflect(const Vector3& vec, const Vector3& normal) const;
+	static Vector3 Reflect(const Vector3& vec, const Vector3& normal);
 
 	// スライドベクトル
-	Vector3 Slide(const Vector3& vec, const Vector3& normal) const;
+	static Vector3 Slide(const Vector3& vec, const Vector3& normal);
 
 	// 線形補間
-	Vector3 Lerp(const Vector3& start, const Vector3& end, float value) const;
+	static Vector3 Lerp(const Vector3& start, const Vector3& end, float value);
 
 	// エルミート補間
-	Vector3 Hermite(const Vector3& startPos, const Vector3& startTangent, const Vector3& endPos, const Vector3& endTangent, float value) const;
+	static Vector3 Hermite(const Vector3& startPos, const Vector3& startTangent, const Vector3& endPos, const Vector3& endTangent, float value);
 	
 	// 行列を使ったベクトルの変換
-	Vector3 Transform(const Vector3& vec, const Matrix& mat) const;
+	static Vector3 Transform(const Vector3& vec, const Matrix& mat);
 
 public:
 	float x, y, z;

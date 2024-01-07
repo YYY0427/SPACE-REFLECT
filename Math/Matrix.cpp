@@ -91,113 +91,176 @@ Matrix Matrix::operator/=(float div)
 // s—ñ‚Ì“]’u
 Matrix Matrix::Transpose() const
 {
-	Matrix result;
+	//Matrix result;
 
-	// s—ñ‚Ì“]’u
-	result.m[0][0] = m[0][0]; result.m[0][1] = m[1][0]; result.m[0][2] = m[2][0]; result.m[0][3] = m[3][0];
-	result.m[1][0] = m[0][1]; result.m[1][1] = m[1][1]; result.m[1][2] = m[2][1]; result.m[1][3] = m[3][1];
-	result.m[2][0] = m[0][2]; result.m[2][1] = m[1][2]; result.m[2][2] = m[2][2]; result.m[2][3] = m[3][2];
-	result.m[3][0] = m[0][3]; result.m[3][1] = m[1][3]; result.m[3][2] = m[2][3]; result.m[3][3] = m[3][3];
+	//// s—ñ‚Ì“]’u
+	//result.m[0][0] = m[0][0]; result.m[0][1] = m[1][0]; result.m[0][2] = m[2][0]; result.m[0][3] = m[3][0];
+	//result.m[1][0] = m[0][1]; result.m[1][1] = m[1][1]; result.m[1][2] = m[2][1]; result.m[1][3] = m[3][1];
+	//result.m[2][0] = m[0][2]; result.m[2][1] = m[1][2]; result.m[2][2] = m[2][2]; result.m[2][3] = m[3][2];
+	//result.m[3][0] = m[0][3]; result.m[3][1] = m[1][3]; result.m[3][2] = m[2][3]; result.m[3][3] = m[3][3];
 
-	return result;
-}
+	//return result;
 
-// s—ñ‚Ì“]’u
-Matrix Matrix::Transpose()
-{
-	Matrix result;
-	return result = Transpose();
+	MATRIX result = MTranspose(ToDxLibMatrix());
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+			 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
 }
 
 // ‚ ‚éŒü‚«‚©‚ç‚ ‚éŒü‚«‚Ö•ÏŠ·‚·‚é‰ñ“]s—ñ‚ğæ“¾
 Matrix Matrix::GetRotationMatrix(const Vector3& from, const Vector3& to)
 {
-	// ‚ ‚éŒü‚«‚©‚ç‚ ‚éŒü‚«‚Ö•ÏŠ·‚·‚é‰ñ“]s—ñ‚ğæ“¾‚·‚é
-	Vector3 axis = from.Cross(from, to);
-	axis.Normalize();
-	float angle = acosf(from.Dot(from, to));
+	//// ‚ ‚éŒü‚«‚©‚ç‚ ‚éŒü‚«‚Ö•ÏŠ·‚·‚é‰ñ“]s—ñ‚ğæ“¾‚·‚é
+	//Vector3 axis = from.Cross(from, to);
+	//axis.Normalize();
+	//float angle = acosf(from.Dot(from, to));
 
-	// ‰ñ“]s—ñ‚ÌŒvZ
-	Matrix result;
-	result.m[0][0] = cosf(angle) + axis.x * axis.x * (1.0f - cosf(angle));
-	result.m[0][1] = axis.x * axis.y * (1.0f - cosf(angle)) - axis.z * sinf(angle);
-	result.m[0][2] = axis.z * axis.x * (1.0f - cosf(angle)) + axis.y * sinf(angle);
-	result.m[0][3] = 0.0f;
+	//// ‰ñ“]s—ñ‚ÌŒvZ
+	//Matrix result;
+	//result.m[0][0] = cosf(angle) + axis.x * axis.x * (1.0f - cosf(angle));
+	//result.m[0][1] = axis.x * axis.y * (1.0f - cosf(angle)) - axis.z * sinf(angle);
+	//result.m[0][2] = axis.z * axis.x * (1.0f - cosf(angle)) + axis.y * sinf(angle);
+	//result.m[0][3] = 0.0f;
 
-	result.m[1][0] = axis.x * axis.y * (1.0f - cosf(angle)) + axis.z * sinf(angle);
-	result.m[1][1] = cosf(angle) + axis.y * axis.y * (1.0f - cosf(angle));
-	result.m[1][2] = axis.y * axis.z * (1.0f - cosf(angle)) - axis.x * sinf(angle);
-	result.m[1][3] = 0.0f;
+	//result.m[1][0] = axis.x * axis.y * (1.0f - cosf(angle)) + axis.z * sinf(angle);
+	//result.m[1][1] = cosf(angle) + axis.y * axis.y * (1.0f - cosf(angle));
+	//result.m[1][2] = axis.y * axis.z * (1.0f - cosf(angle)) - axis.x * sinf(angle);
+	//result.m[1][3] = 0.0f;
 
-	result.m[2][0] = axis.z * axis.x * (1.0f - cosf(angle)) - axis.y * sinf(angle);
-	result.m[2][1] = axis.y * axis.z * (1.0f - cosf(angle)) + axis.x * sinf(angle);
-	result.m[2][2] = cosf(angle) + axis.z * axis.z * (1.0f - cosf(angle));
-	result.m[2][3] = 0.0f;
+	//result.m[2][0] = axis.z * axis.x * (1.0f - cosf(angle)) - axis.y * sinf(angle);
+	//result.m[2][1] = axis.y * axis.z * (1.0f - cosf(angle)) + axis.x * sinf(angle);
+	//result.m[2][2] = cosf(angle) + axis.z * axis.z * (1.0f - cosf(angle));
+	//result.m[2][3] = 0.0f;
 
-	result.m[3][0] = 0.0f;
-	result.m[3][1] = 0.0f;
-	result.m[3][2] = 0.0f;
-	result.m[3][3] = 1.0f;
+	//result.m[3][0] = 0.0f;
+	//result.m[3][1] = 0.0f;
+	//result.m[3][2] = 0.0f;
+	//result.m[3][3] = 1.0f;
 
-	return result;
+	//return result;
+
+	MATRIX result = MGetRotVec2(from.ToDxLibVector3(), to.ToDxLibVector3());
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+			 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
 }
 
 // •½sˆÚ“®s—ñ‚Ìæ“¾
 Matrix Matrix::GetTranslate(const Vector3& v)
 {
-	// •½sˆÚ“®s—ñ‚ğæ“¾‚·‚é
-	Matrix result;
+	//// •½sˆÚ“®s—ñ‚ğæ“¾‚·‚é
+	//Matrix result;
 
-	// •½sˆÚ“®s—ñ‚ÌŒvZ
-	result.m[0][0] = 1.0f; result.m[0][1] = 0.0f; result.m[0][2] = 0.0f; result.m[0][3] = v.x;
-	result.m[1][0] = 0.0f; result.m[1][1] = 1.0f; result.m[1][2] = 0.0f; result.m[1][3] = v.y;
-	result.m[2][0] = 0.0f; result.m[2][1] = 0.0f; result.m[2][2] = 1.0f; result.m[2][3] = v.z;
-	result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
+	//// •½sˆÚ“®s—ñ‚ÌŒvZ
+	//result.m[0][0] = 1.0f; result.m[0][1] = 0.0f; result.m[0][2] = 0.0f; result.m[0][3] = v.x;
+	//result.m[1][0] = 0.0f; result.m[1][1] = 1.0f; result.m[1][2] = 0.0f; result.m[1][3] = v.y;
+	//result.m[2][0] = 0.0f; result.m[2][1] = 0.0f; result.m[2][2] = 1.0f; result.m[2][3] = v.z;
+	//result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
 
-	return result;
+	//return result;
+
+	MATRIX result = MGetTranslate(v.ToDxLibVector3());
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+			 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
+}
+
+// Šg‘åk¬s—ñ‚Ìæ“¾
+Matrix Matrix::GetScale(const Vector3& v)
+{
+	//// Šg‘åk¬s—ñ‚ğæ“¾‚·‚é
+	//Matrix result;
+
+	//// Šg‘åk¬s—ñ‚ÌŒvZ
+	//result.m[0][0] = v.x; result.m[0][1] = 0.0f; result.m[0][2] = 0.0f; result.m[0][3] = 0.0f;
+	//result.m[1][0] = 0.0f; result.m[1][1] = v.y; result.m[1][2] = 0.0f; result.m[1][3] = 0.0f;
+	//result.m[2][0] = 0.0f; result.m[2][1] = 0.0f; result.m[2][2] = v.z; result.m[2][3] = 0.0f;
+	//result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
+
+	//return result;
+
+	MATRIX result = MGetScale(v.ToDxLibVector3());
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+				 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+				 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+				 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
 }
 
 // X²‰ñ“]s—ñ‚Ìæ“¾
 Matrix Matrix::GetRotationX(float angle)
 {
-	// x²‰ñ“]s—ñ‚ğæ“¾‚·‚é
-	Matrix result;
+	//// x²‰ñ“]s—ñ‚ğæ“¾‚·‚é
+	//Matrix result;
 
-	// x²‰ñ“]s—ñ‚ÌŒvZ
-	result.m[0][0] = 1.0f; result.m[0][1] = 0.0f; result.m[0][2] = 0.0f; result.m[0][3] = 0.0f;
-	result.m[1][0] = 0.0f; result.m[1][1] = cosf(angle); result.m[1][2] = -sinf(angle); result.m[1][3] = 0.0f;
-	result.m[2][0] = 0.0f; result.m[2][1] = sinf(angle); result.m[2][2] = cosf(angle); result.m[2][3] = 0.0f;
-	result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
+	//// x²‰ñ“]s—ñ‚ÌŒvZ
+	//result.m[0][0] = 1.0f; result.m[0][1] = 0.0f; result.m[0][2] = 0.0f; result.m[0][3] = 0.0f;
+	//result.m[1][0] = 0.0f; result.m[1][1] = cosf(angle); result.m[1][2] = -sinf(angle); result.m[1][3] = 0.0f;
+	//result.m[2][0] = 0.0f; result.m[2][1] = sinf(angle); result.m[2][2] = cosf(angle); result.m[2][3] = 0.0f;
+	//result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
 
-	return result;
+	//return result;
+
+	MATRIX result = MGetRotX(angle);
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+			 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
 }
 
 // Y²‰ñ“]s—ñ‚Ìæ“¾
 Matrix Matrix::GetRotationY(float angle)
 {
-	// y²‰ñ“]s—ñ‚ğæ“¾‚·‚é
-	Matrix result;
+	//// y²‰ñ“]s—ñ‚ğæ“¾‚·‚é
+	//Matrix result;
 
-	// y²‰ñ“]s—ñ‚ÌŒvZ
-	result.m[0][0] = cosf(angle); result.m[0][1] = 0.0f; result.m[0][2] = sinf(angle); result.m[0][3] = 0.0f;
-	result.m[1][0] = 0.0f; result.m[1][1] = 1.0f; result.m[1][2] = 0.0f; result.m[1][3] = 0.0f;
-	result.m[2][0] = -sinf(angle); result.m[2][1] = 0.0f; result.m[2][2] = cosf(angle); result.m[2][3] = 0.0f;
-	result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
+	//// y²‰ñ“]s—ñ‚ÌŒvZ
+	//result.m[0][0] = cosf(angle); result.m[0][1] = 0.0f; result.m[0][2] = sinf(angle); result.m[0][3] = 0.0f;
+	//result.m[1][0] = 0.0f; result.m[1][1] = 1.0f; result.m[1][2] = 0.0f; result.m[1][3] = 0.0f;
+	//result.m[2][0] = -sinf(angle); result.m[2][1] = 0.0f; result.m[2][2] = cosf(angle); result.m[2][3] = 0.0f;
+	//result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
 
-	return result;
+	//return result;
+
+	MATRIX result = MGetRotY(angle);
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+			 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
 }
 
 // Z²‰ñ“]s—ñ‚Ìæ“¾
 Matrix Matrix::GetRotationZ(float angle)
 {
-	// z²‰ñ“]s—ñ‚ğæ“¾‚·‚é
-	Matrix result;
+	//// z²‰ñ“]s—ñ‚ğæ“¾‚·‚é
+	//Matrix result;
 
-	// z²‰ñ“]s—ñ‚ÌŒvZ
-	result.m[0][0] = cosf(angle); result.m[0][1] = -sinf(angle); result.m[0][2] = 0.0f; result.m[0][3] = 0.0f;
-	result.m[1][0] = sinf(angle); result.m[1][1] = cosf(angle); result.m[1][2] = 0.0f; result.m[1][3] = 0.0f;
-	result.m[2][0] = 0.0f; result.m[2][1] = 0.0f; result.m[2][2] = 1.0f; result.m[2][3] = 0.0f;
-	result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
+	//// z²‰ñ“]s—ñ‚ÌŒvZ
+	//result.m[0][0] = cosf(angle); result.m[0][1] = -sinf(angle); result.m[0][2] = 0.0f; result.m[0][3] = 0.0f;
+	//result.m[1][0] = sinf(angle); result.m[1][1] = cosf(angle); result.m[1][2] = 0.0f; result.m[1][3] = 0.0f;
+	//result.m[2][0] = 0.0f; result.m[2][1] = 0.0f; result.m[2][2] = 1.0f; result.m[2][3] = 0.0f;
+	//result.m[3][0] = 0.0f; result.m[3][1] = 0.0f; result.m[3][2] = 0.0f; result.m[3][3] = 1.0f;
+	//return result;
+
+	MATRIX result = MGetRotZ(angle);
+	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
+			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
+			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
+			 result.m[3][0], result.m[3][1], result.m[3][2], result.m[3][3] };
+}
+
+// s—ñ‚©‚çƒIƒCƒ‰[Šp‚É•ÏŠ·
+Vector3 Matrix::ToEulerAngle(const Matrix& m)
+{
+	// s—ñ‚©‚çƒIƒCƒ‰[Šp‚É•ÏŠ·
+	Vector3 result;
+
+	// ƒIƒCƒ‰[Šp‚ÌŒvZ
+	result.x = atan2f(m.m[2][1], m.m[2][2]);
+	result.y = atan2f(-m.m[2][0], sqrtf(m.m[2][1] * m.m[2][1] + m.m[2][2] * m.m[2][2]));
+	result.z = atan2f(m.m[1][0], m.m[0][0]);
 
 	return result;
 }
@@ -212,6 +275,22 @@ Vector3 Matrix::ToEulerAngle() const
 	result.x = atan2f(m[2][1], m[2][2]);
 	result.y = atan2f(-m[2][0], sqrtf(m[2][1] * m[2][1] + m[2][2] * m[2][2]));
 	result.z = atan2f(m[1][0], m[0][0]);
+
+	return result;
+}
+
+// DXƒ‰ƒCƒuƒ‰ƒŠ‚Ìs—ñ‚É•ÏŠ·
+MATRIX Matrix::ToDxLibMatrix() const
+{
+	MATRIX result{};
+
+	for (int i = 0; i < 4; i++)
+	{
+		result.m[i][0] = m[i][0];
+		result.m[i][1] = m[i][1];
+		result.m[i][2] = m[i][2];
+		result.m[i][3] = m[i][3];
+	}
 
 	return result;
 }

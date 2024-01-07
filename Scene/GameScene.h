@@ -3,6 +3,12 @@
 #include <string>
 #include <memory>
 
+// プロトタイプ宣言
+class UIManager;
+class Player;
+class Camera;	
+class SkyDome;
+
 /// <summary>
 /// ゲームシーン
 /// </summary>
@@ -26,5 +32,10 @@ public:
 	void Draw() override final;
 
 private:
+	// ポインタ
+	std::shared_ptr<UIManager> m_pUIManager;
+	std::shared_ptr<Player> m_pPlayer;
+	std::shared_ptr<Camera> m_pCamera;
+	std::shared_ptr<SkyDome> m_pSkyDome;
 };
 

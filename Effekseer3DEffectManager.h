@@ -1,8 +1,9 @@
 #pragma once
 #include <DxLib.h>
 #include <string>
-#include <unordered_map>
+#include <map>
 #include <list>
+#include "Math/Vector3.h"
 
 // エフェクトのファイルパス
 namespace EffectID
@@ -70,7 +71,7 @@ public:
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffect(int& playingEffectHandle, std::string fileName, VECTOR pos, VECTOR scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, VECTOR rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffect(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// 指定のエフェクトのループ再生
@@ -81,7 +82,7 @@ public:
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffectLoop(int& playingEffectHandle, std::string fileName, VECTOR pos, VECTOR scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, VECTOR rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffectLoop(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// 指定のエフェクトの追従再生
@@ -92,7 +93,7 @@ public:
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffectFollow(int& playingEffectHandle, std::string fileName, VECTOR* pos, VECTOR scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, VECTOR rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffectFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// 指定のエフェクトの追従とループ再生
@@ -103,7 +104,7 @@ public:
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffectLoopAndFollow(int& playingEffectHandle, std::string fileName, VECTOR* pos, VECTOR scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, VECTOR rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffectLoopAndFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// エフェクトの全ての値の変更
@@ -113,14 +114,14 @@ public:
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void SetEffectAllParam(int playingEffectHandle, VECTOR pos, VECTOR scale, float speed, VECTOR rot);
+	void SetEffectAllParam(int playingEffectHandle, Vector3 pos, Vector3 scale, float speed, Vector3 rot);
 
 	/// <summary>
 	/// エフェクトの拡大率の変更
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="scale">拡大率</param>
-	void SetEffectScale(int playingEffectHandle, VECTOR scale);
+	void SetEffectScale(int playingEffectHandle, Vector3 scale);
 
 	/// <summary>
 	/// エフェクトの再生速度の変更
@@ -134,14 +135,14 @@ public:
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="rot">回転率</param>
-	void SetEffectRot(int playingEffectHandle, VECTOR rot);
+	void SetEffectRot(int playingEffectHandle, Vector3 rot);
 
 	/// <summary>
 	/// エフェクトの位置の変更
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="pos">位置</param>
-	void SetEffectPos(int playingEffectHandle, VECTOR pos);
+	void SetEffectPos(int playingEffectHandle, Vector3 pos);
 
 	/// <summary>
 	/// 特定のエフェクトが再生中か
@@ -171,10 +172,6 @@ public:
 
 	// 全てのエフェクトの削除
 	void DeleteAllEffect();
-
-	float GetDynamicEffectParam(int effectPlayinHandle, int32_t index);
-
-	void SetDynamicEffectParam(int effectPlayingHandle, int32_t index, float param);
 
 private:
 	// コンストラクタ
@@ -216,9 +213,9 @@ private:
 		std::string effectFileName;
 		int* playingEffectHandle;
 		PlayType type;
-		VECTOR pos;
-		VECTOR rot;
-		VECTOR scale;
+		Vector3 pos;
+		Vector3 rot;
+		Vector3 scale;
 		float speed;
 	};
 
@@ -228,15 +225,15 @@ private:
 		std::string effectFileName;
 		int* playingEffectHandle;
 		PlayType type;
-		VECTOR* pos;
-		VECTOR rot;
-		VECTOR scale;
+		Vector3* pos;
+		Vector3 rot;
+		Vector3 scale;
 		float speed;
 	};
 
 private:
 	// エフェクトのファイル名をIDとしたエフェクトリソースのハンドルのテーブル
-	std::unordered_map<std::string, int> m_effectResourceHandleTable;
+	std::map<std::string, int> m_effectResourceHandleTable;
 
 	// エフェクトのデータを保存したテーブル
 	std::list<EffectData> m_effectDataTable;

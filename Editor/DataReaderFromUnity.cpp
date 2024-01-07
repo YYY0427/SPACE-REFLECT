@@ -5,6 +5,9 @@
 
 namespace
 {
+	// ファイルの階層
+	const std::string file_hierarchy = "Data/Object/";	
+
 	// 拡張子
 	const std::string extension = ".dat";
 }
@@ -22,6 +25,9 @@ DataReaderFromUnity::~DataReaderFromUnity()
 // Unityで配置したオブジェクトのデータを読み取る
 void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 {
+	// ファイル名の階層を付ける
+	fileName = file_hierarchy + fileName;
+
 	// 拡張子を付ける
 	fileName += extension;
 

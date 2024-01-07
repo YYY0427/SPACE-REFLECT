@@ -166,7 +166,7 @@ void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::str
 }
 
 // 指定のエフェクトの再生
-void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, std::string fileName, VECTOR pos, VECTOR scale, float speed, VECTOR rot)
+void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale, float speed, Vector3 rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
@@ -185,7 +185,7 @@ void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, std::string 
 }
 
 // 指定のエフェクトのループ再生
-void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::string fileName, VECTOR pos, VECTOR scale, float speed, VECTOR rot)
+void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale, float speed, Vector3 rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
@@ -209,7 +209,7 @@ void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::str
 }
 
 // 指定のエフェクトの追従再生
-void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, std::string fileName, VECTOR* pos, VECTOR scale, float speed, VECTOR rot)
+void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale, float speed, Vector3 rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
@@ -233,7 +233,7 @@ void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, std::s
 }
 
 // 指定のエフェクトの追従とループ再生
-void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle, std::string fileName, VECTOR* pos, VECTOR scale, float speed, VECTOR rot)
+void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale, float speed, Vector3 rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
@@ -257,7 +257,7 @@ void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle,
 }
 
 // エフェクトの全ての値の変更
-void Effekseer3DEffectManager::SetEffectAllParam(int playingEffectHandle, VECTOR pos, VECTOR scale, float speed, VECTOR rot)
+void Effekseer3DEffectManager::SetEffectAllParam(int playingEffectHandle, Vector3 pos, Vector3 scale, float speed, Vector3 rot)
 {
 	// 再生速度
 	SetEffectSpeed(playingEffectHandle, speed);
@@ -273,7 +273,7 @@ void Effekseer3DEffectManager::SetEffectAllParam(int playingEffectHandle, VECTOR
 }
 
 // エフェクトの拡大率の変更
-void Effekseer3DEffectManager::SetEffectScale(int playingEffectHandle, VECTOR scale)
+void Effekseer3DEffectManager::SetEffectScale(int playingEffectHandle, Vector3 scale)
 {
 	// エフェクトの拡大率の設定
 	int result = SetScalePlayingEffekseer3DEffect(playingEffectHandle, scale.x, scale.y, scale.z);
@@ -327,7 +327,7 @@ void Effekseer3DEffectManager::SetEffectSpeed(int playingEffectHandle, float spe
 }
 
 // エフェクトの回転率の変更
-void Effekseer3DEffectManager::SetEffectRot(int playingEffectHandle, VECTOR rot)
+void Effekseer3DEffectManager::SetEffectRot(int playingEffectHandle, Vector3 rot)
 {
 	// エフェクトの回転率の設定
 	int result = SetRotationPlayingEffekseer3DEffect(playingEffectHandle, rot.x, rot.y, rot.z);
@@ -354,7 +354,7 @@ void Effekseer3DEffectManager::SetEffectRot(int playingEffectHandle, VECTOR rot)
 }
 
 // エフェクトの位置の変更
-void Effekseer3DEffectManager::SetEffectPos(int playingEffectHandle, VECTOR pos)
+void Effekseer3DEffectManager::SetEffectPos(int playingEffectHandle, Vector3 pos)
 {
 	// エフェクトの位置の設定
 	int result = SetPosPlayingEffekseer3DEffect(playingEffectHandle, pos.x, pos.y, pos.z);
@@ -427,14 +427,4 @@ void Effekseer3DEffectManager::DeleteAllEffect()
 	// 全てのデータの削除
 	m_effectDataTable.clear();
 	m_followEffectDataTable.clear();
-}
-
-float Effekseer3DEffectManager::GetDynamicEffectParam(int effectPlayinHandle, int32_t index)
-{
-	return GetDynamicInput3DEffect(effectPlayinHandle, index);
-}
-
-void Effekseer3DEffectManager::SetDynamicEffectParam(int effectPlayingHandle, int32_t index, float param)
-{
-	SetDynamicInput3DEffect(effectPlayingHandle, index, param);
 }

@@ -139,27 +139,27 @@ void Model::Draw()
 }
 
 // モデルの表示位置の設定
-void Model::SetPos(VECTOR pos)
+void Model::SetPos(Vector3 pos)
 {
-	MV1SetPosition(m_modelHandle, pos);
+	MV1SetPosition(m_modelHandle, pos.ToDxLibVector3());
 }
 
 // モデルの回転状態の設定
-void Model::SetRot(VECTOR rot)
+void Model::SetRot(Vector3 rot)
 {
-	MV1SetRotationXYZ(m_modelHandle, rot);
+	MV1SetRotationXYZ(m_modelHandle, rot.ToDxLibVector3());
 }
 
 // モデルの回転行列の設定
-void Model::SetRotMtx(MATRIX mtx)
+void Model::SetRotMtx(Matrix mtx)
 {
-	MV1SetRotationMatrix(m_modelHandle, mtx);
+	MV1SetRotationMatrix(m_modelHandle, mtx.ToDxLibMatrix());
 }
 
 // モデルの拡大率の設定
-void Model::SetScale(VECTOR scale)
+void Model::SetScale(Vector3 scale)
 {
-	MV1SetScale(m_modelHandle, scale);
+	MV1SetScale(m_modelHandle, scale.ToDxLibVector3());
 }
 
 // モデルの不透明度の設定

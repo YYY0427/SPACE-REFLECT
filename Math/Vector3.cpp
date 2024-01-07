@@ -104,7 +104,8 @@ bool Vector3::operator!=(const Vector3& vec)
 /// ベクトルの大きさを返す
 float Vector3::Length() const
 {
-	return sqrtf(x * x + y * y + z * z);
+//	return sqrtf(x * x + y * y + z * z);
+	return VSize(ToDxLibVector3());
 }
 
 // ベクトルの大きさの2乗を返す
@@ -129,40 +130,57 @@ Vector3 Vector3::Normalized() const
 	return { x / length, y / length, z / length };
 }
 
-// ベクトルの内積を返す
-float Vector3::Dot(const Vector3& v1, const Vector3& v2) const 
+// DXライブラリのベクトルに変換
+VECTOR Vector3::ToDxLibVector3() const
 {
-	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+	return VGet(x, y, z);
+}
+
+// ベクトルの内積を返す
+float Vector3::Dot(const Vector3& v1, const Vector3& v2) 
+{
+	/*return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;*/
+
+	return VDot(v1.ToDxLibVector3(), v2.ToDxLibVector3());
+}
+
+// DXライブラリのベクトルからベクトルに変換
+Vector3 Vector3::FromDxLibVector3(const VECTOR& vec)
+{
+	return { vec.x, vec.y, vec.z };
 }
 
 // ベクトルの外積を返す
-Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) const
+Vector3 Vector3::Cross(const Vector3& v1, const Vector3& v2) 
 {
-	return { v1.y * v2.z - v1.z * v2.y,
+	/*return { v1.y * v2.z - v1.z * v2.y,
 			 v1.z * v2.x - v1.x * v2.z,
-			 v1.x * v2.y - v1.y * v2.x };
+			 v1.x * v2.y - v1.y * v2.x };*/
+
+	VECTOR result = VCross(v1.ToDxLibVector3(), v2.ToDxLibVector3());
+	return { result.x, result.y, result.z };
 }
 
 // 反射ベクトルを返す
-Vector3 Vector3::Reflect(const Vector3& vec, const Vector3& normal) const
+Vector3 Vector3::Reflect(const Vector3& vec, const Vector3& normal)
 {
 	return vec - normal * 2.0f * Dot(vec, normal);
 }
 
 // スライドベクトルを返す
-Vector3 Vector3::Slide(const Vector3& vec, const Vector3& normal) const
+Vector3 Vector3::Slide(const Vector3& vec, const Vector3& normal)
 {
 	return vec - normal * Dot(vec, normal);
 }
 
 // 線形補間
-Vector3 Vector3::Lerp(const Vector3& start, const Vector3& end, float value) const
+Vector3 Vector3::Lerp(const Vector3& start, const Vector3& end, float value) 
 {
 	return start + (end - start) * value;
 }
 
 // エルミート補間
-Vector3 Vector3::Hermite(const Vector3& startPos, const Vector3& startTangent, const Vector3& endPos, const Vector3& endTangent, float value) const
+Vector3 Vector3::Hermite(const Vector3& startPos, const Vector3& startTangent, const Vector3& endPos, const Vector3& endTangent, float value)
 {
 	float t2_3 = value * value * value;
 	float t3_2 = value * value;
@@ -175,9 +193,12 @@ Vector3 Vector3::Hermite(const Vector3& startPos, const Vector3& startTangent, c
 }
 
 // 行列を使ったベクトルの変換
-Vector3 Vector3::Transform(const Vector3& vec, const Matrix& mat) const
+Vector3 Vector3::Transform(const Vector3& vec, const Matrix& mat) 
 {
-	return { vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + mat.m[3][0],
+	/*return { vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + mat.m[3][0],
 			 vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1] + mat.m[3][1],
-			 vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2] + mat.m[3][2] };
+			 vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2] + mat.m[3][2] };*/
+
+	VECTOR result = VTransform(vec.ToDxLibVector3(), mat.ToDxLibMatrix());
+	return { result.x, result.y, result.z };
 }
