@@ -10,7 +10,7 @@ enum class InputType
 	PAUSE,		// ポーズ
 	SLOW,		// スローモーション
 	BOOST,		// ブースト
-	SHIELD,	// カメラ反転
+	SHIELD,		// シールドを出す
 	UP,			// 上
 	DOWN,		// 下
 	RIGHT,		// 右

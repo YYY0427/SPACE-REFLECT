@@ -13,16 +13,19 @@ namespace
 	constexpr float far_distance = 20000.0f;
 
 	// プレイヤーからのカメラまでの距離
-	constexpr float camera_distance = 200.0f;
+	constexpr float camera_distance = 500.0f;
 
 	// ゲームクリア時のカメラの回転速度
 	constexpr float camera_rotate_speed = 0.03f;
+
+	// カメラの移動速度
+	constexpr float camera_move_speed = 1.5f;
 }
 
 // コンストラクタ
 Camera::Camera(Vector3 playerPos) :
-	m_pos({playerPos.x, playerPos.y, playerPos.z - camera_distance}),
-	m_target(playerPos),
+	m_pos(playerPos),
+	m_target({playerPos.x, playerPos.y, playerPos.z + camera_distance}),
 	m_perspective(camera_perspective),
 	m_cameraVertical(0.0f),
 	m_cameraHorizon(DX_PI_F)
@@ -39,6 +42,22 @@ Camera::~Camera()
 // 更新
 void Camera::Update(Vector3 playerPos)
 {
+	// カメラとプレイヤーの差分
+	Vector3 direction = playerPos - m_pos;
+
+	// Y軸、Z軸を無視
+	direction.y = 0.0f;
+	direction.x = 0.0f;
+	
+	// カメラとプレイヤーの距離が一定以上離れていたら
+	if (direction.Length() > camera_distance)
+	{
+		// カメラと注視点の移動
+		direction.Normalize();
+		m_pos += (direction * camera_move_speed);
+		m_target += (direction * camera_move_speed);
+	}
+
 	// カメラの設定
 	CameraSet();
 }

@@ -16,6 +16,7 @@ Gauge::Gauge(
 	float aimGaugeSpeed) :
 	m_maxValue(maxValue),
 	m_aimValue(maxValue),
+	m_backValue(maxValue),
 	m_pos(pos),
 	m_dimensions(dimensions),
 	isDelayed(isDelayedDamage),
@@ -24,7 +25,6 @@ Gauge::Gauge(
 {
 	// バースト演出の場合は0にする
 	(isGaugeBurst) ? m_currentValue = 0.0f : m_currentValue = m_maxValue;
-	(isGaugeBurst) ? m_backValue = 0.0f : m_backValue = m_maxValue;
 
 	// バースト演出を行う場合はUpdate関数を変更する
 	(isGaugeBurst) ? m_updateFunc = &Gauge::BurstUpdate : m_updateFunc = &Gauge::NormalUpdate;
@@ -65,7 +65,7 @@ void Gauge::Draw()
 		DrawExtendGraph(
 			m_pos.x - m_dimensions.x / 2,
 			m_pos.y - m_dimensions.y / 2,
-			m_pos.x + (m_dimensions.x / 2) * (static_cast<float>(m_backValue / m_maxValue)),
+			m_pos.x - (m_dimensions.x / 2) + ((m_dimensions.x) * (static_cast<float>(m_backValue / m_maxValue))),
 			m_pos.y + m_dimensions.y / 2,
 			m_gaugeBackImgH,
 			true);
@@ -74,7 +74,7 @@ void Gauge::Draw()
 		DrawExtendGraph(
 			m_pos.x - m_dimensions.x / 2,
 			m_pos.y - m_dimensions.y / 2,
-			m_pos.x + (m_dimensions.x / 2) * (static_cast<float>(m_currentValue / m_maxValue)),
+			m_pos.x - (m_dimensions.x / 2) + ((m_dimensions.x) * (static_cast<float>(m_currentValue / m_maxValue))),
 			m_pos.y + m_dimensions.y / 2,
 			m_gaugeImgH,
 			true);
@@ -148,14 +148,12 @@ void Gauge::BurstUpdate()
 {
 	// 目標値に向かってゲージを増やす
 	m_currentValue += m_addGaugeSpeed;
-	m_backValue += m_addGaugeSpeed;
 
 	// 目標値を超えたら
-	if (m_currentValue >= m_maxValue && m_backValue >= m_maxValue)
+	if (m_currentValue >= m_maxValue)
 	{
 		// 目標値にする
 		m_currentValue = m_maxValue;
-		m_backValue = m_maxValue;
 
 		// 更新関数を通常時の更新に戻す
 		m_updateFunc = &Gauge::NormalUpdate;

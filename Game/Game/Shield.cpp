@@ -117,7 +117,7 @@ void Shield::Update()
 		//	pos_ = { player_.GetPos().x, player_.GetPos().y, player_.GetPos().z + player_distance };
 
 		// ベクトルから角度を求める
-		m_rot = Matrix::ToEulerAngle(Matrix::GetRotationMatrix({0, 0, 1}, tempVec));
+		m_rot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({0, 0, 1}, tempVec));
 
 		// 入力されていたら
 		if (m_isInput)

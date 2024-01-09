@@ -28,7 +28,7 @@ namespace
 	constexpr float move_normal_speed = 1.5f;
 
 	// プレイヤーのZ軸移動速度
-	constexpr float move_z_speed = 0.5f;
+	constexpr float move_z_speed = 1.5f;
 
 	// プレイヤーの当たり判定の半径
 	constexpr float model_collision_radius = 30.0f;
@@ -242,7 +242,7 @@ void Player::Update(float cameraHorizon)
 
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
 	// X軸回転は進んでいるように見せるように常に30度を足す
-	float rotX = MathUtil::ToRadian(30.0f);
+	float rotX = MathUtil::ToRadian(15.0f);
 	m_rot = { rotX + m_moveVec.z * 0.01f, 0.0f, -m_moveVec.x * 0.01f };
 
 	// エフェクトの設定
