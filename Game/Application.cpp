@@ -1,7 +1,7 @@
 #include "Application.h"
 #include "DxLib.h"
 #include "EffekseerForDXLib.h"
-#include "Effekseer3DEffectManager.h"
+#include "Effect/Effekseer3DEffectManager.h"
 #include "SaveData.h"
 #include "Scene/SceneManager.h"
 #include "Scene/DebugScene.h"

@@ -2,7 +2,7 @@
 #include "SceneBase.h"
 
 // ステージ項目
-enum class StageItem
+enum class Stage
 {
 	TUTORIAL,	// チュートリアル
 	STAGE_1,	// ステージ1

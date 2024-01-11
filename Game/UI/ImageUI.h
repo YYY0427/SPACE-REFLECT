@@ -15,8 +15,25 @@ public:
 	// デストラクタ
 	~ImageUI();
 
+	// 更新
+	void Update() override final {};
+
 	// 描画
 	void Draw() override final;
+
+	// セッター
+	void SetPos(Vector2 pos);		// 位置
+	void SetRot(float rot);			// 回転
+	void SetCenter(Vector2 center);	// 中心座標
+	void SetScale(Vector2 scale);	// 拡大率
+	void SetAlpha(float alpha);		// 透明度
+
+	// ゲッター
+	Vector2 GetPos() const;		// 位置
+	float GetRot() const;		// 回転
+	Vector2 GetCenter() const;	// 中心座標
+	Vector2 GetScale() const;	// 拡大率
+	float GetAlpha() const;		// 透明度
 
 private:
 	// 画像ハンドル

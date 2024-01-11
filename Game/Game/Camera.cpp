@@ -9,8 +9,8 @@ namespace
 	constexpr float camera_perspective = 90.0f;
 
 	// 描画距離(near, far)
-	constexpr float near_distance = 5.0f;
-	constexpr float far_distance = 20000.0f;
+	constexpr float near_distance = 100.0f;
+	constexpr float far_distance = 25000.0f;
 
 	// プレイヤーからのカメラまでの距離
 	constexpr float camera_distance = 500.0f;
@@ -19,19 +19,22 @@ namespace
 	constexpr float camera_rotate_speed = 0.03f;
 
 	// カメラの移動速度
-	constexpr float camera_move_speed = 1.5f;
+	constexpr float camera_move_speed = 3.0f;
 }
 
 // コンストラクタ
 Camera::Camera(Vector3 playerPos) :
-	m_pos(playerPos),
-	m_target({playerPos.x, playerPos.y, playerPos.z + camera_distance}),
+	m_pos({ playerPos.x + 500, playerPos.y + 100, playerPos.z + 2000}),
+	m_target(playerPos),
 	m_perspective(camera_perspective),
 	m_cameraVertical(0.0f),
-	m_cameraHorizon(DX_PI_F)
+	m_cameraHorizon(DX_PI_F),
+	m_isStartAnimation(false),
+	m_hermiteValue(0.0f),
+	m_slowValue(1.0f)
 {
 	// カメラの設定
-	CameraSet();
+	SetCamera();
 }
 
 // デストラクタ
@@ -42,10 +45,14 @@ Camera::~Camera()
 // 更新
 void Camera::Update(Vector3 playerPos)
 {
+	// プレイヤーの位置とは逆方向に少しカメラの注視点をずらす
+	m_target.x = -playerPos.x * 0.2f;
+	m_target.y = -playerPos.y * 0.2f;
+
 	// カメラとプレイヤーの差分
 	Vector3 direction = playerPos - m_pos;
 
-	// Y軸、Z軸を無視
+	// Y軸、X軸を無視
 	direction.y = 0.0f;
 	direction.x = 0.0f;
 	
@@ -54,12 +61,46 @@ void Camera::Update(Vector3 playerPos)
 	{
 		// カメラと注視点の移動
 		direction.Normalize();
-		m_pos += (direction * camera_move_speed);
-		m_target += (direction * camera_move_speed);
+		m_pos += (direction * camera_move_speed * m_slowValue);
+		m_target += (direction * camera_move_speed * m_slowValue);
 	}
 
 	// カメラの設定
-	CameraSet();
+	SetCamera();
+}
+
+// スタート演出時の更新
+void Camera::UpdateStart(Vector3 playerPos)
+{
+	// 注視点の更新
+	m_target = playerPos;
+
+	// プレイヤーの位置がカメラの位置より前に来たら
+	if (playerPos.z > m_pos.z + 200)
+	{
+		// エルミート曲線の値を増やす
+		m_hermiteValue += 0.005f * m_slowValue;
+
+		// カメラの位置をエルミート曲線で移動させる
+		m_pos = Vector3::Hermite
+			(
+				m_pos,
+				{ -1.0f, 0.0f, -1.0f },
+				{ playerPos.x, playerPos.y + 50, playerPos.z - camera_distance },
+				{ 1.0f, 0.0f, 1.0f },
+				m_hermiteValue
+			);
+
+		// エルミート曲線の値が1.0fを超えたら
+		if (m_hermiteValue >= 1.0f)
+		{
+			// スタート演出をしたかフラグを立てる
+			m_isStartAnimation = true;
+		}
+	}
+
+	// カメラの設定
+	SetCamera();
 }
 
 // ゲームクリア時の更新
@@ -71,7 +112,7 @@ void Camera::GameClearUpdate(Vector3 playerPos)
 void Camera::GameOverUpdate(Vector3 playerPos)
 {
 	// カメラの垂直方向の回転
-	m_cameraHorizon -= camera_rotate_speed;
+	m_cameraHorizon -= camera_rotate_speed * m_slowValue;
 	m_cameraHorizon = (std::max)(m_cameraHorizon, MathUtil::ToRadian(30));
 
 	// 基準の長さを垂直方向に回転させたときの水平分の長さ
@@ -92,11 +133,11 @@ void Camera::GameOverUpdate(Vector3 playerPos)
 	m_target = playerPos;
 
 	// カメラの設定
-	CameraSet();
+	SetCamera();
 }
 
 // カメラの設定
-void Camera::CameraSet()
+void Camera::SetCamera()
 {
 	// カメラからどれだけ離れたところ( Near )から、 どこまで( Far )のものを描画するかを設定
 	SetCameraNearFar(near_distance, far_distance);
@@ -117,7 +158,20 @@ Vector3 Camera::GetPos() const
 	return m_pos;
 }
 
+// カメラの水平方向を取得
 float Camera::GetCameraHorizon() const
 {
 	return m_cameraHorizon;
+}
+
+// スタート演出をしたかフラグの取得
+bool Camera::GetIsStartAnimation() const
+{
+	return m_isStartAnimation;
+}
+
+// スローの値の設定
+void Camera::SetSlowValue(float slowValue)
+{
+	m_slowValue = slowValue;
 }

@@ -1,9 +1,9 @@
 #include "StageSelectScene.h"
 #include "GameScene.h"
 #include "SceneManager.h"
+#include "DebugScene.h"
 #include "../Util/InputState.h"
-#include "DxLib.h"
-#include <string>
+#include <DxLib.h>
 
 // コンストラクタ
 StageSelectScene::StageSelectScene(SceneManager& manager) :
@@ -21,7 +21,7 @@ StageSelectScene::~StageSelectScene()
 void StageSelectScene::Update()
 {
 	// 選択肢を回す処理
-	int sceneItemTotalValue = static_cast<int>(StageItem::NUM);
+	int sceneItemTotalValue = static_cast<int>(Stage::NUM);
 	if (InputState::IsTriggered(InputType::UP))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
@@ -34,24 +34,17 @@ void StageSelectScene::Update()
 	// 決定ボタンが押されたらシーン遷移
 	if (InputState::IsTriggered(InputType::DECISION))
 	{
-		// ステージファイル名
-		std::string fileName;
-
-		// 選択されている項目によってステージファイル名を設定
-		switch (static_cast<StageItem>(m_currentSelectItem))
+		// 前のシーンに戻る
+		if (m_currentSelectItem == static_cast<int>(Stage::EXIT))
 		{
-		case StageItem::TUTORIAL:
-			fileName = "Tutorial";
-			break;
-		case StageItem::STAGE_1:
-			fileName = "Stage1";
-			break;
-		case StageItem::EXIT:
+			// 戻る
+			m_manager.ChangeScene(std::make_shared<DebugScene>(m_manager));
 			return;
 		}
 
 		// ゲームシーンに遷移
-		m_manager.ChangeScene(std::make_shared<GameScene>(m_manager, fileName));
+		m_manager.ChangeScene(
+			std::make_shared<GameScene>(m_manager, static_cast<Stage>(m_currentSelectItem)));
 		return;
 	}
 }
@@ -66,9 +59,9 @@ void StageSelectScene::Draw()
 	constexpr int draw_text_pos_x = 500;
 	constexpr int draw_text_pos_y = 200;
 	constexpr int text_space_y = 32;
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(StageItem::TUTORIAL), "TUTORIAL", 0xffffff, true);
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(StageItem::STAGE_1), "STAGE_1", 0xffffff, true);
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(StageItem::EXIT), "EXIT", 0xffffff, true);
+	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(Stage::TUTORIAL), "TUTORIAL", 0xffffff, true);
+	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(Stage::STAGE_1), "STAGE_1", 0xffffff, true);
+	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(Stage::EXIT), "EXIT", 0xffffff, true);
 
 	// 現在選択中の項目の横に→を表示
 	DrawString(draw_text_pos_x - text_space_y, draw_text_pos_y + text_space_y * m_currentSelectItem, "→", 0xff0000);

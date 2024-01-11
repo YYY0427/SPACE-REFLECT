@@ -15,17 +15,24 @@ public:
 
 	// 更新
 	void Update(Vector3 playerPos);				// 通常時の更新
+	void UpdateStart(Vector3 playerPos);		// スタート演出時の更新
 	void GameClearUpdate(Vector3 playerPos);	// ゲームクリア時の更新
 	void GameOverUpdate(Vector3 playerPos);		// ゲームオーバー時の更新
 
 	// カメラの設定	
-	void CameraSet();		
+	void SetCamera();		
 
 	// カメラの座標を取得
 	Vector3 GetPos() const;
 
 	// カメラの水平方向を取得
 	float GetCameraHorizon() const;
+
+	// スタート演出をしたかフラグの取得
+	bool GetIsStartAnimation() const;
+
+	// スローの値の設定
+	void SetSlowValue(float slowValue);
 
 private:
 	// カメラの座標
@@ -42,4 +49,13 @@ private:
 
 	// カメラの水平方向
 	float m_cameraHorizon;	
+
+	// エルミート曲線の値
+	float m_hermiteValue;		
+
+	// スローの値
+	float m_slowValue;			
+
+	// フラグ
+	bool m_isStartAnimation;	// スタート演出をしたか
 };

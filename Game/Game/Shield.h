@@ -39,6 +39,9 @@ public:
 	// シールドの頂点情報の取得
 	std::array<VERTEX3D, 6> GetVertex() const;
 
+	// スローの値の設定
+	void SetSlowValue(float slowValue);
+
 private:
 	// ポインタ
 	std::shared_ptr<Image3D> m_pImage;
@@ -52,6 +55,9 @@ private:
 
 	// エネルギーゲージ
 	int m_enerugyGage;
+
+	// スローの値
+	float m_slowValue;
 
 	// シールドの位置
 	Vector3 m_pos;

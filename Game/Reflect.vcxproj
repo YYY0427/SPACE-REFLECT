@@ -144,12 +144,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Game\Enemy\BossEnemyBase.cpp" />
+    <ClCompile Include="Effect\ScreenShaker.cpp" />
+    <ClCompile Include="Game\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Game\Enemy\EnemyBase.cpp" />
+    <ClCompile Include="Game\Planet.cpp" />
+    <ClCompile Include="Game\PlanetManager.cpp" />
+    <ClCompile Include="Game\Enemy\Mosquito.cpp" />
+    <ClCompile Include="UI\DamageFlash.cpp" />
     <ClCompile Include="Editor\DataReaderFromUnity.cpp" />
-    <ClCompile Include="Effekseer3DEffectManager.cpp" />
+    <ClCompile Include="Effect\Effekseer3DEffectManager.cpp" />
     <ClCompile Include="Game\Camera.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\Shield.cpp" />
     <ClCompile Include="Game\SkyDome.cpp" />
+    <ClCompile Include="Game\Meteor.cpp" />
+    <ClCompile Include="Game\MeteorManager.cpp" />
+    <ClCompile Include="Stage\StageBase.cpp" />
+    <ClCompile Include="Stage\Tutorial.cpp" />
+    <ClCompile Include="UI\StatusBack.cpp" />
     <ClCompile Include="UI\ImageUI.cpp" />
     <ClCompile Include="Image3D.cpp" />
     <ClCompile Include="Math\MathUtil.cpp" />
@@ -186,12 +199,26 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Game\Enemy\BossEnemyBase.h" />
+    <ClInclude Include="Effect\ScreenShaker.h" />
+    <ClInclude Include="Game\Enemy\EnemyManager.h" />
+    <ClInclude Include="Game\Enemy\EnemyBase.h" />
+    <ClInclude Include="Game\Planet.h" />
+    <ClInclude Include="Game\PlanetManager.h" />
+    <ClInclude Include="Game\Enemy\Mosquito.h" />
+    <ClInclude Include="UI\DamageFlash.h" />
     <ClInclude Include="Editor\DataReaderFromUnity.h" />
-    <ClInclude Include="Effekseer3DEffectManager.h" />
+    <ClInclude Include="Effect\Effekseer3DEffectManager.h" />
     <ClInclude Include="Game\Camera.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\Shield.h" />
     <ClInclude Include="Game\SkyDome.h" />
+    <ClInclude Include="Game\Meteor.h" />
+    <ClInclude Include="Game\MeteorManager.h" />
+    <ClInclude Include="Stage\StageBase.h" />
+    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="Stage\Tutorial.h" />
+    <ClInclude Include="UI\StatusBack.h" />
     <ClInclude Include="UI\ImageUI.h" />
     <ClInclude Include="Image3D.h" />
     <ClInclude Include="Math\MathUtil.h" />

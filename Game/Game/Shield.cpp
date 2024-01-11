@@ -1,9 +1,10 @@
 #include "Shield.h"
 #include "Player.h"
-#include "../Effekseer3DEffectManager.h"
+#include "../Effect/Effekseer3DEffectManager.h"
 #include "../Image3D.h"
 #include "../UI/Gauge.h"
 #include "../UI/UIManager.h"
+#include "../UI/ImageUI.h"
 #include "../Util/InputState.h"
 #include "../Util/Range.h"
 #include "../Util/Timer.h"
@@ -31,16 +32,31 @@ namespace
 	const std::string enerugy_gage_ui_back_file_path = "Data/Image/StatusBase.png";
 
 	// エネルギーゲージUIの位置
-	const Vector2 enerugy_gage_ui_pos = { 200, 600 };
+	const Vector2 enerugy_gage_ui_pos = { 215, 660 };
 
 	// エネルギーゲージUIのサイズ
 	const Vector2 enerugy_gage_ui_size = { 300, 13 };
+
+	// エネルギー文字のファイルパス
+	const std::string enerugy_string_file_path = "Data/Image/stamina.png";
+
+	// エネルギー文字の位置
+	const Vector2 enerugy_string_pos = { 70, 620 };
+
+	// エネルギー文字の拡大率
+	const Vector2 enerugy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
 	constexpr int max_enerugy_gage = 300;
 
 	// プレイヤーからのシールドの距離
 	constexpr float player_distance = 70.0f;
+
+	// エネルギーの回復速度
+	constexpr int enerugy_recovery_speed = 1;
+
+	// エネルギーの減る速度
+	constexpr int enerugy_decrease_speed = 1;
 }
 
 // コンストラクタ
@@ -48,7 +64,8 @@ Shield::Shield(Player& player) :
 	m_player(player),
 	m_isInput(false),
 	m_effectHandle(-1),
-	m_enerugyGage(max_enerugy_gage)
+	m_enerugyGage(max_enerugy_gage),
+	m_slowValue(1.0f)
 {
 	// 3D画像のインスタンスの作成
 	m_pImage = std::make_shared<Image3D>(img_file_path);
@@ -66,8 +83,14 @@ Shield::Shield(Player& player) :
 		false,
 		0.0f);
 
-	// UIの登録a
+	// エネルギーゲージUIの文字の作成
+	auto pEnerugyString = std::make_shared<ImageUI>(enerugy_string_file_path);
+	pEnerugyString->SetPos(enerugy_string_pos);
+	pEnerugyString->SetScale(enerugy_string_scale);
+
+	// UIの登録
 	UIManager::GetInstance().AddUI("EnerugyGage", m_pEnergyGage, 0, { 0, 1 });
+	UIManager::GetInstance().AddUI("EnerugyString", pEnerugyString, 0, { 0, 1 });
 
 	// シールド画像の初期化
 	m_pImage->SetPos(m_player.GetPos());		 // 位置	
@@ -107,7 +130,7 @@ void Shield::Update()
 		int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
 
 		// シールドの位置の計算
-		Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
+		Vector3 tempVec = { (right + -left) * 10.0f * m_slowValue, (up + -down) * 10.0f * m_slowValue, player_distance };
 
 		// プレイヤーの平行移動行列の取得
 		Matrix playerMtx = Matrix::GetTranslate(m_player.GetPos());
@@ -126,7 +149,7 @@ void Shield::Update()
 			if (m_enerugyGage > 0)
 			{
 				// シールドを出している間は常にエネルギーゲージを減らす
-				m_enerugyGage--;
+				m_enerugyGage -= enerugy_decrease_speed * m_slowValue;
 
 				// シールドエフェクトの再生
 				effectManager.PlayEffect(
@@ -141,7 +164,7 @@ void Shield::Update()
 		else
 		{
 			// 入力されていないならエネルギーゲージを回復させる
-			m_enerugyGage++;
+			m_enerugyGage += enerugy_recovery_speed * m_slowValue;
 		}
 
 		// エネルギーゲージの範囲を制限
@@ -192,4 +215,10 @@ bool Shield::IsShield() const
 std::array<VERTEX3D, 6> Shield::GetVertex() const
 {
 	return m_pImage->GetVertex();
+}
+
+// スローの値の設定
+void Shield::SetSlowValue(float slowValue)
+{
+	m_slowValue = slowValue;
 }

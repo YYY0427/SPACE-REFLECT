@@ -1,13 +1,10 @@
 #pragma once
+#include "StageSelectScene.h"
 #include "SceneBase.h"
-#include <string>
 #include <memory>
 
 // プロトタイプ宣言
-class UIManager;
-class Player;
-class Camera;	
-class SkyDome;
+class StageBase;
 
 /// <summary>
 /// ゲームシーン
@@ -19,8 +16,8 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
-	/// <param name="fileName">ステージファイル名</param>
-	GameScene(SceneManager& manager, std::string fileName);
+	/// <param name="fileName">どのステージか</param>
+	GameScene(SceneManager& manager, Stage stage);
 	
 	// デストラクタ
 	~GameScene();
@@ -32,9 +29,10 @@ public:
 	void Draw() override final;
 
 private:
-	// ポインタ
-	std::shared_ptr<Player> m_pPlayer;
-	std::shared_ptr<Camera> m_pCamera;
-	std::shared_ptr<SkyDome> m_pSkyDome;
+	// ステージ
+	std::unique_ptr<StageBase> m_pStage;
+
+	// いまのステージ
+	Stage m_stage;
 };
 

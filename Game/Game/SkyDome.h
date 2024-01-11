@@ -12,13 +12,13 @@ class SkyDome
 {
 public:
 	// コンストラクタ
-	SkyDome(Vector3 playerPos);
+	SkyDome(Vector3 cameraPos);
 
 	// デストラクタ
 	~SkyDome();
 
 	// 更新
-	void Update(Vector3 playerPos);
+	void Update(Vector3 cameraPos);
 
 	// 描画
 	void Draw();

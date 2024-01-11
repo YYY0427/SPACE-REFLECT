@@ -2,7 +2,7 @@
 
 // コンストラクタ
 UIBase::UIBase() :
-	m_pos({}),
+	m_pos({ 0, 0}),
 	m_isEnabled(true)
 {
 }

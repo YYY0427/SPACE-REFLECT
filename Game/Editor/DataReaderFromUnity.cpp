@@ -59,7 +59,7 @@ void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 		assert(result != -1);
 
 		// Unityとの座標データを合わせるために100倍
-		data.pos.x *= 100.0f;
+		data.pos *= 100.0f;
 
 		// 回転データxyzを読む
 		result = FileRead_read(&data.rot, sizeof(data.rot), dataHandle);
@@ -83,6 +83,14 @@ void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 
 	// ファイルを閉じる
 	FileRead_close(dataHandle);
+}
+
+// インスタンスの取得
+DataReaderFromUnity& DataReaderFromUnity::GetInstance()
+{
+	// 唯一のインスタンスを返す
+	static DataReaderFromUnity instance;
+	return instance;
 }
 
 // オブジェクトの名前からデータを取得

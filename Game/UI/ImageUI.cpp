@@ -6,7 +6,7 @@
 ImageUI::ImageUI(std::string filePath) :
 	m_rot(0.0f),
 	m_scale(1.0f, 1.0f),
-	m_alpha(1.0f),
+	m_alpha(255),
 	m_center(0.0f, 0.0f)
 {
 	// 画像の読み込み
@@ -37,4 +37,64 @@ void ImageUI::Draw()
 
 	// 描画設定を元に戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+// 位置の設定
+void ImageUI::SetPos(Vector2 pos)
+{
+	m_pos = pos;
+}
+
+// 回転の設定
+void ImageUI::SetRot(float rot)
+{
+	m_rot = rot;
+}
+
+// 中心座標の設定
+void ImageUI::SetCenter(Vector2 center)
+{
+	m_center = center;
+}
+
+// 拡大率の設定
+void ImageUI::SetScale(Vector2 scale)
+{
+	m_scale = scale;
+}
+
+// 透明度の設定
+void ImageUI::SetAlpha(float alpha)
+{
+	m_alpha = alpha;
+}
+
+// 位置の取得
+Vector2 ImageUI::GetPos() const
+{
+	return m_pos;
+}
+
+// 回転の取得
+float ImageUI::GetRot() const
+{
+	return m_rot;
+}
+
+// 中心座標の取得
+Vector2 ImageUI::GetCenter() const
+{
+	return m_center;
+}
+
+// 拡大率の取得
+Vector2 ImageUI::GetScale() const
+{
+	return m_scale;
+}
+
+// 透明度の取得
+float ImageUI::GetAlpha() const
+{
+	return m_alpha;
 }

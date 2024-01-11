@@ -1,31 +1,17 @@
 #include "GameScene.h"
-#include "../Editor/DataReaderFromUnity.h"
-#include "../UI/UIManager.h"
-#include "../Game/Player.h"
-#include "../Game/Camera.h"
-#include "../Game/SkyDome.h"
-#include "DxLib.h"
+#include "../Stage/Tutorial.h"
 
 // コンストラクタ
-GameScene::GameScene(SceneManager& manager, std::string fileName) :
-	SceneBase(manager)
+GameScene::GameScene(SceneManager& manager, Stage stage) :
+	SceneBase(manager),
+	m_stage(stage)
 {
-	// オブジェクト配置データ読み込み
-	auto dataReader = std::make_unique<DataReaderFromUnity>();
-	dataReader->LoadUnityGameObjectData(fileName);
-
-	// オブジェクトの生成
-	auto& playerData = dataReader->GetData("Player");
-	if (!playerData.empty())
+	switch (m_stage)
 	{
-		m_pPlayer = std::make_shared<Player>(playerData.front());
+	case Stage::TUTORIAL:
+		m_pStage = std::make_unique<Tutorial>();
+		break;
 	}
-
-	// カメラの生成
-	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
-
-	// スカイドームの生成
-	m_pSkyDome = std::make_shared<SkyDome>(m_pPlayer->GetPos());
 }
 
 // デストラクタ
@@ -36,31 +22,11 @@ GameScene::~GameScene()
 // 更新
 void GameScene::Update()
 {
-	// プレイヤーの更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
-
-	// カメラの更新
-	m_pCamera->Update(m_pPlayer->GetPos());
-
-	// スカイドームの更新
-	m_pSkyDome->Update(m_pPlayer->GetPos());
-
-	// UIの更新
-	UIManager::GetInstance().Update();
+	m_pStage->Update();
 }
 
 // 描画
 void GameScene::Draw()
 {
-	// 画面をクリア
-	ClearDrawScreen();
-
-	// スカイドームの描画
-	m_pSkyDome->Draw();
-
-	// プレイヤーの描画
-	m_pPlayer->Draw();
-
-	// UIの描画
-	UIManager::GetInstance().Draw();
+	m_pStage->Draw();
 }

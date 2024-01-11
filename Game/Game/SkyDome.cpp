@@ -8,12 +8,12 @@ namespace
 	const std::string model_file_path = "Data/Model/SkyDome.mv1";
 
 	// モデルの拡大率
-	const Vector3 model_scale = { 80, 80, 80 };
+	const Vector3 model_scale = { 100, 100, 100 };
 }
 
 // コンストラクタ
-SkyDome::SkyDome(Vector3 playerPos) :
-	m_pos(playerPos)
+SkyDome::SkyDome(Vector3 cameraPos) :
+	m_pos(cameraPos)
 {
 	// モデルのインスタンスの作成
 	m_pModel = std::make_unique<Model>(model_file_path);
@@ -34,9 +34,9 @@ SkyDome::~SkyDome()
 }
 
 // 更新
-void SkyDome::Update(Vector3 playerPos)
+void SkyDome::Update(Vector3 cameraPos)
 {
-	m_pos.z = playerPos.z;
+	m_pos.z = cameraPos.z;
 
 	// モデルの位置をプレイヤーの位置に合わせる
 	m_pModel->SetPos(m_pos);

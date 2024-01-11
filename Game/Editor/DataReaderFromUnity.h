@@ -19,17 +19,25 @@ struct UnityGameObject
 class DataReaderFromUnity
 {
 public:
-	// コンストラクタ
-	DataReaderFromUnity();
-
 	// デストラクタ
 	~DataReaderFromUnity();
 
 	// Unityで配置したオブジェクトのデータを読み取る
 	void LoadUnityGameObjectData(std::string fileName);
 
+	// インスタンスの取得
+	static DataReaderFromUnity& GetInstance();
+
 	// 読み取ったデータの取得
 	const std::vector<UnityGameObject>& GetData(std::string objectName) const;
+
+private:
+	// コンストラクタ
+	DataReaderFromUnity();
+
+	// コピーも代入も禁止
+	DataReaderFromUnity(const DataReaderFromUnity&) = delete;	// コピーコンストラクタ禁止
+	void operator = (const DataReaderFromUnity&) = delete;		// 代入禁止
 
 private:
 	// 読み取ったデータ
