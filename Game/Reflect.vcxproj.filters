@@ -200,6 +200,9 @@
     <ClCompile Include="Game\Enemy\BossEnemyBase.cpp">
       <Filter>ソース ファイル\Game\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Enemy\BossMosquito.cpp">
+      <Filter>ソース ファイル\Game\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -365,6 +368,9 @@
       <Filter>ソース ファイル\Game\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Game\Enemy\BossEnemyBase.h">
+      <Filter>ソース ファイル\Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy\BossMosquito.h">
       <Filter>ソース ファイル\Game\Enemy</Filter>
     </ClInclude>
   </ItemGroup>

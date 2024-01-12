@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Game\Enemy\BossMosquito.cpp" />
     <ClCompile Include="Game\Enemy\BossEnemyBase.cpp" />
     <ClCompile Include="Effect\ScreenShaker.cpp" />
     <ClCompile Include="Game\Enemy\EnemyManager.cpp" />
@@ -199,6 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Game\Enemy\BossMosquito.h" />
     <ClInclude Include="Game\Enemy\BossEnemyBase.h" />
     <ClInclude Include="Effect\ScreenShaker.h" />
     <ClInclude Include="Game\Enemy\EnemyManager.h" />

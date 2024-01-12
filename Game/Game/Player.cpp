@@ -144,7 +144,7 @@ void Player::UpdateStart(Vector3 cameraPos)
 
 	// エフェクトの設定
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z});
+	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
@@ -328,7 +328,7 @@ void Player::Update(float cameraHorizon)
 	m_rot = { rotX + m_moveVec.z * 0.01f, 0.0f, -m_moveVec.x * 0.01f };
 
 	// エフェクトの設定
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z });
+	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);

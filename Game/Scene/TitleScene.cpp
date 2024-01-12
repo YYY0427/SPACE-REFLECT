@@ -28,7 +28,7 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_currentSelectSceneItem(0)
 {
 	// ‰æ–ÊØ‚è‘Ö‚¦‰‰o‚Ìİ’è
-	m_pTransitor = std::make_unique<TileTransitor>();
+	m_pTransitor = std::make_unique<IrisTransitor>();
 	m_pTransitor->Start();
 }
 
