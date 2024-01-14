@@ -55,6 +55,9 @@ public:
 	// ベクトルの大きさの2乗を返す
     float SQLength() const;
 
+	// 2つのベクトル間のユークリッド距離を計算
+	float Distance(const Vector3& other) const;
+
 	// ベクトルの正規化
 	void Normalize();
 

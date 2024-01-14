@@ -114,6 +114,12 @@ float Vector3::SQLength() const
 	return x * x + y * y + z * z;
 }
 
+// 2つのベクトル間のユークリッド距離を計算
+float Vector3::Distance(const Vector3& other) const
+{
+	return std::sqrt(std::pow(x - other.x, 2) + std::pow(y - other.y, 2) + std::pow(z - other.z, 2));
+}
+
 // ベクトルの正規化
 void Vector3::Normalize()
 {

@@ -152,6 +152,9 @@
     <ClCompile Include="Game\Planet.cpp" />
     <ClCompile Include="Game\PlanetManager.cpp" />
     <ClCompile Include="Game\Enemy\Mosquito.cpp" />
+    <ClCompile Include="Game\Laser\LaserBase.cpp" />
+    <ClCompile Include="Game\Laser\LaserManager.cpp" />
+    <ClCompile Include="Game\Laser\NormalLaser.cpp" />
     <ClCompile Include="UI\DamageFlash.cpp" />
     <ClCompile Include="Editor\DataReaderFromUnity.cpp" />
     <ClCompile Include="Effect\Effekseer3DEffectManager.cpp" />
@@ -208,6 +211,9 @@
     <ClInclude Include="Game\Planet.h" />
     <ClInclude Include="Game\PlanetManager.h" />
     <ClInclude Include="Game\Enemy\Mosquito.h" />
+    <ClInclude Include="Game\Laser\LaserBase.h" />
+    <ClInclude Include="Game\Laser\LaserManager.h" />
+    <ClInclude Include="Game\Laser\NormalLaser.h" />
     <ClInclude Include="UI\DamageFlash.h" />
     <ClInclude Include="Editor\DataReaderFromUnity.h" />
     <ClInclude Include="Effect\Effekseer3DEffectManager.h" />

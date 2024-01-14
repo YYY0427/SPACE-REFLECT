@@ -39,6 +39,9 @@
     <Filter Include="ソース ファイル\Game\Enemy">
       <UniqueIdentifier>{9864279b-9f21-4734-bfaf-5a88e97be7ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Laser">
+      <UniqueIdentifier>{12a82fca-64c1-4348-908b-63305fe3240b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -202,6 +205,15 @@
     </ClCompile>
     <ClCompile Include="Game\Enemy\BossMosquito.cpp">
       <Filter>ソース ファイル\Game\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Laser\LaserBase.cpp">
+      <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Laser\LaserManager.cpp">
+      <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Laser\NormalLaser.cpp">
+      <Filter>ソース ファイル\Game\Laser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +384,15 @@
     </ClInclude>
     <ClInclude Include="Game\Enemy\BossMosquito.h">
       <Filter>ソース ファイル\Game\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Laser\NormalLaser.h">
+      <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Laser\LaserManager.h">
+      <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Laser\LaserBase.h">
+      <Filter>ソース ファイル\Game\Laser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

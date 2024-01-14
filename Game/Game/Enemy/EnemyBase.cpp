@@ -17,7 +17,11 @@ EnemyBase::EnemyBase() :
 	m_rot({ 0, 0, 0 }),
 	m_hp(0),
 	m_opacity(0.0f),
-	m_deadEffectHandle(-1)
+	m_attackPower(0),
+	m_moveSpeed(0.0f),
+	m_deadEffectHandle(-1),
+	m_movePointIndex(0),
+	m_isGoal(false)
 {
 }
 

@@ -9,6 +9,7 @@
 // プロトタイプ宣言
 class EnemyBase;
 class BossEnemyBase;
+class Player;
 
 // 敵の種類
 enum class EnemyType
@@ -25,46 +26,45 @@ enum class BossEnemyType
 	NONE,			// なし
 };
 
+// 敵の行動のデータ
+struct EnemyActionData
+{
+	Vector3 goalPos;	// 目的地
+	int idleFrame;		// 目的地に到達してから次の目的地に向かうまでの待機フレーム
+	bool isLaser;		// 目的地に到達したらレーザーを撃つか
+	int laserType;		// レーザーを撃つ場合、どのレーザーを撃つか
+	int laserIdleFrame;	// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
+	int laserChargeFrame;	// レーザーのチャージフレーム
+	int laserFireFrame; // レーザーを何フレーム発射し続けるか
+};
+
+// 敵のデータ
+struct EnemyData
+{
+	Vector3 pos;	// 敵の初期位置
+	EnemyType type;	// 敵の種類
+	int hp;			// 敵の体力
+	int attack;		// 敵の攻撃力
+	float speed;		// 敵の移動速度
+	float scale;		// 敵の大きさ
+	std::vector<EnemyActionData> actionDataList;	// 敵の行動データリスト
+};
+
+// ウェーブデータ
+struct WaveData
+{
+	std::vector<EnemyData> enemyDataList;	// 敵のデータリスト
+	BossEnemyType bossType;						// ボスの種類
+};
+
 /// <summary>
 /// 敵の管理クラス
 /// </summary>
 class EnemyManager
 {
-private:
-	// 敵の行動のデータ
-	struct EnemyActionData
-	{
-		Vector3 goalPos;	// 目的地
-		int idleFrame;		// 目的地に到達してから次の目的地に向かうまでの待機フレーム
-		bool isLaser;		// 目的地に到達したらレーザーを撃つか
-		int laserType;		// レーザーを撃つ場合、どのレーザーを撃つか
-		int laserIdleFrame;	// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
-		int laserChargeFrame;	// レーザーのチャージフレーム
-		int laserFireFrame; // レーザーを何フレーム発射し続けるか
-	};
-
-	// 敵のデータ
-	struct EnemyData
-	{
-		Vector3 pos;	// 敵の初期位置
-		EnemyType type;	// 敵の種類
-		int hp;			// 敵の体力
-		int attack;		// 敵の攻撃力
-		float speed;		// 敵の移動速度
-		float scale;		// 敵の大きさ
-		std::vector<EnemyActionData> actionDataList;	// 敵の行動データリスト
-	};
-
-	// ウェーブデータ
-	struct WaveData
-	{
-		std::vector<EnemyData> enemyDataList;	// 敵のデータリスト
-		BossEnemyType bossType;						// ボスの種類
-	};
-
 public:
 	// コンストラクタ
-	EnemyManager();
+	EnemyManager(std::shared_ptr<Player> pPlayer);
 
 	// デストラクタ
 	~EnemyManager();
@@ -93,7 +93,8 @@ public:
 	std::vector<EnemyActionData> LoadEnemyActionFileData(std::string filePath);	// 敵の行動
 
 private:
-	// 敵
+	// ポインタ
+	std::shared_ptr<Player> m_pPlayer;						// プレイヤー
 	std::list<std::shared_ptr<EnemyBase>> m_pEnemyList;		// 雑魚敵リスト
 	std::shared_ptr<BossEnemyBase> m_pBossEnemy;			// ボス敵
 

@@ -24,10 +24,11 @@ namespace
 }
 
 // コンストラクタ
-EnemyManager::EnemyManager() :
+EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer) :
 	m_waveNow(0),
 	m_isNextWave(false),
-	m_isLoadWave(false)
+	m_isLoadWave(false),
+	m_pPlayer(pPlayer)
 {
 	// 雑魚敵モデルハンドルの読み込み
 	m_modelHandleTable[EnemyType::MOSQUITO] = my::MyLoadModel(mosquito_model_file_path.c_str());
@@ -120,7 +121,7 @@ void EnemyManager::NextWave()
 	if(m_waveNow == m_waveTable.size() - 1)
 	{
 		// ボス敵の生成
-	//	m_pBossEnemy = std::make_shared<BossEnemyBase>(m_bossModelHandleTable[waveData.bossType]);
+		AddBossEnemy(waveData.bossType);
 	}
 	else
 	{
@@ -140,7 +141,10 @@ void EnemyManager::AddEnemy(EnemyData data)
 	{
 	// 蚊
 	case EnemyType::MOSQUITO:
-	//	m_pEnemyList.push_back(std::make_shared<Mosquito>(m_modelHandleTable[data.type], data));
+		m_pEnemyList.push_back(std::make_shared<Mosquito>(
+			m_modelHandleTable[data.type], 
+			data,
+			m_pPlayer));
 		break;
 
 	default:
@@ -156,6 +160,19 @@ void EnemyManager::AddBossEnemy(BossEnemyType type)
 	if(m_pBossEnemy)
 	{
 		return;
+	}
+
+	// 種類によってボス敵の生成
+	switch (type)
+	{	
+	case BossEnemyType::MOSQUITO:
+		m_pBossEnemy = std::make_shared<BossMosquito>(m_bossModelHandleTable[type]);
+		break;
+	case BossEnemyType::NONE:
+		break;
+	default:
+		// ここに来たら敵の種類が追加されていない
+		assert(!"ボス敵の種類がありません");
 	}
 }
 
@@ -212,7 +229,7 @@ void EnemyManager::LoadWaveFileData(std::string filePath)
 }
 
 // 敵のデータの読み込み
-EnemyManager::EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
+EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
 	std::string localFilePath = enemy_file_hierarchy + filePath + file_extension;
@@ -265,7 +282,7 @@ EnemyManager::EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
 }
 
 // 敵の行動のデータの読み込み
-std::vector<EnemyManager::EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string filePath)
+std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
 	std::string localFilePath = enemy_action_file_hierarchy + filePath + file_extension;

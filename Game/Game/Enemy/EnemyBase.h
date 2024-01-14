@@ -1,9 +1,12 @@
 #pragma once
 #include "../../Math/Vector3.h"
+#include "EnemyManager.h"
+#include "../../StateMachine.h"
 #include <memory>
 
 // プロトタイプ宣言
 class Model;
+class Player;
 
 /// <summary>
 /// 敵の基底クラス
@@ -33,6 +36,10 @@ public:
 protected:
 	// ポインタ
 	std::shared_ptr<Model> m_pModel;
+	std::shared_ptr<Player> m_pPlayer;
+
+	// 行動データリスト
+	std::vector<EnemyActionData> m_actionDataList;
 
 	// 位置情報
 	Vector3 m_pos;
@@ -43,8 +50,17 @@ protected:
 	// 移動ベクトル
 	Vector3 m_moveVec;
 
+	// 目的地
+	Vector3 m_goalPos;
+
+	// 移動速度
+	float m_moveSpeed;
+
 	// 不透明度
 	float m_opacity;
+
+	// 攻撃力
+	int m_attackPower;
 
 	// HP
 	int m_hp;		
@@ -52,6 +68,12 @@ protected:
 	// 存在フラグ
 	bool m_isEnabled;
 
+	// 現在の行動データのインデックス
+	int m_movePointIndex;
+
 	// 死亡エフェクトハンドル
 	int m_deadEffectHandle;
+
+	// 目的地に到達したかフラグ
+	bool m_isGoal;
 };
