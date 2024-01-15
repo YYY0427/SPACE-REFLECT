@@ -21,7 +21,7 @@ namespace
 	constexpr int laser_effect_charge_frame = 150;		// チャージフレーム
 
 	// プレイヤーを追従しない場合の向かう位置
-	const Vector2 window_size = { Application::GetInstance().GetWindowSize().width , Application::GetInstance().GetWindowSize().height };
+	const Vector2 window_size = { static_cast<float>(Application::GetInstance().GetWindowSize().width) , static_cast<float>(Application::GetInstance().GetWindowSize().height )};
 	const Vector2 goal_pos[] = 
 	{
 		{ 0 + 100, 0 + 100 },
