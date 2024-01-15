@@ -30,8 +30,9 @@ public:
 	void OnDamage(int damage, Vector3 pos);
 
 	// ゲッター
-	Vector3 GetPos() const;		// 位置情報
-	bool IsEnabled() const;		// 存在フラグ
+	Vector3 GetPos() const;				// 位置情報
+	Vector3 GetLaserFirePos() const;	// レーザーの発射位置
+	bool IsEnabled() const;				// 存在フラグ
 
 protected:
 	// ポインタ
@@ -52,6 +53,9 @@ protected:
 
 	// 目的地
 	Vector3 m_goalPos;
+
+	// レーザーの発射位置
+	Vector3 m_laserFirePos;
 
 	// 移動速度
 	float m_moveSpeed;

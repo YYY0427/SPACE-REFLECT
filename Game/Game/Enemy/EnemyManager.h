@@ -34,7 +34,7 @@ struct EnemyActionData
 	bool isLaser;		// 目的地に到達したらレーザーを撃つか
 	int laserType;		// レーザーを撃つ場合、どのレーザーを撃つか
 	int laserIdleFrame;	// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
-	int laserChargeFrame;	// レーザーのチャージフレーム
+	float laserSpeed;	// レーザーを撃つ場合、レーザーの移動速度
 	int laserFireFrame; // レーザーを何フレーム発射し続けるか
 };
 

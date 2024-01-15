@@ -43,6 +43,9 @@ protected:
 	// 拡大率
 	Vector3 m_scale;
 
+	// 不透明度
+	float m_opacity;	
+
 	// 存在フラグ
 	bool m_isEnabled;
 

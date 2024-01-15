@@ -58,6 +58,12 @@ Vector3 EnemyBase::GetPos() const
 	return m_pos;
 }
 
+// レーザーの発射位置の取得
+Vector3 EnemyBase::GetLaserFirePos() const
+{
+	return m_laserFirePos;
+}
+
 // 存在フラグの取得
 bool EnemyBase::IsEnabled() const
 {

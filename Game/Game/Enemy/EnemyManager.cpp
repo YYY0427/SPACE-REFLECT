@@ -330,8 +330,8 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 			// レーザーを発射するまでの待機フレームの読み込み
 			data.laserIdleFrame = std::stoi(strvec[6]);
 
-			// レーザーのチャージフレームの読み込み
-			data.laserChargeFrame = std::stoi(strvec[7]);
+			// レーザーの速度の読み込み
+			data.laserSpeed = std::stof(strvec[7]);
 
 			// レーザーを何フレームの間、発射するかの読み込み
 			data.laserFireFrame = std::stoi(strvec[8]);
