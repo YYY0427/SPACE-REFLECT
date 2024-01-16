@@ -1,9 +1,11 @@
 #pragma once
-#include "../../Math/Vector3.h"
+#include "../../../Math/Vector3.h"
 #include <memory>
 
 // プロトタイプ宣言
 class Model;
+class Player;
+class LaserManager;
 
 /// <summary>
 /// ボス敵の基底クラス
@@ -33,6 +35,8 @@ public:
 protected:
 	// ポインタ
 	std::shared_ptr<Model> m_pModel;
+	std::shared_ptr<Player> m_pPlayer;
+	std::shared_ptr<LaserManager> m_pLaserManager;
 
 	// 位置情報
 	Vector3 m_pos;

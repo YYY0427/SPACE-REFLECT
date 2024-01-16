@@ -1,6 +1,6 @@
 #include "BossEnemyBase.h"
-#include "../../Model.h"
-#include "../../Effect/Effekseer3DEffectManager.h"
+#include "../../../Model.h"
+#include "../../../Effect/Effekseer3DEffectManager.h"
 
 namespace
 {

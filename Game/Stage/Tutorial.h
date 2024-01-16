@@ -14,6 +14,7 @@ class DamageFlash;
 class ScreenShaker;
 class PlanetManager;
 class LaserManager;
+class EnemyManager;
 
 /// <summary>
 /// チュートリアルステージクラス
@@ -63,5 +64,6 @@ private:
 	std::shared_ptr<ScreenShaker> m_pScreenShaker;
 	std::shared_ptr<PlanetManager> m_pPlanetManager;
 	std::shared_ptr<LaserManager> m_pLaserManager;
+	std::shared_ptr<EnemyManager> m_pEnemyManager;
 };
 

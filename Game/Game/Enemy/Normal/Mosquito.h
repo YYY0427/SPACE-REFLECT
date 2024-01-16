@@ -1,7 +1,7 @@
 #pragma once
 #include "EnemyBase.h"
-#include "../../Util/Timer.h"
-#include "../../Game/Laser/LaserManager.h"
+#include "../../../Util/Timer.h"
+#include "../../../Game/Laser/LaserManager.h"
 
 /// <summary>
 /// 雑魚敵クラス
@@ -45,10 +45,13 @@ private:
 	// 待機時間フレーム
 	int m_idleFrame;		
 
-	// レーザー
-	LaserType m_laserType;		// レーザーの種類
-	int m_laserFireIdleFrame;	// レーザー発射までの待機時間
-	int m_laserFireFrame;		// レーザー発射時間
-	float m_laserSpeed;			// レーザーの速度
+	// 行動データ
+	EnemyActionData m_actionData;	
+
+	//// レーザー
+	//LaserType m_laserType;		// レーザーの種類
+	//int m_laserFireIdleFrame;	// レーザー発射までの待機時間
+	//int m_laserFireFrame;		// レーザー発射時間
+	//float m_laserSpeed;			// レーザーの速度
 };
 

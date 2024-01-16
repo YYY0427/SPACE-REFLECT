@@ -1,5 +1,6 @@
 #include "EnemyBase.h"
-#include "../../Effect/Effekseer3DEffectManager.h"
+#include "../../../Effect/Effekseer3DEffectManager.h"
+#include "../../../Model.h"
 
 namespace
 {
@@ -49,6 +50,11 @@ void EnemyBase::OnDamage(int damage, Vector3 pos)
 
 		// 死亡フラグを立てる
 		m_isEnabled = false;
+	}
+	else
+	{
+		// 全てのマテリアルのディフューズカラーを反転
+		m_pModel->InversAllMaterialDifColor();
 	}
 }
 

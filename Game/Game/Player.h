@@ -4,7 +4,6 @@
 #include <deque>
 #include "../Math/Vector3.h"
 #include "../Util/Timer.h"
-#include "../Editor/DataReaderFromUnity.h"
 
 // プロトタイプ宣言
 class Model;
@@ -19,7 +18,7 @@ class Player
 {
 public:
 	// コンストラクタ
-	Player(UnityGameObject data);
+	Player();
 
 	// デストラクタ
 	~Player();

@@ -10,12 +10,13 @@
 #include "../Game/MeteorManager.h"
 #include "../Game/PlanetManager.h"
 #include "../Game/Laser/LaserManager.h"
+#include "../Game/Enemy/EnemyManager.h"
 #include <DxLib.h>
 
 namespace
 {
 	// オブジェクト配置データのファイルパス
-	const std::string object_data_file_path = "Tutorial2";
+	const std::string object_data_file_path = "Test";
 
 	// 隕石に当たっている間にプレイヤーに与えるダメージ
 	constexpr int meteor_damage = 2;
@@ -33,34 +34,19 @@ Tutorial::Tutorial()
 	auto& dataReader = DataReaderFromUnity::GetInstance();
 	dataReader.LoadUnityGameObjectData(object_data_file_path.c_str());
 
-	// プレイヤーの生成
-	auto& playerData = dataReader.GetData("Player");
-	if (!playerData.empty())
-	{
-		m_pPlayer = std::make_shared<Player>(playerData.front());
-	}
-
-	// 惑星の生成
+	// インスタンスの作成
+	m_pPlayer = std::make_shared<Player>();
+	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
+	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager);
 	m_pPlanetManager = std::make_shared<PlanetManager>();
-
-	// カメラの生成
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
-
-	// スカイドームの生成
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-
-	// 隕石の生成
 	m_pMeteorManager = std::make_shared<MeteorManager>();
+	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
 
-	// レーザーの生成
-	m_pLaserManager = std::make_shared<LaserManager>();
-
-	// ダメージフラッシュの生成
+	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
-
-	// 画面揺れマシンの生成
-	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
 }
 
 // デストラクタ
@@ -101,6 +87,7 @@ void Tutorial::UpdatePlay()
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
 	m_pCamera->Update(m_pPlayer->GetPos());				// カメラ
+	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update(m_pCamera->GetPos());			// スカイドーム
 	m_pPlanetManager->Update();							// 惑星
@@ -127,6 +114,7 @@ void Tutorial::Draw()
 	m_pSkyDome->Draw();			// スカイドーム
 	m_pPlanetManager->Draw();	// 惑星
 	m_pMeteorManager->Draw();	// 隕石
+	m_pEnemyManager->Draw();	// 敵
 	m_pPlayer->Draw();			// プレイヤー
 	m_pLaserManager->Draw();	// レーザー
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト

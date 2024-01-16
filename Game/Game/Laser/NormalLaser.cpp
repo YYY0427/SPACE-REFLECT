@@ -1,5 +1,5 @@
 #include "NormalLaser.h"
-#include "../Enemy/EnemyBase.h"
+#include "../Enemy/Normal/EnemyBase.h"
 #include "../Player.h"
 #include "../../Math/Vector2.h"
 #include "../../Application.h"

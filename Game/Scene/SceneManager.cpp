@@ -35,7 +35,7 @@ void SceneManager::Draw()
 // シーンの切り替え
 void SceneManager::ChangeScene(std::shared_ptr<SceneBase> nextScene)
 {
-	//リストが空っぽだったら入れ替えるのではなく
+	// リストが空っぽだったら入れ替えるのではなく
 	if (m_scenes.empty())
 	{
 		// 先頭に追加する

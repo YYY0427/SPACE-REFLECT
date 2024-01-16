@@ -1,13 +1,15 @@
 #include "EnemyManager.h"
-#include "BossEnemyBase.h"
-#include "EnemyBase.h"
-#include "Mosquito.h"
-#include "BossMosquito.h"
+#include "Boss/BossEnemyBase.h"
+#include "Normal/EnemyBase.h"
+#include "Normal/Mosquito.h"
+#include "Boss/BossMosquito.h"
 #include "../../StringManager.h"
 #include "../../Util/DrawFunctions.h"
+#include "../Player.h"
 #include <fstream>
 #include <sstream>
 #include <cassert>
+#include <DxLib.h>
 
 namespace
 {
@@ -28,6 +30,7 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	m_waveNow(0),
 	m_isNextWave(false),
 	m_isLoadWave(false),
+	m_isDeadBoss(false),
 	m_pPlayer(pPlayer),
 	m_pLaserManager(pLaserManager)
 {
@@ -42,6 +45,17 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 // デストラクタ
 EnemyManager::~EnemyManager()
 {
+	// 雑魚敵のモデルハンドルの解放
+	for (auto& model : m_modelHandleTable)
+	{
+		MV1DeleteModel(model.second);
+	}
+
+	// ボス敵のモデルハンドルの解放
+	for (auto& model : m_bossModelHandleTable)
+	{
+		MV1DeleteModel(model.second);
+	}
 }
 
 // 更新
@@ -53,9 +67,17 @@ void EnemyManager::Update()
 		enemy->Update();
 	}
 
-	// ボス敵が出現していたら更新
+	// ボス敵が出現していたら
 	if(m_pBossEnemy)
 	{
+		// ボス敵が出現していて、かつボス敵が倒されていたら
+		if (!m_pBossEnemy->IsEnabled())
+		{
+			// ボス敵が倒されたことにする
+			m_isDeadBoss = true;
+		}
+
+		// 更新
 		m_pBossEnemy->Update();
 	}
 }
@@ -108,20 +130,26 @@ void EnemyManager::NextWave()
 	};
 
 	// ボス敵が出現していたらなにもしない
-	if (m_pBossEnemy)
-	{
-		return;
-	};
+	if (m_pBossEnemy)	return;
 
 	// ウェーブを進める
 	m_waveNow++;
 	auto& waveData = m_waveTable[m_waveNow];
 
 	// 最後のウェーブだったらボス敵を生成
-	if(m_waveNow == m_waveTable.size() - 1)
+	if(m_waveNow == m_waveTable.size())
 	{
-		// ボス敵の生成
-		AddBossEnemy(waveData.bossType);
+		// ボス敵がいなかったら
+		if (waveData.bossType == BossEnemyType::NONE)
+		{
+			// ボス敵が倒されたことにする
+			m_isDeadBoss = true;
+		}
+		else
+		{
+			// ボス敵の生成
+			AddBossEnemy(waveData.bossType);
+		}
 	}
 	else
 	{
@@ -167,7 +195,10 @@ void EnemyManager::AddBossEnemy(BossEnemyType type)
 	switch (type)
 	{	
 	case BossEnemyType::MOSQUITO:
-		m_pBossEnemy = std::make_shared<BossMosquito>(m_bossModelHandleTable[type]);
+		m_pBossEnemy = std::make_shared<BossMosquito>(
+			m_bossModelHandleTable[type],
+			m_pPlayer,
+			m_pLaserManager);
 		break;
 	case BossEnemyType::NONE:
 		break;
@@ -257,9 +288,10 @@ EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
 		std::vector<std::string> strvec = StringManager::GetInstance().SplitString(line, ',');
 
 		// 座標の読み込み
-		data.pos.x = std::stof(strvec[0]);
-		data.pos.y = std::stof(strvec[1]);
-		data.pos.z = std::stof(strvec[2]);
+		data.pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ std::stof(strvec[0]), std::stof(strvec[1]), 0.0f }));
+
+		// z軸はプレイヤーの座標からの相対座標に変換
+		data.pos.z = m_pPlayer->GetPos().z - (std::stof(strvec[2]));
 
 		// 種類の読み込み
 		data.type = static_cast<EnemyType>(std::stoi(strvec[3]));
@@ -326,7 +358,7 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 		if (data.isLaser)
 		{
 			// レーザーの種類の読み込み
-		//	data.laserType = static_cast<LaserType>(std::stoi(strvec[5]));
+			data.laserType = static_cast<LaserType>(std::stoi(strvec[5]));
 
 			// レーザーを発射するまでの待機フレームの読み込み
 			data.laserIdleFrame = std::stoi(strvec[6]);
@@ -336,10 +368,20 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 
 			// レーザーを何フレームの間、発射するかの読み込み
 			data.laserFireFrame = std::stoi(strvec[8]);
+
+			// レーザーがプレイヤーを追従するかどうかのフラグの読み込み
+			data.isPlayerFollowing = std::stoi(strvec[9]);
+			assert(data.isPlayerFollowing < 0 || data.isPlayerFollowing > 1 && "フラグの値は0または1で設定してください");
 		}
 
 		// データの追加
 		dataTable.push_back(data);
 	}
 	return dataTable;
+}
+
+// ボス敵の死亡判定
+bool EnemyManager::IsDeadBoss() const
+{
+	return m_isDeadBoss;
 }

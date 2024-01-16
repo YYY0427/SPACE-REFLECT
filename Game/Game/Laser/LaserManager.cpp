@@ -12,7 +12,8 @@ namespace
 } 
 
 // コンストラクタ
-LaserManager::LaserManager()
+LaserManager::LaserManager(std::shared_ptr<Player> pPlayer) :
+	m_pPlayer(pPlayer)
 {
 	// モデルの読み込み
 	m_modelHandleTable[LaserType::NORMAL] = my::MyLoadModel(normal_laser_model_file_path.c_str());
@@ -57,7 +58,7 @@ void LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, i
 	case LaserType::NORMAL:
 		laserData.pLaser = std::make_shared<NormalLaser>(
 			m_modelHandleTable[LaserType::NORMAL],
-			pEnemy, laserFireFrame, laserSpeed, isPlayerFollowing);
+			pEnemy, m_pPlayer, laserFireFrame, laserSpeed, isPlayerFollowing);
 		break;
 	default:
 		assert(!"レーザーの種類がありません");

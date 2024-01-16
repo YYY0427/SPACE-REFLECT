@@ -1,7 +1,7 @@
 #pragma once
-#include "../../Math/Vector3.h"
-#include "EnemyManager.h"
-#include "../../StateMachine.h"
+#include "../../../Math/Vector3.h"
+#include "../EnemyManager.h"
+#include "../../../StateMachine.h"
 #include <memory>
 
 // プロトタイプ宣言

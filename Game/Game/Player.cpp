@@ -12,6 +12,7 @@
 #include "../UI/StatusBack.h"
 #include "../UI/ImageUI.h"
 #include "../UI/UIManager.h"
+#include "../Editor/DataReaderFromUnity.h"
 #include <string>
 #include <algorithm>
 
@@ -82,10 +83,7 @@ namespace
 }
 
 //  コンストラクタ
-Player::Player(UnityGameObject data) :
-	m_pos(data.pos),
-	m_rot(data.rot),
-	m_scale(data.scale),
+Player::Player() :
 	m_moveVec(0, 0, 0),
 	m_hp(max_hp),
 	m_ultimateTimer(0),
@@ -96,6 +94,12 @@ Player::Player(UnityGameObject data) :
 	m_isStartAnimation(false),
 	m_slowValue(1.0f)
 {
+	// データの読み込み
+	auto& data = DataReaderFromUnity::GetInstance().GetData("Player");
+	m_pos = data.front().pos;
+	m_rot = data.front().rot;
+	m_scale = data.front().scale;
+
 	// プレイヤーモデルのインスタンスの生成
 	m_pModel = std::make_shared<Model>(model_file_path.c_str());
 

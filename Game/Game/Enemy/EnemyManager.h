@@ -5,12 +5,12 @@
 #include <string>
 #include <map>
 #include "../../Math/Vector3.h"
+#include "../Laser/LaserManager.h"
 
 // プロトタイプ宣言
 class EnemyBase;
 class BossEnemyBase;
 class Player;
-class LaserManager;
 
 // 敵の種類
 enum class EnemyType
@@ -33,10 +33,11 @@ struct EnemyActionData
 	Vector3 goalPos;	// 目的地
 	int idleFrame;		// 目的地に到達してから次の目的地に向かうまでの待機フレーム
 	bool isLaser;		// 目的地に到達したらレーザーを撃つか
-	int laserType;		// レーザーを撃つ場合、どのレーザーを撃つか
+	LaserType laserType;		// レーザーを撃つ場合、どのレーザーを撃つか
 	int laserIdleFrame;	// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
 	float laserSpeed;	// レーザーを撃つ場合、レーザーの移動速度
 	int laserFireFrame; // レーザーを何フレーム発射し続けるか
+	bool isPlayerFollowing;	// レーザーを撃つ場合、レーザーがプレイヤーを追従するかどうか
 };
 
 // 敵のデータ
@@ -93,6 +94,9 @@ public:
 	EnemyData LoadEnemyFileData(std::string filePath);	// 敵
 	std::vector<EnemyActionData> LoadEnemyActionFileData(std::string filePath);	// 敵の行動
 
+	// ボスが倒されたか
+	bool IsDeadBoss() const;
+
 private:
 	// ポインタ
 	std::shared_ptr<Player> m_pPlayer;						// プレイヤー
@@ -103,6 +107,9 @@ private:
 	// モデルハンドルテーブル
 	std::map<EnemyType, int> m_modelHandleTable;			// 雑魚敵
 	std::map<BossEnemyType, int> m_bossModelHandleTable;	// ボス敵
+
+	// ボスが倒されたか
+	bool m_isDeadBoss;	
 
 	// ウェーブ
 	std::vector<WaveData> m_waveTable;	// ウェーブデータ

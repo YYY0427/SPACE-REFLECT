@@ -42,6 +42,12 @@
     <Filter Include="ソース ファイル\Game\Laser">
       <UniqueIdentifier>{12a82fca-64c1-4348-908b-63305fe3240b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Game\Enemy\Boss">
+      <UniqueIdentifier>{a4237435-3162-4b2b-8e04-c5c57a80453b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Game\Enemy\Normal">
+      <UniqueIdentifier>{4b646907-041b-46fd-80d6-e79980747be2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -191,19 +197,7 @@
     <ClCompile Include="Game\PlanetManager.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Enemy\Mosquito.cpp">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Enemy\EnemyBase.cpp">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Enemy\EnemyManager.cpp">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Enemy\BossEnemyBase.cpp">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Enemy\BossMosquito.cpp">
       <Filter>ソース ファイル\Game\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Game\Laser\LaserBase.cpp">
@@ -214,6 +208,18 @@
     </ClCompile>
     <ClCompile Include="Game\Laser\NormalLaser.cpp">
       <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy\Boss\BossEnemyBase.cpp">
+      <Filter>ソース ファイル\Game\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy\Boss\BossMosquito.cpp">
+      <Filter>ソース ファイル\Game\Enemy\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy\Normal\EnemyBase.cpp">
+      <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Enemy\Normal\Mosquito.cpp">
+      <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,19 +376,7 @@
     <ClInclude Include="Game\PlanetManager.h">
       <Filter>ソース ファイル\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Enemy\Mosquito.h">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Enemy\EnemyBase.h">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Enemy\EnemyManager.h">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Enemy\BossEnemyBase.h">
-      <Filter>ソース ファイル\Game\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Enemy\BossMosquito.h">
       <Filter>ソース ファイル\Game\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Game\Laser\NormalLaser.h">
@@ -393,6 +387,18 @@
     </ClInclude>
     <ClInclude Include="Game\Laser\LaserBase.h">
       <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy\Boss\BossEnemyBase.h">
+      <Filter>ソース ファイル\Game\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy\Boss\BossMosquito.h">
+      <Filter>ソース ファイル\Game\Enemy\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy\Normal\EnemyBase.h">
+      <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Enemy\Normal\Mosquito.h">
+      <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

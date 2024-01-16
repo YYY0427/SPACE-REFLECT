@@ -66,6 +66,9 @@ Meteor::Meteor(int modelHandle, UnityGameObject data):
 	m_moveVec({ 0, 0, 0 }),
 	m_rotVec({ 0, 0, 0 })
 {
+	// モデルのインスタンスの作成
+	m_pModel = std::make_unique<Model>(modelHandle);
+
 	// モデルの設定
 	m_pModel->SetPos(m_pos);			// 位置
 	m_pModel->SetRot(m_rot);			// 回転
