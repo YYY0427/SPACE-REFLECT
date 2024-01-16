@@ -3,6 +3,8 @@
 #include "../../StateMachine.h"
 #include "../../Util/Timer.h"
 #include "../../Math/Matrix.h"
+#include "../../Math/Vector2.h"
+#include <vector>
 
 // プロトタイプ宣言
 class EnemyBase;
@@ -68,5 +70,14 @@ private:
 	Timer<int> m_chargeEffectTimer;	// チャージエフェクトのタイマー
 
 	// プレイヤーを追従するか
-	bool m_isPlayerFollowing;	
+	bool m_isPlayerFollowing;
+
+	// 通常発射時の移動ポイント
+	int m_normalFireMovePointIndex;	
+
+	// 通常発射時の移動ポイントの座標
+	Vector3 m_normalFireGoalPos;
+
+	// 通常発射時の移動ポイントの座標のリスト
+	std::vector<Vector2> m_normalFireMovePointList;
 };

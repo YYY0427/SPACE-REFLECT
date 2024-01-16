@@ -3,7 +3,8 @@
 // コンストラクタ
 LaserBase::LaserBase() :
 	m_isEnabled(true),
-	m_isReflect(false)
+	m_isReflect(false),
+	m_speed(0.0f)
 {
 }
 

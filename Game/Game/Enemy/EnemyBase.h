@@ -7,6 +7,7 @@
 // プロトタイプ宣言
 class Model;
 class Player;
+class LaserManager;
 
 /// <summary>
 /// 敵の基底クラス
@@ -38,6 +39,7 @@ protected:
 	// ポインタ
 	std::shared_ptr<Model> m_pModel;
 	std::shared_ptr<Player> m_pPlayer;
+	std::shared_ptr<LaserManager> m_pLaserManager;
 
 	// 行動データリスト
 	std::vector<EnemyActionData> m_actionDataList;

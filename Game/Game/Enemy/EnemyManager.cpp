@@ -24,11 +24,12 @@ namespace
 }
 
 // コンストラクタ
-EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer) :
+EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager) :
 	m_waveNow(0),
 	m_isNextWave(false),
 	m_isLoadWave(false),
-	m_pPlayer(pPlayer)
+	m_pPlayer(pPlayer),
+	m_pLaserManager(pLaserManager)
 {
 	// 雑魚敵モデルハンドルの読み込み
 	m_modelHandleTable[EnemyType::MOSQUITO] = my::MyLoadModel(mosquito_model_file_path.c_str());
@@ -36,7 +37,6 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer) :
 	// ボス敵モデルハンドルの読み込み
 	m_bossModelHandleTable[BossEnemyType::NONE] = -1;
 	m_bossModelHandleTable[BossEnemyType::MOSQUITO] = m_modelHandleTable[EnemyType::MOSQUITO];
-
 }
 
 // デストラクタ
@@ -144,7 +144,8 @@ void EnemyManager::AddEnemy(EnemyData data)
 		m_pEnemyList.push_back(std::make_shared<Mosquito>(
 			m_modelHandleTable[data.type], 
 			data,
-			m_pPlayer));
+			m_pPlayer,
+			m_pLaserManager));
 		break;
 
 	default:

@@ -43,6 +43,9 @@ protected:
 	// Šg‘å—¦
 	Vector3 m_scale;
 
+	// ‘¬“x
+	float m_speed;		
+
 	// •s“§–¾“x
 	float m_opacity;	
 

@@ -9,6 +9,7 @@
 #include "../Game/SkyDome.h"
 #include "../Game/MeteorManager.h"
 #include "../Game/PlanetManager.h"
+#include "../Game/Laser/LaserManager.h"
 #include <DxLib.h>
 
 namespace
@@ -51,6 +52,9 @@ Tutorial::Tutorial()
 	// 隕石の生成
 	m_pMeteorManager = std::make_shared<MeteorManager>();
 
+	// レーザーの生成
+	m_pLaserManager = std::make_shared<LaserManager>();
+
 	// ダメージフラッシュの生成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
@@ -67,33 +71,21 @@ Tutorial::~Tutorial()
 // 更新
 void Tutorial::Update()
 {
-	// ステートマシンの更新
-	m_stateMachine.Update();
-
-	// スクリーンシェイカーの更新
-	m_pScreenShaker->Update();
-
-	// エフェクトの更新
-	Effekseer3DEffectManager::GetInstance().Update();
-
-	// UIの更新
-	UIManager::GetInstance().Update();
+	// 更新
+	m_stateMachine.Update();	// ステートマシン
+	m_pScreenShaker->Update();	// 画面揺れ
+	Effekseer3DEffectManager::GetInstance().Update();	// エフェクト
+	UIManager::GetInstance().Update();	// UI
 }
 
 // スタート演出の更新
 void Tutorial::UpdateStartAnimation()
 {
-	// プレイヤーの更新
-	m_pPlayer->UpdateStart(m_pCamera->GetPos());
-
-	// カメラの更新
-	m_pCamera->UpdateStart(m_pPlayer->GetPos());
-
-	// スカイドームの更新
-	m_pSkyDome->Update(m_pCamera->GetPos());
-
-	// 惑星の更新
-	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());
+	// 更新
+	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
+	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
+	m_pSkyDome->Update(m_pCamera->GetPos());		// スカイドーム
+	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());	// 惑星
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->GetIsStartAnimation() &&
@@ -106,29 +98,20 @@ void Tutorial::UpdateStartAnimation()
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
-	// プレイヤーの更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
-
-	// カメラの更新
-	m_pCamera->Update(m_pPlayer->GetPos());
-
-	// スカイドームの更新
-	m_pSkyDome->Update(m_pCamera->GetPos());
-
-	// 惑星の更新
-	m_pPlanetManager->Update();
+	// 更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
+	m_pCamera->Update(m_pPlayer->GetPos());				// カメラ
+	m_pLaserManager->Update();							// レーザー
+	m_pSkyDome->Update(m_pCamera->GetPos());			// スカイドーム
+	m_pPlanetManager->Update();							// 惑星
+	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
+	m_pDamageFlash->Update();							// ダメージフラッシュ
 
 	// 隕石の生成
 	m_pMeteorManager->CreateMeteor(120, m_pPlayer->GetPos());
 
-	// 隕石の更新
-	m_pMeteorManager->Update(m_pCamera->GetPos());
-
 	// 当たり判定
 	Collision();
-
-	// ダメージフラッシュの更新
-	m_pDamageFlash->Update();
 }
 
 // 描画
@@ -140,23 +123,14 @@ void Tutorial::Draw()
 	// 画面をクリア
 	ClearDrawScreen();
 
-	// スカイドームの描画
-	m_pSkyDome->Draw();
-
-	// 惑星の描画
-	m_pPlanetManager->Draw();
-
-	// 隕石の描画
-	m_pMeteorManager->Draw();
-
-	// プレイヤーの描画
-	m_pPlayer->Draw();
-
-	// エフェクトの描画
-	Effekseer3DEffectManager::GetInstance().Draw();
-
-	// UIの描画
-	UIManager::GetInstance().Draw();
+	// 描画
+	m_pSkyDome->Draw();			// スカイドーム
+	m_pPlanetManager->Draw();	// 惑星
+	m_pMeteorManager->Draw();	// 隕石
+	m_pPlayer->Draw();			// プレイヤー
+	m_pLaserManager->Draw();	// レーザー
+	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
+	UIManager::GetInstance().Draw();	// UI
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();

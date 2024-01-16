@@ -12,10 +12,19 @@ namespace
 }
 
 // コンストラクタ
-Mosquito::Mosquito(int modelHandle, EnemyData data, std::shared_ptr<Player> m_pPlayer)
+Mosquito::Mosquito(int modelHandle, 
+	EnemyData data, 
+	std::shared_ptr<Player> pPlayer, 
+	std::shared_ptr<LaserManager> pLaserManager) :
+	m_laserFireFrame(0),
+	m_laserFireIdleFrame(0),
+	m_laserSpeed(0),
+	m_laserType({}),
+	m_idleFrame(0)
 {
 	// 初期化
-	m_pPlayer = m_pPlayer;
+	m_pPlayer = pPlayer;
+	m_pLaserManager = pLaserManager;
 	m_actionDataList = data.actionDataList;
 	m_isEnabled = true;
 	m_pos = data.pos;
@@ -103,8 +112,27 @@ void Mosquito::UpdateMove()
 		// レーザー発射状態に遷移
 		if (itr->isLaser)
 		{
+			// レーザーの設定
+			m_laserType = static_cast<LaserType>(itr->laserType);	// レーザーの種類
+			m_laserFireIdleFrame= itr->laserIdleFrame;	// レーザー発射までの待機フレーム
+			m_laserFireFrame = itr->laserFireFrame;		// レーザー発射フレーム
+			m_laserSpeed = itr->laserSpeed;				// レーザーの速度
+			m_idleFrame = itr->idleFrame;				// 移動ポイントの待機フレーム
+
+			// レーザー発射
 			m_state.SetState(State::ATTACK);
 		}
+		else
+		{
+			// 移動ポイントの待機フレームを設定
+			m_idleFrame = itr->idleFrame;
+
+			// レーザー発射フラグが立っていなかったら
+			m_state.SetState(State::IDLE);
+		}
+
+		// 次の移動ポイントへ
+		m_movePointIndex++;	
 	}
 }
 

@@ -10,6 +10,7 @@
 class EnemyBase;
 class BossEnemyBase;
 class Player;
+class LaserManager;
 
 // 敵の種類
 enum class EnemyType
@@ -64,7 +65,7 @@ class EnemyManager
 {
 public:
 	// コンストラクタ
-	EnemyManager(std::shared_ptr<Player> pPlayer);
+	EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
 
 	// デストラクタ
 	~EnemyManager();
@@ -95,6 +96,7 @@ public:
 private:
 	// ポインタ
 	std::shared_ptr<Player> m_pPlayer;						// プレイヤー
+	std::shared_ptr<LaserManager> m_pLaserManager;			// レーザー管理
 	std::list<std::shared_ptr<EnemyBase>> m_pEnemyList;		// 雑魚敵リスト
 	std::shared_ptr<BossEnemyBase> m_pBossEnemy;			// ボス敵
 
