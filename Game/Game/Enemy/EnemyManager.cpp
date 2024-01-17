@@ -32,7 +32,8 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	m_isLoadWave(false),
 	m_isDeadBoss(false),
 	m_pPlayer(pPlayer),
-	m_pLaserManager(pLaserManager)
+	m_pLaserManager(pLaserManager),
+	m_bossType(BossEnemyType::NONE)
 {
 	// 雑魚敵モデルハンドルの読み込み
 	m_modelHandleTable[EnemyType::MOSQUITO] = my::MyLoadModel(mosquito_model_file_path.c_str());
@@ -96,6 +97,17 @@ void EnemyManager::Draw()
 	{
 		m_pBossEnemy->Draw();
 	}
+
+	// デバッグ用
+#ifdef _DEBUG
+	// 雑魚敵の座標の描画
+	for (int i = 0; i < m_pEnemyList.size(); i++)
+	{
+		auto itr = m_pEnemyList.begin();
+		std::advance(itr, i);
+		DrawFormatString(0, 20 * i + 30, 0xffffff, "雑魚敵 %d 座標: %f, %f, %f", i, itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z);
+	}
+#endif
 }
 
 // ウェーブのスタート
@@ -140,7 +152,7 @@ void EnemyManager::NextWave()
 	if(m_waveNow == m_waveTable.size())
 	{
 		// ボス敵がいなかったら
-		if (waveData.bossType == BossEnemyType::NONE)
+		if (m_bossType == BossEnemyType::NONE)
 		{
 			// ボス敵が倒されたことにする
 			m_isDeadBoss = true;
@@ -148,7 +160,7 @@ void EnemyManager::NextWave()
 		else
 		{
 			// ボス敵の生成
-			AddBossEnemy(waveData.bossType);
+			AddBossEnemy(m_bossType);
 		}
 	}
 	else
@@ -237,31 +249,28 @@ void EnemyManager::LoadWaveFileData(std::string filePath)
 
 		WaveData data{};
 
-		// 最後の行はボス敵の種類の読み込み
-		if (ifs.eof())
+		// 敵のデータの読み込み
+		for (int i = 0; i < strvec.size(); i++)
 		{
-			data.bossType = static_cast<BossEnemyType>(std::stoi(strvec[0]));
-		}
-		// それ以外は雑魚敵のデータの読み込み
-		else
-		{
-			// 敵のデータの読み込み
-			for (auto& str : strvec)
+			if(i == strvec.size() - 1)
+			{
+				// ボス敵の種類の読み込み
+				m_bossType = static_cast<BossEnemyType>(std::stoi(strvec[i]));
+			}
+			else
 			{
 				// 敵のデータの追加
-				data.enemyDataList.push_back(LoadEnemyFileData(str));
+				data.enemyDataList = LoadEnemyFileData(strvec[i]);
 
-				// ボス敵の種類は無効
-				data.bossType = BossEnemyType::NONE;
+				// ウェーブのデータの追加
+				m_waveTable.push_back(data);
 			}
 		}
-		// ウェーブのデータの追加
-		m_waveTable.push_back(data);
 	}
 }
 
 // 敵のデータの読み込み
-EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
+std::vector<EnemyData> EnemyManager::LoadEnemyFileData(std::string filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
 	std::string localFilePath = enemy_file_hierarchy + filePath + file_extension;
@@ -269,7 +278,7 @@ EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
 	assert(ifs && "Enemyデータの読み込み失敗");
 
 	// 初期化
-	EnemyData data{};
+	std::vector<EnemyData> dataTable{};
 	bool isFirst = false;
 	std::string line;
 
@@ -287,11 +296,18 @@ EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
 		// csvデータ１行を','で複数の文字列に変換
 		std::vector<std::string> strvec = StringManager::GetInstance().SplitString(line, ',');
 
-		// 座標の読み込み
-		data.pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ std::stof(strvec[0]), std::stof(strvec[1]), 0.0f }));
+		EnemyData data{};
 
-		// z軸はプレイヤーの座標からの相対座標に変換
-		data.pos.z = m_pPlayer->GetPos().z - (std::stof(strvec[2]));
+		// 座標の読み込み
+		data.pos.x = std::stof(strvec[0]);
+		data.pos.y = std::stof(strvec[1]);
+		data.pos.z = std::stof(strvec[2]);
+
+		//// 座標の読み込み
+		//data.pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ std::stof(strvec[0]), std::stof(strvec[1]), 0.0f }));
+
+		//// z軸はプレイヤーの座標からの相対座標に変換
+		//data.pos.z = m_pPlayer->GetPos().z - (std::stof(strvec[2]));
 
 		// 種類の読み込み
 		data.type = static_cast<EnemyType>(std::stoi(strvec[3]));
@@ -302,16 +318,19 @@ EnemyData EnemyManager::LoadEnemyFileData(std::string filePath)
 		// 攻撃力の読み込み
 		data.attack = std::stoi(strvec[5]);
 
-		// 移動速度の読み込み
-		data.speed = std::stof(strvec[6]);
-
 		// 大きさの読み込み
-		data.scale = std::stof(strvec[7]);
+		data.scale = std::stof(strvec[6]);
+
+		// 移動速度の読み込み
+		data.speed = std::stof(strvec[7]);
 
 		// 行動データの読み込み
 		data.actionDataList = LoadEnemyActionFileData(strvec[8]);
+
+		// データの追加
+		dataTable.push_back(data);
 	}
-	return data;
+	return dataTable;
 }
 
 // 敵の行動のデータの読み込み
@@ -348,6 +367,12 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 		data.goalPos.y = std::stof(strvec[1]);
 		data.goalPos.z = std::stof(strvec[2]);
 
+		//// 目的地の読み込み
+		//data.goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ std::stof(strvec[0]), std::stof(strvec[1]), 0.0f }));
+
+		//// z軸はプレイヤーの座標からの相対座標に変換
+		//data.goalPos.z = m_pPlayer->GetPos().z - (std::stof(strvec[2]));
+
 		// 目的地に到達してから次の目的地に向かうまでの待機フレームの読み込み
 		data.idleFrame = std::stoi(strvec[3]);
 
@@ -371,7 +396,6 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 
 			// レーザーがプレイヤーを追従するかどうかのフラグの読み込み
 			data.isPlayerFollowing = std::stoi(strvec[9]);
-			assert(data.isPlayerFollowing < 0 || data.isPlayerFollowing > 1 && "フラグの値は0または1で設定してください");
 		}
 
 		// データの追加

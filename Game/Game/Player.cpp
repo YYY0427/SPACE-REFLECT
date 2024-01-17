@@ -327,7 +327,7 @@ void Player::Update(float cameraHorizon)
 	m_ultimateTimer = (std::max)(--m_ultimateTimer, 0);
 
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
-	// X軸回転は進んでいるように見せるように常に30度を足す
+	// X軸回転は進んでいるように見せるよう傾ける
 	float rotX = MathUtil::ToRadian(25.0f);
 	m_rot = { rotX + m_moveVec.z * 0.01f, 0.0f, -m_moveVec.x * 0.01f };
 
@@ -423,7 +423,7 @@ void Player::Draw()
 		DrawSphere3D(m_pos.ToDxLibVector3(), model_collision_radius, 8, 0xff0000, 0xff0000, false);
 
 		// プレイヤーの位置情報の描画
-		DrawFormatString(0, 0, 0xffffff, "%f, %f, %f", m_pos.x, m_pos.y, m_pos.z);
+		DrawFormatString(0, 0, 0xffffff, "プレイヤー 座標 : %f, %f, %f", m_pos.x, m_pos.y, m_pos.z);
 #endif 
 	}
 }

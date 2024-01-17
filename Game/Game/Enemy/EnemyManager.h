@@ -33,7 +33,7 @@ struct EnemyActionData
 	Vector3 goalPos;	// 目的地
 	int idleFrame;		// 目的地に到達してから次の目的地に向かうまでの待機フレーム
 	bool isLaser;		// 目的地に到達したらレーザーを撃つか
-	LaserType laserType;		// レーザーを撃つ場合、どのレーザーを撃つか
+	LaserType laserType;// レーザーを撃つ場合、どのレーザーを撃つか
 	int laserIdleFrame;	// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
 	float laserSpeed;	// レーザーを撃つ場合、レーザーの移動速度
 	int laserFireFrame; // レーザーを何フレーム発射し続けるか
@@ -56,7 +56,6 @@ struct EnemyData
 struct WaveData
 {
 	std::vector<EnemyData> enemyDataList;	// 敵のデータリスト
-	BossEnemyType bossType;						// ボスの種類
 };
 
 /// <summary>
@@ -91,7 +90,7 @@ public:
 
 	// ファイルデータの読み込み
 	void LoadWaveFileData(std::string filePath);		// ウェーブ
-	EnemyData LoadEnemyFileData(std::string filePath);	// 敵
+	std::vector<EnemyData> LoadEnemyFileData(std::string filePath);	// 敵
 	std::vector<EnemyActionData> LoadEnemyActionFileData(std::string filePath);	// 敵の行動
 
 	// ボスが倒されたか
@@ -113,6 +112,7 @@ private:
 
 	// ウェーブ
 	std::vector<WaveData> m_waveTable;	// ウェーブデータ
+	BossEnemyType m_bossType;				// ボスの種類
 	int m_waveNow;		// 現在のウェーブ数
 	bool m_isNextWave;	// 次のウェーブに移行するかどうか
 	bool m_isLoadWave;	// ウェーブデータを読み込んだかどうか

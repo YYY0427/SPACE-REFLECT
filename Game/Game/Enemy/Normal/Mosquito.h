@@ -15,18 +15,24 @@ public:
 	// デストラクタ
 	~Mosquito();
 
+	// 更新
+	void Update() override final;
+
+	// 描画
+	void Draw() override final;
+
+private:
 	// 初期化
 	void EntarMove();	// 移動
 
 	// 更新
-	void Update() override final;
-	void UpdateIdle();		// 待機
-	void UpdateMove();		// 移動
-	void UpdateAttack();	// 攻撃
-	void UpdateDead();		// 死亡
+	void UpdateIdle();	// 待機
+	void UpdateMove();	// 移動
+	void UpdateAttack();// 攻撃
+	void UpdateDead();	// 死亡
 
-	// 描画
-	void Draw() override final;
+	// 目的地の取得
+	void GetGoalPos();	
 
 private:
 	// 状態

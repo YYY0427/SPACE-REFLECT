@@ -47,6 +47,9 @@ Tutorial::Tutorial()
 	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
+
+	// ウェーブデータの読み込み
+	m_pEnemyManager->LoadWaveFileData("Test");
 }
 
 // デストラクタ
@@ -84,6 +87,13 @@ void Tutorial::UpdateStartAnimation()
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
+	static bool isWaveStart = false;
+	if(!isWaveStart)
+	{
+		m_pEnemyManager->StartWave();
+		isWaveStart = true;
+	}
+
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
 	m_pCamera->Update(m_pPlayer->GetPos());				// カメラ
