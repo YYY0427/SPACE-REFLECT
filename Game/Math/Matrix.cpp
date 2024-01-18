@@ -269,13 +269,41 @@ Vector3 Matrix::ToEulerAngle(const Matrix& m)
 // 行列からオイラー角に変換
 Vector3 Matrix::ToEulerAngle() const
 {
-	// 行列からオイラー角に変換
 	Vector3 result;
+	const float Threshold = 0.0001f;
 
-	// オイラー角の計算
-	result.x = atan2f(m[2][1], m[2][2]);
-	result.y = atan2f(-m[2][0], sqrtf(m[2][1] * m[2][1] + m[2][2] * m[2][2]));
-	result.z = atan2f(m[1][0], m[0][0]);
+	// ジンバルロック判定
+	if (m[2][1] > 1.0f - Threshold || m[2][1] < -1.0f + Threshold)
+	{
+		result.x = (m[2][1] < 0 ? (DX_PI_F / 2) : -(DX_PI_F / 2));
+		result.y = atan2f(-m[0][2], m[0][0]);
+		result.z = 0.0f;
+		return result;
+	}
+
+	result.x = -asinf(m[2][1]);
+	result.z = asinf(m[0][1] / cosf(result.x));
+
+	// ジンバルロック判定
+	if ((isnan(result.z) != 0))
+	{
+		result.x = (m[2][1] < 0 ? (DX_PI_F / 2) : -(DX_PI_F / 2));
+		result.y = atan2f(-m[0][2], m[0][0]);
+		result.z = 0.0f;
+		return result;
+	}
+
+	if (m[1][1] < 0.0f)
+	{
+		result.z = DX_PI_F - result.z;
+	}
+
+	result.y = atan2f(m[2][0], m[2][2]);
+
+	//// オイラー角の計算
+	//result.x = atan2f(m[2][1], m[2][2]);
+	//result.y = atan2f(-m[2][0], sqrtf(m[2][1] * m[2][1] + m[2][2] * m[2][2]));
+	//result.z = atan2f(m[1][0], m[0][0]);
 
 	return result;
 }

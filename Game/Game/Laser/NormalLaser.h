@@ -54,6 +54,10 @@ private:
 	std::shared_ptr<EnemyBase> m_pEnemy;	// 発射元のポインタ
 	std::shared_ptr<Player> m_pPlayer;		// プレイヤーのポインタ
 
+	// 向く方向
+	Vector3 m_directionPos;	// 向く座標
+	Vector3 m_directionVec; // ベクトル
+
 	// 状態マシン
 	StateMachine<State> m_stateMachine;	
 
@@ -72,12 +76,8 @@ private:
 	// プレイヤーを追従するか
 	bool m_isPlayerFollowing;
 
-	// 通常発射時の移動ポイント
-	int m_normalFireMovePointIndex;	
-
-	// 通常発射時の移動ポイントの座標
-	Vector3 m_normalFireGoalPos;
-
-	// 通常発射時の移動ポイントの座標のリスト
-	std::vector<Vector2> m_normalFireMovePointList;
+	// 通常発射時
+	int m_normalFireMovePointIndex;		// 移動ポイントインデックス
+	Vector3 m_normalFireGoalPos;		// 移動ポイントの座標
+	std::vector<Vector2> m_normalFireMovePointList;	// 移動ポイントの座標のリスト
 };

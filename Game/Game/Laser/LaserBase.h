@@ -38,7 +38,7 @@ protected:
 	Vector3 m_rot;
 
 	// ˆÚ“®ƒxƒNƒgƒ‹
-	Vector3 m_moveVec;
+	Vector3 m_rotVec;
 
 	// Šg‘å—¦
 	Vector3 m_scale;
