@@ -59,8 +59,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 	// プレイヤーを追従する場合	
 	if (m_isPlayerFollowing)
 	{
-		// プレイヤーの位置を目的地に設定
-		m_rotVec = (m_pPlayer->GetPosLogTable().back() - m_pos).Normalized() * laserSpeed;
+		m_directionPos = m_pPlayer->GetPosLogTable().back();
 	}
 	// プレイヤーを追従しない場合
 	else
@@ -79,14 +78,14 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, 0.0f }));
 
 		// レーザーの移動ベクトルを設定
-		m_rotVec = (m_normalFireGoalPos - m_pos).Normalized() * laserSpeed;
+		m_directionPos = m_normalFireGoalPos;
 	}
 
 	// ベクトル方向の回転行列を作成
-	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, m_rotVec);
+	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
 
 	// ベクトル方向の回転行列からオイラー角を出力
-	Matrix effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_rotVec);
+	Matrix effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
 	Vector3 effectRot = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの再生
@@ -142,10 +141,10 @@ void NormalLaser::Update()
 	m_pos = m_pEnemy->GetLaserFirePos();
 
 	// ベクトル方向の回転行列を作成
-	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, m_rotVec);
+	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
 
 	// ベクトル方向の回転行列からオイラー角を出力
-	Matrix effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_rotVec);
+	Matrix effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
 	Vector3 effectRot = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの回転率を設定
@@ -189,7 +188,7 @@ void NormalLaser::UpdateCharge()
 void NormalLaser::UpdateNormalFire()
 {
 	// 目的地に到達したかどうかの判定
-	if (m_pos.Distance(m_normalFireGoalPos) < distance_thres_hold)
+	if (m_directionPos.Distance(m_normalFireGoalPos) < distance_thres_hold)
 	{
 		// 目的地に到達したら次の目的地を設定
 		m_normalFireMovePointIndex++;
@@ -210,15 +209,22 @@ void NormalLaser::UpdateNormalFire()
 		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, 0.0f }));
 
 		// レーザーの移動ベクトルを設定
-		m_rotVec = (m_normalFireGoalPos - m_pos).Normalized() * m_speed;
+		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
+	}
+	else
+	{
+		Vector3 goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ m_normalFireMovePointList[m_normalFireMovePointIndex].x,
+																			  m_normalFireMovePointList[m_normalFireMovePointIndex].y,
+																			  0.0f }));
+		m_directionVec = (goalPos - m_directionPos).Normalized() * m_speed;
+		m_directionPos += m_directionVec;
 	}
 }
 
 // プレイヤーを追従して発射状態の更新
 void NormalLaser::UpdateFirePlayerFollowing()
 {
-	// プレイヤーの位置を目的地に設定
-	m_rotVec = (m_pPlayer->GetPosLogTable().back() - m_pos).Normalized() * m_speed;
+	m_directionPos = m_pPlayer->GetPosLogTable().back();
 }
 
 // 描画
@@ -229,5 +235,7 @@ void NormalLaser::Draw()
 	SetUseLighting(false);
 	m_pModel->Draw();
 	SetUseLighting(true);
+
+	DrawFormatString(0, 200, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
 #endif 
 }
