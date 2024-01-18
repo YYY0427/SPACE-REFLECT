@@ -12,7 +12,7 @@ class LaserManager;
 /// <summary>
 /// 敵の基底クラス
 /// </summary>
-class EnemyBase
+class EnemyBase : public std::enable_shared_from_this<EnemyBase>
 {
 public:
 	// コンストラクタ

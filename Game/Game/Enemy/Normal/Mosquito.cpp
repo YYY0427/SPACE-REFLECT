@@ -24,12 +24,8 @@ Mosquito::Mosquito(int modelHandle,
 	EnemyData data, 
 	std::shared_ptr<Player> pPlayer, 
 	std::shared_ptr<LaserManager> pLaserManager) :
-	m_idleFrame(0)
-	/*m_laserFireFrame(0),
-	m_laserFireIdleFrame(0),
-	m_laserSpeed(0),
-	m_laserType({}),
-	m_idleFrame(0)*/
+	m_idleFrame(0),
+	m_laserKey(-1)
 {
 	// 初期化
 	m_pPlayer = pPlayer;
@@ -44,7 +40,7 @@ Mosquito::Mosquito(int modelHandle,
 	m_opacity = 1.0f;
 
 	// プレイヤーを向くように回転行列を設定
-	Matrix rotMtx = Matrix::GetRotationMatrix((m_pPlayer->GetPos() - m_pos), init_model_direction);
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
 
 	// ステートマシンの設定
 	m_state.AddState(State::IDLE, {}, [this](){ UpdateIdle(); }, {});
@@ -78,6 +74,13 @@ void Mosquito::EntarMove()
 	{
 		// 存在フラグを下げる
 		m_isEnabled = false;
+
+		// レーザーを発射していたら
+		if (m_laserKey != -1)
+		{
+			// レーザーの削除
+			m_pLaserManager->DeleteLaser(m_laserKey);
+		}
 		return;
 	}
 
@@ -94,14 +97,16 @@ void Mosquito::Update()
 	// ステートマシンの更新
 	m_state.Update();
 
+	// レーザーの発射位置の更新
+	m_laserFirePos = m_pos;
+
 	// プレイヤーを向くように回転行列を設定
-	Matrix rotMtx = Matrix::GetRotationMatrix((m_pPlayer->GetPos() - m_pos), init_model_direction);
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
 
 	// モデルの設定
 	m_pModel->RestoreAllMaterialDifColor();	// ディフューズカラーを元に戻す
 	m_pModel->SetOpacity(m_opacity);
 	m_pModel->SetRotMtx(rotMtx);
-	m_pModel->SetRot(m_rot);
 	m_pModel->SetPos(m_pos);
 	m_pModel->Update();
 }
@@ -112,11 +117,8 @@ void Mosquito::UpdateIdle()
 	// Z座標の更新
 	m_pos.z += m_pPlayer->GetMoveVec().z;
 
-	// 待機フレームの更新
-	m_actionData.idleFrame--;
-
 	// 待機フレームが終わったら
-	if (m_actionData.idleFrame <= 0)
+	if (m_actionData.idleFrame-- <= 0)
 	{
 		// 移動状態に遷移
 		m_state.SetState(State::MOVE);
@@ -126,15 +128,10 @@ void Mosquito::UpdateIdle()
 // 移動状態の更新
 void Mosquito::UpdateMove()
 {
-	// 存在フラグが下がっていたらなにもしない
-	if(!m_isEnabled) return;
-
 	// 目的地に到達したかの判定
 	if (m_pos.Distance(m_goalPos) < distance_thres_hold &&
 		!m_isGoal)
 	{
-		/* 到達 */
-
 		// 到達した場合、一回しか通ってほしくない為、
 		// フラグを立てる
 		m_isGoal = true;
@@ -150,21 +147,11 @@ void Mosquito::UpdateMove()
 		// レーザー発射状態に遷移
 		if (itr->isLaser)
 		{
-			//// レーザーの設定
-			//m_laserType = static_cast<LaserType>(itr->laserType);	// レーザーの種類
-			//m_laserFireIdleFrame = itr->laserIdleFrame;	// レーザー発射までの待機フレーム
-			//m_laserFireFrame = itr->laserFireFrame;		// レーザー発射フレーム
-			//m_laserSpeed = itr->laserSpeed;				// レーザーの速度
-			//m_idleFrame = itr->idleFrame;				// 移動ポイントの待機フレーム
-
 			// レーザー発射
 			m_state.SetState(State::ATTACK);
 		}
 		else
 		{
-			// 移動ポイントの待機フレームを設定
-		//	m_idleFrame = itr->idleFrame;
-
 			// レーザー発射フラグが立っていなかったら
 			m_state.SetState(State::IDLE);
 		}
@@ -187,25 +174,25 @@ void Mosquito::UpdateAttack()
 	// Z座標の更新
 	m_pos.z += m_pPlayer->GetMoveVec().z;
 
-	// レーザー発射までの待機フレームの更新
-	m_actionData.laserIdleFrame--;
-
 	// レーザー発射までの待機フレームが終わったら
-	if (m_actionData.laserIdleFrame <= 0)
+	if (m_actionData.laserIdleFrame-- <= 0 && m_actionData.isLaser)
 	{
 		// レーザーの発射
-		m_pLaserManager->AddLaser(
+		m_laserKey = m_pLaserManager->AddLaser(
 			m_actionData.laserType,
-			static_cast<std::shared_ptr<EnemyBase>>(this), 
+			shared_from_this(),
 			m_actionData.laserFireFrame,
 			m_actionData.laserSpeed,
 			m_actionData.isPlayerFollowing);
 
-		// レーザー発射フレームの更新
-		m_actionData.laserFireFrame--;
-
-		// レーザー発射フレームが終わったら
-		if (m_actionData.laserFireFrame <= 0)
+		// レーザーを発射したのでフラグを下げる
+		m_actionData.isLaser = false;
+	}
+	// レーザー発射後、レーザー発射中フレームの更新
+	else if (m_actionData.laserIdleFrame <= 0 && !m_actionData.isLaser)
+	{
+		// レーザー発射中フレームが終わったら
+		if (m_actionData.laserFireFrame-- <= 0)
 		{
 			// 待機状態に遷移
 			m_state.SetState(State::IDLE);
@@ -236,5 +223,11 @@ void Mosquito::GetGoalPos()
 // 描画
 void Mosquito::Draw()
 {
+	// モデルの描画
 	m_pModel->Draw();
+
+#ifdef _DEBUG
+	// 目的地の描画
+	DrawSphere3D(m_goalPos.ToDxLibVector3(), 10.0f, 10, 0xff0000, 0xff0000, TRUE);
+#endif
 }

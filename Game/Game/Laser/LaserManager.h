@@ -20,7 +20,7 @@ enum class LaserType
 struct LaserData
 {
 	LaserType type;	// レーザーの種類
-	std::shared_ptr<LaserBase> pLaser;	// 発射元のポインタ
+	std::shared_ptr<LaserBase> pLaser;	
 };
 
 /// <summary>
@@ -47,14 +47,17 @@ public:
 	/// <param name="type">レーザーの種類</param>
 	/// <param name="pEnemy">発射元のポインタ</param>
 	/// <param name="laserFireFrame">レーザーの発射時間フレーム</param>
-	void AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
+	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
 	
+	// レーザーの削除
+	void DeleteLaser(int key);
+
 	// ゲッター
-	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
+	const std::map<int, LaserData>& GetLaserList() const;	// レーザーリスト
 
 private:
 	// ポインタ
-	std::list<LaserData> m_pLaserList;	// レーザーリスト
+	std::map<int, LaserData> m_pLaserList;	// レーザーリスト
 	std::shared_ptr<Player> m_pPlayer;	// プレイヤーのポインタ
 
 	// モデルハンドルテーブル

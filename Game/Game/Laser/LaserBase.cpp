@@ -4,7 +4,8 @@
 LaserBase::LaserBase() :
 	m_isEnabled(true),
 	m_isReflect(false),
-	m_speed(0.0f)
+	m_speed(0.0f),
+	m_opacity(1.0f)
 {
 }
 

@@ -24,10 +24,12 @@ namespace
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
-	constexpr float distance_thres_hold = 0.1f;
+	constexpr float distance_thres_hold = 5.0f;
 
 	// プレイヤーを追従しない場合の向かう位置
-	const Vector2 window_size = { static_cast<float>(Application::GetInstance().GetWindowSize().width) , static_cast<float>(Application::GetInstance().GetWindowSize().height )};
+	const Vector2 window_size = 
+		{ static_cast<float>(Application::GetInstance().GetWindowSize().width), 
+		static_cast<float>(Application::GetInstance().GetWindowSize().height )};
 	const Vector2 goal_pos[] = 
 	{
 		{ 0 + 100, 0 + 100 },
@@ -94,7 +96,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 		&m_pos,
 		laser_effect_scale,
 		laser_effect_play_speed,
-		effectRot);
+		-effectRot);
 
 	// 状態の追加
 	m_stateMachine.AddState(State::CHARGE, {}, [this]() { UpdateCharge(); }, {});
@@ -125,11 +127,10 @@ void NormalLaser::Update()
 	// ステートがチャージ状態でない場合
 	if(m_stateMachine.GetCurrentState() != State::CHARGE)
 	{
-		// レーザーの発射フレームを減らす
-		m_laserFireFrame--;
+
 
 		// レーザーの発射フレームが0以下になったら
-		if (m_laserFireFrame <= 0)
+		if (m_laserFireFrame-- <= 0)
 		{
 			// 存在フラグを下げる
 			m_isEnabled = false;
@@ -150,7 +151,7 @@ void NormalLaser::Update()
 	Vector3 effectRot = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの回転率を設定
-	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
+	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, -effectRot);
 
 	// モデルの設定
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列

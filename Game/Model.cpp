@@ -135,37 +135,43 @@ void Model::Update()
 //  描画
 void Model::Draw()
 {
-	MV1DrawModel(m_modelHandle);
+	int result = MV1DrawModel(m_modelHandle);
+	assert(result != -1);
 }
 
 // モデルの表示位置の設定
 void Model::SetPos(Vector3 pos)
 {
-	MV1SetPosition(m_modelHandle, pos.ToDxLibVector3());
+	int result = MV1SetPosition(m_modelHandle, pos.ToDxLibVector3());
+	assert(result != -1);
 }
 
 // モデルの回転状態の設定
 void Model::SetRot(Vector3 rot)
 {
-	MV1SetRotationXYZ(m_modelHandle, rot.ToDxLibVector3());
+	int result = MV1SetRotationXYZ(m_modelHandle, rot.ToDxLibVector3());
+	assert(result != -1);
 }
 
 // モデルの回転行列の設定
 void Model::SetRotMtx(Matrix mtx)
 {
-	MV1SetRotationMatrix(m_modelHandle, mtx.ToDxLibMatrix());
+	int result = MV1SetRotationMatrix(m_modelHandle, mtx.ToDxLibMatrix());
+	assert(result != -1);
 }
 
 // モデルの拡大率の設定
 void Model::SetScale(Vector3 scale)
 {
-	MV1SetScale(m_modelHandle, scale.ToDxLibVector3());
+	int result = MV1SetScale(m_modelHandle, scale.ToDxLibVector3());
+	assert(result != -1);
 }
 
 // モデルの不透明度の設定
 void Model::SetOpacity(float opacity)
 {
-	MV1SetOpacityRate(m_modelHandle, opacity);
+	int result = MV1SetOpacityRate(m_modelHandle, opacity);
+	assert(result != -1);
 }
 
 // モデルの指定のマテリアルの描画ブレンドモードを設定

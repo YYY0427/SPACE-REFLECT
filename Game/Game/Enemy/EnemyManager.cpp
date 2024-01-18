@@ -62,6 +62,9 @@ EnemyManager::~EnemyManager()
 // 更新
 void EnemyManager::Update()
 {
+	// 存在フラグが下がっている敵の削除
+	m_pEnemyList.remove_if([](std::shared_ptr<EnemyBase> data) { return !data->IsEnabled(); });
+
 	// 雑魚敵の更新
 	for (auto& enemy : m_pEnemyList)
 	{

@@ -141,6 +141,7 @@ Matrix Matrix::GetRotationMatrix(const Vector3& from, const Vector3& to)
 	//return result;
 
 	MATRIX result = MGetRotVec2(from.ToDxLibVector3(), to.ToDxLibVector3());
+	
 	return { result.m[0][0], result.m[0][1], result.m[0][2], result.m[0][3],
 			 result.m[1][0], result.m[1][1], result.m[1][2], result.m[1][3],
 			 result.m[2][0], result.m[2][1], result.m[2][2], result.m[2][3],
@@ -291,6 +292,5 @@ MATRIX Matrix::ToDxLibMatrix() const
 		result.m[i][2] = m[i][2];
 		result.m[i][3] = m[i][3];
 	}
-
 	return result;
 }

@@ -2,6 +2,7 @@
 #include "EnemyBase.h"
 #include "../../../Util/Timer.h"
 #include "../../../Game/Laser/LaserManager.h"
+#include <memory>
 
 /// <summary>
 /// 雑魚敵クラス
@@ -32,7 +33,7 @@ private:
 	void UpdateDead();	// 死亡
 
 	// 目的地の取得
-	void GetGoalPos();	
+	void GetGoalPos();
 
 private:
 	// 状態
@@ -54,10 +55,7 @@ private:
 	// 行動データ
 	EnemyActionData m_actionData;	
 
-	//// レーザー
-	//LaserType m_laserType;		// レーザーの種類
-	//int m_laserFireIdleFrame;	// レーザー発射までの待機時間
-	//int m_laserFireFrame;		// レーザー発射時間
-	//float m_laserSpeed;			// レーザーの速度
+	// レーザーのKey
+	int m_laserKey;
 };
 

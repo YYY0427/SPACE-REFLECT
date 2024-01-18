@@ -28,12 +28,25 @@ LaserManager::~LaserManager()
 void LaserManager::Update()
 {
 	// 不要になったレーザーの削除
-	m_pLaserList.remove_if([](LaserData data) { return !data.pLaser->IsEnabled(); });
+	for (auto it = m_pLaserList.begin(); it != m_pLaserList.end();)
+	{
+		// レーザーが無効になったら削除
+		if (!it->second.pLaser->IsEnabled())
+		{
+			// レーザーの削除
+			it = m_pLaserList.erase(it);
+		}
+		else
+		{
+			// 次の要素へ
+			it++;
+		}
+	}
 
 	// レーザーの更新
 	for (auto& laser : m_pLaserList)
 	{
-		laser.pLaser->Update();
+		laser.second.pLaser->Update();
 	}
 }
 
@@ -42,12 +55,12 @@ void LaserManager::Draw()
 {
 	for (auto& laser : m_pLaserList)
 	{
-		laser.pLaser->Draw();
+		laser.second.pLaser->Draw();
 	}
 }
 
 // レーザーの追加
-void LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserFireFrame, float laserSpeed, bool isPlayerFollowing)
+int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserFireFrame, float laserSpeed, bool isPlayerFollowing)
 {
 	LaserData laserData;
 	laserData.type = type;
@@ -63,10 +76,30 @@ void LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, i
 	default:
 		assert(!"レーザーの種類がありません");
 	}
+
+	// Keyの設定
+	int key = 0;
+	if (m_pLaserList.size() != 0)
+	{
+		key = m_pLaserList.rbegin()->first + 1;
+	}
+
+	// レーザーリストに追加
+	m_pLaserList[key] = laserData;
+
+	// Keyを返す
+	return key;
+}
+
+// レーザーの削除
+void LaserManager::DeleteLaser(int key)
+{
+	// レーザーの削除
+	m_pLaserList.erase(key);
 }
 
 // レーザーの取得	
-const std::list<LaserData>& LaserManager::GetLaserList() const
+const std::map<int, LaserData>& LaserManager::GetLaserList() const
 {
 	return m_pLaserList;
 }
