@@ -30,13 +30,14 @@ enum class BossEnemyType
 // 敵の行動のデータ
 struct EnemyActionData
 {
-	Vector3 goalPos;	// 目的地
-	int idleFrame;		// 目的地に到達してから次の目的地に向かうまでの待機フレーム
-	bool isLaser;		// 目的地に到達したらレーザーを撃つか
-	LaserType laserType;// レーザーを撃つ場合、どのレーザーを撃つか
-	int laserIdleFrame;	// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
-	float laserSpeed;	// レーザーを撃つ場合、レーザーの移動速度
-	int laserFireFrame; // レーザーを何フレーム発射し続けるか
+	Vector3 goalPos;		// 目的地
+	int idleFrame;			// 目的地に到達してから次の目的地に向かうまでの待機フレーム
+	bool isLaser;			// 目的地に到達したらレーザーを撃つか
+	LaserType laserType;	// レーザーを撃つ場合、どのレーザーを撃つか
+	float laserChargeFrame;	// レーザーを撃つ場合、レーザーを撃つまでのチャージフレーム
+	int laserIdleFrame;		// レーザーを撃つ場合、目的地に到達してからレーザーを撃つまでの待機フレーム
+	float laserSpeed;		// レーザーを撃つ場合、レーザーの移動速度
+	int laserFireFrame;		// レーザーを何フレーム発射し続けるか
 	bool isPlayerFollowing;	// レーザーを撃つ場合、レーザーがプレイヤーを追従するかどうか
 };
 

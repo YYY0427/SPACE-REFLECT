@@ -46,8 +46,11 @@ public:
 	/// </summary>
 	/// <param name="type">レーザーの種類</param>
 	/// <param name="pEnemy">発射元のポインタ</param>
+	/// <param name="laserChargeFrame">レーザーのチャージフレーム</param>
 	/// <param name="laserFireFrame">レーザーの発射時間フレーム</param>
-	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
+	/// <param name="laserSpeed">レーザーの移動速度</param>
+	/// <param name="isPlayerFollowing">プレイヤーを追従するか</param>
+	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
 	
 	// レーザーの削除
 	void DeleteLaser(int key);

@@ -37,6 +37,7 @@ Mosquito::Mosquito(int modelHandle,
 	m_hp = data.hp;
 	m_moveSpeed = data.speed;
 	m_attackPower = data.attack;
+	m_scale = { data.scale, data.scale, data.scale };
 	m_opacity = 1.0f;
 
 	// ƒvƒŒƒCƒ„[‚ðŒü‚­‚æ‚¤‚É‰ñ“]s—ñ‚ðÝ’è
@@ -55,7 +56,7 @@ Mosquito::Mosquito(int modelHandle,
 	// ƒ‚ƒfƒ‹‚ÌÝ’è
 	m_pModel->SetOpacity(m_opacity);
 	m_pModel->SetRotMtx(rotMtx);
-	m_pModel->SetScale({ data.scale, data.scale, data.scale });
+	m_pModel->SetScale(m_scale);
 	m_pModel->SetPos(m_pos);
 	m_pModel->ChangeAnimation(idle_anim_num, true, false, 8);
 	m_pModel->Update();
@@ -181,6 +182,7 @@ void Mosquito::UpdateAttack()
 		m_laserKey = m_pLaserManager->AddLaser(
 			m_actionData.laserType,
 			shared_from_this(),
+			m_actionData.laserChargeFrame,
 			m_actionData.laserFireFrame,
 			m_actionData.laserSpeed,
 			m_actionData.isPlayerFollowing);
@@ -223,6 +225,14 @@ void Mosquito::GetGoalPos()
 // •`‰æ
 void Mosquito::Draw()
 {
+	// TODO : —ÖŠsü‚¢‚Â‚©‚â‚é
+	Vector3 scale = m_scale;
+	m_pModel->SetScale({ scale.x * 1.08f, scale.y * 1.08f, 0.0f });
+	m_pModel->SetAllMaterialDifColor(GetColorF(255.0f, 0.0f, 0.0f, 255.0f));
+	m_pModel->Draw();
+	m_pModel->RestoreAllMaterialDifColor();
+	m_pModel->SetScale(m_scale);
+
 	// ƒ‚ƒfƒ‹‚Ì•`‰æ
 	m_pModel->Draw();
 

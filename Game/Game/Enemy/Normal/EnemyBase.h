@@ -59,6 +59,9 @@ protected:
 	// レーザーの発射位置
 	Vector3 m_laserFirePos;
 
+	// 大きさ
+	Vector3 m_scale;
+
 	// 移動速度
 	float m_moveSpeed;
 

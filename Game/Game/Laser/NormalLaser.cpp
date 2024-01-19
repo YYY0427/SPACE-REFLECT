@@ -18,13 +18,14 @@ namespace
 	// エフェクト
 	const Vector3 init_laser_effect_direction = { 0.0f, 0.0f, -1.0f };	// 初期方向
 	const Vector3 laser_effect_scale = { 24.0f, 24.0f, 24.0f };		// 拡大率
-	constexpr int laser_effect_play_speed = 1.5f;		// 再生速度
-	constexpr int laser_effect_total_play_frame = 100;	// 再生フレーム数
-	constexpr int laser_effect_charge_frame = 150;		// チャージフレーム
+	constexpr float laser_effect_play_speed = 1.0f;		// 再生速度
+	constexpr int init_laser_effect_charge_frame = 140;	// 元々のチャージフレーム
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
-	constexpr float distance_thres_hold = 5.0f;
+	constexpr float distance_thres_hold = 15.0f;
+
+	constexpr float afisajf = 0.0f;
 
 	// プレイヤーを追従しない場合の向かう位置
 	const Vector2 window_size = 
@@ -41,7 +42,7 @@ namespace
 }
 
 // コンストラクタ
-NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserFireFrame, float laserSpeed, bool isPlayerFollowing) :
+NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing) :
 	m_pEnemy(pEnemy),
 	m_pPlayer(pPlayer),
 	m_laserFireFrame(laserFireFrame),
@@ -53,16 +54,14 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 	m_scale = laser_model_scale;
 	m_speed = laserSpeed;
 
-	// エフェクトのチャージ時間フレームとエフェクトの再生速度からチャージ時間が何フレームなのか求める
-	m_chargeEffectTimer = laser_effect_charge_frame / laser_effect_play_speed;
+	// エフェクトのチャージフレームを設定
+	m_chargeEffectFrame = laserChargeFrame;
 
-	// プレイヤーを追従する場合	
-	if (m_isPlayerFollowing)
-	{
-		m_directionPos = m_pPlayer->GetPosLogTable().back();
-	}
+	// エフェクトのチャージフレームから再生速度を算出
+	float effectSpeed = static_cast<float>(init_laser_effect_charge_frame) / static_cast<float>(m_chargeEffectFrame);
+
 	// プレイヤーを追従しない場合
-	else
+	if(!m_isPlayerFollowing)
 	{
 		// レーザーの目的地をリストに追加
 		for (auto& movePoint : goal_pos)
@@ -74,12 +73,14 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 		std::random_device seed;
 		std::mt19937 engine(seed());
 		std::shuffle(m_normalFireMovePointList.begin(), m_normalFireMovePointList.end(), engine);
-		Vector2 screenPos = m_normalFireMovePointList.front();
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, 0.0f }));
 
-		// レーザーの移動ベクトルを設定
-		m_directionPos = m_normalFireGoalPos;
+		// 目的地を設定
+		Vector2 screenPos = m_normalFireMovePointList.front();
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, afisajf }));
+
 	}
+	// レーザーの向く座標を設定
+	m_directionPos = m_pPlayer->GetPosLogTable().back();
 
 	// ベクトル方向の回転行列を作成
 	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
@@ -94,7 +95,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 		EffectID::infinity_laser,
 		&m_pos,
 		laser_effect_scale,
-		laser_effect_play_speed,
+		effectSpeed,
 		effectRot);
 
 	// 状態の追加
@@ -126,6 +127,9 @@ void NormalLaser::Update()
 	// ステートがチャージ状態でない場合
 	if(m_stateMachine.GetCurrentState() != State::CHARGE)
 	{
+		// エフェクトの再生速度の設定
+		Effekseer3DEffectManager::GetInstance().SetEffectSpeed(m_laserEffectHandle, 1.0f);
+
 		// レーザーの発射フレームが0以下になったら
 		if (m_laserFireFrame-- <= 0)
 		{
@@ -161,11 +165,8 @@ void NormalLaser::Update()
 // チャージ状態の更新
 void NormalLaser::UpdateCharge()
 {
-	// チャージ時間のタイマーの更新	
-	m_chargeEffectTimer.Update(1);
-
 	// チャージ時間が終わったら
-	if(m_chargeEffectTimer.IsTimeOut())
+	if(m_chargeEffectFrame-- <= 0)
 	{
 		// モデルの拡大率を設定
 		m_scale.x *= -10.0f;
@@ -193,9 +194,10 @@ void NormalLaser::UpdateNormalFire()
 		// 目的地に到達したら次の目的地を設定
 		m_normalFireMovePointIndex++;
 
-		// 次の目的地がリストの最後まで到達したら最初に戻す
+		// 次の目的地がリストの最後まで到達したら
 		if (m_normalFireMovePointIndex >= m_normalFireMovePointList.size())
 		{
+			// インデックスを初期化
 			m_normalFireMovePointIndex = 0;
 
 			// 地点の移動順序の入れ替え(配列の中身をシャッフル)
@@ -206,17 +208,21 @@ void NormalLaser::UpdateNormalFire()
 
 		// 次の目的地を設定
 		Vector2 screenPos = m_normalFireMovePointList[m_normalFireMovePointIndex];
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, 0.0f }));
-
-		// レーザーの移動ベクトルを設定
-		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, afisajf }));
 	}
 	else
 	{
-		Vector3 goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ m_normalFireMovePointList[m_normalFireMovePointIndex].x,
-																			  m_normalFireMovePointList[m_normalFireMovePointIndex].y,
-																			  0.0f }));
-		m_directionVec = (goalPos - m_directionPos).Normalized() * m_speed;
+		// ゴールの座標を設定
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(
+			ConvScreenPosToWorldPos(
+				{ m_normalFireMovePointList[m_normalFireMovePointIndex].x,
+				  m_normalFireMovePointList[m_normalFireMovePointIndex].y,
+				  afisajf }));
+
+		// ベクトルを設定
+		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
+
+		// 座標を更新
 		m_directionPos += m_directionVec;
 	}
 }
@@ -224,7 +230,11 @@ void NormalLaser::UpdateNormalFire()
 // プレイヤーを追従して発射状態の更新
 void NormalLaser::UpdateFirePlayerFollowing()
 {
-	m_directionPos = m_pPlayer->GetPosLogTable().back();
+	// ベクトルを設定
+	m_directionVec = (m_pPlayer->GetPos() - m_directionPos).Normalized() * m_speed;
+
+	// 座標の更新
+	m_directionPos += m_directionVec;
 }
 
 // 描画
@@ -233,9 +243,9 @@ void NormalLaser::Draw()
 #ifdef _DEBUG
 	// モデルの描画
 	SetUseLighting(false);
-	m_pModel->Draw();
+//	m_pModel->Draw();
 	SetUseLighting(true);
 
-	DrawFormatString(0, 200, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
+	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
 #endif 
 }

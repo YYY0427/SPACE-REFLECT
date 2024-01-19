@@ -306,12 +306,6 @@ std::vector<EnemyData> EnemyManager::LoadEnemyFileData(std::string filePath)
 		data.pos.y = std::stof(strvec[1]);
 		data.pos.z = std::stof(strvec[2]);
 
-		//// 座標の読み込み
-		//data.pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ std::stof(strvec[0]), std::stof(strvec[1]), 0.0f }));
-
-		//// z軸はプレイヤーの座標からの相対座標に変換
-		//data.pos.z = m_pPlayer->GetPos().z - (std::stof(strvec[2]));
-
 		// 種類の読み込み
 		data.type = static_cast<EnemyType>(std::stoi(strvec[3]));
 
@@ -370,12 +364,6 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 		data.goalPos.y = std::stof(strvec[1]);
 		data.goalPos.z = std::stof(strvec[2]);
 
-		//// 目的地の読み込み
-		//data.goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ std::stof(strvec[0]), std::stof(strvec[1]), 0.0f }));
-
-		//// z軸はプレイヤーの座標からの相対座標に変換
-		//data.goalPos.z = m_pPlayer->GetPos().z - (std::stof(strvec[2]));
-
 		// 目的地に到達してから次の目的地に向かうまでの待機フレームの読み込み
 		data.idleFrame = std::stoi(strvec[3]);
 
@@ -388,17 +376,20 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 			// レーザーの種類の読み込み
 			data.laserType = static_cast<LaserType>(std::stoi(strvec[5]));
 
+			// レーザーを発射するまでのチャージフレームの読み込み
+			data.laserChargeFrame = std::stoi(strvec[6]);
+
 			// レーザーを発射するまでの待機フレームの読み込み
-			data.laserIdleFrame = std::stoi(strvec[6]);
+			data.laserIdleFrame = std::stoi(strvec[7]);
 
 			// レーザーの速度の読み込み
-			data.laserSpeed = std::stof(strvec[7]);
+			data.laserSpeed = std::stof(strvec[8]);
 
 			// レーザーを何フレームの間、発射するかの読み込み
-			data.laserFireFrame = std::stoi(strvec[8]);
+			data.laserFireFrame = std::stoi(strvec[9]);
 
 			// レーザーがプレイヤーを追従するかどうかのフラグの読み込み
-			data.isPlayerFollowing = std::stoi(strvec[9]);
+			data.isPlayerFollowing = std::stoi(strvec[10]);
 		}
 
 		// データの追加

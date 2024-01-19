@@ -60,7 +60,7 @@ void LaserManager::Draw()
 }
 
 // レーザーの追加
-int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserFireFrame, float laserSpeed, bool isPlayerFollowing)
+int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing)
 {
 	LaserData laserData;
 	laserData.type = type;
@@ -71,7 +71,7 @@ int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, in
 	case LaserType::NORMAL:
 		laserData.pLaser = std::make_shared<NormalLaser>(
 			m_modelHandleTable[LaserType::NORMAL],
-			pEnemy, m_pPlayer, laserFireFrame, laserSpeed, isPlayerFollowing);
+			pEnemy, m_pPlayer, laserChargeFrame, laserFireFrame, laserSpeed, isPlayerFollowing);
 		break;
 	default:
 		assert(!"レーザーの種類がありません");

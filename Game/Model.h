@@ -94,6 +94,8 @@ public:
 	void InversAllMaterialDifColor();							// 全てのマテリアルのディフューズカラーを反転
 	void RestoreAllMaterialDifColor();							// 全てのマテリアルのディフューズカラーを元に戻す
 
+	// 全てのマテリアルのアウトラインを設定する
+	void SetAllMaterialOutLine(COLOR_F color, float size);	
 
 private:
 	// アニメーション情報

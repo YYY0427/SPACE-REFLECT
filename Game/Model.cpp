@@ -267,6 +267,36 @@ void Model::RestoreAllMaterialDifColor()
 	}
 }
 
+// 全てのマテリアルのアウトラインを設定する
+void Model::SetAllMaterialOutLine(COLOR_F color, float size)
+{
+
+	/*int result = MV1SetMaterialOutLineWidthAll(m_modelHandle, size);
+	assert(result != -1);	
+
+	result = MV1SetMaterialOutLineColorAll(m_modelHandle, color);
+	assert(result != -1);*/
+
+
+	// マテリアルの数の取得
+	int materialNum = GetMaterialNum();
+
+	// マテリアルの数の分、アウトラインを設定する
+	for (int i = 0; i < materialNum; i++)
+	{
+		// マテリアルの元々のアウトラインの太さを取得
+		float initWidth = MV1GetMaterialOutLineDotWidth(m_modelHandle, i);
+
+		// アウトラインの太さを元々の太さ + 指定の太さに設定
+		int result = MV1SetMaterialOutLineDotWidth(m_modelHandle, i, size);
+		assert(result != -1);
+
+		// アウトラインの色を設定
+		result = MV1SetMaterialOutLineColor(m_modelHandle, i, color);
+		assert(result != -1);
+	}
+}
+
 // アニメーションを設定する(ぱっと切り替える)
 void Model::SetAnimation(int animNo, bool isLoop, bool isForceChange, float animPlaySpeed)
 {
@@ -375,7 +405,6 @@ int Model::GetColFrameIndex() const
 int Model::GetMaterialNum() const
 {
 	int result = MV1GetMaterialNum(m_modelHandle);
-	assert(result != -1);
 	return result;
 }
 
