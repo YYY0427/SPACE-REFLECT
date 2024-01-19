@@ -2,6 +2,7 @@
 #include "../Math/MathUtil.h"
 #include <DxLib.h>
 #include <algorithm>
+#include <cassert>
 
 namespace
 {
@@ -45,9 +46,26 @@ Camera::~Camera()
 // 更新
 void Camera::Update(Vector3 playerPos)
 {
-	// プレイヤーの位置とは逆方向に少しカメラの注視点をずらす
+#if false
+	// プレイヤーの位置方向に少しカメラの注視点をずらす
+	Vector3 tempTarget = m_target;
+
+	m_target.x = playerPos.x * 0.2f;
+	m_target.y = playerPos.y * 0.2f;
+
+	// 注視点を特定の角度以上には回転させない
+	Vector3 centerPos = { 0, 0, 1 };
+	Vector3 targetPos = m_target - m_pos;
+	float angle = MathUtil::ToDegree(centerPos.Angle(targetPos));
+	if (angle >= 10.0f)
+	{
+		m_target = tempTarget;
+	}
+#else
+	// プレイヤーの位置方向とは逆に少しカメラの注視点をずらす
 	m_target.x = -playerPos.x * 0.2f;
 	m_target.y = -playerPos.y * 0.2f;
+#endif
 
 	// カメラとプレイヤーの差分
 	Vector3 direction = playerPos - m_pos;

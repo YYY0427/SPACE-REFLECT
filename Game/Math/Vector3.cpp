@@ -105,7 +105,8 @@ bool Vector3::operator!=(const Vector3& vec)
 float Vector3::Length() const
 {
 //	return sqrtf(x * x + y * y + z * z);
-	return VSize(ToDxLibVector3());
+//	return VSize(ToDxLibVector3());
+	return pow((x * x) + (y * y) + (z * z), 0.5);
 }
 
 // ベクトルの大きさの2乗を返す
@@ -118,6 +119,12 @@ float Vector3::SQLength() const
 float Vector3::Distance(const Vector3& other) const
 {
 	return std::sqrt(std::pow(x - other.x, 2) + std::pow(y - other.y, 2) + std::pow(z - other.z, 2));
+}
+
+// 2つのベクトルのなす角度を求める
+float Vector3::Angle(const Vector3& other) const
+{
+	return std::acos(Dot(*this, other) / (Length() * other.Length()));
 }
 
 // ベクトルの正規化

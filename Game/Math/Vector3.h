@@ -58,6 +58,9 @@ public:
 	// 2つのベクトル間のユークリッド距離を計算
 	float Distance(const Vector3& other) const;
 
+	// 2つのベクトルのなす角度を求める
+	float Angle(const Vector3& other) const;
+
 	// ベクトルの正規化
 	void Normalize();
 

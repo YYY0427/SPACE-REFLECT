@@ -1,4 +1,5 @@
 #include "LaserBase.h"
+#include "../../Model.h"
 
 // コンストラクタ
 LaserBase::LaserBase() :
@@ -12,6 +13,12 @@ LaserBase::LaserBase() :
 // デストラクタ
 LaserBase::~LaserBase()
 {
+}
+
+// モデルハンドルの取得
+int LaserBase::GetModelHandle() const
+{
+	return m_pModel->GetModelHandle();
 }
 
 // 存在フラグの取得

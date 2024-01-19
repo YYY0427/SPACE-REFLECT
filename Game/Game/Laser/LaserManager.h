@@ -19,8 +19,9 @@ enum class LaserType
 // レーザーのデータ
 struct LaserData
 {
+	int key;		// レーザーのキー
 	LaserType type;	// レーザーの種類
-	std::shared_ptr<LaserBase> pLaser;	
+	std::shared_ptr<LaserBase> pLaser;	// レーザーのポインタ
 };
 
 /// <summary>
@@ -56,11 +57,11 @@ public:
 	void DeleteLaser(int key);
 
 	// ゲッター
-	const std::map<int, LaserData>& GetLaserList() const;	// レーザーリスト
+	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
 
 private:
 	// ポインタ
-	std::map<int, LaserData> m_pLaserList;	// レーザーリスト
+	std::list<LaserData> m_pLaserList;	// レーザーリスト
 	std::shared_ptr<Player> m_pPlayer;	// プレイヤーのポインタ
 
 	// モデルハンドルテーブル

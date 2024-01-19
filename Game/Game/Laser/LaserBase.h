@@ -24,6 +24,7 @@ public:
 	virtual void Draw() = 0;
 
 	// ゲッター
+	int GetModelHandle() const;	// モデルハンドル
 	bool IsEnabled() const;	// 存在フラグ
 	bool IsReflect() const;	// 反射フラグ
 

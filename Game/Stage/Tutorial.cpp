@@ -10,6 +10,7 @@
 #include "../Game/MeteorManager.h"
 #include "../Game/PlanetManager.h"
 #include "../Game/Laser/LaserManager.h"
+#include "../Game/Laser/LaserBase.h"
 #include "../Game/Enemy/EnemyManager.h"
 #include <DxLib.h>
 
@@ -20,6 +21,9 @@ namespace
 
 	// 隕石に当たっている間にプレイヤーに与えるダメージ
 	constexpr int meteor_damage = 2;
+
+	// レーザーに当たっている間にプレイヤーに与えるダメージ
+	constexpr int laser_damage = 1;
 }
 
 // コンストラクタ
@@ -163,4 +167,27 @@ void Tutorial::Collision()
 	}
 
 	// プレイヤーと敵のレーザーの当たり判定
+	for (auto& laser : m_pLaserManager->GetLaserList())
+	{
+		// 球とメッシュの当たり判定
+		MV1_COLL_RESULT_POLY_DIM result{};
+		result = MV1CollCheck_Sphere(
+			laser.pLaser->GetModelHandle(),
+			-1,
+			m_pPlayer->GetPos().ToDxLibVector3(),
+			m_pPlayer->GetCollsionRadius());
+
+		// 当たっていたら
+		if (result.HitNum > 0)
+		{
+			// プレイヤーのダメージ処理
+			m_pPlayer->OnDamage(laser_damage);
+
+			// ダメージフラッシュの演出
+			m_pDamageFlash->Start(60, 50, 0xff0000);
+
+			// 画面揺れの演出
+			m_pScreenShaker->StartShake({ laser_damage * 10.0f, laser_damage * 10.0f }, 30);
+		}
+	}
 }
