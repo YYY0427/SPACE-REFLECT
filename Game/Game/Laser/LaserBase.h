@@ -23,6 +23,9 @@ public:
 	// 描画
 	virtual void Draw() = 0;
 
+	// レーザーを止める
+	virtual void Stop(Vector3 pos);
+
 	// ゲッター
 	int GetModelHandle() const;	// モデルハンドル
 	bool IsEnabled() const;	// 存在フラグ

@@ -212,6 +212,12 @@ const Size& Application::GetWindowSize() const
 	return m_screenSize;
 }
 
+// fps‚ğæ“¾
+int Application::GetFps() const
+{
+	return fps;
+}
+
 // I—¹
 void Application::Exit()
 {

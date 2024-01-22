@@ -22,6 +22,10 @@ public:
 	// 描画
 	void Draw() override final;
 
+	// ゲッター
+	Vector3 GetPos() const;				// 座標
+	float GetCollisionRadius() const override final ;	// 当たり判定の半径
+
 private:
 	// 初期化
 	void EntarMove();	// 移動
@@ -32,8 +36,8 @@ private:
 	void UpdateAttack();// 攻撃
 	void UpdateDead();	// 死亡
 
-	// 目的地の取得
-	void GetGoalPos();
+	// ゴールの座標
+	void GetGoalPos();	
 
 private:
 	// 状態

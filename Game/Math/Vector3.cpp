@@ -105,8 +105,8 @@ bool Vector3::operator!=(const Vector3& vec)
 float Vector3::Length() const
 {
 //	return sqrtf(x * x + y * y + z * z);
-//	return VSize(ToDxLibVector3());
-	return pow((x * x) + (y * y) + (z * z), 0.5);
+	return VSize(ToDxLibVector3());
+//	return pow((x * x) + (y * y) + (z * z), 0.5);
 }
 
 // ƒxƒNƒgƒ‹‚Ì‘å‚«‚³‚Ì2æ‚ğ•Ô‚·

@@ -1,5 +1,6 @@
 #include "LaserBase.h"
 #include "../../Model.h"
+#include "../../Effect/Effekseer3DEffectManager.h"
 
 // コンストラクタ
 LaserBase::LaserBase() :
@@ -13,6 +14,12 @@ LaserBase::LaserBase() :
 // デストラクタ
 LaserBase::~LaserBase()
 {
+}
+
+// レーザーを止める
+void LaserBase::Stop(Vector3 pos)
+{
+	// なにもしない
 }
 
 // モデルハンドルの取得

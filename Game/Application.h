@@ -28,6 +28,9 @@ public:
 	// ウィンドウのサイズを取得
 	const Size& GetWindowSize() const;
 
+	// fpsを取得
+	int GetFps() const;
+
 	// 終了
 	void Exit();
 

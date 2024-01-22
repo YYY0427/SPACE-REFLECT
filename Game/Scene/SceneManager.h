@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <list>
+#include <DxLib.h>
 
 // プロトタイプ宣言
 class SceneBase;
@@ -43,4 +44,10 @@ public:
 private:
 	// シーン
 	std::list<std::shared_ptr<SceneBase>> m_scenes;
+
+	// シーンの更新時間
+	LONGLONG m_updateTime;
+
+	// シーンの描画時間
+	LONGLONG m_drawTime;
 };

@@ -97,6 +97,9 @@ public:
 	// ボスが倒されたか
 	bool IsDeadBoss() const;
 
+	// 敵のリストの取得
+	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;
+
 private:
 	// ポインタ
 	std::shared_ptr<Player> m_pPlayer;						// プレイヤー

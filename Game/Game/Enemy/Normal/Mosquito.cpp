@@ -8,15 +8,21 @@ namespace
 	// アニメーション番号
 	constexpr int idle_anim_num = 1;	// 待機
 
+	// レーザーの発射位置のフレーム
+	constexpr int laser_fire_frame_pos = 37;
+
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
 	constexpr float distance_thres_hold = 5.0f;  
 
-	// 
+	// 0.0 = near, 1.0 = far
 	constexpr float afisajf = 0.9f;
 
 	// モデルの初期の向いている方向
 	const Vector3 init_model_direction = { 0, 0, -1 };
+
+	// 当たり判定の半径
+	constexpr float hit_radius = 70.0f;
 }
 
 // コンストラクタ
@@ -99,7 +105,8 @@ void Mosquito::Update()
 	m_state.Update();
 
 	// レーザーの発射位置の更新
-	m_laserFirePos = m_pos;
+	m_laserFirePos = Vector3::FromDxLibVector3(
+		MV1GetFramePosition(m_pModel->GetModelHandle(), laser_fire_frame_pos));
 
 	// プレイヤーを向くように回転行列を設定
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
@@ -239,5 +246,20 @@ void Mosquito::Draw()
 #ifdef _DEBUG
 	// 目的地の描画
 	DrawSphere3D(m_goalPos.ToDxLibVector3(), 10.0f, 10, 0xff0000, 0xff0000, TRUE);
+
+	// 当たり判定の描画
+	DrawSphere3D(m_pos.ToDxLibVector3(), hit_radius * m_scale.x, 10, 0xff0000, 0xff0000, FALSE);
 #endif
+}
+
+// 座標の取得
+Vector3 Mosquito::GetPos() const
+{
+	return m_pos;
+}
+
+// 当たり判定の半径の取得
+float Mosquito::GetCollisionRadius() const
+{
+	return hit_radius * m_scale.x;
 }

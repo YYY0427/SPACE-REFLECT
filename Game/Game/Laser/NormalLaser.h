@@ -33,12 +33,18 @@ public:
 
 	// 更新
 	void Update() override final;
-	void UpdateCharge();
-	void UpdateNormalFire();
-	void UpdateFirePlayerFollowing();
 
 	// 描画
 	void Draw() override final;
+
+	// レーザーを止める
+	void Stop(Vector3 pos) override final;
+
+private:
+	// 更新
+	void UpdateCharge();				// チャージ
+	void UpdateNormalFire();			// 通常発射
+	void UpdateFirePlayerFollowing();	// プレイヤーを追従して発射
 
 private:
 	// 状態

@@ -403,3 +403,9 @@ bool EnemyManager::IsDeadBoss() const
 {
 	return m_isDeadBoss;
 }
+
+// G‹›“G‚ÌƒŠƒXƒg‚Ìæ“¾
+const std::list<std::shared_ptr<EnemyBase>>& EnemyManager::GetEnemyList() const
+{
+	return m_pEnemyList;
+}

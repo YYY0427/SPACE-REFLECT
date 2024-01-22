@@ -47,7 +47,7 @@ namespace
 	const Vector2 enerugy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
-	constexpr int max_enerugy_gage = 300;
+	constexpr int max_enerugy_gage = 1000000;
 
 	// プレイヤーからのシールドの距離
 	constexpr float player_distance = 70.0f;
@@ -130,7 +130,7 @@ void Shield::Update()
 		int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
 
 		// シールドの位置の計算
-		Vector3 tempVec = { (right + -left) * 10.0f * m_slowValue, (up + -down) * 10.0f * m_slowValue, player_distance };
+		Vector3 tempVec = { (right + -left) * 10 * m_slowValue, (up + -down) * 10 * m_slowValue, player_distance };
 
 		// プレイヤーの平行移動行列の取得
 		Matrix playerMtx = Matrix::GetTranslate(m_player.GetPos());

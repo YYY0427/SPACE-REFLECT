@@ -154,6 +154,16 @@ void NormalLaser::Update()
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
 
+	// 反射フラグが立っていたら
+	if (m_isReflect)
+	{
+		// レーザーの反射フラグを下げる
+		m_isReflect = false;
+
+		// モデルの拡大率をもとに戻す
+		m_scale.x = -1.0f;
+	}
+
 	// モデルの設定
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列
 	m_pModel->SetPos(m_pos);		// 位置
@@ -169,7 +179,7 @@ void NormalLaser::UpdateCharge()
 	if(m_chargeEffectFrame-- <= 0)
 	{
 		// モデルの拡大率を設定
-		m_scale.x *= -10.0f;
+		m_scale.x = -1.0f;
 
 		// ステートの変更
 		if (m_isPlayerFollowing)
@@ -243,9 +253,29 @@ void NormalLaser::Draw()
 #ifdef _DEBUG
 	// モデルの描画
 	SetUseLighting(false);
-//	m_pModel->Draw();
+	m_pModel->Draw();
 	SetUseLighting(true);
 
 	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
 #endif 
+}
+
+// レーザーを止める
+void NormalLaser::Stop(Vector3 pos)
+{
+	// レーザーの反射フラグを立てる
+	m_isReflect = true;
+
+	// レーザーの発射地点からの距離を算出
+	Vector3 vec = pos - m_pos;
+	float length = vec.Length();
+
+	// レーザーのエフェクトがシールドで止まってるよう見えるように、エフェクトの拡大率を設定
+	Effekseer3DEffectManager::GetInstance().SetEffectScale(
+		m_laserEffectHandle, { laser_effect_scale.x, laser_effect_scale.y, length / 310.0f });
+
+	// レーザーの当たり判定用モデルを反対側に向ける
+	m_scale.x = 1.0f;
+	m_pModel->SetScale(m_scale);
+	m_pModel->Update();
 }
