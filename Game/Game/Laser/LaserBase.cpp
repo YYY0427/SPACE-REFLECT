@@ -16,16 +16,22 @@ LaserBase::~LaserBase()
 {
 }
 
-// レーザーを止める
-void LaserBase::Stop(Vector3 pos)
-{
-	// なにもしない
-}
-
 // モデルハンドルの取得
 int LaserBase::GetModelHandle() const
 {
 	return m_pModel->GetModelHandle();
+}
+
+// 位置情報の取得
+Vector3 LaserBase::GetPos() const
+{
+	return m_pos;
+}
+
+// 方向ベクトルの取得
+Vector3 LaserBase::GetDirection() const
+{
+	return Vector3();
 }
 
 // 存在フラグの取得

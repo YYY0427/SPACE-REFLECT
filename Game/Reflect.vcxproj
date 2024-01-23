@@ -155,6 +155,7 @@
     <ClCompile Include="Game\Laser\LaserBase.cpp" />
     <ClCompile Include="Game\Laser\LaserManager.cpp" />
     <ClCompile Include="Game\Laser\NormalLaser.cpp" />
+    <ClCompile Include="Game\Laser\ReflectLaser.cpp" />
     <ClCompile Include="UI\DamageFlash.cpp" />
     <ClCompile Include="Editor\DataReaderFromUnity.cpp" />
     <ClCompile Include="Effect\Effekseer3DEffectManager.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="Game\Laser\LaserBase.h" />
     <ClInclude Include="Game\Laser\LaserManager.h" />
     <ClInclude Include="Game\Laser\NormalLaser.h" />
+    <ClInclude Include="Game\Laser\ReflectLaser.h" />
     <ClInclude Include="UI\DamageFlash.h" />
     <ClInclude Include="Editor\DataReaderFromUnity.h" />
     <ClInclude Include="Effect\Effekseer3DEffectManager.h" />

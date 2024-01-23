@@ -24,7 +24,6 @@ public:
 
 	// ゲッター
 	Vector3 GetPos() const;				// 座標
-	float GetCollisionRadius() const override final ;	// 当たり判定の半径
 
 private:
 	// 初期化

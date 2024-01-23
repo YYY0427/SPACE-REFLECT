@@ -139,6 +139,13 @@ void Tutorial::Draw()
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	UIManager::GetInstance().Draw();	// UI
 
+	int i = 0;
+	for (auto& laser: m_pLaserManager->GetLaserList())
+	{
+		i += 20;
+		DrawFormatString(0, 300 + i, 0xffffff, "%d", laser.pLaser->IsReflect());
+	}
+
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
 }
@@ -173,9 +180,58 @@ void Tutorial::Collision()
 		MV1CollResultPolyDimTerminate(result);
 	}
 
+	// シールドと敵レーザーの当たり判定
+	for (auto& laser : m_pLaserManager->GetLaserList())
+	{
+		if (!m_pPlayer->GetShield()->IsShield())
+		{
+			// レーザーと当たっていなくて、レーザーが止まっていたらレーザーを再開
+			laser.pLaser->UndoReflect();
+
+			// シールドがなければ判定しない
+			continue;
+		}
+
+		// レーザーの種類が反射レーザーなら判定しない
+		if (laser.type == LaserType::REFLECT)	continue;
+
+		// シールドの頂点の座標を取得
+		Vector3 shieldLeftTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[0].pos);
+		Vector3 shieldRightTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[1].pos);
+		Vector3 shieldLeftBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[2].pos);
+		Vector3 shieldRightBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[3].pos);
+
+		// シールドは2つのポリゴンからできてるので2つのポリゴンともチェック
+		MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Triangle(
+			laser.pLaser->GetModelHandle(), -1, shieldLeftTopPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3());
+		MV1_COLL_RESULT_POLY_DIM result2 = MV1CollCheck_Triangle(
+			laser.pLaser->GetModelHandle(), -1, shieldRightBottomPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3());
+
+		// どっちかのポリゴンが当たっていたら
+		if (result.HitNum > 0 || result2.HitNum > 0)
+		{
+			// まだ反射レーザーがなければ反射レーザーを追加
+			if(!laser.pLaser->IsReflect())
+			{
+				// 反射レーザーを追加
+				m_pLaserManager->AddReflectLaser(m_pPlayer->GetShield(), laser.pLaser);
+			}
+
+			// 敵のレーザーを止める
+			laser.pLaser->Stop(m_pPlayer->GetShield()->GetPos());
+		}
+
+		// 当たり判定情報の後始末
+		MV1CollResultPolyDimTerminate(result);
+		MV1CollResultPolyDimTerminate(result2);
+	}
+
 	// プレイヤーと敵のレーザーの当たり判定
 	for (auto& laser : m_pLaserManager->GetLaserList())
 	{
+		// 反射中レーザーなら判定しない
+		if(laser.pLaser->IsReflect()) continue;	
+
 		// 球とメッシュの当たり判定
 		MV1_COLL_RESULT_POLY_DIM result{};
 		result = MV1CollCheck_Sphere(
@@ -200,9 +256,35 @@ void Tutorial::Collision()
 		MV1CollResultPolyDimTerminate(result);
 	}
 
+	// 反射したレーザーと敵の当たり判定
+	for (auto& laser : m_pLaserManager->GetLaserList())
+	{
+		// 反射中レーザーでなければ判定しない
+		if(laser.type != LaserType::REFLECT) continue;
+
+		for (auto& enemy : m_pEnemyManager->GetEnemyList())
+		{
+			// 球とメッシュの当たり判定
+			MV1_COLL_RESULT_POLY_DIM result{};
+			result = MV1CollCheck_Sphere(
+				laser.pLaser->GetModelHandle(),
+				-1,
+				enemy->GetPos().ToDxLibVector3(),
+				enemy->GetCollisionRadius());
+
+			// 当たっていたら
+			if (result.HitNum > 0)
+			{
+				// 敵にダメージ処理
+				enemy->OnDamage(1000, Vector3::FromDxLibVector3(result.Dim->HitPosition));
+			}
+		}
+	}
+
 	// プレイヤーと敵の当たり判定
 	for (auto& enemy : m_pEnemyManager->GetEnemyList())
 	{
+		// 球と球の当たり判定
 		float distance = (enemy->GetPos() - m_pPlayer->GetPos()).Length();
 		if (distance < enemy->GetCollisionRadius() + m_pPlayer->GetCollsionRadius())
 		{
@@ -214,49 +296,6 @@ void Tutorial::Collision()
 
 			// 画面揺れの演出
 			m_pScreenShaker->StartShake({ enemy_damage * 10.0f, enemy_damage * 10.0f }, 30);
-		}
-	}
-
-	// シールドと敵レーザーの当たり判定
-	for (auto& laser : m_pLaserManager->GetLaserList())
-	{
-		// シールドがなければ判定しない
-		if (!m_pPlayer->GetShield()->IsShield()) continue;
-
-		// レーザーの種類が反射レーザーなら判定しない
-		if (laser.type == LaserType::REFLECT)	continue;
-
-		// シールドの頂点の座標を取得
-		Vector3 shieldLeftTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[0].pos);
-		Vector3 shieldRightTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[1].pos);
-		Vector3 shieldLeftBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[2].pos);
-		Vector3 shieldRightBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[3].pos);
-
-		// シールドは2つのポリゴンからできてるので2つのポリゴンともチェック
-		MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Triangle(
-			laser.pLaser->GetModelHandle(), -1, shieldLeftTopPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3());
-		MV1_COLL_RESULT_POLY_DIM result2 = MV1CollCheck_Triangle(
-			laser.pLaser->GetModelHandle(), -1, shieldRightBottomPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3());
-
-		// どっちかのポリゴンが当たっていたら
-		if (result.HitNum > 0 || result2.HitNum > 0)
-		{
-			// レーザーの当たった位置をおおまかに取得
-			Vector3 hitPos{};
-			if (result.HitNum > 0)
-			{
-				hitPos = (Vector3::FromDxLibVector3(result.Dim->Position[0]) + 
-						  Vector3::FromDxLibVector3(result.Dim->Position[1]) +
-						  Vector3::FromDxLibVector3(result.Dim->Position[2])) / 3;
-			}
-			else
-			{
-				hitPos = (Vector3::FromDxLibVector3(result2.Dim->Position[0]) +
-						  Vector3::FromDxLibVector3(result2.Dim->Position[1]) +
-						  Vector3::FromDxLibVector3(result2.Dim->Position[2])) / 3;
-			}
-			// 敵のレーザーを止める
-			laser.pLaser->Stop(hitPos);
 		}
 	}
 }

@@ -22,7 +22,8 @@ EnemyBase::EnemyBase() :
 	m_moveSpeed(0.0f),
 	m_deadEffectHandle(-1),
 	m_movePointIndex(0),
-	m_isGoal(false)
+	m_isGoal(false),
+	m_collisionRadius(0.0f)
 {
 }
 
@@ -74,4 +75,10 @@ Vector3 EnemyBase::GetLaserFirePos() const
 bool EnemyBase::IsEnabled() const
 {
 	return m_isEnabled;
+}
+
+// “–‚½‚è”»’è‚Ì”¼Œa‚ÌŽæ“¾
+float EnemyBase::GetCollisionRadius() const
+{
+	return m_collisionRadius;
 }

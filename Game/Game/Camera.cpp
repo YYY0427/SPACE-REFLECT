@@ -14,7 +14,7 @@ namespace
 	constexpr float far_distance = 25000.0f;
 
 	// プレイヤーからのカメラまでの距離
-	constexpr float camera_distance = 500.0f;
+	constexpr float camera_distance = 400.0f;
 
 	// ゲームクリア時のカメラの回転速度
 	constexpr float camera_rotate_speed = 0.03f;

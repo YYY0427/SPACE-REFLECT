@@ -65,5 +65,7 @@ private:
 	std::shared_ptr<PlanetManager> m_pPlanetManager;
 	std::shared_ptr<LaserManager> m_pLaserManager;
 	std::shared_ptr<EnemyManager> m_pEnemyManager;
+
+	int m_testFrameCount = 0;
 };
 

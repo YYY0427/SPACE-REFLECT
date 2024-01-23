@@ -2,11 +2,13 @@
 #include <memory>
 #include <list>
 #include <map>
+#include "../../Math/Vector3.h"
 
 // プロトタイプ宣言
 class LaserBase;
 class Player;
 class EnemyBase;
+class Shield;
 
 // レーザーの種類
 enum class LaserType
@@ -53,6 +55,9 @@ public:
 	/// <param name="isPlayerFollowing">プレイヤーを追従するか</param>
 	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
 	
+	// 反射レーザーの追加
+	void AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser);
+
 	// レーザーの削除
 	void DeleteLaser(int key);
 

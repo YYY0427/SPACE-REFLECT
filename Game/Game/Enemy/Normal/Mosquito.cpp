@@ -45,6 +45,7 @@ Mosquito::Mosquito(int modelHandle,
 	m_attackPower = data.attack;
 	m_scale = { data.scale, data.scale, data.scale };
 	m_opacity = 1.0f;
+	m_collisionRadius = hit_radius * m_scale.x;
 
 	// ƒvƒŒƒCƒ„[‚ðŒü‚­‚æ‚¤‚É‰ñ“]s—ñ‚ðÝ’è
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
@@ -256,10 +257,4 @@ void Mosquito::Draw()
 Vector3 Mosquito::GetPos() const
 {
 	return m_pos;
-}
-
-// “–‚½‚è”»’è‚Ì”¼Œa‚ÌŽæ“¾
-float Mosquito::GetCollisionRadius() const
-{
-	return hit_radius * m_scale.x;
 }

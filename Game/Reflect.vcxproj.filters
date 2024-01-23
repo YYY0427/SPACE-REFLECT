@@ -221,6 +221,9 @@
     <ClCompile Include="Game\Enemy\Normal\Mosquito.cpp">
       <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Laser\ReflectLaser.cpp">
+      <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -399,6 +402,9 @@
     </ClInclude>
     <ClInclude Include="Game\Enemy\Normal\Mosquito.h">
       <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Laser\ReflectLaser.h">
+      <Filter>ソース ファイル\Game\Laser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,10 +24,15 @@ public:
 	virtual void Draw() = 0;
 
 	// レーザーを止める
-	virtual void Stop(Vector3 pos);
+	virtual void Stop(Vector3 pos) {};
+
+	// 反射された状態から元に戻す
+	virtual void UndoReflect() {};
 
 	// ゲッター
-	int GetModelHandle() const;	// モデルハンドル
+	int GetModelHandle() const;		// モデルハンドル
+	Vector3 GetPos() const;			// 位置情報
+	virtual Vector3 GetDirection() const;	// 方向ベクトル
 	bool IsEnabled() const;	// 存在フラグ
 	bool IsReflect() const;	// 反射フラグ
 

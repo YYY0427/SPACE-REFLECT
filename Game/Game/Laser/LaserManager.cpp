@@ -2,6 +2,10 @@
 #include "LaserBase.h"
 #include "NormalLaser.h"
 #include "../../Util/DrawFunctions.h"
+#include "../Shield.h"
+#include "ReflectLaser.h"
+#include "../Player.h"
+#include "../Shield.h"
 #include <cassert>
 #include <string>
 
@@ -29,6 +33,15 @@ void LaserManager::Update()
 {
 	// 不要になったレーザーの削除
 	m_pLaserList.remove_if([](const LaserData& laser) { return !laser.pLaser->IsEnabled(); });
+
+	if (m_pPlayer->GetShield())
+	{
+		if (!m_pPlayer->GetShield()->IsShield())
+		{
+			// 反射レーザーの削除
+			m_pLaserList.remove_if([](const LaserData& laser) { return laser.type == LaserType::REFLECT; });
+		}
+	}
 
 	// レーザーの更新
 	for (auto& laser : m_pLaserList)
@@ -79,6 +92,30 @@ int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, in
 
 	// Keyを返す
 	return laserData.key;
+}
+
+// 反射レーザーの追加
+void LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser)
+{
+	// レーザーのデータを作成
+	LaserData laserData;
+	laserData.type = LaserType::REFLECT;
+
+	// Keyの設定
+	laserData.key = 0;
+	for (auto& laser : m_pLaserList)
+	{
+		if (laserData.key <= laser.key)
+		{
+			laserData.key = laser.key + 1;
+		}
+	}
+
+	// レーザーのポインタを設定
+	laserData.pLaser = std::make_shared<ReflectLaser>(m_modelHandleTable[LaserType::NORMAL], pShield, pLaser);
+
+	// レーザーリストに追加
+	m_pLaserList.push_back(laserData);
 }
 
 // レーザーの削除

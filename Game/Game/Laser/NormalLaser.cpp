@@ -124,6 +124,20 @@ NormalLaser::~NormalLaser()
 // 更新
 void NormalLaser::Update()
 {
+	//if (m_reflectFrame++ > 3)
+	//{
+	//	// レーザーの反射状態を元に戻す
+	//	UndoReflect();
+	//}
+
+	// 発射元の敵が死んでいたら
+	if (!m_pEnemy->IsEnabled())
+	{
+		// 存在フラグを下げる
+		m_isEnabled = false;
+		return;
+	}
+
 	// ステートがチャージ状態でない場合
 	if(m_stateMachine.GetCurrentState() != State::CHARGE)
 	{
@@ -153,16 +167,6 @@ void NormalLaser::Update()
 
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
-
-	// 反射フラグが立っていたら
-	if (m_isReflect)
-	{
-		// レーザーの反射フラグを下げる
-		m_isReflect = false;
-
-		// モデルの拡大率をもとに戻す
-		m_scale.x = -1.0f;
-	}
 
 	// モデルの設定
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列
@@ -266,6 +270,9 @@ void NormalLaser::Stop(Vector3 pos)
 	// レーザーの反射フラグを立てる
 	m_isReflect = true;
 
+	// レーザーの反射フレームを初期化
+//	m_reflectFrame = 0;
+
 	// レーザーの発射地点からの距離を算出
 	Vector3 vec = pos - m_pos;
 	float length = vec.Length();
@@ -278,4 +285,24 @@ void NormalLaser::Stop(Vector3 pos)
 	m_scale.x = 1.0f;
 	m_pModel->SetScale(m_scale);
 	m_pModel->Update();
+}
+
+// 反射された状態から元に戻す
+void NormalLaser::UndoReflect()
+{
+	// 反射フラグが立っていたら
+	if (m_isReflect)
+	{
+		// レーザーの反射フラグを下げる
+		m_isReflect = false;
+
+		// モデルの拡大率をもとに戻す
+		m_scale.x = -1.0f;
+	}
+}
+
+// 方向ベクトルの取得
+Vector3 NormalLaser::GetDirection() const
+{
+	return (m_directionPos - m_pos);
 }

@@ -40,6 +40,12 @@ public:
 	// レーザーを止める
 	void Stop(Vector3 pos) override final;
 
+	// 反射された状態から元に戻す
+	void UndoReflect() override final;
+
+	// 方向ベクトルのゲッター
+	Vector3 GetDirection() const override final;
+
 private:
 	// 更新
 	void UpdateCharge();				// チャージ
@@ -74,11 +80,10 @@ private:
 	// レーザーのエフェクトのハンドル
 	int m_laserEffectHandle;
 
-	// レーザーの発射時間フレーム
-	int m_laserFireFrame;	
-
-	// エフェクトチャージフレーム
-	int m_chargeEffectFrame;	
+	// フレーム
+	int m_laserFireFrame;		// レーザーの発射フレーム
+	int m_chargeEffectFrame;	// エフェクトチャージフレーム
+	int m_reflectFrame;			// 反射してから何フレーム経過したか
 
 	// プレイヤーを追従するか
 	bool m_isPlayerFollowing;

@@ -19,8 +19,8 @@ namespace
 	const std::string img_file_path = "Data/Image/Shield.png";	
 
 	// シールド画像のサイズ
-	constexpr float shield_width = 70.0f;	// 横幅サイズ
-	constexpr float shield_height = 70.0f;	// 縦幅サイズ
+	constexpr float shield_width = 120.0f;	// 横幅サイズ
+	constexpr float shield_height = 120.0f;	// 縦幅サイズ
 
 	// シールドのエフェクトの拡大率
 	const Vector3 effect_scale = { 80.0f,  80.0f, 80.0f, };	
@@ -47,7 +47,7 @@ namespace
 	const Vector2 enerugy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
-	constexpr int max_enerugy_gage = 1000000;
+	constexpr int max_enerugy_gage = 10000;
 
 	// プレイヤーからのシールドの距離
 	constexpr float player_distance = 70.0f;
