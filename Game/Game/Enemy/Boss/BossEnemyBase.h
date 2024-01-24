@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Math/Vector3.h"
+#include "../../../StateMachine.h"
 #include <memory>
 
 // プロトタイプ宣言
@@ -29,8 +30,9 @@ public:
 	void OnDamage(int damage, Vector3 pos);
 
 	// ゲッター
-	Vector3 GetPos() const;		// 位置情報
-	bool IsEnabled() const;		// 存在フラグ
+	Vector3 GetPos() const;				// 位置情報
+	float GetCollisionRadius() const;	// 当たり判定の半径
+	bool IsEnabled() const;				// 存在フラグ
 
 protected:
 	// ポインタ
@@ -58,4 +60,7 @@ protected:
 
 	// ダメージエフェクトのハンドル
 	int m_damageEffectHandle;
+
+	// 当たり判定半径
+	float m_collisionRadius;
 };

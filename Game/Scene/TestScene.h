@@ -1,6 +1,9 @@
 #pragma once
 #include "SceneBase.h"
 
+// プロトタイプ宣言
+class Warning;
+
 /// <summary>
 /// テスト用シーン
 /// 色々試すときに使う
@@ -22,4 +25,8 @@ public:
 	 
 	 // 描画
 	 void Draw() override final;
+
+private:
+	// 警告UI
+	std::unique_ptr<Warning> m_pWarning;
 };

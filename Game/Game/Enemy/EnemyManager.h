@@ -11,6 +11,7 @@
 class EnemyBase;
 class BossEnemyBase;
 class Player;
+class Warning;
 
 // 敵の種類
 enum class EnemyType
@@ -24,6 +25,7 @@ enum class BossEnemyType
 {
 	// ボス敵
 	MOSQUITO,		// 蚊
+	MATRIX,			// マトリックス
 	NONE,			// なし
 };
 
@@ -106,6 +108,7 @@ private:
 	std::shared_ptr<LaserManager> m_pLaserManager;			// レーザー管理
 	std::list<std::shared_ptr<EnemyBase>> m_pEnemyList;		// 雑魚敵リスト
 	std::shared_ptr<BossEnemyBase> m_pBossEnemy;			// ボス敵
+	std::unique_ptr<Warning> m_pWarning;					// 警告
 
 	// モデルハンドルテーブル
 	std::map<EnemyType, int> m_modelHandleTable;			// 雑魚敵

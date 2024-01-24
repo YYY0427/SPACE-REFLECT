@@ -3,8 +3,10 @@
 #include "Normal/EnemyBase.h"
 #include "Normal/Mosquito.h"
 #include "Boss/BossMosquito.h"
+#include "Boss/BossMatrix.h"
 #include "../../StringManager.h"
 #include "../../Util/DrawFunctions.h"
+#include "../../UI/Warning.h"
 #include "../Player.h"
 #include <fstream>
 #include <sstream>
@@ -23,6 +25,7 @@ namespace
 
 	// 敵のモデルのファイルパス
 	const std::string mosquito_model_file_path = "Data/Model/Mosquito.mv1";	// 蚊
+	const std::string matrix_model_file_path = "Data/Model/Matrix.mv1";		// マトリックス
 }
 
 // コンストラクタ
@@ -41,6 +44,7 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	// ボス敵モデルハンドルの読み込み
 	m_bossModelHandleTable[BossEnemyType::NONE] = -1;
 	m_bossModelHandleTable[BossEnemyType::MOSQUITO] = m_modelHandleTable[EnemyType::MOSQUITO];
+	m_bossModelHandleTable[BossEnemyType::MATRIX] = my::MyLoadModel(matrix_model_file_path.c_str());
 }
 
 // デストラクタ
@@ -215,6 +219,14 @@ void EnemyManager::AddBossEnemy(BossEnemyType type)
 			m_pPlayer,
 			m_pLaserManager);
 		break;
+
+	case BossEnemyType::MATRIX:
+		m_pBossEnemy = std::make_shared<BossMatrix>(
+			m_bossModelHandleTable[type],
+			m_pPlayer,
+			m_pLaserManager);
+		break;
+
 	case BossEnemyType::NONE:
 		break;
 	default:

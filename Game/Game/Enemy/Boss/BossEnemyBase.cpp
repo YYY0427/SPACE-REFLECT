@@ -18,7 +18,8 @@ BossEnemyBase::BossEnemyBase() :
 	m_rot({ 0, 0, 0 }),
 	m_hp(0),
 	m_opacity(0.0f),
-	m_damageEffectHandle(-1)
+	m_damageEffectHandle(-1),
+	m_collisionRadius(0.0f)
 {
 }
 
@@ -56,6 +57,12 @@ void BossEnemyBase::OnDamage(int damage, Vector3 pos)
 Vector3 BossEnemyBase::GetPos() const
 {
 	return m_pos;
+}
+
+// “–‚½‚è”»’è‚Ì”¼Œa‚Ìæ“¾
+float BossEnemyBase::GetCollisionRadius() const
+{
+	return m_collisionRadius;
 }
 
 // ‘¶İƒtƒ‰ƒO‚Ìæ“¾
