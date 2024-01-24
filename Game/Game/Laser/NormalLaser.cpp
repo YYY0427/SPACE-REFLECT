@@ -124,12 +124,6 @@ NormalLaser::~NormalLaser()
 // 更新
 void NormalLaser::Update()
 {
-	//if (m_reflectFrame++ > 3)
-	//{
-	//	// レーザーの反射状態を元に戻す
-	//	UndoReflect();
-	//}
-
 	// 発射元の敵が死んでいたら
 	if (!m_pEnemy->IsEnabled())
 	{
@@ -167,6 +161,11 @@ void NormalLaser::Update()
 
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
+
+	if (!m_isReflect)
+	{
+		Effekseer3DEffectManager::GetInstance().SetEffectScale(m_laserEffectHandle, laser_effect_scale);
+	}
 
 	// モデルの設定
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列
@@ -236,6 +235,13 @@ void NormalLaser::UpdateNormalFire()
 		// ベクトルを設定
 		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
 
+		// ベクトルがNaNだったら
+		if (std::isnan(m_directionVec.x) || std::isnan(m_directionVec.y) || std::isnan(m_directionVec.z))
+		{
+			// 0に設定
+			m_directionVec = { 0.0f, 0.0f, 0.0f };
+		}
+
 		// 座標を更新
 		m_directionPos += m_directionVec;
 	}
@@ -247,6 +253,13 @@ void NormalLaser::UpdateFirePlayerFollowing()
 	// ベクトルを設定
 	m_directionVec = (m_pPlayer->GetPos() - m_directionPos).Normalized() * m_speed;
 
+	// ベクトルがNaNだったら
+	if (std::isnan(m_directionVec.x) || std::isnan(m_directionVec.y) || std::isnan(m_directionVec.z))
+	{
+		// 0に設定
+		m_directionVec = { 0.0f, 0.0f, 0.0f };
+	}
+
 	// 座標の更新
 	m_directionPos += m_directionVec;
 }
@@ -257,7 +270,7 @@ void NormalLaser::Draw()
 #ifdef _DEBUG
 	// モデルの描画
 	SetUseLighting(false);
-	m_pModel->Draw();
+//	m_pModel->Draw();
 	SetUseLighting(true);
 
 	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
@@ -270,9 +283,6 @@ void NormalLaser::Stop(Vector3 pos)
 	// レーザーの反射フラグを立てる
 	m_isReflect = true;
 
-	// レーザーの反射フレームを初期化
-//	m_reflectFrame = 0;
-
 	// レーザーの発射地点からの距離を算出
 	Vector3 vec = pos - m_pos;
 	float length = vec.Length();
@@ -282,7 +292,6 @@ void NormalLaser::Stop(Vector3 pos)
 		m_laserEffectHandle, { laser_effect_scale.x, laser_effect_scale.y, length / 310.0f });
 
 	// レーザーの当たり判定用モデルを反対側に向ける
-	m_scale.x = 1.0f;
 	m_pModel->SetScale(m_scale);
 	m_pModel->Update();
 }
@@ -290,15 +299,8 @@ void NormalLaser::Stop(Vector3 pos)
 // 反射された状態から元に戻す
 void NormalLaser::UndoReflect()
 {
-	// 反射フラグが立っていたら
-	if (m_isReflect)
-	{
-		// レーザーの反射フラグを下げる
-		m_isReflect = false;
-
-		// モデルの拡大率をもとに戻す
-		m_scale.x = -1.0f;
-	}
+	// レーザーの反射フラグを下げる
+	m_isReflect = false;
 }
 
 // 方向ベクトルの取得

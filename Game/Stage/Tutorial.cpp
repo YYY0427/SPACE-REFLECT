@@ -145,7 +145,6 @@ void Tutorial::Draw()
 		i += 20;
 		DrawFormatString(0, 300 + i, 0xffffff, "%d", laser.pLaser->IsReflect());
 	}
-
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
 }
@@ -176,6 +175,7 @@ void Tutorial::Collision()
 			// 画面揺れの演出
 			m_pScreenShaker->StartShake({ meteor_damage * 10.0f, meteor_damage * 10.0f}, 30);
 		}
+
 		// 当たり判定情報の後始末
 		MV1CollResultPolyDimTerminate(result);
 	}
@@ -183,17 +183,17 @@ void Tutorial::Collision()
 	// シールドと敵レーザーの当たり判定
 	for (auto& laser : m_pLaserManager->GetLaserList())
 	{
+		// レーザーの種類が反射レーザーなら判定しない
+		if (laser.type == LaserType::REFLECT)	continue;
+
 		if (!m_pPlayer->GetShield()->IsShield())
 		{
-			// レーザーと当たっていなくて、レーザーが止まっていたらレーザーを再開
+			// レーザーを元に戻す
 			laser.pLaser->UndoReflect();
 
 			// シールドがなければ判定しない
 			continue;
 		}
-
-		// レーザーの種類が反射レーザーなら判定しない
-		if (laser.type == LaserType::REFLECT)	continue;
 
 		// シールドの頂点の座標を取得
 		Vector3 shieldLeftTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[0].pos);
@@ -220,6 +220,11 @@ void Tutorial::Collision()
 			// 敵のレーザーを止める
 			laser.pLaser->Stop(m_pPlayer->GetShield()->GetPos());
 		}
+		else
+		{
+			// レーザーを元に戻す
+			laser.pLaser->UndoReflect();
+		}
 
 		// 当たり判定情報の後始末
 		MV1CollResultPolyDimTerminate(result);
@@ -231,6 +236,9 @@ void Tutorial::Collision()
 	{
 		// 反射中レーザーなら判定しない
 		if(laser.pLaser->IsReflect()) continue;	
+
+		// レーザーの種類が反射レーザーなら判定しない
+		if (laser.type == LaserType::REFLECT)	continue;
 
 		// 球とメッシュの当たり判定
 		MV1_COLL_RESULT_POLY_DIM result{};
@@ -278,6 +286,8 @@ void Tutorial::Collision()
 				// 敵にダメージ処理
 				enemy->OnDamage(1000, Vector3::FromDxLibVector3(result.Dim->HitPosition));
 			}
+			// 当たり判定情報の後始末
+			MV1CollResultPolyDimTerminate(result);
 		}
 	}
 

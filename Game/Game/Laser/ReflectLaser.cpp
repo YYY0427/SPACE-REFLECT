@@ -16,8 +16,7 @@ namespace
 }
 
 // コンストラクタ
-ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser) :
-	m_frame(0)
+ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser)
 {
 	// 初期化
 	m_pShield = pShield;
@@ -58,15 +57,8 @@ ReflectLaser::~ReflectLaser()
 // 更新
 void ReflectLaser::Update()
 {
-	m_frame++;
-	if (m_pLaser->IsReflect() && m_frame > 3)
-	{
-		m_pLaser->UndoReflect();
-		m_frame = 0;
-	}
-
 	// 発射元のレーザーがシールドに反射していなかったら消す
-	if (!m_pLaser->IsReflect())
+	if (!m_pLaser->IsReflect() || !m_pLaser->IsEnabled())
 	{
 		m_isEnabled = false;
 		return;

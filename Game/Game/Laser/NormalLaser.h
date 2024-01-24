@@ -83,7 +83,6 @@ private:
 	// フレーム
 	int m_laserFireFrame;		// レーザーの発射フレーム
 	int m_chargeEffectFrame;	// エフェクトチャージフレーム
-	int m_reflectFrame;			// 反射してから何フレーム経過したか
 
 	// プレイヤーを追従するか
 	bool m_isPlayerFollowing;

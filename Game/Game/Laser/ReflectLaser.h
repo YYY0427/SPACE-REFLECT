@@ -30,7 +30,4 @@ private:
 
 	// ベクトル
 	Vector3 m_vec;
-
-	// フレーム
-	int m_frame;
 };
