@@ -28,6 +28,5 @@ private:
 	// レーザーエフェクトのハンドル
 	int m_laserEffectHandle;	
 
-	// ベクトル
-	Vector3 m_vec;
+	Vector3 m_directionVec;
 };

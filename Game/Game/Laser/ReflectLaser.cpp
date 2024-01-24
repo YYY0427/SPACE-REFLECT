@@ -13,6 +13,9 @@ namespace
 	// 拡大率
 	const Vector3 model_scale = { 1.0f, 0.1f, 0.1f };		// モデル
 	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
+
+	// 移動速度
+	constexpr float move_speed = 200.0f;	
 }
 
 // コンストラクタ
@@ -28,11 +31,11 @@ ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std
 	m_pos = m_pShield->GetPos();
 
 	// 反射ベクトルを作成
-	m_vec = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
+	m_directionVec = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
 
-	// 指定したベクトル方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_vec);
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_vec);
+	// 指定した位置方向に向ける行列の作成
+	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionVec);
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionVec);
 
 	// レーザーエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
@@ -66,11 +69,18 @@ void ReflectLaser::Update()
 
 	// 位置をシールドに合わせる
 	m_pos = m_pShield->GetPos();
-	m_vec = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
+
+	// 反射ベクトルを作成
+	Vector3 reflectVec = Vector3::Reflect(
+		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
+	reflectVec = reflectVec.Normalized() * move_speed;
+
+	// 向く方向を更新
+	m_directionVec += reflectVec;
 
 	// 指定したベクトル方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_vec);
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_vec);
+	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionVec);
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionVec);
 
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, rotEffectMtx.ToEulerAngle());

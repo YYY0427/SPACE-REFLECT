@@ -27,6 +27,9 @@ namespace
 
 	constexpr float afisajf = 0.0f;
 
+	// 反射中にシールドに何フレーム当たっていなかったら反射を解除するか
+	constexpr int reflect_collision_shield_frame = 5;
+
 	// プレイヤーを追従しない場合の向かう位置
 	const Vector2 window_size = 
 		{ static_cast<float>(Application::GetInstance().GetWindowSize().width), 
@@ -146,6 +149,18 @@ void NormalLaser::Update()
 		}
 	}
 	
+	// レーザーが反射状態なら
+	if (m_isReflect)
+	{
+		// フレームを加算
+		// 一定フレーム経過したら反射状態を解除
+		if (m_reflectFrame++ > reflect_collision_shield_frame)
+		{
+			// 反射状態を解除
+			UndoReflect();
+		}
+	}
+	
 	// 状態の更新
 	m_stateMachine.Update();
 
@@ -162,8 +177,10 @@ void NormalLaser::Update()
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
 
+	// レーザーの反射フラグが立っていない場合
 	if (!m_isReflect)
 	{
+		// エフェクトの拡大率を設定
 		Effekseer3DEffectManager::GetInstance().SetEffectScale(m_laserEffectHandle, laser_effect_scale);
 	}
 
@@ -283,6 +300,9 @@ void NormalLaser::Stop(Vector3 pos)
 	// レーザーの反射フラグを立てる
 	m_isReflect = true;
 
+	// シールドに当たったので初期化
+	m_reflectFrame = 0;
+
 	// レーザーの発射地点からの距離を算出
 	Vector3 vec = pos - m_pos;
 	float length = vec.Length();
@@ -299,8 +319,9 @@ void NormalLaser::Stop(Vector3 pos)
 // 反射された状態から元に戻す
 void NormalLaser::UndoReflect()
 {
-	// レーザーの反射フラグを下げる
+	// 初期化
 	m_isReflect = false;
+	m_reflectFrame = 0;
 }
 
 // 方向ベクトルの取得

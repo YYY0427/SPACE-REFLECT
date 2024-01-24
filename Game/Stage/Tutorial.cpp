@@ -114,7 +114,7 @@ void Tutorial::UpdatePlay()
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 
 	// 隕石の生成
-	m_pMeteorManager->CreateMeteor(120, m_pPlayer->GetPos());
+//	m_pMeteorManager->CreateMeteor(120, m_pPlayer->GetPos());
 
 	// 当たり判定
 	Collision();
@@ -219,11 +219,6 @@ void Tutorial::Collision()
 
 			// 敵のレーザーを止める
 			laser.pLaser->Stop(m_pPlayer->GetShield()->GetPos());
-		}
-		else
-		{
-			// レーザーを元に戻す
-			laser.pLaser->UndoReflect();
 		}
 
 		// 当たり判定情報の後始末
