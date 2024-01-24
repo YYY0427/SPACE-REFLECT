@@ -61,8 +61,12 @@ private:
 	// ポインタ
 	std::unique_ptr<Gauge> m_pHpGauge;
 
-	// 移動ポイントテーブル
-	std::vector<Vector3> m_movePointTable;
+	// 移動
+	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル
+	int m_movePointIndex;					// 移動ポイントのインデックス
+	Vector3 m_goalPos;						// 目標座標
+	bool m_isGoal;							// 目標座標に到達したか
+	bool m_isMoveEnd;						// 移動が終了したか
 
 	// 攻撃ステート
 	std::vector<State> m_attackStateTable;	//	攻撃ステートテーブル

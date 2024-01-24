@@ -6,6 +6,7 @@
 #include <map>
 #include "../../Math/Vector3.h"
 #include "../Laser/LaserManager.h"
+#include "../../StateMachine.h"
 
 // プロトタイプ宣言
 class EnemyBase;

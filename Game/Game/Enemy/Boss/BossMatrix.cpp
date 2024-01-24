@@ -3,6 +3,7 @@
 #include "../../../UI/Gauge.h"
 #include "../../../UI/UIManager.h"
 #include "../../../Math/MathUtil.h"
+#include "../../../Application.h"
 #include <random>
 #include <algorithm>
 
@@ -46,7 +47,13 @@ namespace
 	constexpr int died_continue_frame = 60 * 5;	// 死亡時の演出の継続時間
 
 	// HP
+	auto& screenSize = Application::GetInstance().GetWindowSize();
 	constexpr int max_hp = 1000;		// 最大HP
+	const Vector2 hp_gauge_pos = { screenSize.width / 2, screenSize.height - 300};	// HPゲージの位置
+	const Vector2 hp_gauge_size = { 500, 50 };										// HPゲージのサイズ
+	const std::string hp_gauge_img_file_path = "Data/Image/HP.png";				// HPゲージの画像ファイルパス
+	const std::string hp_gauge_back_img_file_path = "Data/Image/HPBack.png";	// HPゲージの背景画像ファイルパス
+	const std::string hp_gauge_frame_img_file_path = "Data/Image/HPFrame.png";	// HPゲージの枠画像ファイルパス
 
 	// 当たり判定の半径
 	constexpr float collision_radius = 250.0f;
@@ -85,7 +92,9 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
 
 	// HPゲージの設定
-	m_pHpGauge = std::make_unique<Gauge>(m_hp, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	m_pHpGauge = std::make_unique<Gauge>(
+		hp_gauge_img_file_path, hp_gauge_back_img_file_path, hp_gauge_frame_img_file_path, max_hp, 
+		hp_gauge_pos, hp_gauge_size, true, max_hp / 100, true, 3);
 
 	// モデル設定
 	m_pModel = std::make_shared<Model>(modelHandle);	// インスタンス生成
