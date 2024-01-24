@@ -224,6 +224,9 @@
     <ClCompile Include="Game\Laser\ReflectLaser.cpp">
       <Filter>ソース ファイル\Game\Laser</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Enemy\Boss\BossMatrix.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -406,5 +409,6 @@
     <ClInclude Include="Game\Laser\ReflectLaser.h">
       <Filter>ソース ファイル\Game\Laser</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Enemy\Boss\BossMatrix.h" />
   </ItemGroup>
 </Project>
