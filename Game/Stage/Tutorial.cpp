@@ -21,14 +21,11 @@ namespace
 	// オブジェクト配置データのファイルパス
 	const std::string object_data_file_path = "Test";
 
-	// 隕石に当たっている間にプレイヤーに与えるダメージ
-	constexpr int meteor_damage = 2;
-
-	// レーザーに当たっている間にプレイヤーに与えるダメージ
-	constexpr int laser_damage = 1;
-
-	// 敵に当たっている間にプレイヤーに与えるダメージ
-	constexpr int enemy_damage = 1;
+	// ダメージ
+	constexpr int meteor_damage = 2; // 隕石に当たっている間にプレイヤーに与えるダメージ
+	constexpr int laser_damage = 1;  // レーザーに当たっている間にプレイヤーに与えるダメージ
+	constexpr int enemy_damage = 1;  // 敵に当たっている間にプレイヤーに与えるダメージ
+	constexpr int boss_reflect_laser_damage = 2; // 反射レーザーに当たっている間にボスに与えるダメージ
 }
 
 // コンストラクタ
@@ -136,8 +133,10 @@ void Tutorial::Draw()
 	m_pEnemyManager->Draw();	// 敵
 	m_pPlayer->Draw();			// プレイヤー
 	m_pLaserManager->Draw();	// レーザー
-	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	UIManager::GetInstance().Draw();	// UI
+
+	// TODO : レーザーのエフェクトがなぜかシールドよりも後ろに描画されるから直して
+	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
@@ -259,6 +258,7 @@ void Tutorial::Collision()
 		// 反射中レーザーでなければ判定しない
 		if(laser.type != LaserType::REFLECT) continue;
 
+		// 雑魚敵
 		for (auto& enemy : m_pEnemyManager->GetEnemyList())
 		{
 			// 球とメッシュの当たり判定
@@ -274,6 +274,26 @@ void Tutorial::Collision()
 			{
 				// 敵にダメージ処理
 				enemy->OnDamage(1000, Vector3::FromDxLibVector3(result.Dim->HitPosition));
+			}
+			// 当たり判定情報の後始末
+			MV1CollResultPolyDimTerminate(result);
+		}
+		// ボス
+		if (m_pEnemyManager->GetBossEnemy())
+		{
+			MV1_COLL_RESULT_POLY_DIM result{};
+			result = MV1CollCheck_Sphere(
+				laser.pLaser->GetModelHandle(),
+				-1,
+				m_pEnemyManager->GetBossEnemy()->GetPos().ToDxLibVector3(),
+				m_pEnemyManager->GetBossEnemy()->GetCollisionRadius());
+
+			// 当たっていたら
+			if (result.HitNum > 0)
+			{
+				// ボスにダメージ処理
+				m_pEnemyManager->GetBossEnemy()->OnDamage(
+					boss_reflect_laser_damage, Vector3::FromDxLibVector3(result.Dim->HitPosition));
 			}
 			// 当たり判定情報の後始末
 			MV1CollResultPolyDimTerminate(result);

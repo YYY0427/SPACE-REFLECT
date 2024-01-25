@@ -7,6 +7,7 @@
 #include "../../../Application.h"
 #include "../../Laser/LaserManager.h"
 #include "../../Player.h"
+#include "../../../Effect/Effekseer3DEffectManager.h"
 #include <random>
 #include <algorithm>
 
@@ -15,12 +16,12 @@
 namespace
 {
 	// 位置
-	const Vector3 init_pos = { 0.0f, 300.0f, 1500.0f };				// 初期位置
-	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1100.0f };		// 登場時の位置
+	const Vector3 init_pos = { 0.0f, 300.0f, 5000.0f };				// 初期位置
+	const Vector3 goal_init_pos = { 0.0f, 300.0f, 2000.0f };		// 登場時の位置
 
 	// モデル
 	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f};
-	const Vector3 model_scale = { 1.5f , 1.5f, 1.5f };			// 拡大率
+	const Vector3 model_scale = { 3.0f , 3.0f, 3.0f };			// 拡大率
 	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };	// 初期の向き
 
 	// アニメーション番号
@@ -38,7 +39,7 @@ namespace
 	constexpr int normal_laser_fire_frame = 2;	// 通常レーザー発射
 
 	// 移動
-	constexpr float entry_move_speed = 1.5f;	// 登場時の移動速度
+	constexpr float entry_move_speed = 10.0f;	// 登場時の移動速度
 	constexpr float move_speed = 10.0f;			// 移動速度
 	constexpr float distance_threshold = 10.0f; // 目的地に到達したかどうか測る閾値
 	const Vector3 move_pos[] =					// 移動先の座標
@@ -72,8 +73,11 @@ namespace
 	constexpr float collision_radius = 250.0f;
 
 	// フレーム
-	constexpr int next_attack_state_frame = 60 * 5;		// 次の攻撃ステートに移るまでのフレーム
+	constexpr int next_attack_state_frame = 60 * 5;			// 次の攻撃ステートに移るまでのフレーム
 	constexpr int stop_normal_laser_attack_frame = 60 * 10;	// 通常レーザー攻撃のフレーム
+	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
+	constexpr int die_shake_frame = 60 * 5;					// 死亡時の揺れるフレーム
+	constexpr int die_effect_interval_frame = 20;		// 死亡時のエフェクトの再生間隔
 }
 
 // コンストラクタ
@@ -82,7 +86,11 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_isMoveEnd(false),
 	m_idleFrame(0),
 	m_laserKey(-1),
-	m_laserFrame(0)
+	m_laserFrame(0),
+	m_damageEffectHandle(-1),
+	m_dieIdleFrame(die_idle_frame),
+	m_dieShakeFrame(die_shake_frame),
+	m_dieEffectIntervalFrame(die_effect_interval_frame)
 {
 	// 初期化
 	m_pPlayer = pPlayer;
@@ -117,7 +125,7 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	// HPゲージの設定
 	m_pHpGauge = std::make_shared<Gauge>(
 		hp_gauge_img_file_path, hp_gauge_back_img_file_path, hp_gauge_frame_img_file_path, max_hp, 
-		hp_gauge_pos, hp_gauge_size, true, max_hp / 100, true, 3);
+		hp_gauge_pos, hp_gauge_size, true, 2, true, 3);
 	UIManager::GetInstance().AddUI("BossHPGauge", m_pHpGauge, 2, { 0, 1 });
 
 	// ボス名前の設定
@@ -143,6 +151,9 @@ BossMatrix::~BossMatrix()
 // 更新
 void BossMatrix::Update()
 {
+	// HPゲージの更新
+	m_pHpGauge->Update();	
+
 	// Z座標の更新
 	m_pos.z += m_pPlayer->GetMoveVec().z;
 
@@ -171,6 +182,34 @@ void BossMatrix::Draw()
 	// 当たり判定の描画
 	DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 16, 0xff0000, 0xff0000, false);
 #endif
+}
+
+// ダメージ処理
+void BossMatrix::OnDamage(int damage, Vector3 pos)
+{
+	// HPを減らす
+	m_hp -= damage;
+	m_pHpGauge->SetValue(m_hp);
+
+	// ダメージエフェクトの再生
+	Effekseer3DEffectManager::GetInstance().PlayEffect(
+		m_damageEffectHandle,
+		EffectID::enemy_boss_hit_effect,
+		pos,
+		{ 200.0f, 200.0f, 200.0f }
+	);
+
+	// HPが0以下になったら死亡
+	if (m_hp <= 0)
+	{
+		// ステートを死亡に変更
+		m_stateMachine.SetState(State::DIE);
+	}
+	else
+	{
+		// 全てのマテリアルのディフューズカラーを反転
+		m_pModel->InversAllMaterialDifColor();
+	}
 }
 
 // 通常レーザー攻撃の開始
@@ -245,6 +284,11 @@ void BossMatrix::UpdateIdle()
 // 死亡時の更新
 void BossMatrix::UpdateDie()
 {
+	// レーザーを削除
+	m_pLaserManager->DeleteLaser(m_laserKey);
+
+	// UIを格納
+	UIManager::GetInstance().Store();
 }
 
 // 移動しながら通常レーザー攻撃
@@ -262,7 +306,9 @@ void BossMatrix::UpdateMoveHomingLaserAttack()
 void BossMatrix::UpdateStopNormalLaserAttack()
 {
 	// レーザーの発射位置の更新
-	m_laserFirePos = Vector3::FromDxLibVector3(MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
+	Vector3 pos = Vector3::FromDxLibVector3(
+		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
+	m_laserFirePos = { pos.x, pos.y, pos.z - 200.0f };
 
 	// アニメーションが終了したら
 	if (m_laserFrame-- <= 0)

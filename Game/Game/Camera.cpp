@@ -10,7 +10,7 @@ namespace
 	constexpr float camera_perspective = 90.0f;
 
 	// 描画距離(near, far)
-	constexpr float near_distance = 100.0f;
+	constexpr float near_distance = 5.0f;
 	constexpr float far_distance = 25000.0f;
 
 	// プレイヤーからのカメラまでの距離

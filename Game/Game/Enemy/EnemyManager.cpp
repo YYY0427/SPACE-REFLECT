@@ -460,3 +460,9 @@ const std::list<std::shared_ptr<EnemyBase>>& EnemyManager::GetEnemyList() const
 {
 	return m_pEnemyList;
 }
+
+// ƒ{ƒX“G‚Ìæ“¾
+const std::shared_ptr<EnemyBase>& EnemyManager::GetBossEnemy() const
+{
+	return m_pBossEnemy;
+}

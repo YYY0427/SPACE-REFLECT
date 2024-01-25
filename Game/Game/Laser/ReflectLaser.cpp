@@ -103,6 +103,6 @@ void ReflectLaser::Draw()
 {
 #ifdef _DEBUG
 	// ƒ‚ƒfƒ‹‚Ì•`‰æ
-	m_pModel->Draw();
+//	m_pModel->Draw();
 #endif 
 }

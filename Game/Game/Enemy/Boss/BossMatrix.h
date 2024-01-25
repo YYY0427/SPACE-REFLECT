@@ -28,6 +28,9 @@ public:
 	// 描画
 	void Draw() override final;
 
+	// ダメージ処理
+	void OnDamage(int damage, Vector3 pos) override final;
+
 private:
 	// 開始
 	void EntarStopNormalLaserAttack();	// 通常レーザー攻撃
@@ -86,7 +89,13 @@ private:
 	// フレーム
 	int m_idleFrame;						// 待機フレーム
 	int m_laserFrame;						// レーザー発射フレーム
+	int m_dieIdleFrame;						// 死亡時の待機フレーム	
+	int m_dieShakeFrame;					// 死亡時の横揺れ演出を行うフレーム
+	int m_dieEffectIntervalFrame;			// 死亡時のエフェクトの発生間隔
 
 	// レーザーのKey
 	int m_laserKey;
+
+	// エフェクトハンドル
+	int m_damageEffectHandle;
 };

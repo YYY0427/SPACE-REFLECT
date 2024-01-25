@@ -33,6 +33,7 @@ Gauge::Gauge(
 	if (isGaugeBurst)
 	{
 		m_currentValue = 0.0f;
+		m_backValue = 0.0f;
 		m_updateFunc = &Gauge::BurstUpdate;
 		m_isEndBurst = false;
 	}
@@ -173,15 +174,17 @@ void Gauge::BurstUpdate()
 {
 	// 目標値に向かってゲージを増やす
 	m_currentValue += m_addGaugeSpeed;
+	m_backValue += m_addGaugeSpeed;
 
 	// 目標値を超えたら
-	if (m_currentValue >= m_maxValue)
+	if (m_currentValue >= m_maxValue && m_backValue >= m_maxValue)
 	{
 		// バースト演出が終了したことを示すフラグを立てる
 		m_isEndBurst = true;
 
 		// 目標値にする
 		m_currentValue = m_maxValue;
+		m_backValue = m_maxValue;
 
 		// 更新関数を通常時の更新に戻す
 		m_updateFunc = &Gauge::NormalUpdate;

@@ -23,9 +23,9 @@ namespace
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
-	constexpr float distance_threshold = 15.0f;
+	constexpr float distance_threshold = 5.0f;
 
-	constexpr float afisajf = 0.0f;
+	constexpr float afisajf = 0.9f;
 
 	// 反射中にシールドに何フレーム当たっていなかったら反射を解除するか
 	constexpr int reflect_collision_shield_frame = 5;
@@ -288,7 +288,7 @@ void NormalLaser::Draw()
 #ifdef _DEBUG
 	// モデルの描画
 	SetUseLighting(false);
-	m_pModel->Draw();
+//	m_pModel->Draw();
 	SetUseLighting(true);
 
 	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);

@@ -28,7 +28,7 @@ public:
 	virtual void Draw() = 0;
 
 	// ダメージ処理
-	void OnDamage(int damage, Vector3 pos);
+	virtual void OnDamage(int damage, Vector3 pos);
 
 	// ゲッター
 	Vector3 GetPos() const;				// 位置情報

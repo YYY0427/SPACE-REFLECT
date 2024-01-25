@@ -104,6 +104,9 @@ public:
 	// 敵のリストの取得
 	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;
 
+	// ボス敵の取得
+	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;
+
 private:
 	// ステート
 	enum class State
