@@ -13,7 +13,7 @@ namespace
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
-	constexpr float distance_thres_hold = 5.0f;  
+	constexpr float distance_threshold = 5.0f;  
 
 	// 0.0 = near, 1.0 = far
 	constexpr float afisajf = 0.9f;
@@ -138,7 +138,7 @@ void Mosquito::UpdateIdle()
 void Mosquito::UpdateMove()
 {
 	// 目的地に到達したかの判定
-	if (m_pos.Distance(m_goalPos) < distance_thres_hold &&
+	if (m_pos.Distance(m_goalPos) < distance_threshold &&
 		!m_isGoal)
 	{
 		// 到達した場合、一回しか通ってほしくない為、

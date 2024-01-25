@@ -35,6 +35,9 @@ public:
 	/// <param name="storeVec">UI‚ğŠi”[‚·‚éƒxƒNƒgƒ‹</param>
 	void AddUI(std::string key, std::shared_ptr<UIBase> ui, int drawOrder, Vector2 storeVec = {});
 
+	// UI‚Ìíœ
+	void DeleteUI(std::string key);
+
 	// UI‚ÌŠi”[
 	void Store();
 

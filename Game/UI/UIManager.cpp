@@ -66,6 +66,20 @@ void UIManager::AddUI(std::string key, std::shared_ptr<UIBase> ui, int drawOrder
 		[](const UIData& a, const UIData& b) { return a.drawOrder < b.drawOrder; });
 }
 
+// UI‚Ìíœ
+void UIManager::DeleteUI(std::string key)
+{
+	// ƒL[‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	auto itr = std::find_if(m_uiTable.begin(), m_uiTable.end(),
+				[&key](const UIData& data) { return data.key == key; });
+
+	// “o˜^‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í‰½‚à‚µ‚È‚¢
+	if (itr == m_uiTable.end()) return;
+
+	// íœ
+	m_uiTable.erase(itr);
+}
+
 // UI‚ÌŠi”[
 void UIManager::Store()
 {

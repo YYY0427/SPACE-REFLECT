@@ -23,7 +23,7 @@ namespace
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
-	constexpr float distance_thres_hold = 15.0f;
+	constexpr float distance_threshold = 15.0f;
 
 	constexpr float afisajf = 0.0f;
 
@@ -116,6 +116,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 	m_pModel->SetOpacity(m_opacity);// 不透明度
 	m_pModel->Update();				// 当たり判定の更新
 }
+
 
 // デストラクタ
 NormalLaser::~NormalLaser()
@@ -219,7 +220,7 @@ void NormalLaser::UpdateCharge()
 void NormalLaser::UpdateNormalFire()
 {
 	// 目的地に到達したかどうかの判定
-	if (m_directionPos.Distance(m_normalFireGoalPos) < distance_thres_hold)
+	if (m_directionPos.Distance(m_normalFireGoalPos) < distance_threshold)
 	{
 		// 目的地に到達したら次の目的地を設定
 		m_normalFireMovePointIndex++;

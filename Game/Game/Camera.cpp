@@ -54,10 +54,10 @@ void Camera::Update(Vector3 playerPos)
 	m_target.y = playerPos.y * 0.2f;
 
 	// ’‹“_‚ğ“Á’è‚ÌŠp“xˆÈã‚É‚Í‰ñ“]‚³‚¹‚È‚¢
-	Vector3 centerPos = { 0, 0, 1 };
+	Vector3 centerPos = { 0, 0, playerPos.z };
 	Vector3 targetPos = m_target - m_pos;
 	float angle = MathUtil::ToDegree(centerPos.Angle(targetPos));
-	if (angle >= 10.0f)
+	if (angle >= 15.0f)
 	{
 		m_target = tempTarget;
 	}

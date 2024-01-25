@@ -29,4 +29,10 @@ public:
 private:
 	// ŒxUI
 	std::unique_ptr<Warning> m_pWarning;
+
+	int window;
+	int player;
+	int frameCount;
+	int width;
+	int height;
 };

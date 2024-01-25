@@ -17,6 +17,8 @@ namespace
     // 画面サイズ
     constexpr int window_width = 1280;	
     constexpr int window_height = 720;	
+	/*constexpr int window_width = 1600;
+	constexpr int window_height = 900;*/
 
     // ウィンドウタイトル
     const std::string window_title = "REFLECT";

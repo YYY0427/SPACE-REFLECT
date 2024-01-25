@@ -48,6 +48,9 @@ public:
 	// ダメージを受けた時の処理
 	void SetValue(float afterHp);
 
+	// バースト演出が終了したか
+	bool IsEndBurst() const;
+
 private:
 	// 通常時の更新
 	void NormalUpdate();	
@@ -77,7 +80,8 @@ private:
 	float m_aimGaugeSpeed;	// ゲージが減る速度
 
 	// フラグ
-	bool isDelayed;	// ダメージを受けてからゲージが減るまでの時間があるか
+	bool m_isDelayed;		// ダメージを受けてからゲージが減るまでの時間があるか
+	bool m_isEndBurst;		// バースト演出が終了したか(演出を行わない場合はtrue)
 
 	// ダメージを受けてからのフレーム数
 	Timer<int> m_damageFrameCount;

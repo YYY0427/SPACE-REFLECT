@@ -54,7 +54,7 @@ public:
 	/// <param name="laserSpeed">レーザーの移動速度</param>
 	/// <param name="isPlayerFollowing">プレイヤーを追従するか</param>
 	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
-	
+
 	// 反射レーザーの追加
 	void AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser);
 

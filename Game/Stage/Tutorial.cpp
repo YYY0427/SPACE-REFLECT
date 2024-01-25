@@ -139,12 +139,6 @@ void Tutorial::Draw()
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	UIManager::GetInstance().Draw();	// UI
 
-	int i = 0;
-	for (auto& laser: m_pLaserManager->GetLaserList())
-	{
-		i += 20;
-		DrawFormatString(0, 300 + i, 0xffffff, "%d", laser.pLaser->IsReflect());
-	}
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
 }

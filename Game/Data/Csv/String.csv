@@ -31,3 +31,4 @@ PauseItemTitle,TITLE,Abel,20,3
 PausetemSelectBarRight,[,Abel,20,3
 PausetemSelectBarLeft,],Abel,20,3
 WarningUI,WARNING!!,Abel,100,10
+BossMatrixName,MATRIX,Abel,40,10

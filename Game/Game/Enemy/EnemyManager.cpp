@@ -7,6 +7,7 @@
 #include "../../StringManager.h"
 #include "../../Util/DrawFunctions.h"
 #include "../../UI/Warning.h"
+#include "../../UI/UIManager.h"
 #include "../Player.h"
 #include <fstream>
 #include <sstream>
@@ -26,6 +27,9 @@ namespace
 	// 敵のモデルのファイルパス
 	const std::string mosquito_model_file_path = "Data/Model/Mosquito.mv1";	// 蚊
 	const std::string matrix_model_file_path = "Data/Model/Matrix.mv1";		// マトリックス
+
+	// ボス敵登場時の警告のフレーム
+	constexpr int warning_frame = 180;
 }
 
 // コンストラクタ
@@ -45,6 +49,11 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	m_bossModelHandleTable[BossEnemyType::NONE] = -1;
 	m_bossModelHandleTable[BossEnemyType::MOSQUITO] = m_modelHandleTable[EnemyType::MOSQUITO];
 	m_bossModelHandleTable[BossEnemyType::MATRIX] = my::MyLoadModel(matrix_model_file_path.c_str());
+
+	// ステートマシンの設定
+	m_stateMachine.AddState(State::NORMAL, {}, [this]() {UpdateNormal(); }, {});
+	m_stateMachine.AddState(State::WARNING, {}, [this]() {UpdateWarning(); }, {});
+	m_stateMachine.SetState(State::NORMAL);
 }
 
 // デストラクタ
@@ -66,6 +75,13 @@ EnemyManager::~EnemyManager()
 // 更新
 void EnemyManager::Update()
 {
+	// ステートマシンの更新
+	m_stateMachine.Update();
+}
+
+// 通常時の更新
+void EnemyManager::UpdateNormal()
+{
 	// 存在フラグが下がっている敵の削除
 	m_pEnemyList.remove_if([](std::shared_ptr<EnemyBase> data) { return !data->IsEnabled(); });
 
@@ -76,7 +92,7 @@ void EnemyManager::Update()
 	}
 
 	// ボス敵が出現していたら
-	if(m_pBossEnemy)
+	if (m_pBossEnemy)
 	{
 		// ボス敵が出現していて、かつボス敵が倒されていたら
 		if (!m_pBossEnemy->IsEnabled())
@@ -87,6 +103,26 @@ void EnemyManager::Update()
 
 		// 更新
 		m_pBossEnemy->Update();
+	}
+
+	// 次のウェーブへ
+	NextWave();
+}
+
+// 警告時の更新
+void EnemyManager::UpdateWarning()
+{
+	// 警告が終了したら
+	if (m_pWarning->IsEnd())
+	{
+		// 警告の削除
+		UIManager::GetInstance().DeleteUI("Warning");
+
+		// ボス敵の生成
+		AddBossEnemy(m_bossType);
+
+		// ステートを通常に遷移
+		m_stateMachine.SetState(State::NORMAL);
 	}
 }
 
@@ -151,12 +187,8 @@ void EnemyManager::NextWave()
 	// ボス敵が出現していたらなにもしない
 	if (m_pBossEnemy)	return;
 
-	// ウェーブを進める
-	m_waveNow++;
-	auto& waveData = m_waveTable[m_waveNow];
-
 	// 最後のウェーブだったらボス敵を生成
-	if(m_waveNow == m_waveTable.size())
+	if(m_waveNow == m_waveTable.size() - 1)
 	{
 		// ボス敵がいなかったら
 		if (m_bossType == BossEnemyType::NONE)
@@ -166,12 +198,20 @@ void EnemyManager::NextWave()
 		}
 		else
 		{
-			// ボス敵の生成
-			AddBossEnemy(m_bossType);
+			// 警告状態に遷移
+			m_stateMachine.SetState(State::WARNING);
+
+			// 警告の生成
+			m_pWarning = std::make_shared<Warning>(warning_frame);
+			UIManager::GetInstance().AddUI("Warning", m_pWarning, 0, { 0, 0 });
 		}
 	}
 	else
 	{
+		// ウェーブを進める
+		m_waveNow++;
+		auto& waveData = m_waveTable[m_waveNow];
+
 		// 雑魚敵の生成
 		for (auto& data : waveData.enemyDataList)
 		{

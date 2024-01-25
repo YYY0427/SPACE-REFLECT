@@ -76,6 +76,8 @@ public:
 
 	// 更新
 	void Update();
+	void UpdateNormal();
+	void UpdateWarning();
 
 	// 描画
 	void Draw();
@@ -104,12 +106,23 @@ public:
 	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;
 
 private:
+	// ステート
+	enum class State
+	{
+		NORMAL,
+		WARNING,
+	};
+
+private:
+	// ステートマシン
+	StateMachine<State> m_stateMachine;	
+
 	// ポインタ
 	std::shared_ptr<Player> m_pPlayer;						// プレイヤー
 	std::shared_ptr<LaserManager> m_pLaserManager;			// レーザー管理
 	std::list<std::shared_ptr<EnemyBase>> m_pEnemyList;		// 雑魚敵リスト
 	std::shared_ptr<BossEnemyBase> m_pBossEnemy;			// ボス敵
-	std::unique_ptr<Warning> m_pWarning;					// 警告
+	std::shared_ptr<Warning> m_pWarning;					// 警告
 
 	// モデルハンドルテーブル
 	std::map<EnemyType, int> m_modelHandleTable;			// 雑魚敵

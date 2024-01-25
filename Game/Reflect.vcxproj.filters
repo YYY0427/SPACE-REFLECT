@@ -230,6 +230,9 @@
     <ClCompile Include="UI\Warning.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="UI\StringUI.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -416,6 +419,9 @@
       <Filter>ソース ファイル\Game\Enemy\Boss</Filter>
     </ClInclude>
     <ClInclude Include="UI\Warning.h">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\StringUI.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,12 @@
 #include "../Util/DrawFunctions.h"
 #include <DxLib.h>
 
+namespace
+{
+	// ゲージのフレームのサイズ
+	constexpr float gauge_frame_size = 3.0f;
+}
+
 // コンストラクタ
 Gauge::Gauge(
 	const std::string gaugeImgFilePath, 
@@ -19,15 +25,23 @@ Gauge::Gauge(
 	m_backValue(maxValue),
 	m_pos(pos),
 	m_dimensions(dimensions),
-	isDelayed(isDelayedDamage),
+	m_isDelayed(isDelayedDamage),
 	m_aimGaugeSpeed(aimGaugeSpeed),
 	m_addGaugeSpeed(addGaugeSpeed)
 {
-	// バースト演出の場合は0にする
-	(isGaugeBurst) ? m_currentValue = 0.0f : m_currentValue = m_maxValue;
-
-	// バースト演出を行う場合はUpdate関数を変更する
-	(isGaugeBurst) ? m_updateFunc = &Gauge::BurstUpdate : m_updateFunc = &Gauge::NormalUpdate;
+	// バースト演出を行うかどうか
+	if (isGaugeBurst)
+	{
+		m_currentValue = 0.0f;
+		m_updateFunc = &Gauge::BurstUpdate;
+		m_isEndBurst = false;
+	}
+	else
+	{
+		m_currentValue = m_maxValue;
+		m_updateFunc = &Gauge::NormalUpdate;
+		m_isEndBurst = true;
+	}
 
 	// 画像の読み込み
 	// 画像が指定されていない場合は-1を代入する
@@ -78,36 +92,41 @@ void Gauge::Draw()
 			m_pos.y + m_dimensions.y / 2,
 			m_gaugeImgH,
 			true);
-
-		/*DrawExtendGraph(
-			hpBarSideSpace_,
-			pos_.y - (hpBarHeight_ / 2),
-			hpBarSideSpace_ + static_cast<int>((common::screen_width - (hpBarSideSpace_ * 2)) * (static_cast<float>(backHp_ / maxHp_))),
-			pos_.y + (hpBarHeight_ / 2),
-			hpBackImgH_,
-			true);
-
-		DrawExtendGraph(
-			hpBarSideSpace_,
-			pos_.y - (hpBarHeight_ / 2),
-			hpBarSideSpace_ + static_cast<int>((common::screen_width - (hpBarSideSpace_ * 2)) * (static_cast<float>(hp_ / maxHp_))),
-			pos_.y + (hpBarHeight_ / 2),
-			hpImgH_,
-			true);*/
 	}
 	// フレームの描画
-	/*DrawExtendGraph(
-		hpBarSideSpace,
-		hpBarStartY,
-		hpBarSideSpace + static_cast<int>((common::screen_width - (hpBarSideSpace * 2))),
-		hpBarStartY + hpBarHeight,
-		hpFrameImgH_,
-		true);*/
+	DrawExtendGraph(
+		m_pos.x - (m_dimensions.x / 2),
+		m_pos.y - m_dimensions.y / 2 - gauge_frame_size,
+		m_pos.x + (m_dimensions.x / 2),
+		m_pos.y - m_dimensions.y / 2,
+		m_gaugeFrameImgH,
+		true);
+	DrawExtendGraph(
+		m_pos.x - (m_dimensions.x / 2),
+		m_pos.y + m_dimensions.y / 2,
+		m_pos.x + (m_dimensions.x / 2),
+		m_pos.y + m_dimensions.y / 2 + gauge_frame_size,
+		m_gaugeFrameImgH,
+		true);
+	DrawExtendGraph(
+		m_pos.x - (m_dimensions.x / 2) - gauge_frame_size,
+		m_pos.y - m_dimensions.y / 2 - gauge_frame_size,
+		m_pos.x - (m_dimensions.x / 2),
+		m_pos.y + m_dimensions.y / 2 + gauge_frame_size,
+		m_gaugeFrameImgH,
+		true);
+	DrawExtendGraph(
+		m_pos.x + (m_dimensions.x / 2),
+		m_pos.y - m_dimensions.y / 2 - gauge_frame_size,
+		m_pos.x + (m_dimensions.x / 2) + gauge_frame_size,
+		m_pos.y + m_dimensions.y / 2 + gauge_frame_size,
+		m_gaugeFrameImgH,
+		true);
 }
 
 void Gauge::SetValue(float afterValue)
 {
-	if (isDelayed)
+	if (m_isDelayed)
 	{
 		// ディレイタイムの設定
 		m_damageFrameCount.SetTime(60);
@@ -116,6 +135,12 @@ void Gauge::SetValue(float afterValue)
 	// 目標値を設定
 	m_aimValue = afterValue;
 	m_aimValue = (std::max)(m_aimValue, 0.0f);
+}
+
+// バースト演出が終了したか
+bool Gauge::IsEndBurst() const
+{
+	return m_isEndBurst;
 }
 
 // 通常時の更新
@@ -152,6 +177,9 @@ void Gauge::BurstUpdate()
 	// 目標値を超えたら
 	if (m_currentValue >= m_maxValue)
 	{
+		// バースト演出が終了したことを示すフラグを立てる
+		m_isEndBurst = true;
+
 		// 目標値にする
 		m_currentValue = m_maxValue;
 

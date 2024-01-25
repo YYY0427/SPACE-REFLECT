@@ -15,7 +15,7 @@ namespace
 	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
 	// 移動速度
-	constexpr float move_speed = 200.0f;	
+	constexpr float move_speed = 25.0f;	
 }
 
 // コンストラクタ
@@ -70,13 +70,20 @@ void ReflectLaser::Update()
 	// 位置をシールドに合わせる
 	m_pos = m_pShield->GetPos();
 
-	// 反射ベクトルを作成
-	Vector3 reflectVec = Vector3::Reflect(
+#if false
+	m_directionVec = Vector3::Reflect(
 		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
-	reflectVec = reflectVec.Normalized() * move_speed;
+#else
+	// 反射ベクトルを作成
+	Vector3 goalPos = Vector3::Reflect(
+		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
+
+	// ベクトルの取得
+	Vector3 moveVec = (goalPos - m_directionVec).Normalized() * move_speed;
 
 	// 向く方向を更新
-	m_directionVec += reflectVec;
+	m_directionVec += moveVec;
+#endif
 
 	// 指定したベクトル方向に向ける行列の作成
 	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionVec);
