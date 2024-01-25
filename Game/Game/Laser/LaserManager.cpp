@@ -34,15 +34,6 @@ void LaserManager::Update()
 	// 不要になったレーザーの削除
 	m_pLaserList.remove_if([](const LaserData& laser) { return !laser.pLaser->IsEnabled(); });
 
-	if (m_pPlayer->GetShield())
-	{
-		if (!m_pPlayer->GetShield()->IsShield())
-		{
-			// 反射レーザーの削除
-			m_pLaserList.remove_if([](const LaserData& laser) { return laser.type == LaserType::REFLECT; });
-		}
-	}
-
 	// レーザーの更新
 	for (auto& laser : m_pLaserList)
 	{
@@ -122,7 +113,13 @@ void LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_
 void LaserManager::DeleteLaser(int key)
 {
 	// レーザーの削除
-	m_pLaserList.remove_if([key](const LaserData& laser) { return laser.key == key; });
+	for (auto& laser : m_pLaserList)
+	{
+		if (laser.key == key)
+		{
+			laser.pLaser->Delete();
+		}
+	}
 }
 
 // レーザーの取得	

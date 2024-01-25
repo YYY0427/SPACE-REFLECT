@@ -1,10 +1,10 @@
 #pragma once
-#include "BossEnemyBase.h"
+#include "../EnemyBase.h"
 
 /// <summary>
 /// 蚊のボスクラス
 /// </summary>
-class BossMosquito final : public BossEnemyBase
+class BossMosquito final : public EnemyBase
 {
 public:
 	// コンストラクタ

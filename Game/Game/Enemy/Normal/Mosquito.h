@@ -1,5 +1,5 @@
 #pragma once
-#include "EnemyBase.h"
+#include "../EnemyBase.h"
 #include "../../../Util/Timer.h"
 #include "../../../Game/Laser/LaserManager.h"
 #include <memory>

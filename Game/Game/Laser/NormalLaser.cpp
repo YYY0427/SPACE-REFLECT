@@ -1,5 +1,5 @@
 #include "NormalLaser.h"
-#include "../Enemy/Normal/EnemyBase.h"
+#include "../Enemy/EnemyBase.h"
 #include "../Player.h"
 #include "../../Math/Vector2.h"
 #include "../../Application.h"
@@ -288,7 +288,7 @@ void NormalLaser::Draw()
 #ifdef _DEBUG
 	// モデルの描画
 	SetUseLighting(false);
-//	m_pModel->Draw();
+	m_pModel->Draw();
 	SetUseLighting(true);
 
 	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);

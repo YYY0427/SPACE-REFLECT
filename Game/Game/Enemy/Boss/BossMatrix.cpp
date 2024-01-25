@@ -10,6 +10,8 @@
 #include <random>
 #include <algorithm>
 
+// TODO : HPが半分以下になったら透明になる(レーザーの発射場所はランダムにする)
+
 namespace
 {
 	// 位置
@@ -22,15 +24,18 @@ namespace
 	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };	// 初期の向き
 
 	// アニメーション番号
-	constexpr int idle_anim_no = 0;						// 待機
-	constexpr int normal_laser_fire_anim_no = 1;		// 移動
-	constexpr int cube_laser_fire_anim_no = 2;			// レーザー発射
+	constexpr int idle_anim_no = 0;				// 待機
+	constexpr int move_anim_no = 2;				// 移動
+	constexpr int laser_fire_anim_no = 3;		// レーザー発射
 
 	// モデルのマテリアル番号
 	constexpr int body_material_no = 0;			// 本体
 	constexpr int lense_material_no = 1;		// レンズ
 	constexpr int eye_material_no = 2;			// 目
 	constexpr int laser_material_no = 3;		// レーザー
+
+	// フレーム番号
+	constexpr int normal_laser_fire_frame = 2;	// 通常レーザー発射
 
 	// 移動
 	constexpr float entry_move_speed = 1.5f;	// 登場時の移動速度
@@ -66,15 +71,18 @@ namespace
 	// 当たり判定の半径
 	constexpr float collision_radius = 250.0f;
 
-	// 次の攻撃ステートに移るまでのフレーム
-	constexpr int next_attack_state_frame = 60 * 5;
+	// フレーム
+	constexpr int next_attack_state_frame = 60 * 5;		// 次の攻撃ステートに移るまでのフレーム
+	constexpr int stop_normal_laser_attack_frame = 60 * 10;	// 通常レーザー攻撃のフレーム
 }
 
 // コンストラクタ
 BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager) :
 	m_attackStateIndex(0),
 	m_isMoveEnd(false),
-	m_idleFrame(0)
+	m_idleFrame(0),
+	m_laserKey(-1),
+	m_laserFrame(0)
 {
 	// 初期化
 	m_pPlayer = pPlayer;
@@ -96,16 +104,14 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_stateMachine.AddState(State::MOVE_NORMAL_LASER_ATTACK, {}, [this]() {UpdateMoveNormalLaserAttack(); }, {});
 	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, {}, [this]() {UpdateMoveHomingLaserAttack(); }, {});
 	m_stateMachine.AddState(State::STOP_NORMAL_LASER_ATTACK, [this]() {EntarStopNormalLaserAttack(); }, [this]() {UpdateStopNormalLaserAttack(); }, {});
-	m_stateMachine.AddState(State::STOP_HOMING_LASER_ATTACK, {}, [this]() {UpdateStopHomingLaserAttack(); }, {});
 	m_stateMachine.AddState(State::CUBE_LASER_ATTACK, {}, [this]() {UpdateCubeLaserAttack(); }, {});
 	m_stateMachine.SetState(State::ENTRY);
 
 	// 攻撃ステートの追加
-	m_attackStateTable.push_back(State::MOVE_NORMAL_LASER_ATTACK);
-	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
+//	m_attackStateTable.push_back(State::MOVE_NORMAL_LASER_ATTACK);
+//	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
 	m_attackStateTable.push_back(State::STOP_NORMAL_LASER_ATTACK);
-	m_attackStateTable.push_back(State::STOP_HOMING_LASER_ATTACK);
-	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
+//	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
 	ShuffleAttackState();
 
 	// HPゲージの設定
@@ -170,8 +176,14 @@ void BossMatrix::Draw()
 // 通常レーザー攻撃の開始
 void BossMatrix::EntarStopNormalLaserAttack()
 {
+	// フレームの初期化
+	m_laserFrame = stop_normal_laser_attack_frame;
+
+	// 通常レーザー発射用のアニメーションに変更
+	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, 8);
+
 	// レーザーの生成
-//	m_pLaserManager->AddLaser(LaserType::NORMAL, shared_from_this(), 140, 10000, 10.0f, false);
+	m_laserKey = m_pLaserManager->AddLaser(LaserType::NORMAL, shared_from_this(), 140, 10000, 2.0f, false);
 }
 
 // 登場時の更新
@@ -249,11 +261,18 @@ void BossMatrix::UpdateMoveHomingLaserAttack()
 // 通常レーザー攻撃
 void BossMatrix::UpdateStopNormalLaserAttack()
 {
-}
+	// レーザーの発射位置の更新
+	m_laserFirePos = Vector3::FromDxLibVector3(MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
 
-// ホーミングレーザー攻撃
-void BossMatrix::UpdateStopHomingLaserAttack()
-{
+	// アニメーションが終了したら
+	if (m_laserFrame-- <= 0)
+	{
+		// ステートを待機に変更
+		m_stateMachine.SetState(State::IDLE);
+
+		// レーザーの削除
+		m_pLaserManager->DeleteLaser(m_laserKey);
+	}
 }
 
 // キューブレーザー攻撃

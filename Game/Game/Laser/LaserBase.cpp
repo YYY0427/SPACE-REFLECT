@@ -16,6 +16,12 @@ LaserBase::~LaserBase()
 {
 }
 
+// Á‚·
+void LaserBase::Delete()
+{
+	m_isEnabled = false;
+}
+
 // ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹‚Ìæ“¾
 int LaserBase::GetModelHandle() const
 {

@@ -1,6 +1,5 @@
 #pragma once
-#include "BossEnemyBase.h"
-#include "../Normal/EnemyBase.h"
+#include "../EnemyBase.h"
 #include <vector>
 
 // プロトタイプ宣言
@@ -12,7 +11,7 @@ class StringUI;
 /// ボス敵
 /// マトリックス
 /// </summary>
-class BossMatrix : public BossEnemyBase
+class BossMatrix : public EnemyBase
 {
 public:
 	// コンストラクタ
@@ -40,7 +39,6 @@ private:
 	void UpdateMoveNormalLaserAttack();	// 移動しながら通常レーザー攻撃
 	void UpdateMoveHomingLaserAttack();	// 移動しながらホーミングレーザー攻撃
 	void UpdateStopNormalLaserAttack();	// 通常レーザー攻撃
-	void UpdateStopHomingLaserAttack();	// ホーミングレーザー攻撃
 	void UpdateCubeLaserAttack();		// キューブレーザー攻撃
 
 	// 攻撃ステートの順序をシャッフル
@@ -62,7 +60,6 @@ private:
 		MOVE_NORMAL_LASER_ATTACK,	// 移動しながら通常レーザー攻撃
 		MOVE_HOMING_LASER_ATTACK,	// 移動しながらホーミングレーザー攻撃
 		STOP_NORMAL_LASER_ATTACK,	// 通常レーザー攻撃
-		STOP_HOMING_LASER_ATTACK,	// ホーミングレーザー攻撃
 		CUBE_LASER_ATTACK,			// キューブレーザー攻撃
 	};
 
@@ -86,6 +83,10 @@ private:
 	std::vector<State> m_attackStateTable;	//	攻撃ステートテーブル
 	int m_attackStateIndex;					// 攻撃ステートのインデックス
 
-	// 待機
+	// フレーム
 	int m_idleFrame;						// 待機フレーム
+	int m_laserFrame;						// レーザー発射フレーム
+
+	// レーザーのKey
+	int m_laserKey;
 };

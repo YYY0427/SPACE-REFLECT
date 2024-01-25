@@ -1,6 +1,5 @@
 #include "EnemyManager.h"
-#include "Boss/BossEnemyBase.h"
-#include "Normal/EnemyBase.h"
+#include "EnemyBase.h"
 #include "Normal/Mosquito.h"
 #include "Boss/BossMosquito.h"
 #include "Boss/BossMatrix.h"

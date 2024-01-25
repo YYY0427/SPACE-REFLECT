@@ -146,10 +146,9 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Game\Enemy\Boss\BossMatrix.cpp" />
     <ClCompile Include="Game\Enemy\Boss\BossMosquito.cpp" />
-    <ClCompile Include="Game\Enemy\Boss\BossEnemyBase.cpp" />
     <ClCompile Include="Effect\ScreenShaker.cpp" />
     <ClCompile Include="Game\Enemy\EnemyManager.cpp" />
-    <ClCompile Include="Game\Enemy\Normal\EnemyBase.cpp" />
+    <ClCompile Include="Game\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Game\Planet.cpp" />
     <ClCompile Include="Game\PlanetManager.cpp" />
     <ClCompile Include="Game\Enemy\Normal\Mosquito.cpp" />
@@ -209,10 +208,9 @@
     <ClInclude Include="Application.h" />
     <ClInclude Include="Game\Enemy\Boss\BossMatrix.h" />
     <ClInclude Include="Game\Enemy\Boss\BossMosquito.h" />
-    <ClInclude Include="Game\Enemy\Boss\BossEnemyBase.h" />
     <ClInclude Include="Effect\ScreenShaker.h" />
     <ClInclude Include="Game\Enemy\EnemyManager.h" />
-    <ClInclude Include="Game\Enemy\Normal\EnemyBase.h" />
+    <ClInclude Include="Game\Enemy\EnemyBase.h" />
     <ClInclude Include="Game\Planet.h" />
     <ClInclude Include="Game\PlanetManager.h" />
     <ClInclude Include="Game\Enemy\Normal\Mosquito.h" />

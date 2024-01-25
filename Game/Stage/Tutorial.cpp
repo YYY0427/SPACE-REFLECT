@@ -13,7 +13,7 @@
 #include "../Game/Laser/LaserManager.h"
 #include "../Game/Laser/LaserBase.h"
 #include "../Game/Enemy/EnemyManager.h"
-#include "../Game/Enemy/Normal/EnemyBase.h"
+#include "../Game/Enemy/EnemyBase.h"
 #include <DxLib.h>
 
 namespace

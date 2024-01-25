@@ -29,6 +29,9 @@ public:
 	// 反射された状態から元に戻す
 	virtual void UndoReflect() {};
 
+	// レーザーを消す
+	void Delete();
+
 	// ゲッター
 	int GetModelHandle() const;		// モデルハンドル
 	Vector3 GetPos() const;			// 位置情報
