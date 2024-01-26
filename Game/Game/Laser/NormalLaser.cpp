@@ -20,12 +20,17 @@ namespace
 	const Vector3 laser_effect_scale = { 24.0f, 24.0f, 24.0f };		// 拡大率
 	constexpr float laser_effect_play_speed = 1.0f;		// 再生速度
 	constexpr int init_laser_effect_charge_frame = 140;	// 元々のチャージフレーム
+	constexpr float laser_effect_z_length = 260.0f;		// Z軸の長さ
+
+	// フレーム
+	constexpr int laser_end_frame_no = 0;	// レーザーの端のフレーム番号
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
 	constexpr float distance_threshold = 5.0f;
 
-	constexpr float afisajf = 0.9f;
+	// カメラのNearを0、Farを1としたときのZ座標
+	constexpr float near_far_z_pos = 0.0f;
 
 	// 反射中にシールドに何フレーム当たっていなかったら反射を解除するか
 	constexpr int reflect_collision_shield_frame = 5;
@@ -36,10 +41,10 @@ namespace
 		static_cast<float>(Application::GetInstance().GetWindowSize().height )};
 	const Vector2 goal_pos[] = 
 	{
-		{ 0 + 100, 0 + 100 },
-		{ window_size.x - 100, 0 + 100 },
-		{ 0 + 100, window_size.y - 100 },
-		{ window_size.x - 100, window_size.y - 100 },
+		{ 0 + 150, 0 + 150 },
+		{ window_size.x - 150, 0 + 150 },
+		{ 0 + 150, window_size.y - 150 },
+		{ window_size.x - 150, window_size.y - 150 },
 		{ window_size.x / 2, window_size.y / 2 },
 	};
 }
@@ -79,7 +84,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 
 		// 目的地を設定
 		Vector2 screenPos = m_normalFireMovePointList.front();
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, afisajf }));
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, near_far_z_pos }));
 
 	}
 	// レーザーの向く座標を設定
@@ -95,7 +100,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 	// エフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectFollow(
 		m_laserEffectHandle,
-		EffectID::infinity_laser,
+		EffectID::normal_laser,
 		&m_pos,
 		laser_effect_scale,
 		effectSpeed,
@@ -239,7 +244,7 @@ void NormalLaser::UpdateNormalFire()
 
 		// 次の目的地を設定
 		Vector2 screenPos = m_normalFireMovePointList[m_normalFireMovePointIndex];
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, afisajf }));
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ screenPos.x,screenPos.y, near_far_z_pos }));
 	}
 	else
 	{
@@ -248,7 +253,7 @@ void NormalLaser::UpdateNormalFire()
 			ConvScreenPosToWorldPos(
 				{ m_normalFireMovePointList[m_normalFireMovePointIndex].x,
 				  m_normalFireMovePointList[m_normalFireMovePointIndex].y,
-				  afisajf }));
+				  near_far_z_pos }));
 
 		// ベクトルを設定
 		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
@@ -304,13 +309,13 @@ void NormalLaser::Stop(Vector3 pos)
 	// シールドに当たったので初期化
 	m_reflectFrame = 0;
 
-	// レーザーの発射地点からの距離を算出
+	// レーザーの発射地点からシールドまでの距離を算出
 	Vector3 vec = pos - m_pos;
 	float length = vec.Length();
 
 	// レーザーのエフェクトがシールドで止まってるよう見えるように、エフェクトの拡大率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectScale(
-		m_laserEffectHandle, { laser_effect_scale.x, laser_effect_scale.y, length / 310.0f });
+		m_laserEffectHandle, { laser_effect_scale.x, laser_effect_scale.y, length / laser_effect_z_length });
 
 	// レーザーの当たり判定用モデルを反対側に向ける
 	m_pModel->SetScale(m_scale);

@@ -35,6 +35,8 @@ public:
 	void SetSlowValue(float slowValue);
 
 private:
+	int m_windEffectHandle;
+
 	// ƒJƒƒ‰‚ÌÀ•W
 	Vector3 m_pos;
 

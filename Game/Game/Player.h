@@ -30,14 +30,15 @@ public:
 
 	// 描画
 	void Draw();
+	void DrawShield();
 
 	// プレイヤーのダメージ処理
 	void OnDamage(int damage);
 
-	/// <summary>
-	/// プレイヤーが生きているか
-	/// </summary>
-	/// <returns>true : 生きている, false : 死んでいる</returns>
+	// シールドが反射した時の処理
+	void OnReflect();
+
+	// プレイヤーが生きているか
 	bool IsLive() const;
 
 	// 位置情報の取得
@@ -86,6 +87,9 @@ private:
 	// 移動ベクトル
 	Vector3 m_moveVec;
 
+	// 不透明度
+	float m_opacity;
+
 	// プレイヤーの移動速度
 	float m_moveSpeed;
 
@@ -97,9 +101,11 @@ private:
 
 	// フラグ
 	bool m_isInputLeftStick;	// 左スティックの入力フラグ
+	bool m_isReflect;			// 反射中か
 	bool m_isStartAnimation;	// スタート演出をしたかフラグ
 
 	// エフェクト
+	int m_windEffectHandle;			// 風エフェクトのハンドル
 	int m_boostEffectHandle;		// ブーストエフェクトハンドル
 //	Vector3 m_boostEffectScale;		// ブーストエフェクトの拡大率
 //	float m_boostEffectSpeed;		// ブーストエフェクトの再生速度

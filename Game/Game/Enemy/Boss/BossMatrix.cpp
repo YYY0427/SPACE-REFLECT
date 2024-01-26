@@ -21,7 +21,7 @@ namespace
 
 	// モデル
 	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f};
-	const Vector3 model_scale = { 3.0f , 3.0f, 3.0f };			// 拡大率
+	const Vector3 model_scale = { 2.0f , 2.0f, 2.0f };			// 拡大率
 	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };	// 初期の向き
 
 	// アニメーション番号
@@ -74,10 +74,10 @@ namespace
 
 	// フレーム
 	constexpr int next_attack_state_frame = 60 * 5;			// 次の攻撃ステートに移るまでのフレーム
-	constexpr int stop_normal_laser_attack_frame = 60 * 10;	// 通常レーザー攻撃のフレーム
+	constexpr int stop_normal_laser_attack_frame = 60 * 20;	// 通常レーザー攻撃のフレーム
 	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
 	constexpr int die_shake_frame = 60 * 5;					// 死亡時の揺れるフレーム
-	constexpr int die_effect_interval_frame = 20;		// 死亡時のエフェクトの再生間隔
+	constexpr int die_effect_interval_frame = 20;			// 死亡時のエフェクトの再生間隔
 }
 
 // コンストラクタ
@@ -196,7 +196,7 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 		m_damageEffectHandle,
 		EffectID::enemy_boss_hit_effect,
 		pos,
-		{ 200.0f, 200.0f, 200.0f }
+		{ 100.0f, 100.0f, 100.0f }
 	);
 
 	// HPが0以下になったら死亡

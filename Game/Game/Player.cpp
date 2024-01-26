@@ -92,7 +92,9 @@ Player::Player() :
 	m_playerDeadEffectHandle(-1),
 	m_isPlayerDeadEffect(false),
 	m_isStartAnimation(false),
-	m_slowValue(1.0f)
+	m_slowValue(1.0f),
+	m_windEffectHandle(-1),
+	m_opacity(1.0f)
 {
 	// データの読み込み
 	auto& data = DataReaderFromUnity::GetInstance().GetData("Player");
@@ -103,17 +105,12 @@ Player::Player() :
 	// プレイヤーモデルのインスタンスの生成
 	m_pModel = std::make_shared<Model>(model_file_path.c_str());
 
-	// モデルの拡大率の設定
-	m_pModel->SetScale(m_scale);
-
-	// 回転率の設定
-	m_pModel->SetRot(m_rot);
-
-	// 位置情報の設定
-	m_pModel->SetPos(m_pos);
-
-	// アニメーションと当たり判定の更新
-	m_pModel->Update();
+	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);// 不透明度
+	m_pModel->SetScale(m_scale);	// 拡大率
+	m_pModel->SetRot(m_rot);		// 回転
+	m_pModel->SetPos(m_pos);		// 位置
+	m_pModel->Update();				// 更新
 
 	// ブーストエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
@@ -123,6 +120,15 @@ Player::Player() :
 		boost_effect_scale,
 		boost_effect_speed,
 		{ m_rot.x, 0.0f, 0.0f });
+
+	//// 風エフェクトの再生
+	//Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
+	//	m_windEffectHandle,
+	//	EffectID::wind,
+	//	&m_pos,
+	//	{ 100.0f, 100.0f, 100.0f },
+	//	1.0f,
+	//	{ 0.0f, -DX_PI_F / 2, 0.0f });
 }
 
 //  デストラクタ
@@ -331,20 +337,20 @@ void Player::Update(float cameraHorizon)
 	float rotX = MathUtil::ToRadian(25.0f);
 	m_rot = { rotX + m_moveVec.z * 0.01f, 0.0f, -m_moveVec.x * 0.01f };
 
+	// 不透明度を元に戻す
+	m_opacity = 1.0f;
+
 	// エフェクトの設定
 	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
 
-	// 位置座標の設定
-	m_pModel->SetPos(m_pos);
-
-	// 向いている方向の設定
-	m_pModel->SetRot(m_rot);
-
-	// アニメーションを進める
-	m_pModel->Update();
+	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 不透明度
+	m_pModel->SetPos(m_pos);			// 位置
+	m_pModel->SetRot(m_rot);			// 回転
+	m_pModel->Update();					// 更新
 
 	// シールドがある場合
 	if (m_pShield)
@@ -411,13 +417,6 @@ void Player::Draw()
 		// プレイヤーモデルの描画
 		m_pModel->Draw();
 
-		// 最初の更新をした後の場合
-		if (m_pShield)
-		{
-			// シールドの描画
-			m_pShield->Draw();
-		}
-
 #ifdef _DEBUG
 		// プレイヤーの当たり判定の描画
 		DrawSphere3D(m_pos.ToDxLibVector3(), model_collision_radius, 8, 0xff0000, 0xff0000, false);
@@ -425,6 +424,18 @@ void Player::Draw()
 		// プレイヤーの位置情報の描画
 		DrawFormatString(0, 0, 0xffffff, "プレイヤー 座標 : %f, %f, %f", m_pos.x, m_pos.y, m_pos.z);
 #endif 
+	}
+}
+
+// シールドの描画
+void Player::DrawShield()
+{
+	// シールドがある場合
+	// プレイヤーが死んでいる場合は描画しない
+	if (m_pShield && !m_isPlayerDeadEffect)
+	{
+		// シールドの描画
+		m_pShield->Draw();
 	}
 }
 
@@ -437,6 +448,14 @@ void Player::OnDamage(int damage)
 
 	// HPバーの値の設定
 	m_pHPbar->SetValue(m_hp);
+}
+
+// シールドが反射した時の処理
+void Player::OnReflect()
+{
+	//// レーザーが見えやすいように不透明度を下げる
+	m_opacity = 0.1f;
+	m_pModel->SetOpacity(m_opacity);	
 }
 
 // プレイヤーが生きているか

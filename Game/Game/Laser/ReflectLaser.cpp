@@ -39,7 +39,7 @@ ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std
 
 	// レーザーエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
-		m_laserEffectHandle, EffectID::refrect_laser, &m_pos, effect_scale, 1.0f, rotEffectMtx.ToEulerAngle());
+		m_laserEffectHandle, EffectID::reflect_laser, &m_pos, effect_scale, 1.0f, rotEffectMtx.ToEulerAngle());
 
 	// モデルの設定
 	m_pModel = std::make_shared<Model>(modelHandle);	// インスタンス生成

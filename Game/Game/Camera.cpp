@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "../Math/MathUtil.h"
+#include "../Effect/Effekseer3DEffectManager.h"
 #include <DxLib.h>
 #include <algorithm>
 #include <cassert>
@@ -10,7 +11,7 @@ namespace
 	constexpr float camera_perspective = 90.0f;
 
 	// 描画距離(near, far)
-	constexpr float near_distance = 5.0f;
+	constexpr float near_distance = 50.0f;
 	constexpr float far_distance = 25000.0f;
 
 	// プレイヤーからのカメラまでの距離
@@ -34,6 +35,16 @@ Camera::Camera(Vector3 playerPos) :
 	m_hermiteValue(0.0f),
 	m_slowValue(1.0f)
 {
+
+	// 風エフェクトの再生
+	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
+		m_windEffectHandle,
+		EffectID::wind,
+		m_pos,
+		{ 100.0f, 100.0f, 100.0f },
+		1.0f,
+		{ 0.0f, -DX_PI_F / 2, 0.0f });
+
 	// カメラの設定
 	SetCamera();
 }
@@ -46,7 +57,10 @@ Camera::~Camera()
 // 更新
 void Camera::Update(Vector3 playerPos)
 {
-#if false
+#if true
+	// TODO : カメラがターゲットぱっと切り替わっちゃうので、スムーズに切り替わるようにする
+	// 特定の角度以上なら補完を入れる
+	
 	// プレイヤーの位置方向に少しカメラの注視点をずらす
 	Vector3 tempTarget = m_target;
 
@@ -83,6 +97,8 @@ void Camera::Update(Vector3 playerPos)
 		m_target += (direction * camera_move_speed * m_slowValue);
 	}
 
+	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, {m_pos.x, m_pos.y, m_pos.z - 400.0f });
+
 	// カメラの設定
 	SetCamera();
 }
@@ -116,6 +132,8 @@ void Camera::UpdateStart(Vector3 playerPos)
 			m_isStartAnimation = true;
 		}
 	}
+
+	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 400.0f });
 
 	// カメラの設定
 	SetCamera();

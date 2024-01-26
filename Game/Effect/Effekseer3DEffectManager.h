@@ -8,28 +8,27 @@
 // エフェクトのファイルパス
 namespace EffectID
 {
-	const std::string test = "Test";
-	const std::string player_dead = "Explosion";		// プレイヤー死亡時に出すエフェクト
-	const std::string player_shield = "MagicShield";	// プレイヤーのシールド	
-	const std::string player_boost = "Boost";			// プレイヤーに常に出すエフェクト
-	const std::string infinity_laser = "ContinueLaser";	// 敵のレーザーエフェクト
-	const std::string refrect_laser = "RefrectLaser";	// 敵のレーザーを反射したレーザー
-	const std::string enemy_died = "Explosion";			// 敵の死亡時のエフェクト
+	const std::string player_dead = "Explosion";			// プレイヤー死亡時に出すエフェクト
+	const std::string player_shield = "MagicShield";		// プレイヤーのシールド	
+	const std::string player_boost = "Boost";				// プレイヤーに常に出すエフェクト
+	const std::string normal_laser = "Laser";				// 敵のレーザーエフェクト
+	const std::string reflect_laser = "ReflectLaser";		// 敵のレーザーを反射したレーザー
+	const std::string enemy_died = "Explosion";				// 敵の死亡時のエフェクト
 	const std::string enemy_boss_entry = "EnemyBossEntry";	// 敵のボスが出現するときのエフェクト
-	const std::string enemy_boss_hit_effect = "BossEnemyHitEffect";
-	const std::string wind = "Wind";
+	const std::string enemy_boss_hit_effect = "BossEnemyHitEffect";	// ヒットエフェクト 
+	const std::string wind = "Wind";								// 風のエフェクト
 
+	// まとめてロードするための配列
 	const std::string effect_file_path[] =
 	{ 
-		test,
 		player_dead,
 		player_shield,
 		player_boost,
-		refrect_laser,
+		reflect_laser,
 		enemy_died,
 		enemy_boss_entry,
 		wind,
-		infinity_laser,
+		normal_laser,
 		enemy_boss_hit_effect,
 	};
 }

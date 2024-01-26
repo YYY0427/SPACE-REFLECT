@@ -131,12 +131,14 @@ void Tutorial::Draw()
 	m_pPlanetManager->Draw();	// 惑星
 	m_pMeteorManager->Draw();	// 隕石
 	m_pEnemyManager->Draw();	// 敵
-	m_pPlayer->Draw();			// プレイヤー
 	m_pLaserManager->Draw();	// レーザー
-	UIManager::GetInstance().Draw();	// UI
-
-	// TODO : レーザーのエフェクトがなぜかシールドよりも後ろに描画されるから直して
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
+
+	// Zバッファ関係で描画順が変わるので最後に描画
+	m_pPlayer->DrawShield();			// シールド
+	m_pPlayer->Draw();					// プレイヤー
+
+	UIManager::GetInstance().Draw();	// UI
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
@@ -212,6 +214,13 @@ void Tutorial::Collision()
 
 			// 敵のレーザーを止める
 			laser.pLaser->Stop(m_pPlayer->GetShield()->GetPos());
+
+			// プレイヤーの反射処理
+			m_pPlayer->OnReflect();
+
+			// エフェクトの再生
+			int handle = {};
+			Effekseer3DEffectManager::GetInstance().PlayEffect(handle, EffectID::enemy_boss_hit_effect, m_pPlayer->GetShield()->GetPos(), { 25, 25, 25 });
 		}
 
 		// 当たり判定情報の後始末
