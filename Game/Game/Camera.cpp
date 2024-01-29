@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "../Math/MathUtil.h"
 #include "../Effect/Effekseer3DEffectManager.h"
+#include "../MyDebug/DebugText.h"
 #include <DxLib.h>
 #include <algorithm>
 #include <cassert>
@@ -58,7 +59,7 @@ Camera::~Camera()
 // 更新
 void Camera::Update(Vector3 playerPos)
 {
-#if true
+#if false
 	// TODO : カメラがターゲットぱっと切り替わっちゃうので、スムーズに切り替わるようにする
 	// 特定の角度以上なら補完を入れる
 	
@@ -74,14 +75,9 @@ void Camera::Update(Vector3 playerPos)
 	float angle = MathUtil::ToDegree(centerPos.Angle(targetPos));
 	if (angle >= 15.0f)
 	{
-	//	m_target = tempTarget;
-		/*m_lerpValue += 1.0f * m_slowValue;
-		m_target = Vector3::Lerp(m_target, tempTarget, m_lerpValue);*/
+		DebugText::Log("15度超えたよ");
+		m_target = tempTarget;
 	}
-	/*else
-	{
-		m_lerpValue = 0.0f;
-	}*/
 #else
 	// プレイヤーの位置方向とは逆に少しカメラの注視点をずらす
 	m_target.x = -playerPos.x * 0.2f;

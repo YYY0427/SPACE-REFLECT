@@ -175,6 +175,9 @@ void Application::Run()
 		// シーンの描画
 		sceneManager.Draw();
 
+		// デバッグテキストの描画
+		DebugText::Draw();
+
 		// 画面の更新
 		ScreenFlip();
 
@@ -187,7 +190,7 @@ void Application::Run()
 		if(m_isExit) break;
 
 		// fpsを固定
-		while (GetNowHiPerformanceCount() - time < (static_cast<long long>((1000 / fps)) * 1000))
+		while (GetNowHiPerformanceCount() - time < static_cast<long long>(1000000 / fps))
 		{
 
 		}
@@ -210,6 +213,9 @@ void Application::End()
 	// StringManagerの終了処理
 	auto& stringManager = StringManager::GetInstance();
 	stringManager.End();
+
+	// DebugTextの終了処理
+	DebugText::End();
 
 	// ＤＸライブラリ使用の終了処理
 	DxLib_End();

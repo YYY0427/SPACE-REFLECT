@@ -454,7 +454,7 @@ void Player::OnDamage(int damage)
 // シールドが反射した時の処理
 void Player::OnReflect()
 {
-	//// レーザーが見えやすいように不透明度を下げる
+	// レーザーが見えやすいように不透明度を下げる
 	m_opacity = 0.1f;
 	m_pModel->SetOpacity(m_opacity);	
 }

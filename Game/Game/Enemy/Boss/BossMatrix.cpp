@@ -17,7 +17,7 @@ namespace
 {
 	// 位置
 	const Vector3 init_pos = { 0.0f, 300.0f, 5000.0f };				// 初期位置
-	const Vector3 goal_init_pos = { 0.0f, 300.0f, 2000.0f };		// 登場時の位置
+	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1500.0f };		// 登場時の位置
 
 	// モデル
 	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f};
@@ -160,6 +160,7 @@ void BossMatrix::Update()
 	// ステートマシンの更新
 	m_stateMachine.Update();
 
+	// TODO : レーザーの方向に向けるようにする
 	// プレイヤー方向の回転行列の取得
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
 	Vector3 rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };

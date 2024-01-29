@@ -21,7 +21,7 @@ namespace
 	const Vector3 laser_effect_scale = { 24.0f, 24.0f, 24.0f };		// 拡大率
 	constexpr float laser_effect_play_speed = 1.0f;		// 再生速度
 	constexpr int init_laser_effect_charge_frame = 140;	// 元々のチャージフレーム
-	constexpr float laser_effect_z_length = 260.0f;		// Z軸の長さ
+	constexpr float laser_effect_z_length = 270.0f;		// Z軸の長さ
 
 	// フレーム
 	constexpr int laser_end_frame_no = 0;	// レーザーの端のフレーム番号

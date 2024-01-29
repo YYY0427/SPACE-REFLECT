@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <DxLib.h>
-#include <initializer_list>
+#include <list>
 #include "../StringManager.h"
 
 namespace
@@ -40,8 +40,14 @@ public:
 	// 初期化
 	static void Init();
 
+	// 終了処理
+	static void End();
+
 	// ログのクリア
 	static void Clear();
+
+	// ログの描画
+	static void Draw();
 
 	// ログを出力する
 	static void Log(std::string string);
@@ -68,28 +74,15 @@ public:
 				str += ", " + std::to_string(array[i]);
 			}
 		}
-
-		// 半透明の背景を描画
-		int width, height, line = 0;
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 127);
-		GetDrawStringSizeToHandle(&width, &height, &line, str.c_str(), str.size(), m_fontHandle);
-		DrawBox(draw_width, height * m_logCount, draw_width + width, (height * m_logCount) + height, draw_back_color, true);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-		// 描画
-		DrawStringToHandle(
-			draw_width,
-			draw_start_height + (draw_height_interval * m_logCount),
-			str.c_str(),
-			draw_font_color,
-			m_fontHandle);
-
-		// カウント
-		m_logCount++;
+		// ログを格納
+		m_logList.push_front(str);
 #endif
 	}
 
 private:
+	// ログのリスト
+	static std::list<std::string> m_logList;
+
 	// ログの出力回数
 	static int m_logCount;
 

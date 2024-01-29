@@ -51,18 +51,18 @@ void SceneManager::Draw()
 	float fps = GetFPS();
 //	float fps = Application::GetInstance().GetFps();
 
-		// 画面サイズの取得
+	// 画面サイズの取得
 	Size size = Application::GetInstance().GetWindowSize();
 
 	// 1フレームにかかった描画時間を表示
-	float rate = static_cast<float>(m_updateTime + m_drawTime) / static_cast<float>(1000000.0f / fps);
+	float rate = static_cast<float>(m_updateTime + m_drawTime) / static_cast<long long>(1000000 / fps);
 	int width = static_cast<int>(size.width * rate);
 	DrawBox(16, size.height - 40, 32, size.height - 24, 0xff0000, true);
 	DrawString(40, size.height - 40, "DrawTime", 0xffffff);
 	DrawBox(0, size.height - 16, width, size.height, 0xff0000, true);
 
 	// 1フレームにかかった更新時間を表示
-	rate = static_cast<float>(m_updateTime) / static_cast<float>(1000000.0f / fps);
+	rate = static_cast<float>(m_updateTime) / static_cast<long long>(1000000 / fps);
 	width = static_cast<int>(size.width * rate);
 	DrawBox(150, size.height - 40, 166, size.height - 24, 0x0000ff, true);
 	DrawString(174, size.height - 40, "UpdateTime", 0xffffff);
