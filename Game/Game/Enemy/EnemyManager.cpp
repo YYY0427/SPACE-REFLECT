@@ -7,6 +7,7 @@
 #include "../../Util/DrawFunctions.h"
 #include "../../UI/Warning.h"
 #include "../../UI/UIManager.h"
+#include "../../MyDebug/DebugText.h"
 #include "../Player.h"
 #include <fstream>
 #include <sstream>
@@ -147,7 +148,8 @@ void EnemyManager::Draw()
 	{
 		auto itr = m_pEnemyList.begin();
 		std::advance(itr, i);
-		DrawFormatString(0, 20 * i + 30, 0xffffff, "ŽG‹›“G %d À•W: %f, %f, %f", i, itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z);
+
+		DebugText::Log("ŽG‹›“G@À•W", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
 	}
 #endif
 }

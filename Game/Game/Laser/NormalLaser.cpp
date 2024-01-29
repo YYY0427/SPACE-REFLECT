@@ -5,6 +5,7 @@
 #include "../../Application.h"
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Model.h"
+#include "../../MyDebug/DebugText.h"
 #include <DxLib.h>
 #include <random>
 #include <algorithm>
@@ -296,7 +297,8 @@ void NormalLaser::Draw()
 //	m_pModel->Draw();
 	SetUseLighting(true);
 
-	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
+	DebugText::Log("レーザーの向く座標", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
+//	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
 #endif 
 }
 

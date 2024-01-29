@@ -48,6 +48,9 @@
     <Filter Include="ソース ファイル\Game\Enemy\Normal">
       <UniqueIdentifier>{4b646907-041b-46fd-80d6-e79980747be2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Debug">
+      <UniqueIdentifier>{266e0d49-3720-4b65-87d4-ebfc071e422b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -235,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="Effect\Triangle.cpp">
       <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="MyDebug\DebugText.cpp">
+      <Filter>ソース ファイル\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -429,6 +435,9 @@
     </ClInclude>
     <ClInclude Include="Effect\Triangle.h">
       <Filter>ソース ファイル\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="MyDebug\DebugText.h">
+      <Filter>ソース ファイル\Debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

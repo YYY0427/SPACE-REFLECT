@@ -9,6 +9,7 @@
 #include "SoundManager.h"
 #include "StringManager.h"
 #include "Util/InputState.h"
+#include "MyDebug/DebugText.h"
 #include <string>
 #include <memory>
 
@@ -132,6 +133,9 @@ bool Application::Init()
 	// 入力タイプの初期化
 	InputState::Init();
 
+	// デバッグテキストの初期化
+	DebugText::Init();
+
 	// ダブルバッファモード
 	// 裏画面に描画
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -158,6 +162,9 @@ void Application::Run()
 		// Windowモード設定
 		auto& saveData = SaveData::GetInstance();
 		ChangeWindowMode(saveData.GetSaveData().windowMode);
+
+		// デバッグテキストのクリア
+		DebugText::Clear();
 
 		// 入力の更新
 		InputState::Update();

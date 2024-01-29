@@ -62,6 +62,12 @@ public:
 	/// <param name="color">文字の描画色</param>
 	void DrawFormatStringCenter(std::string id, int num, int x, int y, unsigned int color);
 
+	template <typename T>
+	std::string ToString(T value)
+	{
+		return std::to_string(value);
+	}
+
 private:
 	// コンストラクタ
 	// シングルトンパターンなのでprivate

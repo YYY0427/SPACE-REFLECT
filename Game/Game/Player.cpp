@@ -13,6 +13,7 @@
 #include "../UI/ImageUI.h"
 #include "../UI/UIManager.h"
 #include "../Editor/DataReaderFromUnity.h"
+#include "../MyDebug/DebugText.h"
 #include <string>
 #include <algorithm>
 
@@ -422,7 +423,7 @@ void Player::Draw()
 		DrawSphere3D(m_pos.ToDxLibVector3(), model_collision_radius, 8, 0xff0000, 0xff0000, false);
 
 		// プレイヤーの位置情報の描画
-		DrawFormatString(0, 0, 0xffffff, "プレイヤー 座標 : %f, %f, %f", m_pos.x, m_pos.y, m_pos.z);
+		DebugText::Log("プレイヤー 座標", { m_pos.x, m_pos.y, m_pos.z});
 #endif 
 	}
 }

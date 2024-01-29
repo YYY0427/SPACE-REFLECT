@@ -33,6 +33,7 @@ Camera::Camera(Vector3 playerPos) :
 	m_cameraHorizon(DX_PI_F),
 	m_isStartAnimation(false),
 	m_hermiteValue(0.0f),
+	m_lerpValue(0.0f),
 	m_slowValue(1.0f)
 {
 
@@ -73,8 +74,14 @@ void Camera::Update(Vector3 playerPos)
 	float angle = MathUtil::ToDegree(centerPos.Angle(targetPos));
 	if (angle >= 15.0f)
 	{
-		m_target = tempTarget;
+	//	m_target = tempTarget;
+		/*m_lerpValue += 1.0f * m_slowValue;
+		m_target = Vector3::Lerp(m_target, tempTarget, m_lerpValue);*/
 	}
+	/*else
+	{
+		m_lerpValue = 0.0f;
+	}*/
 #else
 	// プレイヤーの位置方向とは逆に少しカメラの注視点をずらす
 	m_target.x = -playerPos.x * 0.2f;

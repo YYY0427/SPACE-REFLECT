@@ -55,6 +55,9 @@ private:
 	// エルミート曲線の値
 	float m_hermiteValue;		
 
+	// ラープの値
+	float m_lerpValue;
+
 	// スローの値
 	float m_slowValue;			
 
