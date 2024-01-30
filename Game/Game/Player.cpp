@@ -175,7 +175,7 @@ void Player::Update(float cameraHorizon)
 		m_pBackUI = std::make_shared<StatusBack>();
 
 		// UI‚Ì“o˜^
-		UIManager::GetInstance().AddUI("PlayerStatusBack", m_pBackUI, 0, { 2, 1 });
+		UIManager::GetInstance().AddUI("PlayerStatusBack", m_pBackUI, 0, { -2, 0 });
 	}
 
 	// ƒXƒ^[ƒg‰‰o‚ð‚µ‚Ä‚¢‚È‚¢ê‡
@@ -209,8 +209,8 @@ void Player::Update(float cameraHorizon)
 		pHpString->SetScale(hp_string_scale);
 
 		// UI‚Ì“o˜^
-		UIManager::GetInstance().AddUI("HPBar", m_pHPbar, 0, { 0, 1 });
-		UIManager::GetInstance().AddUI("HPString", pHpString, 0, { 0, 1 });
+		UIManager::GetInstance().AddUI("HPBar", m_pHPbar, 0, { -2, 0 });
+		UIManager::GetInstance().AddUI("HPString", pHpString, 0, { -2, 0 });
 	}
 
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();

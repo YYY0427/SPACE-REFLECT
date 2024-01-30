@@ -26,6 +26,9 @@ public:
 	// 描画
 	void Draw();
 
+	// 終了したかどうか
+	bool IsEnd() const;
+
 private:
 	// 三角形のデータ
 	struct TriangleData

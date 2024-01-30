@@ -30,6 +30,9 @@ public:
 	// ダメージ処理
 	virtual void OnDamage(int damage, Vector3 pos);
 
+	// 死亡演出
+	virtual void PerformDeathEffect() {};
+
 	// ゲッター
 	Vector3 GetPos() const;				// 位置情報
 	Vector3 GetLaserFirePos() const;	// レーザーの発射位置

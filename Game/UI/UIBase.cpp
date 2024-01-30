@@ -13,9 +13,9 @@ UIBase::~UIBase()
 }
 
 // UI‚ÌŠi”[
-void UIBase::Store(Vector2 vec)
+void UIBase::Store(Vector2 vec, float storeSpeed)
 {
-	m_pos += vec;
+	m_pos += vec.Normalized() * storeSpeed;
 }
 
 // UI‚ª—LŒø‚©‚Ç‚¤‚©

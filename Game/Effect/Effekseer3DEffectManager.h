@@ -17,6 +17,7 @@ namespace EffectID
 	const std::string enemy_boss_entry = "EnemyBossEntry";	// 敵のボスが出現するときのエフェクト
 	const std::string enemy_boss_hit_effect = "BossEnemyHitEffect";	// ヒットエフェクト 
 	const std::string wind = "Wind";								// 風のエフェクト
+	const std::string enemy_boss_die = "BossDeath";				// ボスの死亡時のエフェクト
 
 	// まとめてロードするための配列
 	const std::string effect_file_path[] =
@@ -30,6 +31,7 @@ namespace EffectID
 		wind,
 		normal_laser,
 		enemy_boss_hit_effect,
+		enemy_boss_die
 	};
 }
 

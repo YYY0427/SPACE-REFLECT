@@ -28,8 +28,7 @@ namespace InputState
 												 {InputCategory::KEYBORD, KEY_INPUT_LEFT} };			// KEY←
 
 #ifdef _DEBUG
-		m_inputMapTable[InputType::NORMAL_ENEMY_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_E} };	// デバッグ用　雑魚敵を自由に動かせる
-		m_inputMapTable[InputType::BOSS_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };		// デバッグ用　ボスの死亡
+		m_inputMapTable[InputType::BOSS_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// デバッグ用　ボスの死亡
 #endif
 
 		// 設定したボタンの数によって配列の数を変更

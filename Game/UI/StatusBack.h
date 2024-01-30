@@ -16,7 +16,7 @@ public:
 	~StatusBack();
 
 	// XV
-	void Update() override final {};
+	void Update() override final;
 	void UpdateStartAnimation();
 
 	// •`‰æ

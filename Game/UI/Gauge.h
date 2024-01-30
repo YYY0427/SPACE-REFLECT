@@ -73,7 +73,6 @@ private:
 	float m_aimValue;		// 目標の値
 	float m_maxValue;		// 最大値
 
-	Vector2 m_pos;			// ゲージの位置
 	Vector2 m_dimensions;	// ゲージの大きさ
 
 	float m_addGaugeSpeed;	// ゲージが増える速度

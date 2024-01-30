@@ -132,12 +132,9 @@ void Tutorial::Draw()
 	m_pMeteorManager->Draw();	// 隕石
 	m_pEnemyManager->Draw();	// 敵
 	m_pLaserManager->Draw();	// レーザー
-	m_pPlayer->Draw();					// プレイヤー
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
-
-	// Zバッファ関係で描画順が変わるので最後に描画
+	m_pPlayer->Draw();					// プレイヤー
 	m_pPlayer->DrawShield();			// シールド
-
 	UIManager::GetInstance().Draw();	// UI
 
 	// 画面揺れ描画

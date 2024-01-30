@@ -9,6 +9,9 @@
 #include "../../Laser/LaserBase.h"
 #include "../../Player.h"
 #include "../../../Effect/Effekseer3DEffectManager.h"
+#include "../../../Effect/Flash.h"
+#include "../../../Effect/Triangle.h"
+#include "../../../Util/InputState.h"
 #include <random>
 #include <algorithm>
 
@@ -56,6 +59,9 @@ namespace
 	constexpr float died_swing_width = 5.0f;	// 死亡時の横揺れの大きさ
 	constexpr float died_swing_speed = 1.0f;	// 死亡時の横揺れの速さ
 	constexpr int died_continue_frame = 60 * 5;	// 死亡時の演出の継続時間
+	constexpr int died_flash_frame = 60 * 1;	// 死亡時のフラッシュのフレーム
+	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
+	constexpr int die_effect_interval_frame = 20;			// 死亡時のエフェクトの再生間隔
 
 	// HP
 	auto& screenSize = Application::GetInstance().GetWindowSize();
@@ -76,9 +82,6 @@ namespace
 	// フレーム
 	constexpr int next_attack_state_frame = 60 * 5;			// 次の攻撃ステートに移るまでのフレーム
 	constexpr int stop_normal_laser_attack_frame = 60 * 20;	// 通常レーザー攻撃のフレーム
-	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
-	constexpr int die_shake_frame = 60 * 5;					// 死亡時の揺れるフレーム
-	constexpr int die_effect_interval_frame = 20;			// 死亡時のエフェクトの再生間隔
 }
 
 // コンストラクタ
@@ -90,7 +93,7 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_laserFrame(0),
 	m_damageEffectHandle(-1),
 	m_dieIdleFrame(die_idle_frame),
-	m_dieShakeFrame(die_shake_frame),
+	m_dieShakeFrame(0),
 	m_dieEffectIntervalFrame(die_effect_interval_frame)
 {
 	// 初期化
@@ -109,7 +112,7 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::ENTRY, {}, [this]() {UpdateEntry(); }, {});
 	m_stateMachine.AddState(State::IDLE, {}, [this]() {UpdateIdle(); }, {});
-	m_stateMachine.AddState(State::DIE, {}, [this]() {UpdateDie(); }, {});
+	m_stateMachine.AddState(State::DIE, [this]() {EntarDie(); }, [this]() {UpdateDie(); }, {});
 	m_stateMachine.AddState(State::MOVE_NORMAL_LASER_ATTACK, {}, [this]() {UpdateMoveNormalLaserAttack(); }, {});
 	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, {}, [this]() {UpdateMoveHomingLaserAttack(); }, {});
 	m_stateMachine.AddState(State::STOP_NORMAL_LASER_ATTACK, [this]() {EntarStopNormalLaserAttack(); }, [this]() {UpdateStopNormalLaserAttack(); }, {});
@@ -127,12 +130,12 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_pHpGauge = std::make_shared<Gauge>(
 		hp_gauge_img_file_path, hp_gauge_back_img_file_path, hp_gauge_frame_img_file_path, max_hp, 
 		hp_gauge_pos, hp_gauge_size, true, 2, true, 3);
-	UIManager::GetInstance().AddUI("BossHPGauge", m_pHpGauge, 2, { 0, 1 });
+	UIManager::GetInstance().AddUI("BossHPGauge", m_pHpGauge, 2, { 0, -1 });
 
 	// ボス名前の設定
 	m_pBossName = std::make_shared<StringUI>(boss_name_key);
 	m_pBossName->SetPos(boss_name_pos);
-	UIManager::GetInstance().AddUI("BossName", m_pBossName, 2, { 0, 1 });
+	UIManager::GetInstance().AddUI("BossName", m_pBossName, 2, { 0, -1 });
 
 	// モデル設定
 	m_pModel = std::make_shared<Model>(modelHandle);	// インスタンス生成
@@ -152,6 +155,14 @@ BossMatrix::~BossMatrix()
 // 更新
 void BossMatrix::Update()
 {
+#ifdef _DEBUG
+	// デバッグ用
+	if (InputState::IsTriggered(InputType::BOSS_DETH_DEBUG))
+	{
+		m_hp = 0;
+	}
+#endif
+
 	// HPゲージの更新
 	m_pHpGauge->Update();	
 
@@ -174,6 +185,13 @@ void BossMatrix::Draw()
 {
 	// モデルの描画
 	m_pModel->Draw();
+
+	// 死亡時の演出の描画
+	if (m_stateMachine.GetCurrentState() == State::DIE)
+	{
+		m_pFlash->Draw();
+		m_pTriangle->Draw();
+	}
 
 #ifdef _DEBUG
 	// 当たり判定の描画
@@ -209,6 +227,81 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 	}
 }
 
+// 死亡演出
+void BossMatrix::PerformDeathEffect()
+{
+	// 死亡してから特定のフレームが経過したら開始
+	if (m_dieIdleFrame-- <= 0)
+	{
+		// 横揺れ
+		m_pos.x += sinf(m_dieShakeFrame++ * died_swing_speed) * died_swing_width;
+
+		// 徐々にY座標を下げる
+		m_pos.y -= 0.5f;
+
+		// エフェクトの再生間隔が経過したら
+		if (m_dieEffectIntervalFrame-- <= 0)
+		{
+			// エフェクトデータ
+			DieEffectData data{};
+
+			// エフェクトの発生位置をプレイヤーの周りにランダムに設定
+			data.pos =
+			{
+				// エフェクトの発生位置を-500～500の間でランダムに設定
+				m_pos.x + GetRand(1000) - 500,
+				m_pos.y + GetRand(1000) - 500,
+				m_pos.z
+			};
+
+			// エフェクトの大きさを10倍から100倍の間でランダムに設定
+			data.scale = GetRand(30) + 10;
+
+			// xyのベクトルをランダム作成
+			data.vec = { static_cast<float>(GetRand(10) - 5), static_cast<float>(GetRand(10) - 5), 0.0f };
+			data.vec = Vector3::FromDxLibVector3(VNorm(data.vec.ToDxLibVector3()));
+			data.vec = Vector3::FromDxLibVector3(VScale(data.vec.ToDxLibVector3(), 50.0f));
+
+			// エフェクトの再生
+			Effekseer3DEffectManager::GetInstance().PlayEffectFollow(
+				data.effectHandle,
+				EffectID::enemy_died,
+				&data.pos,
+				{ data.scale, data.scale, data.scale },
+				0.5f);
+
+			// テーブルに追加
+			m_dieEffectTable.push_back(data);
+
+			// フレームの初期化
+			m_dieEffectIntervalFrame = die_effect_interval_frame;
+		}
+		// 三角形エフェクトの更新
+		m_pTriangle->Update(m_pos);
+
+		// 三角形エフェクトが終了したら
+		if (m_pTriangle->IsEnd())
+		{
+			// フラッシュの更新
+			Vector3 screenPos = Vector3::FromDxLibVector3(ConvWorldPosToScreenPos(m_pos.ToDxLibVector3()));
+			m_pFlash->Update({screenPos.x, screenPos.y}, 0xffffff);
+
+			// フラッシュが終了したら
+			if (m_pFlash->IsEnd())
+			{
+				// ゲームクリア
+				m_isEnabled = false;
+			}
+		}
+	}
+
+	// エフェクトの更新
+	for (auto& effect : m_dieEffectTable)
+	{
+		effect.pos += effect.vec;
+	}
+}
+
 // 通常レーザー攻撃の開始
 void BossMatrix::EntarStopNormalLaserAttack()
 {
@@ -220,6 +313,25 @@ void BossMatrix::EntarStopNormalLaserAttack()
 
 	// レーザーの生成
 	m_laserKey = m_pLaserManager->AddLaser(LaserType::NORMAL, shared_from_this(), 140, 10000, 2.0f, false);
+}
+
+// 死亡演出の開始
+void BossMatrix::EntarDie()
+{
+	// レーザーを削除
+	m_pLaserManager->DeleteLaser(m_laserKey);
+
+	// インスタンスの生成
+	m_pFlash = std::make_unique<Flash>(died_flash_frame);
+	m_pTriangle = std::make_unique<Triangle>(died_continue_frame);
+
+	/*int handle = 0;
+	Effekseer3DEffectManager::GetInstance().PlayEffect(
+		handle,
+		EffectID::enemy_boss_die,
+		m_pos,
+		{ 100.0f, 100.0f, 100.0f }
+	);*/
 }
 
 // 登場時の更新
@@ -281,11 +393,14 @@ void BossMatrix::UpdateIdle()
 // 死亡時の更新
 void BossMatrix::UpdateDie()
 {
-	// レーザーを削除
-	m_pLaserManager->DeleteLaser(m_laserKey);
-
 	// UIを格納
 	UIManager::GetInstance().Store();
+
+	// アニメーションの停止
+	m_pModel->StopAnim();
+
+	// 死亡演出
+	PerformDeathEffect();
 }
 
 // 移動しながら通常レーザー攻撃
@@ -307,7 +422,7 @@ void BossMatrix::UpdateStopNormalLaserAttack()
 		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
 	m_laserFirePos = { pos.x, pos.y, pos.z - 200.0f };
 
-	// TODO : レーザーの方向に向けるようにする
+	// レーザーの方向に向けるようにする
 	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
 	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };

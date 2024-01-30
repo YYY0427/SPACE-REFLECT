@@ -23,12 +23,14 @@ Gauge::Gauge(
 	m_maxValue(maxValue),
 	m_aimValue(maxValue),
 	m_backValue(maxValue),
-	m_pos(pos),
 	m_dimensions(dimensions),
 	m_isDelayed(isDelayedDamage),
 	m_aimGaugeSpeed(aimGaugeSpeed),
 	m_addGaugeSpeed(addGaugeSpeed)
 {
+	// 初期化
+	m_pos = pos;
+
 	// バースト演出を行うかどうか
 	if (isGaugeBurst)
 	{
@@ -125,6 +127,7 @@ void Gauge::Draw()
 		true);
 }
 
+// ゲージの値を設定
 void Gauge::SetValue(float afterValue)
 {
 	if (m_isDelayed)

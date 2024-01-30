@@ -2,6 +2,12 @@
 #include "UIBase.h"
 #include <algorithm>
 
+namespace
+{
+	// UIの格納速度
+	constexpr float store_speed = 5.0f;
+}
+
 // コンストラクタ
 UIManager::UIManager()
 {
@@ -85,6 +91,6 @@ void UIManager::Store()
 {
 	for (auto& ui : m_uiTable)
 	{
-		ui.ui->Store(ui.storeVec);
+		ui.ui->Store(ui.storeVec, store_speed);
 	}
 }

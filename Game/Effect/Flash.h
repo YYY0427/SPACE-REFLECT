@@ -14,7 +14,7 @@ public:
 	~Flash();
 
 	// XV
-	void Update(unsigned int color);
+	void Update(Vector2 pos, unsigned int color);
 
 	// •`‰æ
 	void Draw();

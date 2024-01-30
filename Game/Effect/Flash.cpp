@@ -27,8 +27,11 @@ Flash::~Flash()
 }
 
 // 更新
-void Flash::Update(unsigned int color)
+void Flash::Update(Vector2 pos, unsigned int color)
 {
+	// 座標を設定
+	m_pos = pos;
+
 	// 色を設定
 	m_color = color;
 

@@ -1,6 +1,7 @@
 #include "Triangle.h"
 #include "../Math/MathUtil.h"
 #include "../Application.h"
+#include <cmath>
 #include <DxLib.h>
 
 namespace
@@ -12,7 +13,7 @@ namespace
 	constexpr float triangle_init_angle = 135.0f;
 
 	// 三角形のなす角
-	constexpr float triangle_angle = 30.0f;
+	constexpr float triangle_angle = 10.0f;
 
 	// 三角形の色を変化させる速度
 	constexpr float color_speed = 2.0f;
@@ -60,13 +61,15 @@ void Triangle::Update(Vector3 bossEnemyPos)
 		Vector3 screenPos = Vector3::FromDxLibVector3(ConvWorldPosToScreenPos(bossEnemyPos.ToDxLibVector3()));
 		triangleData.pos[0] = Vector2(screenPos.x, screenPos.y);
 
-		triangleData.pos[1] = 
+		triangleData.pos[1] = Vector2((0.5f * cosf(m_angle) + 0.5f) * screenSize.width, (0.5f * sinf(m_angle) + 0.5f) * screenSize.width);
+		triangleData.pos[2] = Vector2((0.5f * cosf(m_angle + triangle_angle) + 0.5f) * screenSize.width, (0.5f * sinf(m_angle + triangle_angle) + 0.5f) * screenSize.width);
+		/*triangleData.pos[1] = 
 			Vector2(cosf(MathUtil::ToRadian(m_angle)) * screenSize.width,
 			sinf(MathUtil::ToRadian(m_angle)) * screenSize.height);
 
 		triangleData.pos[2] =
 			Vector2(cosf(MathUtil::ToRadian(m_angle + triangle_angle)) * screenSize.width,
-					sinf(MathUtil::ToRadian(m_angle + triangle_angle)) * screenSize.height);
+					sinf(MathUtil::ToRadian(m_angle + triangle_angle)) * screenSize.height);*/
 
 		// 角度を加算
 		m_angle += 90.0f;
@@ -106,7 +109,7 @@ void Triangle::Update(Vector3 bossEnemyPos)
 void Triangle::Draw()
 {
 	// 演出が終わっていたら描画しない
-	if (m_frame.IsTimeOut()) return;
+	if (IsEnd()) return;
 
 	for (auto& triangle : m_triangleDataTable)
 	{
@@ -115,4 +118,10 @@ void Triangle::Draw()
 			GetColor(m_color.x, m_color.y, m_color.z), TRUE);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
+}
+
+// 終了したか
+bool Triangle::IsEnd() const
+{
+	return m_frame.IsTimeOut();
 }

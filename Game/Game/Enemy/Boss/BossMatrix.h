@@ -6,6 +6,8 @@
 class LaserManager;
 class Gauge;
 class StringUI;
+class Flash;
+class Triangle;
 
 /// <summary>
 /// ボス敵
@@ -31,9 +33,13 @@ public:
 	// ダメージ処理
 	void OnDamage(int damage, Vector3 pos) override final;
 
+	// 死亡演出
+	void PerformDeathEffect() override final;
+
 private:
 	// 開始
 	void EntarStopNormalLaserAttack();	// 通常レーザー攻撃
+	void EntarDie();					// 死亡
 
 	// 更新
 	void UpdateEntry();		// 登場時の更新
@@ -67,6 +73,16 @@ private:
 	};
 
 private:
+	// 死亡時のエフェクトのデータ
+	struct DieEffectData
+	{
+		int effectHandle;
+		Vector3 pos;
+		Vector3 vec;
+		float scale;
+	};
+
+private:
 	// ステートマシン
 	StateMachine<State> m_stateMachine;
 
@@ -74,6 +90,11 @@ private:
 	std::shared_ptr<Gauge> m_pHpGauge;
 	std::shared_ptr<StringUI> m_pBossName;
 	std::shared_ptr<LaserManager> m_pLaserManager;
+	std::unique_ptr<Flash> m_pFlash;
+	std::unique_ptr<Triangle> m_pTriangle;
+
+	// 死亡時のエフェクトテーブル
+	std::vector<DieEffectData> m_dieEffectTable;
 
 	// 移動
 	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル

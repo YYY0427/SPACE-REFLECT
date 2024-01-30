@@ -22,11 +22,14 @@ namespace
 StatusBack::StatusBack() :
 	m_isStartAnimation(false)
 {
+	// 初期化
+	m_pos = init_pos;
+
 	// 画像の読み込み
 	m_pImageUI = std::make_unique<ImageUI>(image_file_path);
 
 	// 画像の設定
-	m_pImageUI->SetPos(init_pos);			// 位置
+	m_pImageUI->SetPos(m_pos);			// 位置
 	m_pImageUI->SetScale({ 0, 0 });			// 拡大率
 }
 
@@ -34,6 +37,13 @@ StatusBack::StatusBack() :
 StatusBack::~StatusBack()
 {
 	
+}
+
+// 更新
+void StatusBack::Update()
+{
+	// 位置の更新
+	m_pImageUI->SetPos(m_pos);
 }
 
 // スタート演出の更新

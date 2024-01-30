@@ -20,7 +20,7 @@ public:
 	virtual void Draw() = 0;
 
 	// UI‚ÌŠi”[
-	void Store(Vector2 vec);
+	void Store(Vector2 vec, float storeSpeed);
 
 	// UI‚ª—LŒø‚©‚Ç‚¤‚©
 	bool IsEnabled() const;
