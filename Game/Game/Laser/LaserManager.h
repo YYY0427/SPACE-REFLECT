@@ -63,6 +63,7 @@ public:
 
 	// ゲッター
 	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
+	const LaserData& GetLaserData(int key) const;		// レーザーデータ
 
 private:
 	// ポインタ

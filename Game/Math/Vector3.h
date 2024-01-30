@@ -25,11 +25,23 @@ public:
 	// Vec3 = (Vec3 -= Vec3)
 	void operator-= (const Vector3& rval);
 
+	// Vec3 = Vec3 + float
+	Vector3 operator+(float add)const;
+
+	// Vec3 = Vec3 - float
+	Vector3 operator-(float sub)const;
+
 	// Vec3 = Vec3 * float
 	Vector3 operator*(float scale)const;
 
 	// Vec3 = Vec3 / floats
 	Vector3 operator/(float div)const;
+
+	// Vec3 = (Vec3 += float)
+	void operator+=(float add);
+
+	// Vec3 = (Vec3 -= float)
+	void operator-=(float sub);
 
 	// Vec3 = (Vec3 *= float)
 	void operator*=(float scale);

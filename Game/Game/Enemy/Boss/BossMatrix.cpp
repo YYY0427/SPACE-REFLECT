@@ -6,6 +6,7 @@
 #include "../../../Math/MathUtil.h"
 #include "../../../Application.h"
 #include "../../Laser/LaserManager.h"
+#include "../../Laser/LaserBase.h"
 #include "../../Player.h"
 #include "../../../Effect/Effekseer3DEffectManager.h"
 #include <random>
@@ -160,15 +161,10 @@ void BossMatrix::Update()
 	// ステートマシンの更新
 	m_stateMachine.Update();
 
-	// TODO : レーザーの方向に向けるようにする
-	// プレイヤー方向の回転行列の取得
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
-	Vector3 rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
-
 	// モデル設定
 	m_pModel->RestoreAllMaterialDifColor();	// ディフューズカラーを元に戻す
 	m_pModel->SetOpacity(m_opacity);	// 不透明度
-	m_pModel->SetRot(rot);				// 向き
+	m_pModel->SetRot(m_rot);				// 向き
 	m_pModel->SetPos(m_pos);			// 位置
 	m_pModel->Update();					// モデルの当たり判定、アニメーションの更新
 }
@@ -310,6 +306,11 @@ void BossMatrix::UpdateStopNormalLaserAttack()
 	Vector3 pos = Vector3::FromDxLibVector3(
 		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
 	m_laserFirePos = { pos.x, pos.y, pos.z - 200.0f };
+
+	// TODO : レーザーの方向に向けるようにする
+	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
 
 	// アニメーションが終了したら
 	if (m_laserFrame-- <= 0)

@@ -42,10 +42,10 @@ namespace
 		static_cast<float>(Application::GetInstance().GetWindowSize().height )};
 	const Vector2 goal_pos[] = 
 	{
-		{ 0 + 150, 0 + 150 },
-		{ window_size.x - 150, 0 + 150 },
-		{ 0 + 150, window_size.y - 150 },
-		{ window_size.x - 150, window_size.y - 150 },
+		{ 0 - 300, 0 - 300 },
+		{ window_size.x + 300, 0 - 300 },
+		{ 0 - 300, window_size.y + 300 },
+		{ window_size.x + 300, window_size.y + 300 },
 		{ window_size.x / 2, window_size.y / 2 },
 	};
 }
@@ -298,7 +298,6 @@ void NormalLaser::Draw()
 	SetUseLighting(true);
 
 	DebugText::Log("レーザーの向く座標", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
-//	DrawFormatString(0, 150, 0xffffff, "レーザーの向く座標 : %f, %f, %f", m_directionPos.x, m_directionPos.y, m_directionPos.z);
 #endif 
 }
 

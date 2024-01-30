@@ -127,3 +127,18 @@ const std::list<LaserData>& LaserManager::GetLaserList() const
 {
 	return m_pLaserList;
 }
+
+// レーザーの取得
+const LaserData& LaserManager::GetLaserData(int key) const
+{
+	for (auto& laser : m_pLaserList)
+	{
+		if (laser.key == key)
+		{
+			return laser;
+		}
+	}
+
+	assert(!"レーザーが見つかりませんでした");
+	return m_pLaserList.front();
+}
