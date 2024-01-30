@@ -12,6 +12,7 @@
 class EnemyBase;
 class Player;
 class Warning;
+class ScreenShaker;
 
 // 敵の種類
 enum class EnemyType
@@ -68,7 +69,10 @@ class EnemyManager
 {
 public:
 	// コンストラクタ
-	EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
+	EnemyManager(
+		std::shared_ptr<Player> pPlayer, 
+		std::shared_ptr<LaserManager> pLaserManager,
+		std::shared_ptr<ScreenShaker> pScreenShaker);
 
 	// デストラクタ
 	~EnemyManager();
@@ -123,8 +127,9 @@ private:
 	std::shared_ptr<Player> m_pPlayer;						// プレイヤー
 	std::shared_ptr<LaserManager> m_pLaserManager;			// レーザー管理
 	std::list<std::shared_ptr<EnemyBase>> m_pEnemyList;		// 雑魚敵リスト
-	std::shared_ptr<EnemyBase> m_pBossEnemy;			// ボス敵
+	std::shared_ptr<EnemyBase> m_pBossEnemy;				// ボス敵
 	std::shared_ptr<Warning> m_pWarning;					// 警告
+	std::shared_ptr<ScreenShaker> m_pScreenShaker;			// 画面揺れ
 
 	// モデルハンドルテーブル
 	std::map<EnemyType, int> m_modelHandleTable;			// 雑魚敵

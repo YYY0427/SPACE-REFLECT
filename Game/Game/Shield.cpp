@@ -141,6 +141,7 @@ void Shield::Update()
 
 		// ベクトルから角度を求める
 		m_rot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({0, 0, 1}, tempVec));
+		Vector3 effectRot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({ 1, 0, 0 }, tempVec));
 
 		// 入力されていたら
 		if (m_isInput)
@@ -158,7 +159,7 @@ void Shield::Update()
 					{ m_pos.x, m_pos.y - 100.0f, m_pos.z },
 					effect_scale, 
 					1.0f, 
-					m_rot);
+					effectRot);
 			}
 		}
 		else

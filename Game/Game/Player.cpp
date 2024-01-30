@@ -117,19 +117,10 @@ Player::Player() :
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
 		m_boostEffectHandle, 
 		EffectID::player_boost, 
-		{ m_pos.x, m_pos.y + 30.0f, m_pos.z },
+		{ m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f },
 		boost_effect_scale,
 		boost_effect_speed,
 		{ m_rot.x, 0.0f, 0.0f });
-
-	//// 風エフェクトの再生
-	//Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
-	//	m_windEffectHandle,
-	//	EffectID::wind,
-	//	&m_pos,
-	//	{ 100.0f, 100.0f, 100.0f },
-	//	1.0f,
-	//	{ 0.0f, -DX_PI_F / 2, 0.0f });
 }
 
 //  デストラクタ
@@ -155,7 +146,7 @@ void Player::UpdateStart(Vector3 cameraPos)
 
 	// エフェクトの設定
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 30.0f });
+	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
@@ -342,7 +333,7 @@ void Player::Update(float cameraHorizon)
 	m_opacity = 1.0f;
 
 	// エフェクトの設定
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 30.0f });
+	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);

@@ -56,7 +56,7 @@ public:
 	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
 
 	// 反射レーザーの追加
-	void AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser);
+	int AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos);
 
 	// レーザーの削除
 	void DeleteLaser(int key);
@@ -64,6 +64,9 @@ public:
 	// ゲッター
 	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
 	const LaserData& GetLaserData(int key) const;		// レーザーデータ
+
+	// セッター
+	void SetLaserPosition(int key, Vector3 pos);		// レーザーの位置を設定
 
 private:
 	// ポインタ

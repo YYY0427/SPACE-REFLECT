@@ -8,6 +8,7 @@ class Gauge;
 class StringUI;
 class Flash;
 class Triangle;
+class ScreenShaker;
 
 /// <summary>
 /// ボス敵
@@ -19,7 +20,8 @@ public:
 	// コンストラクタ
 	BossMatrix(int modelHandle, 
 			   std::shared_ptr<Player> pPlayer, 
-			   std::shared_ptr<LaserManager> pLaserManager);
+			   std::shared_ptr<LaserManager> pLaserManager,
+			   std::shared_ptr<ScreenShaker> pScreenShaker);
 
 	// デストラクタ
 	~BossMatrix();
@@ -90,6 +92,7 @@ private:
 	std::shared_ptr<Gauge> m_pHpGauge;
 	std::shared_ptr<StringUI> m_pBossName;
 	std::shared_ptr<LaserManager> m_pLaserManager;
+	std::shared_ptr<ScreenShaker> m_pScreenShaker;
 	std::unique_ptr<Flash> m_pFlash;
 	std::unique_ptr<Triangle> m_pTriangle;
 
@@ -113,10 +116,12 @@ private:
 	int m_dieIdleFrame;						// 死亡時の待機フレーム	
 	int m_dieShakeFrame;					// 死亡時の横揺れ演出を行うフレーム
 	int m_dieEffectIntervalFrame;			// 死亡時のエフェクトの発生間隔
+	int m_dieDrawStopFrame;					// 死亡時の描画を止めるフレーム
 
 	// レーザーのKey
 	int m_laserKey;
 
 	// エフェクトハンドル
 	int m_damageEffectHandle;
+	int m_dieEffectHandle;
 };

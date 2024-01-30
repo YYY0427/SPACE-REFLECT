@@ -33,11 +33,17 @@ public:
 	void Delete();
 
 	// ゲッター
-	int GetModelHandle() const;		// モデルハンドル
-	Vector3 GetPos() const;			// 位置情報
+	int GetModelHandle() const;				// モデルハンドル
+	int GetReflectLaserKey() const;			// 反射レーザーのキー
+	Vector3 GetPos() const;					// 位置情報
+	Vector3 GetEndPos() const;				// 終了位置
 	virtual Vector3 GetDirection() const;	// 方向ベクトル
-	bool IsEnabled() const;	// 存在フラグ
-	bool IsReflect() const;	// 反射フラグ
+	bool IsEnabled() const;					// 存在フラグ
+	bool IsReflect() const;					// 反射フラグ
+
+	// セッター
+	void SetPos(Vector3 pos);			// 位置情報
+	void SetReflectLaserKey(int key);	// 反射レーザーのキー
 
 protected:
 	// ポインタ
@@ -45,6 +51,12 @@ protected:
 
 	// 位置情報
 	Vector3 m_pos;
+
+	// 開始位置
+	Vector3 m_startPos;
+
+	// 終了位置
+	Vector3 m_endPos;
 
 	// 回転情報
 	Vector3 m_rot;
@@ -63,5 +75,8 @@ protected:
 
 	// 反射フラグ
 	bool m_isReflect;
+
+	// 反射レーザーのキー
+	int m_reflectLaserKey;	
 };
 

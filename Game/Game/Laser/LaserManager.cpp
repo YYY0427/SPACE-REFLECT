@@ -86,7 +86,7 @@ int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, in
 }
 
 // 反射レーザーの追加
-void LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser)
+int LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
 {
 	// レーザーのデータを作成
 	LaserData laserData;
@@ -103,10 +103,12 @@ void LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_
 	}
 
 	// レーザーのポインタを設定
-	laserData.pLaser = std::make_shared<ReflectLaser>(m_modelHandleTable[LaserType::NORMAL], pShield, pLaser);
+	laserData.pLaser = std::make_shared<ReflectLaser>(m_modelHandleTable[LaserType::NORMAL], pShield, pLaser, firePos);
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);
+
+	return laserData.key;
 }
 
 // レーザーの削除
@@ -141,4 +143,16 @@ const LaserData& LaserManager::GetLaserData(int key) const
 
 	assert(!"レーザーが見つかりませんでした");
 	return m_pLaserList.front();
+}
+
+// レーザーの位置の設定
+void LaserManager::SetLaserPosition(int key, Vector3 pos)
+{
+	for (auto& laser : m_pLaserList)
+	{
+		if (laser.key == key)
+		{
+			laser.pLaser->SetPos(pos);
+		}
+	}
 }

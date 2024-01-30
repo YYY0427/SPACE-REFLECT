@@ -21,7 +21,7 @@ namespace
 	const Vector3 laser_effect_scale = { 24.0f, 24.0f, 24.0f };		// 拡大率
 	constexpr float laser_effect_play_speed = 1.0f;		// 再生速度
 	constexpr int init_laser_effect_charge_frame = 140;	// 元々のチャージフレーム
-	constexpr float laser_effect_z_length = 270.0f;		// Z軸の長さ
+	constexpr float laser_effect_z_length = 300.0f;		// Z軸の長さ
 
 	// フレーム
 	constexpr int laser_end_frame_no = 0;	// レーザーの端のフレーム番号
@@ -173,6 +173,10 @@ void NormalLaser::Update()
 
 	// 常に発射元の位置に合わせる
 	m_pos = m_pEnemy->GetLaserFirePos();
+
+	// レーザーの先端の座標を設定
+	m_endPos = Vector3::FromDxLibVector3(
+		MV1GetFramePosition(m_pModel->GetModelHandle(), laser_end_frame_no));
 
 	// ベクトル方向の回転行列を作成
 	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());

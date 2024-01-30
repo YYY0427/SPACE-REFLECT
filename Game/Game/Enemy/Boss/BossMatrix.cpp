@@ -11,11 +11,13 @@
 #include "../../../Effect/Effekseer3DEffectManager.h"
 #include "../../../Effect/Flash.h"
 #include "../../../Effect/Triangle.h"
+#include "../../../Effect/ScreenShaker.h"
 #include "../../../Util/InputState.h"
 #include <random>
 #include <algorithm>
 
 // TODO : HPが半分以下になったら透明になる(レーザーの発射場所はランダムにする)
+// TODO : HPが半分以下になったらプレイヤーのシールドの回転を逆にする
 
 namespace
 {
@@ -60,8 +62,9 @@ namespace
 	constexpr float died_swing_speed = 1.0f;	// 死亡時の横揺れの速さ
 	constexpr int died_continue_frame = 60 * 5;	// 死亡時の演出の継続時間
 	constexpr int died_flash_frame = 60 * 1;	// 死亡時のフラッシュのフレーム
-	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
 	constexpr int die_effect_interval_frame = 20;			// 死亡時のエフェクトの再生間隔
+	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
+	constexpr int die_draw_stop_frame = 60 * 5;				// 死亡時の描画停止フレーム
 
 	// HP
 	auto& screenSize = Application::GetInstance().GetWindowSize();
@@ -85,7 +88,7 @@ namespace
 }
 
 // コンストラクタ
-BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager) :
+BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager, std::shared_ptr<ScreenShaker> pScreenShaker) :
 	m_attackStateIndex(0),
 	m_isMoveEnd(false),
 	m_idleFrame(0),
@@ -94,7 +97,10 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_damageEffectHandle(-1),
 	m_dieIdleFrame(die_idle_frame),
 	m_dieShakeFrame(0),
-	m_dieEffectIntervalFrame(die_effect_interval_frame)
+	m_dieEffectIntervalFrame(die_effect_interval_frame),
+	m_pScreenShaker(pScreenShaker),
+	m_dieEffectHandle(-1),
+	m_dieDrawStopFrame(die_draw_stop_frame)
 {
 	// 初期化
 	m_pPlayer = pPlayer;
@@ -183,20 +189,23 @@ void BossMatrix::Update()
 // 描画
 void BossMatrix::Draw()
 {
-	// モデルの描画
-	m_pModel->Draw();
-
-	// 死亡時の演出の描画
-	if (m_stateMachine.GetCurrentState() == State::DIE)
+	if (m_isEnabled)
 	{
-		m_pFlash->Draw();
-		m_pTriangle->Draw();
-	}
+		// モデルの描画
+		m_pModel->Draw();
 
 #ifdef _DEBUG
-	// 当たり判定の描画
-	DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 16, 0xff0000, 0xff0000, false);
+		// 当たり判定の描画
+		DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 16, 0xff0000, 0xff0000, false);
 #endif
+	}
+
+	//// 死亡時の演出の描画
+	//if (m_stateMachine.GetCurrentState() == State::DIE)
+	//{
+	//	m_pFlash->Draw();
+	//	m_pTriangle->Draw();
+	//}
 }
 
 // ダメージ処理
@@ -321,17 +330,15 @@ void BossMatrix::EntarDie()
 	// レーザーを削除
 	m_pLaserManager->DeleteLaser(m_laserKey);
 
-	// インスタンスの生成
-	m_pFlash = std::make_unique<Flash>(died_flash_frame);
-	m_pTriangle = std::make_unique<Triangle>(died_continue_frame);
+	// アニメーションの停止
+	m_pModel->StopAnim();
 
-	/*int handle = 0;
-	Effekseer3DEffectManager::GetInstance().PlayEffect(
-		handle,
-		EffectID::enemy_boss_die,
-		m_pos,
-		{ 100.0f, 100.0f, 100.0f }
-	);*/
+	// 画面揺れ開始
+	m_pScreenShaker->StartShake({ 100.0f, 0.0f }, 60);
+
+	// インスタンスの生成
+//	m_pFlash = std::make_unique<Flash>(died_flash_frame);
+//	m_pTriangle = std::make_unique<Triangle>(died_continue_frame);
 }
 
 // 登場時の更新
@@ -393,14 +400,31 @@ void BossMatrix::UpdateIdle()
 // 死亡時の更新
 void BossMatrix::UpdateDie()
 {
-	// UIを格納
-	UIManager::GetInstance().Store();
+	// 特定のフレームが経過したら演出開始
+	if (m_dieIdleFrame-- <= 0)
+	{
+		// UIを格納
+		UIManager::GetInstance().Store();
 
-	// アニメーションの停止
-	m_pModel->StopAnim();
-
+		// まだエフェクトが再生されていなかったら
+		if (m_dieEffectHandle == -1)
+		{
+			// エフェクトの再生
+			Effekseer3DEffectManager::GetInstance().PlayEffect(
+				m_dieEffectHandle,
+				EffectID::enemy_boss_die,
+				m_pos,
+				{ 100.0f, 100.0f, 100.0f });
+		}
+		// エフェクトの再生を開始してから、一定フレーム経過したら
+		else if (m_dieDrawStopFrame-- <= 0)
+		{
+			// 存在フラグを下げる
+			m_isEnabled = false;
+		}
+	}
 	// 死亡演出
-	PerformDeathEffect();
+//	PerformDeathEffect();
 }
 
 // 移動しながら通常レーザー攻撃

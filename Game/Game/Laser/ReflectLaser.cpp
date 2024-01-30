@@ -19,7 +19,7 @@ namespace
 }
 
 // コンストラクタ
-ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser)
+ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
 {
 	// 初期化
 	m_pShield = pShield;
@@ -28,7 +28,8 @@ ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std
 	m_isEnabled = true;
 
 	// 位置をシールドに合わせる
-	m_pos = m_pShield->GetPos();
+//	m_pos = m_pShield->GetPos();
+	m_pos = firePos;
 
 	// 反射ベクトルを作成
 	m_directionVec = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
@@ -68,7 +69,7 @@ void ReflectLaser::Update()
 	}
 
 	// 位置をシールドに合わせる
-	m_pos = m_pShield->GetPos();
+//	m_pos = m_pShield->GetPos();
 
 #if false
 	m_directionVec = Vector3::Reflect(

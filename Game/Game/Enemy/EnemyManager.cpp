@@ -33,13 +33,14 @@ namespace
 }
 
 // コンストラクタ
-EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager) :
+EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager, std::shared_ptr<ScreenShaker> pScreenShaker) :
 	m_waveNow(0),
 	m_isNextWave(false),
 	m_isLoadWave(false),
 	m_isDeadBoss(false),
 	m_pPlayer(pPlayer),
 	m_pLaserManager(pLaserManager),
+	m_pScreenShaker(pScreenShaker),
 	m_bossType(BossEnemyType::NONE)
 {
 	// 雑魚敵モデルハンドルの読み込み
@@ -265,7 +266,8 @@ void EnemyManager::AddBossEnemy(BossEnemyType type)
 		m_pBossEnemy = std::make_shared<BossMatrix>(
 			m_bossModelHandleTable[type],
 			m_pPlayer,
-			m_pLaserManager);
+			m_pLaserManager,
+			m_pScreenShaker);
 		break;
 
 	case BossEnemyType::NONE:
