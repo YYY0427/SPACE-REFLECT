@@ -41,6 +41,7 @@ public:
 private:
 	// 開始
 	void EntarStopNormalLaserAttack();	// 通常レーザー攻撃
+	void EntarMoveNormalLaserAttack();	// 移動しながら通常レーザー攻撃
 	void EntarDie();					// 死亡
 
 	// 更新
@@ -51,6 +52,12 @@ private:
 	void UpdateMoveHomingLaserAttack();	// 移動しながらホーミングレーザー攻撃
 	void UpdateStopNormalLaserAttack();	// 通常レーザー攻撃
 	void UpdateCubeLaserAttack();		// キューブレーザー攻撃
+
+	// 移動
+	void InitMove();		// 移動の初期化
+	void SetGoalPos();		// 目標座標の設定
+	void MoveInitPos();		// 初期位置に移動
+	void Move();			// 移動
 
 	// 攻撃ステートの順序をシャッフル
 	void ShuffleAttackState();
@@ -107,7 +114,7 @@ private:
 	bool m_isMoveEnd;						// 移動が終了したか
 
 	// 攻撃ステート
-	std::vector<State> m_attackStateTable;	//	攻撃ステートテーブル
+	std::vector<State> m_attackStateTable;	// 攻撃ステートテーブル
 	int m_attackStateIndex;					// 攻撃ステートのインデックス
 
 	// フレーム

@@ -16,7 +16,7 @@ namespace
 	constexpr float distance_threshold = 5.0f;  
 
 	// 0.0 = near, 1.0 = far
-	constexpr float afisajf = 0.9f;
+	constexpr float near_far_z_pos = 0.9f;
 
 	// モデルの初期の向いている方向
 	const Vector3 init_model_direction = { 0, 0, -1 };
@@ -38,7 +38,7 @@ Mosquito::Mosquito(int modelHandle,
 	m_pLaserManager = pLaserManager;
 	m_actionDataList = data.actionDataList;
 	m_isEnabled = true;
-	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({data.pos.x, data.pos.y, afisajf }));
+	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({data.pos.x, data.pos.y, near_far_z_pos }));
 	m_pos.z = m_pPlayer->GetPos().z + data.pos.z;
 	m_hp = data.hp;
 	m_moveSpeed = data.speed;
@@ -223,7 +223,7 @@ void Mosquito::GetGoalPos()
 	std::advance(itr, m_movePointIndex);
 
 	// 目的地の設定
-	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ itr->goalPos.x, itr->goalPos.y, afisajf }));
+	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ itr->goalPos.x, itr->goalPos.y, near_far_z_pos }));
 	m_goalPos.z = m_pPlayer->GetPos().z + itr->goalPos.z;
 
 	// 移動ベクトルの設定

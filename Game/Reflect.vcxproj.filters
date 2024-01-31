@@ -242,6 +242,9 @@
     <ClCompile Include="MyDebug\DebugText.cpp">
       <Filter>ソース ファイル\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Laser\CubeLaser.cpp">
+      <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -438,6 +441,9 @@
     </ClInclude>
     <ClInclude Include="MyDebug\DebugText.h">
       <Filter>ソース ファイル\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Laser\CubeLaser.h">
+      <Filter>ソース ファイル\Game\Laser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

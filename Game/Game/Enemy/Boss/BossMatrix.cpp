@@ -13,6 +13,7 @@
 #include "../../../Effect/Triangle.h"
 #include "../../../Effect/ScreenShaker.h"
 #include "../../../Util/InputState.h"
+#include "../../../MyDebug/DebugText.h"
 #include <random>
 #include <algorithm>
 
@@ -46,15 +47,16 @@ namespace
 
 	// 移動
 	constexpr float entry_move_speed = 10.0f;	// 登場時の移動速度
-	constexpr float move_speed = 10.0f;			// 移動速度
+	constexpr float move_speed = 20.0f;			// 移動速度
 	constexpr float distance_threshold = 10.0f; // 目的地に到達したかどうか測る閾値
+	constexpr float near_far_z_pos = 0.95f;		// 0.0 = near, 1.0 = far
 	const Vector3 move_pos[] =					// 移動先の座標
 	{
-		goal_init_pos,
-		{ 930, 300, 800 },
-		{ 930, -300, 800 },
-		{ -930, 300, 800 },
-		{ -930, -300, 800 },
+		{ 640, 360, 1300 },
+		{ 100, 100, 1300 },
+		{ 1180, 100, 1300 },
+		{ 100, 620, 1300 },
+		{ 1180, 620, 1300 },
 	};
 
 	// 死亡
@@ -85,6 +87,7 @@ namespace
 	// フレーム
 	constexpr int next_attack_state_frame = 60 * 5;			// 次の攻撃ステートに移るまでのフレーム
 	constexpr int stop_normal_laser_attack_frame = 60 * 20;	// 通常レーザー攻撃のフレーム
+	constexpr int move_normal_laser_attack_frame = 60 * 20;	// 移動しながら通常レーザー攻撃のフレーム
 }
 
 // コンストラクタ
@@ -100,7 +103,9 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_dieEffectIntervalFrame(die_effect_interval_frame),
 	m_pScreenShaker(pScreenShaker),
 	m_dieEffectHandle(-1),
-	m_dieDrawStopFrame(die_draw_stop_frame)
+	m_dieDrawStopFrame(die_draw_stop_frame),
+	m_movePointIndex(0),
+	m_isGoal(false)
 {
 	// 初期化
 	m_pPlayer = pPlayer;
@@ -109,6 +114,7 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_rot = model_rot;
 	m_opacity = 0.0f;
 	m_hp = max_hp;
+	m_moveSpeed = move_speed;
 	m_collisionRadius = collision_radius * model_scale.x;
 	for (auto& point : move_pos)
 	{
@@ -119,14 +125,14 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_stateMachine.AddState(State::ENTRY, {}, [this]() {UpdateEntry(); }, {});
 	m_stateMachine.AddState(State::IDLE, {}, [this]() {UpdateIdle(); }, {});
 	m_stateMachine.AddState(State::DIE, [this]() {EntarDie(); }, [this]() {UpdateDie(); }, {});
-	m_stateMachine.AddState(State::MOVE_NORMAL_LASER_ATTACK, {}, [this]() {UpdateMoveNormalLaserAttack(); }, {});
+	m_stateMachine.AddState(State::MOVE_NORMAL_LASER_ATTACK, [this]() {EntarMoveNormalLaserAttack(); }, [this]() {UpdateMoveNormalLaserAttack(); }, {});
 	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, {}, [this]() {UpdateMoveHomingLaserAttack(); }, {});
 	m_stateMachine.AddState(State::STOP_NORMAL_LASER_ATTACK, [this]() {EntarStopNormalLaserAttack(); }, [this]() {UpdateStopNormalLaserAttack(); }, {});
 	m_stateMachine.AddState(State::CUBE_LASER_ATTACK, {}, [this]() {UpdateCubeLaserAttack(); }, {});
 	m_stateMachine.SetState(State::ENTRY);
 
 	// 攻撃ステートの追加
-//	m_attackStateTable.push_back(State::MOVE_NORMAL_LASER_ATTACK);
+	m_attackStateTable.push_back(State::MOVE_NORMAL_LASER_ATTACK);
 //	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
 	m_attackStateTable.push_back(State::STOP_NORMAL_LASER_ATTACK);
 //	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
@@ -191,6 +197,8 @@ void BossMatrix::Draw()
 {
 	if (m_isEnabled)
 	{
+		DebugText::Log("BossMatrixPos", { m_pos.x, m_pos.y, m_pos.z});
+
 		// モデルの描画
 		m_pModel->Draw();
 
@@ -341,6 +349,22 @@ void BossMatrix::EntarDie()
 //	m_pTriangle = std::make_unique<Triangle>(died_continue_frame);
 }
 
+// 移動しながら通常レーザー攻撃の開始
+void BossMatrix::EntarMoveNormalLaserAttack()
+{
+	// フレームの初期化
+	m_laserFrame = move_normal_laser_attack_frame;
+
+	// 通常レーザー発射用のアニメーションに変更
+	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, 8);
+
+	// レーザーの生成
+	m_laserKey = m_pLaserManager->AddLaser(LaserType::NORMAL, shared_from_this(), 140, 10000, 2.0f, true);
+
+	// 移動の初期化
+	InitMove();
+}
+
 // 登場時の更新
 void BossMatrix::UpdateEntry()
 {
@@ -353,13 +377,14 @@ void BossMatrix::UpdateEntry()
 	if (!m_isMoveEnd)
 	{
 		// ベクトルの取得
-		Vector3 moveVec = ((goal_init_pos + m_pPlayer->GetPos()) - m_pos).Normalized() * entry_move_speed;
+		Vector3 goalPos = { goal_init_pos.x, goal_init_pos.y, goal_init_pos.z + m_pPlayer->GetPos().z };
+		Vector3 moveVec = (goalPos - m_pos).Normalized() * entry_move_speed;
 
 		// 移動
 		m_pos += moveVec;
 
 		// 目的地に到達したか 
-		if (m_pos.Distance(goal_init_pos + m_pPlayer->GetPos()) < distance_threshold)
+		if (m_pos.Distance(goalPos) < distance_threshold)
 		{
 			m_isMoveEnd = true;
 		}
@@ -430,7 +455,37 @@ void BossMatrix::UpdateDie()
 // 移動しながら通常レーザー攻撃
 void BossMatrix::UpdateMoveNormalLaserAttack()
 {
+	// レーザーの発射位置の更新
+	Vector3 pos = Vector3::FromDxLibVector3(
+		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
+	m_laserFirePos = { pos.x, pos.y, pos.z - 200.0f };
 
+	// レーザーの方向に向けるようにする
+	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
+
+	// フレームが経過したら
+	if (m_laserFrame-- <= 0)
+	{
+		// 初期位置へ移動
+		MoveInitPos();
+
+		// 移動が終了したら
+		if (m_isMoveEnd)
+		{
+			// ステートを待機に変更
+			m_stateMachine.SetState(State::IDLE);
+
+			// レーザーの削除
+			m_pLaserManager->DeleteLaser(m_laserKey);
+		}
+	}
+	else
+	{
+		// 移動
+		Move();
+	}
 }
 
 // 移動しながらホーミングレーザー攻撃
@@ -451,7 +506,7 @@ void BossMatrix::UpdateStopNormalLaserAttack()
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
 	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
 
-	// アニメーションが終了したら
+	// フレームが経過したら
 	if (m_laserFrame-- <= 0)
 	{
 		// ステートを待機に変更
@@ -475,6 +530,71 @@ void BossMatrix::ShuffleAttackState()
 	std::shuffle(m_attackStateTable.begin(), m_attackStateTable.end(), engine);
 }
 
+// 移動
+void BossMatrix::Move()
+{
+	// 目的地に到達したかどうかの判定
+	if (m_pos.Distance(m_goalPos) < distance_threshold && !m_isGoal)
+	{
+		// 到達した場合、一回しか通ってほしくない為、
+		// フラグを立てる
+		m_isGoal = true;
+
+		// 目的地に到達したら次の目的地を設定
+		m_movePointIndex++;
+
+		// 次の目的地がリストの最後まで到達したら
+		if (m_movePointIndex >= m_actionDataList.size())
+		{
+			// 移動の初期化
+			InitMove();	
+		}
+
+		// 目的地の設定
+		SetGoalPos();
+	}
+	else
+	{
+		// 目的地とベクトルの設定
+		SetGoalPos();
+
+		// 移動
+		m_pos += m_moveVec;
+	}
+}
+
+// 移動の初期化
+void BossMatrix::InitMove()
+{
+	// 初期化
+	m_movePointIndex = 0;
+	m_isGoal = false;
+	m_isMoveEnd = false;
+
+	// 地点の移動順序の入れ替え(配列の中身をシャッフル)
+	std::random_device seed;
+	std::mt19937 engine(seed());
+	std::shuffle(m_movePointTable.begin(), m_movePointTable.end(), engine);
+
+	// 目的地の設定
+	SetGoalPos();
+}
+
+// 目的地の設定
+void BossMatrix::SetGoalPos()
+{
+	// 現在の移動ポイントのイテレーターの取得
+	auto itr = m_movePointTable.begin();
+	std::advance(itr, m_movePointIndex);
+
+	// 目的地の設定
+	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ itr->x, itr->y, near_far_z_pos }));
+	m_goalPos.z = m_pPlayer->GetPos().z + itr->z;
+
+	// 移動ベクトルの設定
+	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
+}
+
 // 攻撃ステートの設定
 void BossMatrix::SetAttackState()
 {
@@ -492,5 +612,28 @@ void BossMatrix::SetAttackState()
 
 		// 攻撃ステートのインデックスを初期化
 		m_attackStateIndex = 0;
+	}
+}
+
+// 初期位置へ移動
+void BossMatrix::MoveInitPos()
+{
+	// 目的地の設定
+	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ 640, 360, near_far_z_pos }));
+	m_goalPos.z = m_pPlayer->GetPos().z + 1300;
+
+	// 移動ベクトルの設定
+	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
+
+	// 目的地に到達したかどうかの判定
+	if (m_pos.Distance(m_goalPos) < distance_threshold)
+	{
+		// 移動が終了したらフラグを立てる
+		m_isMoveEnd = true;
+	}
+	else
+	{
+		// 移動
+		m_pos += m_moveVec;
 	}
 }

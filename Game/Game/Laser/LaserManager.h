@@ -15,6 +15,7 @@ enum class LaserType
 {
 	NORMAL,		// 通常レーザー
 	REFLECT,	// 反射レーザー
+	CUBE,		// キューブレーザー
 	NUM
 };
 

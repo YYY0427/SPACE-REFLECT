@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Game\Laser\CubeLaser.cpp" />
     <ClCompile Include="Effect\Flash.cpp" />
     <ClCompile Include="Game\Enemy\Boss\BossMatrix.cpp" />
     <ClCompile Include="Game\Enemy\Boss\BossMosquito.cpp" />
@@ -209,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Game\Laser\CubeLaser.h" />
     <ClInclude Include="MyDebug\DebugText.h" />
     <ClInclude Include="Effect\Flash.h" />
     <ClInclude Include="Game\Enemy\Boss\BossMatrix.h" />

@@ -31,7 +31,7 @@ namespace
 	constexpr float distance_threshold = 5.0f;
 
 	// カメラのNearを0、Farを1としたときのZ座標
-	constexpr float near_far_z_pos = 0.0f;
+	constexpr float near_far_z_pos = 0.016f;
 
 	// 反射中にシールドに何フレーム当たっていなかったら反射を解除するか
 	constexpr int reflect_collision_shield_frame = 5;
@@ -42,10 +42,10 @@ namespace
 		static_cast<float>(Application::GetInstance().GetWindowSize().height )};
 	const Vector2 goal_pos[] = 
 	{
-		{ 0 - 300, 0 - 300 },
-		{ window_size.x + 300, 0 - 300 },
-		{ 0 - 300, window_size.y + 300 },
-		{ window_size.x + 300, window_size.y + 300 },
+		{ 0 + 100, 0 + 100 },
+		{ window_size.x - 100, 0 + 100 },
+		{ 0 + 100, window_size.y - 100 },
+		{ window_size.x - 100, window_size.y - 100 },
 		{ window_size.x / 2, window_size.y / 2 },
 	};
 }

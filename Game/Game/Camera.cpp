@@ -43,7 +43,7 @@ Camera::Camera(Vector3 playerPos) :
 		m_windEffectHandle,
 		EffectID::wind,
 		m_pos,
-		{ 200.0f, 200.0f, 200.0f },
+		{ 20000.0f, 20000.0f, 20000.0f },
 		1.0f,
 		{ 0.0f, -DX_PI_F / 2, 0.0f });
 
@@ -100,7 +100,7 @@ void Camera::Update(Vector3 playerPos)
 		m_target += (direction * camera_move_speed * m_slowValue);
 	}
 
-	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, {m_pos.x, m_pos.y, m_pos.z + 1500.0f });
+	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, {m_pos.x, m_pos.y, m_pos.z + 3000.0f });
 
 	// ÉJÉÅÉâÇÃê›íË
 	SetCamera();
@@ -136,7 +136,7 @@ void Camera::UpdateStart(Vector3 playerPos)
 		}
 	}
 
-	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, { m_pos.x, m_pos.y, m_pos.z + 1500.0f });
+	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, { m_pos.x, m_pos.y, m_pos.z + 3000.0f });
 
 	// ÉJÉÅÉâÇÃê›íË
 	SetCamera();
