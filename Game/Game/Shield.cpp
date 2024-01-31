@@ -47,7 +47,7 @@ namespace
 	const Vector2 enerugy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
-	constexpr int max_enerugy_gage = 10000;
+	constexpr int max_enerugy_gage = 1000;
 
 	// プレイヤーからのシールドの距離
 	constexpr float player_distance = 50.0f;
@@ -153,13 +153,13 @@ void Shield::Update()
 				m_enerugyGage -= enerugy_decrease_speed * m_slowValue;
 
 				// シールドエフェクトの再生
-				effectManager.PlayEffect(
+				/*effectManager.PlayEffect(
 					m_effectHandle, 
 					EffectID::player_shield, 
 					{ m_pos.x, m_pos.y - 100.0f, m_pos.z },
 					effect_scale, 
 					1.0f, 
-					effectRot);
+					effectRot);*/
 			}
 		}
 		else
@@ -194,9 +194,9 @@ void Shield::Draw()
 	// シールドを出していたら
 	if (IsShield() && m_player.IsLive())
 	{
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		m_pImage->Draw();
-#endif
+//#endif
 	}
 }
 

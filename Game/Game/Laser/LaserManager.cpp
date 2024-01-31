@@ -4,6 +4,7 @@
 #include "../../Util/DrawFunctions.h"
 #include "../Shield.h"
 #include "ReflectLaser.h"
+#include "CubeLaser.h"
 #include "../Player.h"
 #include "../Shield.h"
 #include <cassert>
@@ -12,7 +13,10 @@
 namespace
 {
 	// 通常レーザーのモデルファイルパス
-	const std::string normal_laser_model_file_path = "Data/Model/Laser.mv1";	
+	const std::string normal_laser_model_file_path = "Data/Model/Laser.mv1";
+
+	// キューブレーザーのモデルファイルパス
+	const std::string cube_laser_model_file_path = "Data/Model/CubeLaser.mv1";
 } 
 
 // コンストラクタ
@@ -21,6 +25,7 @@ LaserManager::LaserManager(std::shared_ptr<Player> pPlayer) :
 {
 	// モデルの読み込み
 	m_modelHandleTable[LaserType::NORMAL] = my::MyLoadModel(normal_laser_model_file_path.c_str());
+	m_modelHandleTable[LaserType::CUBE] = my::MyLoadModel(cube_laser_model_file_path.c_str());
 }
 
 // デストラクタ
@@ -64,6 +69,7 @@ int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, in
 			m_modelHandleTable[LaserType::NORMAL],
 			pEnemy, m_pPlayer, laserChargeFrame, laserFireFrame, laserSpeed, isPlayerFollowing);
 		break;
+
 	default:
 		assert(!"レーザーの種類がありません");
 	}
@@ -108,6 +114,33 @@ int LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_p
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);
 
+	return laserData.key;
+}
+
+// キューブレーザーの追加
+int LaserManager::AddCubeLaser(Vector3 firePos)
+{
+	// レーザーのデータを作成
+	LaserData laserData;
+	laserData.type = LaserType::CUBE;
+
+	// Keyの設定
+	laserData.key = 0;
+	for (auto& laser : m_pLaserList)
+	{
+		if (laserData.key <= laser.key)
+		{
+			laserData.key = laser.key + 1;
+		}
+	}
+
+	// レーザーのポインタを設定
+	laserData.pLaser = std::make_shared<CubeLaser>(m_modelHandleTable[LaserType::CUBE], firePos, m_pPlayer);
+
+	// レーザーリストに追加
+	m_pLaserList.push_back(laserData);
+
+	// Keyを返す
 	return laserData.key;
 }
 

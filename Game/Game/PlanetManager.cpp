@@ -28,11 +28,11 @@ PlanetManager::PlanetManager()
 	auto& dataReader = DataReaderFromUnity::GetInstance();
 
 	// 太陽のインスタンスの作成
-	auto& sunData = dataReader.GetData("Sun");
+	/*auto& sunData = dataReader.GetData("Sun");
 	for (auto& sun : sunData)
 	{
 		m_pPlanet.push_back(std::make_shared<Planet>(m_modelHandleTable["Sun"], sun));
-	}
+	}*/
 
 	// 地球のインスタンスの作成
 	auto& earthData = dataReader.GetData("Earth");
@@ -42,11 +42,11 @@ PlanetManager::PlanetManager()
 	}
 
 	// 月のインスタンスの作成
-	auto& moonData = dataReader.GetData("Moon");
+	/*auto& moonData = dataReader.GetData("Moon");
 	for (auto& moon : moonData)
 	{
 		m_pPlanet.push_back(std::make_shared<Planet>(m_modelHandleTable["Moon"], moon));
-	}
+	}*/
 }
 
 // デストラクタ

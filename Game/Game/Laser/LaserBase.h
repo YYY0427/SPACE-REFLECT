@@ -26,6 +26,9 @@ public:
 	// ƒŒ[ƒU[‚ğ~‚ß‚é
 	virtual void Stop(Vector3 pos) {};
 
+	// ”½Ë
+	virtual void Reflect(Vector3 pos) {};
+
 	// ”½Ë‚³‚ê‚½ó‘Ô‚©‚çŒ³‚É–ß‚·
 	virtual void UndoReflect() {};
 

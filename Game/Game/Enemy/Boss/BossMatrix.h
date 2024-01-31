@@ -42,6 +42,7 @@ private:
 	// 開始
 	void EntarStopNormalLaserAttack();	// 通常レーザー攻撃
 	void EntarMoveNormalLaserAttack();	// 移動しながら通常レーザー攻撃
+	void EntarCubeLaserAttack();		// キューブレーザー攻撃
 	void EntarDie();					// 死亡
 
 	// 更新
@@ -120,6 +121,7 @@ private:
 	// フレーム
 	int m_idleFrame;						// 待機フレーム
 	int m_laserFrame;						// レーザー発射フレーム
+	int m_cubeLaserIntervalFrame;			// キューブレーザーの発射間隔フレーム
 	int m_dieIdleFrame;						// 死亡時の待機フレーム	
 	int m_dieShakeFrame;					// 死亡時の横揺れ演出を行うフレーム
 	int m_dieEffectIntervalFrame;			// 死亡時のエフェクトの発生間隔

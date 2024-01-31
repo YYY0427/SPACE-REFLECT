@@ -31,4 +31,7 @@ private:
 
 	// 終了時のスケール
 	Vector3 m_endScale;
+
+	// 1フレームに回転する量
+	float m_deltaRot;	
 };

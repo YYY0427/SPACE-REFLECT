@@ -219,44 +219,19 @@ void Tutorial::Collision()
 				int key = m_pLaserManager->AddReflectLaser(m_pPlayer->GetShield(), laser.pLaser, firePos);
 				laser.pLaser->SetReflectLaserKey(key);
 			}
+			// 既に反射レーザーがあれば反射レーザーの位置を設定
 			else
 			{
+				// 反射レーザーの位置を設定
 				m_pLaserManager->SetLaserPosition(laser.pLaser->GetReflectLaserKey(), firePos);
 			}
 
 			// 敵のレーザーを止める
-			laser.pLaser->Stop(m_pPlayer->GetShield()->GetPos());
+			laser.pLaser->Reflect(m_pPlayer->GetShield()->GetPos());
 
 			// プレイヤーの反射処理
 			m_pPlayer->OnReflect();
 		}
-
-		//// シールドは2つのポリゴンからできてるので2つのポリゴンともチェック
-		//MV1_COLL_RESULT_POLY_DIM result = MV1CollCheck_Triangle(
-		//	laser.pLaser->GetModelHandle(), -1, shieldLeftTopPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3());
-		//MV1_COLL_RESULT_POLY_DIM result2 = MV1CollCheck_Triangle(
-		//	laser.pLaser->GetModelHandle(), -1, shieldRightBottomPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3());
-
-		//// どっちかのポリゴンが当たっていたら
-		//if (result.HitNum > 0 || result2.HitNum > 0)
-		//{
-		//	// まだ反射レーザーがなければ反射レーザーを追加
-		//	if(!laser.pLaser->IsReflect())
-		//	{
-		//		// 反射レーザーを追加
-		//		m_pLaserManager->AddReflectLaser(m_pPlayer->GetShield(), laser.pLaser);
-		//	}
-
-		//	// 敵のレーザーを止める
-		//	laser.pLaser->Stop(m_pPlayer->GetShield()->GetPos());
-
-		//	// プレイヤーの反射処理
-		//	m_pPlayer->OnReflect();
-		//}
-
-		//// 当たり判定情報の後始末
-		//MV1CollResultPolyDimTerminate(result);
-		//MV1CollResultPolyDimTerminate(result2);
 	}
 
 	// プレイヤーと敵のレーザーの当たり判定
@@ -287,6 +262,13 @@ void Tutorial::Collision()
 
 			// 画面揺れの演出
 			m_pScreenShaker->StartShake({ laser_damage * 10.0f, laser_damage * 10.0f }, 30);
+
+			// 当たっていたレーザーが通常のレーザーなら
+			if (laser.type == LaserType::NORMAL)
+			{
+				// レーザーを止める
+				laser.pLaser->Stop(m_pPlayer->GetPos());
+			}
 		}
 		// 当たり判定情報の後始末
 		MV1CollResultPolyDimTerminate(result);

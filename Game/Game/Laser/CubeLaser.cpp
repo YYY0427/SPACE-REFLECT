@@ -13,7 +13,7 @@ namespace
 	constexpr float opacity_speed = 0.01f;
 
 	// 移動速度
-	constexpr float move_speed = 5.0f;
+	constexpr float move_speed = 2.5f;
 }
 
 // コンストラクタ
@@ -24,6 +24,9 @@ CubeLaser::CubeLaser(int modelHandle, Vector3 firePos, std::shared_ptr<Player> p
 	m_pPlayer = pPlayer;
 	m_opacity = 0.0f;	
 	m_moveVec = (m_pPlayer->GetPos() - m_pos).Normalized() * move_speed;
+
+	// 1フレームに回転する量を0度から～1度の間から取得
+	m_deltaRot = MathUtil::ToRadian(GetRand(100) / 100.0f);
 
 	// モデル設定
 	m_pModel = std::make_unique<Model>(modelHandle);
@@ -48,6 +51,12 @@ void CubeLaser::Update()
 
 	// 移動
 	m_pos += m_moveVec;
+
+	// 拡大
+	m_scale += scale_speed;
+
+	// 回転
+	m_rot += m_deltaRot;
 
 	// モデル設定
 	m_pModel->SetOpacity(m_opacity);	// 不透明度

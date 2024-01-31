@@ -5,6 +5,7 @@
 #include "../Util/InputState.h"
 #include "../Application.h"
 #include "../StringManager.h"
+#include "StageSelectScene.h"
 #include "../Transitor/WipeTransitor.h"
 #include "../Transitor/TileTransitor.h"
 #include "../Transitor/FadeTransitor.h"
@@ -57,6 +58,7 @@ void TitleScene::Update()
 		switch (static_cast<SceneItem>(m_currentSelectSceneItem))
 		{
 		case SceneItem::GAME:
+			m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 			return;
 		case SceneItem::OPTION:
 			m_manager.PushScene(std::make_shared<OptionScene>(m_manager));
