@@ -95,6 +95,7 @@ Player::Player() :
 	m_isStartAnimation(false),
 	m_slowValue(1.0f),
 	m_windEffectHandle(-1),
+	m_boostEffectHandle(-1),
 	m_opacity(1.0f)
 {
 	// データの読み込み
@@ -414,7 +415,7 @@ void Player::Draw()
 		DrawSphere3D(m_pos.ToDxLibVector3(), model_collision_radius, 8, 0xff0000, 0xff0000, false);
 
 		// プレイヤーの位置情報の描画
-		DebugText::Log("プレイヤー 座標", { m_pos.x, m_pos.y, m_pos.z});
+		DebugText::Log("PlayerPos", { m_pos.x, m_pos.y, m_pos.z});
 #endif 
 	}
 }
@@ -440,6 +441,14 @@ void Player::OnDamage(int damage)
 
 	// HPバーの値の設定
 	m_pHPbar->SetValue(m_hp);
+
+	// エフェクトの再生
+	Effekseer3DEffectManager::GetInstance().PlayEffect(
+		m_damageEffectHandle,
+		EffectID::enemy_attack_hit_effect,
+		{ m_pos.x, m_pos.y, m_pos.z },
+		{ 25.0f, 25.0f, 25.0f },
+		1.0f);
 }
 
 // シールドが反射した時の処理

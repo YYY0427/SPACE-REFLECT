@@ -7,7 +7,8 @@
 #include "Scene/DebugScene.h"
 #include "Scene/TitleScene.h"
 #include "SoundManager.h"
-#include "StringManager.h"
+#include "String/MessageManager.h"
+#include "String/Font.h"
 #include "Util/InputState.h"
 #include "MyDebug/DebugText.h"
 #include <string>
@@ -104,9 +105,12 @@ bool Application::Init()
 	auto& soundManager = SoundManager::GetInstance();
 	soundManager.LoadAndStoreSoundFileData();
 
+	// フォントのロード
+	Font::Load();
+
 	// csvファイルに沿って文字列をロード
-	auto& stringManager = StringManager::GetInstance();
-	stringManager.LoadAndStoreStringFileData();
+	auto& messageManager = MessageManager::GetInstance();
+	messageManager.LoadAndStoreStringFileData();
 
 	// Effekseerの初期化
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
@@ -210,9 +214,12 @@ void Application::End()
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
 	effectManager.End();
 
-	// StringManagerの終了処理
-	auto& stringManager = StringManager::GetInstance();
-	stringManager.End();
+	// フォントの終了処理
+	Font::UnLoad();
+
+	// MessageManagerの終了処理
+	auto& messageManager = MessageManager::GetInstance();
+	messageManager.End();
 
 	// DebugTextの終了処理
 	DebugText::End();

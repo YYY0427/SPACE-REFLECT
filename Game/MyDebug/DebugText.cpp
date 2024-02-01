@@ -50,7 +50,7 @@ void DebugText::Draw()
 		int width, height, line = 0;
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 127);
 		GetDrawStringSizeToHandle(&width, &height, &line, log.c_str(), log.size(), m_fontHandle);
-		DrawBox(draw_width, height * m_logCount, draw_width + width, (height * m_logCount) + height, draw_back_color, true);
+		DrawBox(draw_width, height * m_logCount + draw_start_height, draw_width + width, (height * m_logCount) + height + draw_start_height, draw_back_color, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 		// •¶Žš‚Ì•`‰æ

@@ -30,9 +30,6 @@ namespace
 	// 判定の閾値（適切な値に調整する必要）
 	constexpr float distance_threshold = 5.0f;
 
-	// カメラのNearを0、Farを1としたときのZ座標
-	constexpr float near_far_z_pos = 0.016f;
-
 	// 反射中にシールドに何フレーム当たっていなかったら反射を解除するか
 	constexpr int reflect_collision_shield_frame = 5;
 
@@ -47,12 +44,6 @@ namespace
 		{ 0 + 200, window_size.y - 200 },
 		{ window_size.x - 200, window_size.y - 200 },
 		{ window_size.x / 2, window_size.y / 2 },
-
-		/*{ 0 - 0, 0 - 0 },
-		{ window_size.x + 0, 0 - 0 },
-		{ 0 - 0, window_size.y + 0 },
-		{ window_size.x + 0, window_size.y + 0 },
-		{ window_size.x / 2, window_size.y / 2 },*/
 	};
 }
 
@@ -91,8 +82,8 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 
 		// 目的地を設定
 		Vector2 screenPos = m_normalFireMovePointList.front();
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, near_far_z_pos }));
-		m_normalFireGoalPos.z = m_pPlayer->GetPos().z;
+		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
 
 	}
 	// レーザーの向く座標を設定
@@ -256,18 +247,18 @@ void NormalLaser::UpdateNormalFire()
 
 		// 次の目的地を設定
 		Vector2 screenPos = m_normalFireMovePointList[m_normalFireMovePointIndex];
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, near_far_z_pos }));
-		m_normalFireGoalPos.z = m_pPlayer->GetPos().z;
+		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
+		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
 	}
 	else
 	{
 		// ゴールの座標を設定
+		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
 		m_normalFireGoalPos = Vector3::FromDxLibVector3(
 			ConvScreenPosToWorldPos_ZLinear(
 				{ m_normalFireMovePointList[m_normalFireMovePointIndex].x,
 				  m_normalFireMovePointList[m_normalFireMovePointIndex].y,
-				  near_far_z_pos }));
-		m_normalFireGoalPos.z = m_pPlayer->GetPos().z;
+				  z }));
 
 		// ベクトルを設定
 		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
@@ -310,7 +301,7 @@ void NormalLaser::Draw()
 //	m_pModel->Draw();
 	SetUseLighting(true);
 
-	DebugText::Log("レーザーの向く座標", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
+	DebugText::Log("LaserDirectionPos", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
 #endif 
 }
 

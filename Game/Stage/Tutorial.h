@@ -65,7 +65,4 @@ private:
 	std::shared_ptr<PlanetManager> m_pPlanetManager;
 	std::shared_ptr<LaserManager> m_pLaserManager;
 	std::shared_ptr<EnemyManager> m_pEnemyManager;
-
-	bool m_isTest = false;
 };
-

@@ -52,8 +52,6 @@ void DebugScene::Update()
 		case SceneItem::TITLE:
 			m_manager.ChangeScene(std::make_shared<TitleScene>(m_manager));
 			return;
-		case SceneItem::GAME:
-			return;
 		case SceneItem::STAGE_SELECT:
 			m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 			return;
@@ -85,7 +83,7 @@ void DebugScene::Draw()
 
 	// デバッグシーンから飛べるシーンの項目のテキスト表示
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::TITLE), "TITLE", 0xffffff, true);
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), "GAME", 0xffffff, true);
+	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::STAGE_SELECT), "STAGE_SELECT", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::PAUSE), "PAUSE", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::OPTION), "OPTION", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::RESULT), "RESULT", 0xffffff, true);

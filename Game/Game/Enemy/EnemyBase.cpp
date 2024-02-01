@@ -1,6 +1,7 @@
 #include "EnemyBase.h"
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Model.h"
+#include "../../Score/Score.h"
 
 namespace
 {
@@ -41,6 +42,9 @@ void EnemyBase::OnDamage(int damage, Vector3 pos)
 	// HPが0以下になったら死亡
 	if (m_hp <= 0)
 	{
+		// スコアの加算
+		Score::GetInstance().AddScore(ScoreType::ENEMY);
+
 		// 死亡エフェクトの再生
 		Effekseer3DEffectManager::GetInstance().PlayEffect(
 			m_deadEffectHandle,

@@ -1,6 +1,6 @@
 #include "SoundManager.h"
 #include "SaveData.h"
-#include "StringManager.h"
+#include "String/StringUtil.h"
 #include <cassert>
 #include <fstream>
 #include <sstream>
@@ -79,7 +79,7 @@ void SoundManager::LoadAndStoreSoundFileData()
 		}
 
 		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringManager::GetInstance().SplitString(line, ',');
+		std::vector<std::string> strvec = StringUtil::Split(line, ',');
 		
 		// 文字列を適切なデータ型に変換して格納
 		SoundData data;

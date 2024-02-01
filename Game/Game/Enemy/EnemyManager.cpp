@@ -3,7 +3,7 @@
 #include "Normal/Mosquito.h"
 #include "Boss/BossMosquito.h"
 #include "Boss/BossMatrix.h"
-#include "../../StringManager.h"
+#include "../../String/StringUtil.h"
 #include "../../Util/DrawFunctions.h"
 #include "../../UI/Warning.h"
 #include "../../UI/UIManager.h"
@@ -150,7 +150,7 @@ void EnemyManager::Draw()
 		auto itr = m_pEnemyList.begin();
 		std::advance(itr, i);
 
-		DebugText::Log("雑魚敵　座標", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
+		DebugText::Log("", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
 	}
 #endif
 }
@@ -303,7 +303,7 @@ void EnemyManager::LoadWaveFileData(std::string filePath)
 		}
 
 		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringManager::GetInstance().SplitString(line, ',');
+		std::vector<std::string> strvec = StringUtil::Split(line, ',');
 
 		WaveData data{};
 
@@ -352,7 +352,7 @@ std::vector<EnemyData> EnemyManager::LoadEnemyFileData(std::string filePath)
 		}
 
 		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringManager::GetInstance().SplitString(line, ',');
+		std::vector<std::string> strvec = StringUtil::Split(line, ',');
 
 		EnemyData data{};
 
@@ -410,7 +410,7 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 		}
 
 		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringManager::GetInstance().SplitString(line, ',');
+		std::vector<std::string> strvec = StringUtil::Split(line, ',');
 
 		EnemyActionData data{};
 

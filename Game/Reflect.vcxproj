@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="String\Font.cpp" />
     <ClCompile Include="Game\Laser\CubeLaser.cpp" />
     <ClCompile Include="Effect\Flash.cpp" />
     <ClCompile Include="Game\Enemy\Boss\BossMatrix.cpp" />
@@ -160,6 +161,9 @@
     <ClCompile Include="Game\Laser\ReflectLaser.cpp" />
     <ClCompile Include="Effect\Triangle.cpp" />
     <ClCompile Include="MyDebug\DebugText.cpp" />
+    <ClCompile Include="Score\Score.cpp" />
+    <ClCompile Include="Score\ScoreRanking.cpp" />
+    <ClCompile Include="String\StringUtil.cpp" />
     <ClCompile Include="UI\StringUI.cpp" />
     <ClCompile Include="UI\DamageFlash.cpp" />
     <ClCompile Include="Editor\DataReaderFromUnity.cpp" />
@@ -200,7 +204,7 @@
     <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="SoundManager.cpp" />
-    <ClCompile Include="StringManager.cpp" />
+    <ClCompile Include="String\MessageManager.cpp" />
     <ClCompile Include="Util\DrawFunctions.cpp" />
     <ClCompile Include="Util\Easing.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
@@ -210,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="String\Font.h" />
     <ClInclude Include="Game\Laser\CubeLaser.h" />
     <ClInclude Include="MyDebug\DebugText.h" />
     <ClInclude Include="Effect\Flash.h" />
@@ -226,6 +231,9 @@
     <ClInclude Include="Game\Laser\NormalLaser.h" />
     <ClInclude Include="Game\Laser\ReflectLaser.h" />
     <ClInclude Include="Effect\Triangle.h" />
+    <ClInclude Include="Score\Score.h" />
+    <ClInclude Include="Score\ScoreRanking.h" />
+    <ClInclude Include="String\StringUtil.h" />
     <ClInclude Include="UI\StringUI.h" />
     <ClInclude Include="UI\DamageFlash.h" />
     <ClInclude Include="Editor\DataReaderFromUnity.h" />
@@ -266,7 +274,7 @@
     <ClInclude Include="Scene\TestScene.h" />
     <ClInclude Include="Scene\TitleScene.h" />
     <ClInclude Include="SoundManager.h" />
-    <ClInclude Include="StringManager.h" />
+    <ClInclude Include="String\MessageManager.h" />
     <ClInclude Include="Util\DrawFunctions.h" />
     <ClInclude Include="Util\Easing.h" />
     <ClInclude Include="Util\Range.h" />

@@ -2,7 +2,6 @@
 #include <string>
 #include <DxLib.h>
 #include <list>
-#include "../StringManager.h"
 
 namespace
 {
@@ -10,7 +9,7 @@ namespace
 	constexpr int draw_width = 0;
 
 	// 描画するスタートY座標
-	constexpr int draw_start_height = 0;
+	constexpr int draw_start_height = 150;
 
 	// 描画するY座標の間隔
 	constexpr int draw_height_interval = 20;

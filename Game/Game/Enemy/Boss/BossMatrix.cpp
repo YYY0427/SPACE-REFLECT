@@ -14,6 +14,7 @@
 #include "../../../Effect/ScreenShaker.h"
 #include "../../../Util/InputState.h"
 #include "../../../MyDebug/DebugText.h"
+#include "../../../Score/Score.h"
 #include <random>
 #include <algorithm>
 #include <cmath>
@@ -23,14 +24,18 @@
 
 namespace
 {
+	// スクリーンサイズ
+	auto& screenSize = Application::GetInstance().GetWindowSize();
+
 	// 位置
-	const Vector3 init_pos = { 0.0f, 300.0f, 5000.0f };				// 初期位置
-	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1500.0f };		// 登場時の位置
+	const Vector3 init_pos = { 0.0f, 300.0f, 5000.0f };				// 初期位置(ワールド座標)
+	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1500.0f };		// 登場時の位置(ワールド座標)
+	const Vector3 normal_pos = { 640, 360, 1300 };					// 通常時の位置(スクリーン座標)
 
 	// モデル
-	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f};
-	const Vector3 model_scale = { 2.0f , 2.0f, 2.0f };			// 拡大率
-	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };	// 初期の向き
+	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
+	const Vector3 model_scale = { 2.0f , 2.0f, 2.0f };					// 拡大率
+	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };			// 初期の向き
 
 	// アニメーション番号
 	constexpr int idle_anim_no = 0;				// 待機
@@ -50,30 +55,19 @@ namespace
 	constexpr float entry_move_speed = 10.0f;	// 登場時の移動速度
 	constexpr float move_speed = 20.0f;			// 移動速度
 	constexpr float distance_threshold = 10.0f; // 目的地に到達したかどうか測る閾値
-	constexpr float near_far_z_pos = 0.068f;	// 0.0 = near, 1.0 = far
 	const Vector3 move_pos[] =					// 移動先の座標
 	{
-		{ 640, 360, 1300 },
-		{ 100, 100, 1300 },
-		{ 1180, 100, 1300 },
-		{ 100, 620, 1300 },
-		{ 1180, 620, 1300 },
+		{ screenSize. width / 2.0f, screenSize.height / 2.0f, 1600 },
+		{ 0 + 200, 0 + 200, 1600 },
+		{ screenSize. width - 200.0f, 0 + 200, 1600 },
+		{ 0 + 200, screenSize.height - 200.0f, 1600 },
+		{ screenSize.width - 200.0f, screenSize.height - 200.0f, 1600 }
 	};
 
-	// 死亡
-	constexpr float died_swing_width = 5.0f;	// 死亡時の横揺れの大きさ
-	constexpr float died_swing_speed = 1.0f;	// 死亡時の横揺れの速さ
-	constexpr int died_continue_frame = 60 * 5;	// 死亡時の演出の継続時間
-	constexpr int died_flash_frame = 60 * 1;	// 死亡時のフラッシュのフレーム
-	constexpr int die_effect_interval_frame = 20;			// 死亡時のエフェクトの再生間隔
-	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
-	constexpr int die_draw_stop_frame = 60 * 5;				// 死亡時の描画停止フレーム
-
 	// HP
-	auto& screenSize = Application::GetInstance().GetWindowSize();
-	constexpr int max_hp = 1000;		// 最大HP
-	const Vector2 hp_gauge_pos = { screenSize.width / 2.0f, 0.0f + 100.0f};	// HPゲージの位置
-	const Vector2 hp_gauge_size = { 500, 20 };										// HPゲージのサイズ
+	constexpr int max_hp = 1000;												// 最大HP
+	const Vector2 hp_gauge_pos = { screenSize.width / 2.0f, 0.0f + 100.0f};		// HPゲージの位置
+	const Vector2 hp_gauge_size = { 500, 20 };									// HPゲージのサイズ
 	const std::string hp_gauge_img_file_path = "Data/Image/HP.png";				// HPゲージの画像ファイルパス
 	const std::string hp_gauge_back_img_file_path = "Data/Image/HPBack.png";	// HPゲージの背景画像ファイルパス
 	const std::string hp_gauge_frame_img_file_path = "Data/Image/HPFrame.png";	// HPゲージの枠画像ファイルパス
@@ -85,12 +79,17 @@ namespace
 	// 当たり判定の半径
 	constexpr float collision_radius = 250.0f;
 
+	// 登場時に不透明度を下げる速度
+	constexpr float entry_opacity_speed = 0.005f;
+
 	// フレーム
 	constexpr int next_attack_state_frame = 60 * 5;			// 次の攻撃ステートに移るまでのフレーム
 	constexpr int stop_normal_laser_attack_frame = 60 * 20;	// 通常レーザー攻撃のフレーム
 	constexpr int move_normal_laser_attack_frame = 60 * 20;	// 移動しながら通常レーザー攻撃のフレーム
 	constexpr int cube_laser_attack_frame = 60 * 10;		// キューブレーザー攻撃のフレーム
 	constexpr int cube_laser_interval_frame = 60 * 2;		// キューブレーザー攻撃の間隔フレーム
+	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
+	constexpr int die_draw_stop_frame = 60 * 5;				// 死亡時の描画停止フレーム
 }
 
 // コンストラクタ
@@ -102,8 +101,6 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_laserFrame(0),
 	m_damageEffectHandle(-1),
 	m_dieIdleFrame(die_idle_frame),
-	m_dieShakeFrame(0),
-	m_dieEffectIntervalFrame(die_effect_interval_frame),
 	m_pScreenShaker(pScreenShaker),
 	m_dieEffectHandle(-1),
 	m_dieDrawStopFrame(die_draw_stop_frame),
@@ -129,17 +126,13 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	m_stateMachine.AddState(State::ENTRY, {}, [this]() {UpdateEntry(); }, {});
 	m_stateMachine.AddState(State::IDLE, {}, [this]() {UpdateIdle(); }, {});
 	m_stateMachine.AddState(State::DIE, [this]() {EntarDie(); }, [this]() {UpdateDie(); }, {});
-	m_stateMachine.AddState(State::MOVE_NORMAL_LASER_ATTACK, [this]() {EntarMoveNormalLaserAttack(); }, [this]() {UpdateMoveNormalLaserAttack(); }, {});
-	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, {}, [this]() {UpdateMoveHomingLaserAttack(); }, {});
-	m_stateMachine.AddState(State::STOP_NORMAL_LASER_ATTACK, [this]() {EntarStopNormalLaserAttack(); }, [this]() {UpdateStopNormalLaserAttack(); }, {});
+	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, [this]() {EntarMoveHormingLaserAttack(); }, [this]() {UpdateMoveHomingLaserAttack(); }, {});
 	m_stateMachine.AddState(State::CUBE_LASER_ATTACK, [this]() {EntarCubeLaserAttack(); }, [this]() {UpdateCubeLaserAttack(); }, {});
 	m_stateMachine.SetState(State::ENTRY);
 
 	// 攻撃ステートの追加
-	m_attackStateTable.push_back(State::MOVE_NORMAL_LASER_ATTACK);
-//	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
-//	m_attackStateTable.push_back(State::STOP_NORMAL_LASER_ATTACK);
-//	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
+	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
+	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
 	ShuffleAttackState();
 
 	// HPゲージの設定
@@ -190,10 +183,10 @@ void BossMatrix::Update()
 
 	// モデル設定
 	m_pModel->RestoreAllMaterialDifColor();	// ディフューズカラーを元に戻す
-	m_pModel->SetOpacity(m_opacity);	// 不透明度
+	m_pModel->SetOpacity(m_opacity);		// 不透明度
 	m_pModel->SetRot(m_rot);				// 向き
-	m_pModel->SetPos(m_pos);			// 位置
-	m_pModel->Update();					// モデルの当たり判定、アニメーションの更新
+	m_pModel->SetPos(m_pos);				// 位置
+	m_pModel->Update();						// モデルの当たり判定、アニメーションの更新
 }
 
 // 描画
@@ -212,13 +205,6 @@ void BossMatrix::Draw()
 		DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 16, 0xff0000, 0xff0000, false);
 #endif
 	}
-
-	//// 死亡時の演出の描画
-	//if (m_stateMachine.GetCurrentState() == State::DIE)
-	//{
-	//	m_pFlash->Draw();
-	//	m_pTriangle->Draw();
-	//}
 }
 
 // ダメージ処理
@@ -231,7 +217,7 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 	// ダメージエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffect(
 		m_damageEffectHandle,
-		EffectID::enemy_boss_hit_effect,
+		EffectID::player_attack_hit_effect,
 		pos,
 		{ 100.0f, 100.0f, 100.0f }
 	);
@@ -249,94 +235,6 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 	}
 }
 
-// 死亡演出
-void BossMatrix::PerformDeathEffect()
-{
-	// 死亡してから特定のフレームが経過したら開始
-	if (m_dieIdleFrame-- <= 0)
-	{
-		// 横揺れ
-		m_pos.x += sinf(m_dieShakeFrame++ * died_swing_speed) * died_swing_width;
-
-		// 徐々にY座標を下げる
-		m_pos.y -= 0.5f;
-
-		// エフェクトの再生間隔が経過したら
-		if (m_dieEffectIntervalFrame-- <= 0)
-		{
-			// エフェクトデータ
-			DieEffectData data{};
-
-			// エフェクトの発生位置をプレイヤーの周りにランダムに設定
-			data.pos =
-			{
-				// エフェクトの発生位置を-500～500の間でランダムに設定
-				m_pos.x + GetRand(1000) - 500,
-				m_pos.y + GetRand(1000) - 500,
-				m_pos.z
-			};
-
-			// エフェクトの大きさを10倍から100倍の間でランダムに設定
-			data.scale = GetRand(30) + 10;
-
-			// xyのベクトルをランダム作成
-			data.vec = { static_cast<float>(GetRand(10) - 5), static_cast<float>(GetRand(10) - 5), 0.0f };
-			data.vec = Vector3::FromDxLibVector3(VNorm(data.vec.ToDxLibVector3()));
-			data.vec = Vector3::FromDxLibVector3(VScale(data.vec.ToDxLibVector3(), 50.0f));
-
-			// エフェクトの再生
-			Effekseer3DEffectManager::GetInstance().PlayEffectFollow(
-				data.effectHandle,
-				EffectID::enemy_died,
-				&data.pos,
-				{ data.scale, data.scale, data.scale },
-				0.5f);
-
-			// テーブルに追加
-			m_dieEffectTable.push_back(data);
-
-			// フレームの初期化
-			m_dieEffectIntervalFrame = die_effect_interval_frame;
-		}
-		// 三角形エフェクトの更新
-		m_pTriangle->Update(m_pos);
-
-		// 三角形エフェクトが終了したら
-		if (m_pTriangle->IsEnd())
-		{
-			// フラッシュの更新
-			Vector3 screenPos = Vector3::FromDxLibVector3(ConvWorldPosToScreenPos(m_pos.ToDxLibVector3()));
-			m_pFlash->Update({screenPos.x, screenPos.y}, 0xffffff);
-
-			// フラッシュが終了したら
-			if (m_pFlash->IsEnd())
-			{
-				// ゲームクリア
-				m_isEnabled = false;
-			}
-		}
-	}
-
-	// エフェクトの更新
-	for (auto& effect : m_dieEffectTable)
-	{
-		effect.pos += effect.vec;
-	}
-}
-
-// 通常レーザー攻撃の開始
-void BossMatrix::EntarStopNormalLaserAttack()
-{
-	// フレームの初期化
-	m_laserFrame = stop_normal_laser_attack_frame;
-
-	// 通常レーザー発射用のアニメーションに変更
-	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, 8);
-
-	// レーザーの生成
-	m_laserKey = m_pLaserManager->AddLaser(LaserType::NORMAL, shared_from_this(), 140, 10000, 3.0f, false);
-}
-
 // 死亡演出の開始
 void BossMatrix::EntarDie()
 {
@@ -348,14 +246,10 @@ void BossMatrix::EntarDie()
 
 	// 画面揺れ開始
 	m_pScreenShaker->StartShake({ 100.0f, 0.0f }, 60);
-
-	// インスタンスの生成
-//	m_pFlash = std::make_unique<Flash>(died_flash_frame);
-//	m_pTriangle = std::make_unique<Triangle>(died_continue_frame);
 }
 
-// 移動しながら通常レーザー攻撃の開始
-void BossMatrix::EntarMoveNormalLaserAttack()
+// 移動しながらホーミングレーザー攻撃の開始
+void BossMatrix::EntarMoveHormingLaserAttack()
 {
 	// フレームの初期化
 	m_laserFrame = move_normal_laser_attack_frame;
@@ -384,7 +278,7 @@ void BossMatrix::EntarCubeLaserAttack()
 void BossMatrix::UpdateEntry()
 {
 	// 不透明度を上げる
-	m_opacity += 0.005f;
+	m_opacity += entry_opacity_speed;
 	m_opacity = (std::min)(m_opacity, 1.0f);
 	m_pModel->SetOpacity(m_opacity);
 
@@ -449,6 +343,9 @@ void BossMatrix::UpdateDie()
 		// まだエフェクトが再生されていなかったら
 		if (m_dieEffectHandle == -1)
 		{
+			// スコアの加算
+			Score::GetInstance().AddScore(ScoreType::BOSS);
+
 			// エフェクトの再生
 			Effekseer3DEffectManager::GetInstance().PlayEffect(
 				m_dieEffectHandle,
@@ -463,12 +360,10 @@ void BossMatrix::UpdateDie()
 			m_isEnabled = false;
 		}
 	}
-	// 死亡演出
-//	PerformDeathEffect();
 }
 
-// 移動しながら通常レーザー攻撃
-void BossMatrix::UpdateMoveNormalLaserAttack()
+// 移動しながらホーミングレーザー攻撃
+void BossMatrix::UpdateMoveHomingLaserAttack()
 {
 	// レーザーの発射位置の更新
 	Vector3 pos = Vector3::FromDxLibVector3(
@@ -500,35 +395,6 @@ void BossMatrix::UpdateMoveNormalLaserAttack()
 	{
 		// 移動
 		Move();
-	}
-}
-
-// 移動しながらホーミングレーザー攻撃
-void BossMatrix::UpdateMoveHomingLaserAttack()
-{
-}
-
-// 通常レーザー攻撃
-void BossMatrix::UpdateStopNormalLaserAttack()
-{
-	// レーザーの発射位置の更新
-	Vector3 pos = Vector3::FromDxLibVector3(
-		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
-	m_laserFirePos = { pos.x, pos.y, pos.z - 200.0f };
-
-	// レーザーの方向に向けるようにする
-	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
-	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
-
-	// フレームが経過したら
-	if (m_laserFrame-- <= 0)
-	{
-		// ステートを待機に変更
-		m_stateMachine.SetState(State::IDLE);
-
-		// レーザーの削除
-		m_pLaserManager->DeleteLaser(m_laserKey);
 	}
 }
 
@@ -625,9 +491,8 @@ void BossMatrix::SetGoalPos()
 	std::advance(itr, m_movePointIndex);
 
 	// 目的地の設定
-	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + 1300.0f) / GetCameraFar();
+	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->z) / GetCameraFar();
 	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->x, itr->y, z }));
-	m_goalPos.z = m_pPlayer->GetPos().z + itr->z;
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
@@ -657,10 +522,8 @@ void BossMatrix::SetAttackState()
 void BossMatrix::MoveInitPos()
 {
 	// 目的地の設定
-	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + 1300.0f) / GetCameraFar();
-	auto& screenSize = Application::GetInstance().GetWindowSize();
-	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenSize.width / 2.0f, screenSize.height / 2.0f, z }));
-	m_goalPos.z = m_pPlayer->GetPos().z + 1300.0f;
+	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + normal_pos.z) / GetCameraFar();
+	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ normal_pos.x, normal_pos.y, z }));
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;

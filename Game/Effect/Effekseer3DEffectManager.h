@@ -15,9 +15,10 @@ namespace EffectID
 	const std::string reflect_laser = "ReflectLaser";		// 敵のレーザーを反射したレーザー
 	const std::string enemy_died = "Explosion";				// 敵の死亡時のエフェクト
 	const std::string enemy_boss_entry = "EnemyBossEntry";	// 敵のボスが出現するときのエフェクト
-	const std::string enemy_boss_hit_effect = "BossEnemyHitEffect";	// ヒットエフェクト 
-	const std::string wind = "Wind";								// 風のエフェクト
-	const std::string enemy_boss_die = "BossDeath";				// ボスの死亡時のエフェクト
+	const std::string enemy_attack_hit_effect = "EnemyAttackHitEffect";	// 敵の攻撃のヒットエフェクト 
+	const std::string player_attack_hit_effect = "PlayerAttackHitEffect";	// プレイヤーの攻撃のヒットエフェクト
+	const std::string wind = "Wind";									// 風のエフェクト
+	const std::string enemy_boss_die = "BossDeath";						// ボスの死亡時のエフェクト
 
 	// まとめてロードするための配列
 	const std::string effect_file_path[] =
@@ -30,8 +31,9 @@ namespace EffectID
 		enemy_boss_entry,
 		wind,
 		normal_laser,
-		enemy_boss_hit_effect,
-		enemy_boss_die
+		enemy_attack_hit_effect,
+		enemy_boss_die,
+		player_attack_hit_effect
 	};
 }
 

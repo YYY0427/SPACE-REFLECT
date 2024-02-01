@@ -107,6 +107,7 @@ private:
 	// エフェクト
 	int m_windEffectHandle;			// 風エフェクトのハンドル
 	int m_boostEffectHandle;		// ブーストエフェクトハンドル
+	int m_damageEffectHandle;		// ダメージエフェクトハンドル
 //	Vector3 m_boostEffectScale;		// ブーストエフェクトの拡大率
 //	float m_boostEffectSpeed;		// ブーストエフェクトの再生速度
 	int m_playerDeadEffectHandle;	// プレイヤー死亡エフェクトハンドル

@@ -1,0 +1,35 @@
+ID,文字列,フォント,サイズ,太さ
+TitleLogo,SPACE REFLECT,マキナス 4 Square,100,10
+TitleItemStart,START,マキナス 4 Square,20,3
+TitleItemOption,OPTION,マキナス 4 Square,20,3
+TitleItemExit,EXIT,マキナス 4 Square,20,3
+TitleItemSelectBarRight,[,マキナス 4 Square,20,3
+TitleItemSelectBarLeft,],マキナス 4 Square,20,3
+OptionTitle,OPTION,マキナス 4 Square,50,5
+OptionItemLanguage,LANGUAGE,マキナス 4 Square,20,3
+OptionItemWindowMode,WINDOW MODE,マキナス 4 Square,20,3
+OptionItemMasterVolume,MASTER,マキナス 4 Square,20,3
+OptionItemBgmVolume,BGM,マキナス 4 Square,20,3
+OptionItemPadSetting,CONTROLLER,マキナス 4 Square,20,3
+OptionItemWindowModeOn,FULL SCREEN,マキナス 4 Square,20,3
+OptionItemWindowModeOff,WINDOW,マキナス 4 Square,20,3
+OptionItemSeVolume,SE,マキナス 4 Square,20,3
+OptionItemBack,BACK,マキナス 4 Square,20,3
+PadSettingTitle,PAD CONFIG,マキナス 4 Square,50,5
+PadSettingItemSensX,横感度,マキナス 4 Square,20,3
+PadSettingItemSensY,縦感度,マキナス 4 Square,20,3
+PadSettingItemReverseX,横リバース,マキナス 4 Square,20,3
+PadSettingItemReverseY,縦リバース,マキナス 4 Square,20,3
+PadSettingItemReverseOn,ON,マキナス 4 Square,20,3
+PadSettingItemReverseOff,OFF,マキナス 4 Square,20,3
+PadSettingNumber,-,マキナス 4 Square,20,3
+PadSettingItemBack,BACK,マキナス 4 Square,20,3
+PauseTitle,PAUSE,マキナス 4 Square,75,10
+PauseItemContinue,CONTINUE,マキナス 4 Square,20,3
+PauseItemOption,OPTION,マキナス 4 Square,20,3
+PauseItemTitle,TITLE,マキナス 4 Square,20,3
+PausetemSelectBarRight,[,マキナス 4 Square,20,3
+PausetemSelectBarLeft,],マキナス 4 Square,20,3
+WarningUI,WARNING!!,マキナス 4 Square,100,10
+BossMatrixName,MATRIX,マキナス 4 Square,40,10
+ScoreNumber,-,マキナス 4 Square,30,9

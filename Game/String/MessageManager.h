@@ -2,36 +2,37 @@
 #include <DxLib.h>
 #include <string>
 #include <vector>
+#include <cassert>
 #include <map>
+#include "StringUtil.h"
+
+// 文字列のデータ
+struct MessageData
+{
+	int fontHandle = -1;
+	std::string string;
+};
 
 /// <summary>
 /// 文字列を管理するクラス
 /// </summary>
-class StringManager
+class MessageManager
 {
 public:
 	// デストラクタ
-	~StringManager();
+	~MessageManager();
 
 	/// <summary>
 	/// 唯一のインスタンスを返す
 	/// </summary>
 	/// <returns>唯一の実態の参照</returns>
-	static StringManager& GetInstance();
+	static MessageManager& GetInstance();
 
 	// ファイルから文字列のデータを読み取ってデータテーブルに格納
 	void LoadAndStoreStringFileData();
 
 	// 終了処理
 	void End();
-
-	/// <summary>
-	/// 文字列を区切る(複数の文字列に変換)
-	/// </summary>
-	/// <param name="input">区切りたい文字列</param>
-	/// <param name="delimiter">文字列を区切る文字</param>
-	/// <returns>区切った文字列</returns>
-	std::vector<std::string> SplitString(std::string& input, char delimiter);
 
 	/// <summary>
 	/// ファイルに読み込んだ文字列の表示
@@ -60,26 +61,34 @@ public:
 	/// <param name="x">真ん中に指定したいX軸の座標</param>
 	/// <param name="y">Y軸の座標</param>
 	/// <param name="color">文字の描画色</param>
-	void DrawFormatStringCenter(std::string id, int num, int x, int y, unsigned int color);
-
-	template <typename T>
-	std::string ToString(T value)
+	template<typename T>
+	void DrawNumberCenter(std::string id, T value, int x, int y, unsigned int color)
 	{
-		return std::to_string(value);
+		// ロードしていない場合は止める
+		assert(m_messageDataTable.find(id) != m_messageDataTable.end());
+
+		// 数字を文字列に変換
+		std::string str = std::to_string(value);
+
+		// 数字の描画
+		StringUtil::DrawStringCenter(x, y, color, str, m_messageDataTable[id].fontHandle);
 	}
+
+	// メッセージのデータの取得
+	MessageData GetMessageData(std::string id);
 
 private:
 	// コンストラクタ
 	// シングルトンパターンなのでprivate
-	StringManager();
+	MessageManager();
 
 	// コピーと代入の禁止
-	StringManager(const StringManager&) = delete;			// コピーコンストラクタ禁止
-	void operator = (const StringManager&) = delete;		// 代入禁止
+	MessageManager(const MessageManager&) = delete;			// コピーコンストラクタ禁止
+	void operator = (const MessageManager&) = delete;		// 代入禁止
 
 private:
 	// 文字列データの種類
-	enum class StringDataType
+	enum class MessageDataType
 	{
 		ID,
 		STRING,
@@ -89,14 +98,6 @@ private:
 	};
 
 private:
-	// 文字列のデータ
-	struct StringData
-	{
-		int fontHandle = -1;
-		std::string string;
-	};
-
-private:
 	// CSVファイルで指定した文字列をIDとした文字列のデータテーブル
-	std::map<std::string, StringData> m_stringDataTable;
+	std::map<std::string, MessageData> m_messageDataTable;
 };

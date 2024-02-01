@@ -3,7 +3,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../Util/InputState.h"
 #include "../SaveData.h"
-#include "../StringManager.h"
+#include "../String/MessageManager.h"
 #include "../Application.h"
 #include "../Transitor/FadeTransitor.h"
 #include "DxLib.h"
@@ -84,7 +84,7 @@ void OptionScene::Update()
 	// 選択されている項目がどれか
 	switch(static_cast<OptionItem>(m_currentSelectItem))
 	{ 
-	// ウィンドウモードの設定
+		// ウィンドウモードの設定
 	case OptionItem::WINDOW_MODE:
 		SaveData::GetInstance().SetWindowMode();
 		break;
@@ -133,7 +133,7 @@ void OptionScene::Draw()
 	const auto& size = Application::GetInstance().GetWindowSize();
 
 	// インスタンスの取得
-	auto& stringManager = StringManager::GetInstance();
+	auto& messageManager = MessageManager::GetInstance();
 
 	// 背景色の描画
 	SetDrawBlendMode(DX_BLENDMODE_MULA, 220);
@@ -141,35 +141,35 @@ void OptionScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// シーンタイトルの描画
-	stringManager.DrawStringCenter("OptionTitle", size.width / 2, 100, 0xffffff);
+	messageManager.DrawStringCenter("OptionTitle", size.width / 2, 100, 0xffffff);
 
 	// 項目の描画
 	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
-	stringManager.DrawStringCenter("OptionItemWindowMode", draw_text_pos_x, 
+	messageManager.DrawStringCenter("OptionItemWindowMode", draw_text_pos_x, 
 		draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
 	int masterVolume = static_cast<int>(OptionItem::MASTER_VOLUME);
-	stringManager.DrawStringCenter("OptionItemMasterVolume", draw_text_pos_x, 
+	messageManager.DrawStringCenter("OptionItemMasterVolume", draw_text_pos_x, 
 		draw_text_pos_y + text_space_y * masterVolume, m_itemColorTable[masterVolume]);
 
 	int bgmVolume = static_cast<int>(OptionItem::BGM_VOLUME);
-	stringManager.DrawStringCenter("OptionItemBgmVolume", draw_text_pos_x, 
+	messageManager.DrawStringCenter("OptionItemBgmVolume", draw_text_pos_x, 
 		draw_text_pos_y + text_space_y * bgmVolume, m_itemColorTable[bgmVolume]);
 
 	int seVolume = static_cast<int>(OptionItem::SE_VOLUME);
-	stringManager.DrawStringCenter("OptionItemSeVolume", draw_text_pos_x, 
+	messageManager.DrawStringCenter("OptionItemSeVolume", draw_text_pos_x, 
 		draw_text_pos_y + text_space_y * seVolume, m_itemColorTable[seVolume]);
 
 	int exit = static_cast<int>(OptionItem::EXIT);
-	stringManager.DrawStringCenter("OptionItemBack", size.width / 2, 
+	messageManager.DrawStringCenter("OptionItemBack", size.width / 2, 
 		draw_text_pos_y + text_space_y * exit, m_itemColorTable[exit]);
 
 	// ウィンドウモードの状態の表示
 	auto& saveData = SaveData::GetInstance();
 	(saveData.GetSaveData().windowMode) ?
-		stringManager.DrawStringCenter("OptionItemWindowModeOff", size.width / 2, 
+		messageManager.DrawStringCenter("OptionItemWindowModeOff", size.width / 2, 
 			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]):
-		stringManager.DrawStringCenter("OptionItemWindowModeOn", size.width / 2,
+		messageManager.DrawStringCenter("OptionItemWindowModeOn", size.width / 2,
 			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
 	// 音量の表示

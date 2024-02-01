@@ -4,7 +4,7 @@
 #include "SceneManager.h"
 #include "../Util/InputState.h"
 #include "../Application.h"
-#include "../StringManager.h"
+#include "../String/MessageManager.h"
 #include "StageSelectScene.h"
 #include "../Transitor/WipeTransitor.h"
 #include "../Transitor/TileTransitor.h"
@@ -83,21 +83,21 @@ void TitleScene::Draw()
 	DrawBox(0, 0, size.width, size.height, 0xffffff, true);
 
 	// タイトルの描画
-	auto& stringManager = StringManager::GetInstance();
-	stringManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0x000000);
+	auto& messageManager = MessageManager::GetInstance();
+	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0x000000);
 
 	// 項目の描画
-	stringManager.DrawStringCenter("TitleItemStart", size.width / 2, 
+	messageManager.DrawStringCenter("TitleItemStart", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), 0x000000);
-	stringManager.DrawStringCenter("TitleItemOption", size.width / 2, 
+	messageManager.DrawStringCenter("TitleItemOption", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::OPTION), 0x000000);
-	stringManager.DrawStringCenter("TitleItemExit", size.width / 2, 
+	messageManager.DrawStringCenter("TitleItemExit", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::EXIT), 0x000000);
 
 	// 選択中の項目にバーを描画
-	stringManager.DrawStringCenter("TitleItemSelectBarRight", size.width / 2 - 100, 
+	messageManager.DrawStringCenter("TitleItemSelectBarRight", size.width / 2 - 100, 
 		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);
-	stringManager.DrawStringCenter("TitleItemSelectBarLeft", size.width / 2 + 100, 
+	messageManager.DrawStringCenter("TitleItemSelectBarLeft", size.width / 2 + 100, 
 		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);
 
 	// 画面切り替え演出の描画

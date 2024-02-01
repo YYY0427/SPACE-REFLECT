@@ -1,0 +1,93 @@
+#include "Score.h"
+#include "../String/MessageManager.h"
+
+namespace
+{
+	// スコアの最大値
+	constexpr int max_score = 9999;
+
+	// スコア
+	constexpr int enemy_score = 100;
+	constexpr int boss_score = 1000;
+	constexpr int damage_score = -10;
+	constexpr int death_score = -1000;
+}
+
+// コンストラクタ
+Score::Score()
+{
+	// スコアの初期化
+	for (int i = 0; i < static_cast<int>(ScoreType::NUM); i++)
+	{
+		m_score[i] = 0;
+	}
+}
+
+// デストラクタ
+Score::~Score()
+{
+}
+
+// スコアの加算
+void Score::AddScore(ScoreType type)
+{
+	switch (type)
+	{
+	case ScoreType::ENEMY:
+		m_score[static_cast<int>(type)] += enemy_score;
+		break;
+	case ScoreType::BOSS:
+		m_score[static_cast<int>(type)] += boss_score;
+		break;
+	case ScoreType::ITEM:
+		break;
+	case ScoreType::DAMAGE:
+		m_score[static_cast<int>(type)] += damage_score;
+		break;
+	case ScoreType::DEATH:
+		m_score[static_cast<int>(type)] += death_score;
+		break;
+	default:
+		break;
+	}	
+
+	// スコアの最大値を超えないようにする
+	m_score[static_cast<int>(type)] = (std::min)(m_score[static_cast<int>(type)], max_score);
+}
+
+// スコアの描画
+void Score::DrawScore()
+{
+	// スコアの描画
+	MessageManager::GetInstance().DrawNumberCenter("ScoreNumber", GetTotalScore(), 100, 50, 0xffffff);
+}
+
+// インスタンスの取得
+Score& Score::GetInstance()
+{
+	// 唯一のインスタンスを返す
+	static Score instance;
+	return instance;
+}
+
+// スコアの取得
+int Score::GetScore(ScoreType type) const
+{
+	return m_score[static_cast<int>(type)];
+}
+
+// 合計スコアの取得
+int Score::GetTotalScore() const
+{
+	int totalScore = 0;
+	for (int i = 0; i < static_cast<int>(ScoreType::NUM); i++)
+	{
+		totalScore += m_score[i];
+	}
+
+	// スコアの最大値、最小値を超えないようにする
+	if(totalScore < 0) totalScore = 0;
+	if(totalScore > max_score) totalScore = max_score;
+
+	return totalScore;
+}

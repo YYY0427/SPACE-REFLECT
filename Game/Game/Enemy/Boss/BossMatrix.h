@@ -35,13 +35,9 @@ public:
 	// ダメージ処理
 	void OnDamage(int damage, Vector3 pos) override final;
 
-	// 死亡演出
-	void PerformDeathEffect() override final;
-
 private:
 	// 開始
-	void EntarStopNormalLaserAttack();	// 通常レーザー攻撃
-	void EntarMoveNormalLaserAttack();	// 移動しながら通常レーザー攻撃
+	void EntarMoveHormingLaserAttack();	// 移動しながらホーミングレーザー攻撃
 	void EntarCubeLaserAttack();		// キューブレーザー攻撃
 	void EntarDie();					// 死亡
 
@@ -49,9 +45,7 @@ private:
 	void UpdateEntry();		// 登場時の更新
 	void UpdateIdle();		// 待機時の更新
 	void UpdateDie();		// 死亡時の更新
-	void UpdateMoveNormalLaserAttack();	// 移動しながら通常レーザー攻撃
 	void UpdateMoveHomingLaserAttack();	// 移動しながらホーミングレーザー攻撃
-	void UpdateStopNormalLaserAttack();	// 通常レーザー攻撃
 	void UpdateCubeLaserAttack();		// キューブレーザー攻撃
 
 	// 移動
@@ -76,9 +70,7 @@ private:
 		DIE,		// 死亡
 
 		// 攻撃
-		MOVE_NORMAL_LASER_ATTACK,	// 移動しながら通常レーザー攻撃
 		MOVE_HOMING_LASER_ATTACK,	// 移動しながらホーミングレーザー攻撃
-		STOP_NORMAL_LASER_ATTACK,	// 通常レーザー攻撃
 		CUBE_LASER_ATTACK,			// キューブレーザー攻撃
 	};
 
@@ -101,11 +93,6 @@ private:
 	std::shared_ptr<StringUI> m_pBossName;
 	std::shared_ptr<LaserManager> m_pLaserManager;
 	std::shared_ptr<ScreenShaker> m_pScreenShaker;
-	std::unique_ptr<Flash> m_pFlash;
-	std::unique_ptr<Triangle> m_pTriangle;
-
-	// 死亡時のエフェクトテーブル
-	std::vector<DieEffectData> m_dieEffectTable;
 
 	// 移動
 	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル
@@ -123,8 +110,6 @@ private:
 	int m_laserFrame;						// レーザー発射フレーム
 	int m_cubeLaserIntervalFrame;			// キューブレーザーの発射間隔フレーム
 	int m_dieIdleFrame;						// 死亡時の待機フレーム	
-	int m_dieShakeFrame;					// 死亡時の横揺れ演出を行うフレーム
-	int m_dieEffectIntervalFrame;			// 死亡時のエフェクトの発生間隔
 	int m_dieDrawStopFrame;					// 死亡時の描画を止めるフレーム
 
 	// レーザーのKey

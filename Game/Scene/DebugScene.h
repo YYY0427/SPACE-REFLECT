@@ -27,15 +27,14 @@ private:
 	// ここから飛べるシーン項目
 	enum class SceneItem
 	{
-		TITLE,	// タイトル
-		GAME,	// ゲーム
+		TITLE,			// タイトル
 		STAGE_SELECT,	// ステージセレクト
-		PAUSE,	// ポーズ
-		OPTION,	// オプション
-		RESULT,	// リザルト
-		TEST,	// テスト
-		EXIT,	// 終了
-		NUM		// 項目数
+		PAUSE,			// ポーズ
+		OPTION,			// オプション
+		RESULT,			// リザルト
+		TEST,			// テスト
+		EXIT,			// 終了
+		NUM				// 項目数
 	};
 
 private:

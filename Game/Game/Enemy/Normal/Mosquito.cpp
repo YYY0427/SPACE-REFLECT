@@ -15,9 +15,6 @@ namespace
 	// 判定の閾値（適切な値に調整する必要）
 	constexpr float distance_threshold = 5.0f;  
 
-	// 0.0 = near, 1.0 = far
-	constexpr float near_far_z_pos = 0.9f;
-
 	// モデルの初期の向いている方向
 	const Vector3 init_model_direction = { 0, 0, -1 };
 
@@ -38,14 +35,16 @@ Mosquito::Mosquito(int modelHandle,
 	m_pLaserManager = pLaserManager;
 	m_actionDataList = data.actionDataList;
 	m_isEnabled = true;
-	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({data.pos.x, data.pos.y, near_far_z_pos }));
-	m_pos.z = m_pPlayer->GetPos().z + data.pos.z;
 	m_hp = data.hp;
 	m_moveSpeed = data.speed;
 	m_attackPower = data.attack;
 	m_scale = { data.scale, data.scale, data.scale };
 	m_opacity = 1.0f;
 	m_collisionRadius = hit_radius * m_scale.x;
+
+	// 座標の設定
+	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + data.pos.z) / GetCameraFar();
+	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({data.pos.x, data.pos.y, z }));
 
 	// プレイヤーを向くように回転行列を設定
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
@@ -223,8 +222,11 @@ void Mosquito::GetGoalPos()
 	std::advance(itr, m_movePointIndex);
 
 	// 目的地の設定
-	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ itr->goalPos.x, itr->goalPos.y, near_far_z_pos }));
-	m_goalPos.z = m_pPlayer->GetPos().z + itr->goalPos.z;
+	/*m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ itr->goalPos.x, itr->goalPos.y, near_far_z_pos }));
+	m_goalPos.z = m_pPlayer->GetPos().z + itr->goalPos.z;*/
+
+	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->goalPos.z) / GetCameraFar();
+	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;

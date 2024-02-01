@@ -1,7 +1,7 @@
 #include "Warning.h"
 #include "../Util/DrawFunctions.h"
 #include "../Application.h"
-#include "../StringManager.h"
+#include "../String/MessageManager.h"
 #include <string>
 #include <DxLib.h>
 
@@ -136,7 +136,7 @@ void Warning::Draw()
 	// åxçêï∂éöÇÃï`âÊ
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_stringAlphaParam);
-	StringManager::GetInstance().DrawStringCenter("WarningUI", screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
+	MessageManager::GetInstance().DrawStringCenter("WarningUI", screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

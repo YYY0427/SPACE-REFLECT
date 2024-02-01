@@ -1,5 +1,5 @@
 #include "StringUI.h"
-#include "../StringManager.h"
+#include "../String/MessageManager.h"
 
 // コンストラクタ
 StringUI::StringUI(std::string stringID) :
@@ -17,7 +17,7 @@ StringUI::~StringUI()
 // 描画
 void StringUI::Draw()
 {
-	StringManager::GetInstance().DrawStringCenter(m_stringID, m_pos.x, m_pos.y, m_color);
+	MessageManager::GetInstance().DrawStringCenter(m_stringID, m_pos.x, m_pos.y, m_color);
 }
 
 // 位置の設定

@@ -14,6 +14,8 @@
 #include "../Game/Laser/LaserBase.h"
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/EnemyBase.h"
+#include "../Score/Score.h"
+#include "../String/MessageManager.h"
 #include <DxLib.h>
 
 namespace
@@ -39,6 +41,9 @@ Tutorial::Tutorial()
 	// オブジェクト配置データ読み込み
 	auto& dataReader = DataReaderFromUnity::GetInstance();
 	dataReader.LoadUnityGameObjectData(object_data_file_path.c_str());
+
+	// スコアのインスタンス生成
+	auto& score = Score::GetInstance();
 
 	// インスタンスの作成
 	m_pPlayer = std::make_shared<Player>();
@@ -132,12 +137,11 @@ void Tutorial::Draw()
 	m_pMeteorManager->Draw();	// 隕石
 	m_pEnemyManager->Draw();	// 敵
 	m_pLaserManager->Draw();	// レーザー
-
+	m_pPlayer->Draw();								// プレイヤー
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
-	m_pPlayer->DrawShield();			// シールド
-	m_pPlayer->Draw();					// プレイヤー
-
-	UIManager::GetInstance().Draw();	// UI
+	m_pPlayer->DrawShield();						// シールド
+	UIManager::GetInstance().Draw();				// UI
+	Score::GetInstance().DrawScore();				// スコア
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
@@ -230,7 +234,7 @@ void Tutorial::Collision()
 			laser.pLaser->Reflect(m_pPlayer->GetShield()->GetPos());
 
 			// プレイヤーの反射処理
-			m_pPlayer->OnReflect();
+		//	m_pPlayer->OnReflect();
 		}
 	}
 

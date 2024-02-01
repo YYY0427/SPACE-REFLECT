@@ -102,14 +102,10 @@ public:
 	std::vector<EnemyData> LoadEnemyFileData(std::string filePath);	// 敵
 	std::vector<EnemyActionData> LoadEnemyActionFileData(std::string filePath);	// 敵の行動
 
-	// ボスが倒されたか
-	bool IsDeadBoss() const;
-
-	// 敵のリストの取得
-	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;
-
-	// ボス敵の取得
-	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;
+	// ゲッター
+	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;	// 雑魚敵リスト
+	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;				// ボス敵
+	bool IsDeadBoss() const;											// ボスが倒されたかどうか
 
 private:
 	// ステート
