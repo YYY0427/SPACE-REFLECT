@@ -1,4 +1,7 @@
 #pragma once
+#include "../Scene/SceneBase.h"
+#include <memory>
+#include <string>
 
 /// <summary>
 /// ステージ基底クラス
@@ -7,16 +10,19 @@ class StageBase
 {
 public:
 	// コンストラクタ
-	StageBase();
+	StageBase(SceneManager& manager);
 
 	// デストラクタ
 	virtual ~StageBase();
 
 	// 更新
 	virtual void Update() = 0;
+	void UpdateResult(std::string stageName, std::string playerName);
 
 	// 描画
 	virtual void Draw() = 0;
 
 protected:
+	// シーンマネージャー
+	SceneManager& m_manager;
 };

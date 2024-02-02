@@ -1,4 +1,4 @@
-#include "Tutorial.h"
+#include "Stage1.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../UI/UIManager.h"
 #include "../UI/DamageFlash.h"
@@ -15,7 +15,10 @@
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/EnemyBase.h"
 #include "../Score/Score.h"
+#include "../Score/ScoreRanking.h"
 #include "../String/MessageManager.h"
+#include "../Util/InputState.h"
+#include "../Scene/StageSelectScene.h"
 #include <DxLib.h>
 
 namespace
@@ -31,7 +34,7 @@ namespace
 }
 
 // コンストラクタ
-Tutorial::Tutorial(SceneManager& manager) :
+Stage1::Stage1(SceneManager& manager) :
 	StageBase(manager)
 {
 	// ステートマシンの設定
@@ -55,7 +58,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
 	m_pMeteorManager = std::make_shared<MeteorManager>();
-	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
+	m_pScreenShaker = std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 
 	// UIのインスタンスの作成
@@ -67,12 +70,12 @@ Tutorial::Tutorial(SceneManager& manager) :
 }
 
 // デストラクタ
-Tutorial::~Tutorial()
+Stage1::~Stage1()
 {
 }
 
 // 更新
-void Tutorial::Update()
+void Stage1::Update()
 {
 	// 更新
 	m_stateMachine.Update();	// ステートマシン
@@ -81,7 +84,7 @@ void Tutorial::Update()
 }
 
 // スタート演出の更新
-void Tutorial::UpdateStartAnimation()
+void Stage1::UpdateStartAnimation()
 {
 	// 更新
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
@@ -98,10 +101,10 @@ void Tutorial::UpdateStartAnimation()
 }
 
 // プレイ中の更新
-void Tutorial::UpdatePlay()
+void Stage1::UpdatePlay()
 {
 	static bool isWaveStart = false;
-	if(!isWaveStart)
+	if (!isWaveStart)
 	{
 		m_pEnemyManager->StartWave();
 		isWaveStart = true;
@@ -109,7 +112,7 @@ void Tutorial::UpdatePlay()
 
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos());				// カメラ
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update(m_pCamera->GetPos());			// スカイドーム
@@ -132,19 +135,19 @@ void Tutorial::UpdatePlay()
 }
 
 // ゲームクリアの更新
-void Tutorial::UpdateGameClear()
+void Stage1::UpdateGameClear()
 {
 	m_stateMachine.SetState(State::RESULT);
 }
 
 // リザルトの更新
-void Tutorial::UpdateResult()
+void Stage1::UpdateResult()
 {
-	StageBase::UpdateResult("Tutorial", "UNKO");
+	StageBase::UpdateResult("Stage1", "Test");
 }
 
 // 描画
-void Tutorial::Draw()
+void Stage1::Draw()
 {
 	// 画面揺れの前処理
 	m_pScreenShaker->PreDraw();
@@ -169,16 +172,16 @@ void Tutorial::Draw()
 }
 
 // 当たり判定
-void Tutorial::Collision()
+void Stage1::Collision()
 {
 	// プレイヤーと隕石の当たり判定
 	for (auto& meteor : m_pMeteorManager->GetMeteor())
 	{
 		// 球とメッシュの当たり判定
 		MV1_COLL_RESULT_POLY_DIM result{};
-		result = MV1CollCheck_Sphere(				
-			meteor->GetModelHandle(), 
-			-1, 
+		result = MV1CollCheck_Sphere(
+			meteor->GetModelHandle(),
+			-1,
 			m_pPlayer->GetPos().ToDxLibVector3(),
 			m_pPlayer->GetCollsionRadius());
 
@@ -192,7 +195,7 @@ void Tutorial::Collision()
 			m_pDamageFlash->Start(60, 50, 0xff0000);
 
 			// 画面揺れの演出
-			m_pScreenShaker->StartShake({ meteor_damage * 10.0f, meteor_damage * 10.0f}, 30);
+			m_pScreenShaker->StartShake({ meteor_damage * 10.0f, meteor_damage * 10.0f }, 30);
 		}
 
 		// 当たり判定情報の後始末
@@ -234,7 +237,7 @@ void Tutorial::Collision()
 		{
 			// 反射レーザーの発射位置を取得
 			Vector3 firePos{};
-			if(result.HitFlag)	firePos = Vector3::FromDxLibVector3(result.Position);
+			if (result.HitFlag)	firePos = Vector3::FromDxLibVector3(result.Position);
 			else				firePos = Vector3::FromDxLibVector3(result2.Position);
 
 			// まだ反射レーザーがなければ反射レーザーを追加
@@ -263,7 +266,7 @@ void Tutorial::Collision()
 	for (auto& laser : m_pLaserManager->GetLaserList())
 	{
 		// 反射中レーザーなら判定しない
-		if(laser.pLaser->IsReflect()) continue;	
+		if (laser.pLaser->IsReflect()) continue;
 
 		// レーザーの種類が反射レーザーなら判定しない
 		if (laser.type == LaserType::REFLECT)	continue;
@@ -303,7 +306,7 @@ void Tutorial::Collision()
 	for (auto& laser : m_pLaserManager->GetLaserList())
 	{
 		// 反射中レーザーでなければ判定しない
-		if(laser.type != LaserType::REFLECT) continue;
+		if (laser.type != LaserType::REFLECT) continue;
 
 		// 雑魚敵
 		for (auto& enemy : m_pEnemyManager->GetEnemyList())

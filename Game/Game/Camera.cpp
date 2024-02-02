@@ -26,6 +26,18 @@ namespace
 }
 
 // コンストラクタ
+Camera::Camera(Vector3 pos, Vector3 target) :
+	m_pos(pos),
+	m_target(target),
+	m_perspective(camera_perspective),
+	m_cameraVertical(0.0f),
+	m_cameraHorizon(DX_PI_F),
+	m_isStartAnimation(false),
+	m_hermiteValue(0.0f)
+{
+}
+
+// コンストラクタ
 Camera::Camera(Vector3 playerPos) :
 	m_pos({ playerPos.x + 500, playerPos.y + 100, playerPos.z + 2000}),
 	m_target(playerPos),
@@ -57,12 +69,19 @@ Camera::~Camera()
 }
 
 // 更新
-void Camera::Update(Vector3 playerPos)
+void Camera::Update()
+{
+	// カメラの設定
+	SetCamera();
+}
+
+// プレイ時の更新
+void Camera::UpdatePlay(Vector3 playerPos)
 {
 #if false
 	// TODO : カメラがターゲットぱっと切り替わっちゃうので、スムーズに切り替わるようにする
 	// 特定の角度以上なら補完を入れる
-	
+
 	// プレイヤーの位置方向に少しカメラの注視点をずらす
 	Vector3 tempTarget = m_target;
 
@@ -90,7 +109,7 @@ void Camera::Update(Vector3 playerPos)
 	// Y軸、X軸を無視
 	direction.y = 0.0f;
 	direction.x = 0.0f;
-	
+
 	// カメラとプレイヤーの距離が一定以上離れていたら
 	if (direction.Length() > camera_distance)
 	{
@@ -100,7 +119,7 @@ void Camera::Update(Vector3 playerPos)
 		m_target += (direction * camera_move_speed * m_slowValue);
 	}
 
-	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, {m_pos.x, m_pos.y, m_pos.z + 3000.0f });
+	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, { m_pos.x, m_pos.y, m_pos.z + 3000.0f });
 
 	// カメラの設定
 	SetCamera();

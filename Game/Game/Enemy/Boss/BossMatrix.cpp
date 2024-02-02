@@ -169,6 +169,7 @@ void BossMatrix::Update()
 	if (InputState::IsTriggered(InputType::BOSS_DETH_DEBUG))
 	{
 		m_hp = 0;
+		OnDamage(0, m_pos);
 	}
 #endif
 

@@ -3,6 +3,8 @@
 #include "SceneManager.h"
 #include "DebugScene.h"
 #include "../Util/InputState.h"
+#include "../Score/ScoreRanking.h"
+#include "../Game/Camera.h"
 #include <DxLib.h>
 
 // コンストラクタ
@@ -10,6 +12,8 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	SceneBase(manager),
 	m_currentSelectItem(0)
 {
+	// カメラの生成
+	m_pCamera = std::make_unique<Camera>( Vector3{0, 0, 0}, Vector3{0, 0, 1});
 }
 
 // デストラクタ
@@ -65,4 +69,14 @@ void StageSelectScene::Draw()
 
 	// 現在選択中の項目の横に→を表示
 	DrawString(draw_text_pos_x - text_space_y, draw_text_pos_y + text_space_y * m_currentSelectItem, "→", 0xff0000);
+
+	/*if (ScoreRanking::GetInstance().GetScoreData().size() > m_currentSelectItem)
+	{
+		auto& data = ScoreRanking::GetInstance().GetScoreData()[m_currentSelectItem].scoreSaveData;
+		for (int i = 0; i < data.size(); i++)
+		{
+			DrawString(100, 100 + i * 32, data[i].playerName, 0xffffff);
+			DrawFormatString(300, 100 + i * 32, 0xffffff, "%d", data[i].score);
+		}
+	}*/
 }

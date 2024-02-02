@@ -58,8 +58,19 @@ void Score::AddScore(ScoreType type)
 // スコアの描画
 void Score::DrawScore()
 {
+	// フォントの取得
+	auto data = MessageManager::GetInstance().GetMessageData("ScoreNumber");
+
+	// スコアの文字列の作成
+	std::string str = std::to_string(GetTotalScore());
+	while (str.size() < 4)
+	{
+		str = "0" + str;
+	}
+	str = "SCORE:  " + str;
+
 	// スコアの描画
-	MessageManager::GetInstance().DrawNumberCenter("ScoreNumber", GetTotalScore(), 100, 50, 0xffffff);
+	DrawStringToHandle(10, 10, str.c_str(), 0xffffff, data.fontHandle);
 }
 
 // インスタンスの取得

@@ -1,5 +1,9 @@
 #pragma once
 #include "SceneBase.h"
+#include <memory>
+
+// プロトタイプ宣言
+class Camera;
 
 // ステージ項目
 enum class Stage
@@ -21,10 +25,10 @@ public:
 	/// </summary>
 	/// <param name="manager">シーンマネージャー</param>
 	StageSelectScene(SceneManager& manager);
-	
+
 	// デストラクタ
 	~StageSelectScene();
-	
+
 	// 更新
 	void Update() override final;
 
@@ -32,6 +36,9 @@ public:
 	void Draw() override final;
 
 private:
+	// ポインタ
+	std::unique_ptr<Camera> m_pCamera;
+
 	// 選択されている項目
 	int m_currentSelectItem;
 };

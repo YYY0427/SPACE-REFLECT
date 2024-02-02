@@ -263,6 +263,12 @@
     <ClCompile Include="String\Font.cpp">
       <Filter>ソース ファイル\String</Filter>
     </ClCompile>
+    <ClCompile Include="Util\FileUtil.cpp">
+      <Filter>ソース ファイル\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage\Stage1.cpp">
+      <Filter>ソース ファイル\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -474,6 +480,12 @@
     </ClInclude>
     <ClInclude Include="String\Font.h">
       <Filter>ソース ファイル\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\FileUtil.h">
+      <Filter>ソース ファイル\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage\Stage1.h">
+      <Filter>ソース ファイル\Stage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

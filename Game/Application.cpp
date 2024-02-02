@@ -11,6 +11,7 @@
 #include "String/Font.h"
 #include "Util/InputState.h"
 #include "MyDebug/DebugText.h"
+#include "Score/ScoreRanking.h"
 #include <string>
 #include <memory>
 
@@ -102,19 +103,19 @@ bool Application::Init()
 //	SetUseASyncLoadFlag(TRUE);
 
 	// csvファイルに沿ってサウンドをロード
-	auto& soundManager = SoundManager::GetInstance();
-	soundManager.LoadAndStoreSoundFileData();
+	SoundManager::GetInstance().LoadAndStoreSoundFileData();
 
 	// フォントのロード
 	Font::Load();
 
-	// csvファイルに沿って文字列をロード
-	auto& messageManager = MessageManager::GetInstance();
-	messageManager.LoadAndStoreStringFileData();
+	// スコアランキングのロード
+	ScoreRanking::GetInstance().LoadScore();
+
+	// メッセージをロード
+	MessageManager::GetInstance().LoadAndStoreStringFileData();
 
 	// Effekseerの初期化
-	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.Init();
+	Effekseer3DEffectManager::GetInstance().Init();
 
 	// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ
 	// Effekseerを使用する場合は必ず設定する
@@ -207,19 +208,19 @@ void Application::Run()
 void Application::End()
 {
 	// サウンドをすべて止める
-	auto& soundManager = SoundManager::GetInstance();
-	soundManager.StopAllSound();
+	SoundManager::GetInstance().StopAllSound();
 
 	// Effekseerの終了処理
-	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.End();
+	Effekseer3DEffectManager::GetInstance().End();
 
 	// フォントの終了処理
 	Font::UnLoad();
 
+	// スコアランキングのセーブ
+	ScoreRanking::GetInstance().SaveScore();
+
 	// MessageManagerの終了処理
-	auto& messageManager = MessageManager::GetInstance();
-	messageManager.End();
+	MessageManager::GetInstance().End();
 
 	// DebugTextの終了処理
 	DebugText::End();

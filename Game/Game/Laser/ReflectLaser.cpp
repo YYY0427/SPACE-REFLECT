@@ -15,7 +15,7 @@ namespace
 	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
 	// 移動速度
-	constexpr float move_speed = 25.0f;	
+	constexpr float move_speed = 50.0f;	
 }
 
 // コンストラクタ

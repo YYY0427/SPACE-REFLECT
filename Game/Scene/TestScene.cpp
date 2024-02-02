@@ -7,12 +7,12 @@
 #include "../Transitor/PushTransitor.h"
 #include "../Transitor/StripTransitor.h"
 #include "../UI/Warning.h"
+#include "../Util/FileUtil.h"
 #include "DxLib.h"
 
 namespace
 {
-	constexpr int kStretchWindowWidth = 640;
-	constexpr int kStretchWindowHeight = 180;
+	const std::string file_extension = ".bmp";
 }
 
 // コンストラクタ
@@ -25,6 +25,9 @@ TestScene::TestScene(SceneManager& manager) :
 
 	// 警告UIの設定
 	m_pWarning = std::make_unique<Warning>(200);
+
+	// ファイル名の一括読み込み
+	m_fileNames = FileUtil::LoadFileNames("Data/Test", file_extension);
 }
 
 // デストラクタ
@@ -54,6 +57,16 @@ void TestScene::Draw()
 
 	// 警告UIの描画
 	m_pWarning->Draw();
+
+	int i = 0;
+	for (int i = 0; i < m_fileNames.size(); i++)
+	{
+		// 拡張子を削除
+		m_fileNames[i] = m_fileNames[i].substr(0, m_fileNames[i].size() - file_extension.size());
+
+		// ファイル名の描画
+		DrawString(0, 50 + (i * 20), m_fileNames[i].c_str(), 0xffffff);
+	}
 
 	// 画面切り替え演出の描画
 	m_pTransitor->Draw();

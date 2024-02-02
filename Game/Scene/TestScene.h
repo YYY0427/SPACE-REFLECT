@@ -1,5 +1,7 @@
 #pragma once
 #include "SceneBase.h"
+#include <string>
+#include <vector>
 
 // プロトタイプ宣言
 class Warning;
@@ -29,4 +31,6 @@ public:
 private:
 	// 警告UI
 	std::unique_ptr<Warning> m_pWarning;
+
+	std::vector<std::string> m_fileNames;
 };

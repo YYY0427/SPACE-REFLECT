@@ -1,4 +1,5 @@
 #pragma once
+#include "../Scene/SceneManager.h"
 #include "StageBase.h"
 #include "../StateMachine.h"
 #include <string>
@@ -17,16 +18,16 @@ class LaserManager;
 class EnemyManager;
 
 /// <summary>
-/// チュートリアルステージクラス
+/// ステージ1
 /// </summary>
-class Tutorial final : public StageBase
+class Stage1 final : public StageBase
 {
 public:
 	// コンストラクタ
-	Tutorial(SceneManager& manager);
+	Stage1(SceneManager& manager);
 
 	// デストラクタ
-	~Tutorial();
+	~Stage1();
 
 	// 更新
 	void Update() override final;
