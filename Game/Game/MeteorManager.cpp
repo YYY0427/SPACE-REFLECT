@@ -10,14 +10,14 @@ namespace
 }
 
 // コンストラクタ
-MeteorManager::MeteorManager() :
+MeteorManager::MeteorManager(std::string objectDataFileName) :
 	m_createIntervalFrameTimer(0)
 {
 	// モデルの読み込み
 	m_modelHandle = my::MyLoadModel(model_file_path.c_str());
 
 	// 配置データが存在する場合は配置データから隕石を生成
-	auto& data = DataReaderFromUnity::GetInstance().GetData("Meteor");
+	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Meteor");
 	for (auto& meteorData : data)
 	{
 		m_pMeteorList.push_back(std::make_shared<Meteor>(m_modelHandle, meteorData));

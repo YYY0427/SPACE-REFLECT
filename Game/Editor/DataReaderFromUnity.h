@@ -29,7 +29,7 @@ public:
 	static DataReaderFromUnity& GetInstance();
 
 	// 読み取ったデータの取得
-	const std::vector<UnityGameObject>& GetData(std::string objectName) const;
+	const std::vector<UnityGameObject>& GetData(std::string fileName, std::string objectName) const;
 
 private:
 	// コンストラクタ
@@ -42,5 +42,7 @@ private:
 private:
 	// 読み取ったデータ
 	// ここにデータを格納する
-	std::map<std::string, std::vector<UnityGameObject>> m_data;
+//	std::map<std::string, std::vector<UnityGameObject>> m_data;
+
+	std::map<std::string, std::map<std::string, std::vector<UnityGameObject>>> m_data;
 };

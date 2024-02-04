@@ -6,47 +6,37 @@
 
 namespace
 {
-	// 太陽のモデルのファイルパス
+	// モデルのファイルパス
 	const std::string sun_model_file_path = "Data/Model/Sun.mv1";
-
-	// 地球のモデルのファイルパス
 	const std::string earth_model_file_path = "Data/Model/Earth.mv1";
-
-	// 月のモデルのファイルパス
 	const std::string moon_model_file_path = "Data/Model/Moon.mv1";
 }
 
 // コンストラクタ
-PlanetManager::PlanetManager()
+PlanetManager::PlanetManager(std::string objectDataFileName)
 {
 	// モデルのロード
-	m_modelHandleTable["Earth"] = my::MyLoadModel(earth_model_file_path.c_str());
-//	m_modelHandleTable["Sun"] = my::MyLoadModel(sun_model_file_path.c_str());
-//	m_modelHandleTable["Moon"] = my::MyLoadModel(moon_model_file_path.c_str());
+	m_planetData[PlanetType::EARTH].modelHandle = my::MyLoadModel(earth_model_file_path.c_str());
+	m_planetData[PlanetType::EARTH].name = "Earth";
+	m_planetData[PlanetType::MOON].modelHandle = my::MyLoadModel(moon_model_file_path.c_str());
+	m_planetData[PlanetType::MOON].name = "Moon";
 
 	// インスタンスの取得
 	auto& dataReader = DataReaderFromUnity::GetInstance();
 
-	// 太陽のインスタンスの作成
-	/*auto& sunData = dataReader.GetData("Sun");
-	for (auto& sun : sunData)
-	{
-		m_pPlanet.push_back(std::make_shared<Planet>(m_modelHandleTable["Sun"], sun));
-	}*/
-
 	// 地球のインスタンスの作成
-	auto& earthData = dataReader.GetData("Earth");
+	auto& earthData = dataReader.GetData(objectDataFileName, m_planetData[PlanetType::EARTH].name);
 	for (auto& earth : earthData)
 	{
-		m_pPlanet.push_back(std::make_shared<Planet>(m_modelHandleTable["Earth"], earth));
+		m_planetData[PlanetType::EARTH].pPlanet = std::make_shared<Planet>(m_planetData[PlanetType::EARTH].modelHandle, earth);
 	}
 
 	// 月のインスタンスの作成
-	/*auto& moonData = dataReader.GetData("Moon");
+	auto& moonData = dataReader.GetData(objectDataFileName, m_planetData[PlanetType::MOON].name);
 	for (auto& moon : moonData)
 	{
-		m_pPlanet.push_back(std::make_shared<Planet>(m_modelHandleTable["Moon"], moon));
-	}*/
+		m_planetData[PlanetType::MOON].pPlanet = std::make_shared<Planet>(m_planetData[PlanetType::MOON].modelHandle, moon);
+	}
 }
 
 // デストラクタ
@@ -57,26 +47,32 @@ PlanetManager::~PlanetManager()
 // スタート演出の更新
 void PlanetManager::UpdateStart(Vector3 playerVec)
 {
-	for (auto& planet : m_pPlanet)
+	for (auto& planet : m_planetData)
 	{
-		planet->UpdateStart(playerVec);
+		planet.second.pPlanet->UpdateStart(playerVec);
 	}
 }
 
 // 更新
 void PlanetManager::Update()
 {
-	for (auto& planet : m_pPlanet)
+	for (auto& planet : m_planetData)
 	{
-		planet->Update();
+		planet.second.pPlanet->Update();
 	}
 }
 
 // 描画
 void PlanetManager::Draw()
 {
-	for (auto& planet : m_pPlanet)
+	for (auto& planet : m_planetData)
 	{
-		planet->Draw();
+		planet.second.pPlanet->Draw();
 	}
+}
+
+// タイプから惑星のポインタを取得
+std::shared_ptr<Planet> PlanetManager::GetPlanet(PlanetType type) const
+{
+	return m_planetData.at(type).pPlanet;
 }

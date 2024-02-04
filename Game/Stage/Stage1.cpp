@@ -52,12 +52,12 @@ Stage1::Stage1(SceneManager& manager) :
 	auto& score = Score::GetInstance();
 
 	// インスタンスの作成
-	m_pPlayer = std::make_shared<Player>();
+	m_pPlayer = std::make_shared<Player>(object_data_file_path);
 	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
-	m_pPlanetManager = std::make_shared<PlanetManager>();
+	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_path);
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-	m_pMeteorManager = std::make_shared<MeteorManager>();
+	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_path);
 	m_pScreenShaker = std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 

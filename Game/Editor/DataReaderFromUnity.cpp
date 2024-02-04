@@ -25,14 +25,11 @@ DataReaderFromUnity::~DataReaderFromUnity()
 // Unityで配置したオブジェクトのデータを読み取る
 void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 {
-	// ファイル名の階層を付ける
-	fileName = file_hierarchy + fileName;
-
-	// 拡張子を付ける
-	fileName += extension;
+	// ファイルパスの作成
+	std::string filePath = file_hierarchy + fileName + extension;
 
 	// ファイルにアクセス
-	auto dataHandle = FileRead_open(fileName.c_str());
+	auto dataHandle = FileRead_open(filePath.c_str());
 
 	// データ数を得る
 	int dataNum = 0;
@@ -77,8 +74,9 @@ void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 		result = FileRead_read(&data.scale, sizeof(data.scale), dataHandle);
 		assert(result != -1);
 
+		// ファイル名ごとに保存
 		// オブジェクトの名前ごとに保存
-		m_data[data.name].push_back(data);
+		m_data[fileName][data.name].push_back(data);
 	}
 
 	// ファイルを閉じる
@@ -94,13 +92,21 @@ DataReaderFromUnity& DataReaderFromUnity::GetInstance()
 }
 
 // オブジェクトの名前からデータを取得
-const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(std::string objectName) const
+const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(std::string fileName, std::string objectName) const
 {
-	// データが見つかったか
-	if (m_data.find(objectName) != m_data.end())
+	// ファイル名からデータを取得
+	auto it = m_data.find(fileName);
+	assert(it != m_data.end() && "ファイルデータがないです");
+
+	// オブジェクトの名前からデータを取得
+	auto it2 = it->second.find(objectName);
+	if (it2 == it->second.end())
 	{
-		return m_data.find(objectName)->second;
+		// データがない場合は空のデータを返す
+		std::vector<UnityGameObject> empty;
+		return empty;
 	}
-	// データが見つからなかった
-	return std::vector<UnityGameObject>();
+
+	// データを返す
+	return it2->second;
 }

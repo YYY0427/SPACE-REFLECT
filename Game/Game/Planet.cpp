@@ -69,3 +69,9 @@ void Planet::Draw()
 {
 	m_pModel->Draw();
 }
+
+// ƒQƒbƒ^[
+Vector3 Planet::GetPos() const
+{
+	return m_pos;
+}

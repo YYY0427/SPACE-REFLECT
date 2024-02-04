@@ -4,6 +4,7 @@
 #include <deque>
 #include "../Math/Vector3.h"
 #include "../Util/Timer.h"
+#include <string>
 
 // プロトタイプ宣言
 class Model;
@@ -18,7 +19,7 @@ class Player
 {
 public:
 	// コンストラクタ
-	Player();
+	Player(std::string objectDataFileName);
 
 	// デストラクタ
 	~Player();

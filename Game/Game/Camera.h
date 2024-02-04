@@ -15,7 +15,7 @@ public:
 	~Camera();
 
 	// 更新
-	void Update();								// 通常時の更新
+	void Update(Vector3 pos, Vector3 target);	// 通常時の更新
 	void UpdatePlay(Vector3 playerPos);			// プレイ時の更新
 	void UpdateStart(Vector3 playerPos);		// スタート演出時の更新
 	void GameClearUpdate(Vector3 playerPos);	// ゲームクリア時の更新

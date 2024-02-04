@@ -3,6 +3,7 @@
 #include <fstream>
 #include <algorithm>
 #include <filesystem>
+#include <DxLib.h>
 
 namespace
 {
@@ -200,4 +201,18 @@ ScoreRanking& ScoreRanking::GetInstance()
 const std::vector<StageScore>& ScoreRanking::GetScoreData() const
 {
 	return m_scoreSaveData;
+}
+
+// スコアデータの取得
+const std::vector<ScoreSaveData>& ScoreRanking::GetScoreData(const std::string& stageName) const
+{
+	// ステージ名が一致するものを返す
+	for (auto& stageScore : m_scoreSaveData)
+	{
+		if (stageScore.stageName == stageName)
+		{
+			return stageScore.scoreSaveData;
+		}
+	}
+	return std::vector<ScoreSaveData>();
 }

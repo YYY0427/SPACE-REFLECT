@@ -7,6 +7,20 @@
 // プロトタイプ宣言
  class Planet;
 
+ // 惑星の種類
+ enum class PlanetType
+ {
+	 MOON,
+	 EARTH,
+	 MARS,
+	 JUPITER,
+	 SATURN,
+	 URANUS,
+	 NEPTUNE,
+	 PLUTO,
+	 NUM
+ };	
+
 /// <summary>
 /// 惑星を管理するクラス
 /// </summary>
@@ -14,7 +28,7 @@ class PlanetManager
 {
 public:
 	// コンストラクタ
-	PlanetManager();
+	PlanetManager(std::string objectDataFileName);
 
 	// デストラクタ
 	~PlanetManager();
@@ -26,10 +40,24 @@ public:
 	// 描画
 	void Draw();
 
-private:
-	// 惑星
-	std::vector<std::shared_ptr<Planet>> m_pPlanet;
+	// ゲッター
+	std::shared_ptr<Planet> GetPlanet(PlanetType type) const;
 
-	// モデルのデータ
-	std::map<std::string, int> m_modelHandleTable;
+private:
+	// 惑星のデータ
+	struct PlanetData
+	{
+		// モデルハンドル
+		int modelHandle;
+
+		// 名前
+		std::string name;
+
+		// ポインタ
+		std::shared_ptr<Planet> pPlanet;
+	};
+
+private:
+	// 惑星のデータ
+	std::map<PlanetType, PlanetData> m_planetData;
 };

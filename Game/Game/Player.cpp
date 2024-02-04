@@ -14,7 +14,6 @@
 #include "../UI/UIManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
-#include <string>
 #include <algorithm>
 
 namespace
@@ -84,7 +83,7 @@ namespace
 }
 
 //  コンストラクタ
-Player::Player() :
+Player::Player(std::string objectDataFileName) :
 	m_moveVec(0, 0, 0),
 	m_hp(max_hp),
 	m_ultimateTimer(0),
@@ -99,7 +98,7 @@ Player::Player() :
 	m_opacity(1.0f)
 {
 	// データの読み込み
-	auto& data = DataReaderFromUnity::GetInstance().GetData("Player");
+	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
 	m_pos = data.front().pos;
 	m_rot = data.front().rot;
 	m_scale = data.front().scale;

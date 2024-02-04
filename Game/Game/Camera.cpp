@@ -69,8 +69,12 @@ Camera::~Camera()
 }
 
 // 更新
-void Camera::Update()
+void Camera::Update(Vector3 pos, Vector3 target)
 {
+	// カメラの座標と注視点の更新
+	m_pos = pos;
+	m_target = target;
+
 	// カメラの設定
 	SetCamera();
 }

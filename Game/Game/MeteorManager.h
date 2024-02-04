@@ -11,7 +11,7 @@ class MeteorManager
 {
 public:
 	// コンストラクタ
-	MeteorManager();
+	MeteorManager(std::string objectDataFileName);
 
 	// デストラクタ
 	~MeteorManager();
