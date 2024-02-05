@@ -36,8 +36,8 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_stageData[Stage::STAGE_1].stageName = "Stage1";
 
 	// 惑星の設定
-	m_stageData[Stage::TUTORIAL].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::MOON);
-	m_stageData[Stage::STAGE_1].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::EARTH);
+//	m_stageData[Stage::TUTORIAL].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::MOON);
+//	m_stageData[Stage::STAGE_1].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::EARTH);
 }
 
 // デストラクタ
@@ -86,8 +86,18 @@ void StageSelectScene::Update()
 // カメラの更新
 void StageSelectScene::UpdateCamera()
 {
-	auto stageData = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
-	m_pCamera->Update({ stageData.x, stageData.y, stageData.z - 5000.0f }, stageData);
+	Vector3 cameraGoalPos{};
+	switch(static_cast<Stage>(m_currentSelectItem))
+	{ 
+	case Stage::TUTORIAL:
+		cameraGoalPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "MoonCamera")[0].pos;
+		m_pCamera->Update({ cameraGoalPos.x, cameraGoalPos.y, cameraGoalPos.z }, Vector3(cameraGoalPos.x, cameraGoalPos.y, cameraGoalPos.z + 10.0f));
+		break;
+	case Stage::STAGE_1:
+		cameraGoalPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "EarthCamera")[0].pos;
+		m_pCamera->Update({ cameraGoalPos.x, cameraGoalPos.y, cameraGoalPos.z }, Vector3(cameraGoalPos.x, cameraGoalPos.y, cameraGoalPos.z + 10.0f));
+		break;
+	}
 }
 
 // 描画
