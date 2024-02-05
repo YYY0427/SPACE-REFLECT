@@ -1,5 +1,6 @@
 #include "OptionScene.h"
 #include "SceneManager.h"
+#include "StageSelectScene.h"
 #include "../Util/DrawFunctions.h"
 #include "../Util/InputState.h"
 #include "../SaveData.h"
@@ -114,13 +115,21 @@ void OptionScene::Update()
 		assert(false);
 	}
 
-	// 戻るボタンが押されたとき
-	if (InputState::IsTriggered(InputType::BACK))
+	// 
+	if (InputState::IsTriggered(InputType::LEFT_SHERDER))
 	{
 		// 終了
 		m_manager.PopScene();
 		return;
 	}
+
+	// 戻るボタンが押されたとき
+	//if (InputState::IsTriggered(InputType::BACK))
+	//{
+	//	// 終了
+	//	m_manager.PopScene();
+	//	return;
+	//}
 
 	// 画面切り替え演出の更新
 	m_pTransitor->Update();

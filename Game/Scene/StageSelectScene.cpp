@@ -1,6 +1,7 @@
 #include "StageSelectScene.h"
 #include "GameScene.h"
 #include "SceneManager.h"
+#include "OptionScene.h"
 #include "DebugScene.h"
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
@@ -100,6 +101,8 @@ void StageSelectScene::Update()
 	UpdateCamera();
 	m_pPlanetManager->Update();
 	m_pSkyDome->SetPos(m_pCamera->GetPos());
+
+	// スコアランキングのアルファ値の更新
 	for (int i = m_rankingAlpha.size() - 1; i >= 0; i--)
 	{
 		if (i == m_rankingAlpha.size() - 1)
@@ -115,6 +118,11 @@ void StageSelectScene::Update()
 		}
 	}
 	
+	if (InputState::IsTriggered(InputType::RIGTH_SHERDER))
+	{
+		m_manager.PushScene(std::make_shared<OptionScene>(m_manager));
+		return;
+	}
 
 	// 決定ボタンが押されたらシーン遷移
 	if (InputState::IsTriggered(InputType::DECISION))

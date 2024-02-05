@@ -15,6 +15,8 @@ enum class InputType
 	DOWN,		// 下
 	RIGHT,		// 右
 	LEFT,		// 左
+	RIGTH_SHERDER,	// 右ショルダー
+	LEFT_SHERDER,	// 左ショルダー
 
 	// デバッグ用
 	NORMAL_ENEMY_DEBUG,	// 雑魚敵を自由に動かせる

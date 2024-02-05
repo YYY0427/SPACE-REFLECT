@@ -18,6 +18,8 @@ namespace InputState
 		m_inputMapTable[InputType::SLOW] = { {InputCategory::PAD, XINPUT_BUTTON_B } };				// スロー
 		m_inputMapTable[InputType::BOOST] = { {InputCategory::PAD, XINPUT_BUTTON_A } };				// ブースト
 		m_inputMapTable[InputType::SHIELD] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };  // シールド
+		m_inputMapTable[InputType::RIGTH_SHERDER] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };  // 右ショルダー
+		m_inputMapTable[InputType::LEFT_SHERDER] = { {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };  // 左ショルダー
 		m_inputMapTable[InputType::UP] = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_UP },			// PAD↑
 												 {InputCategory::KEYBORD, KEY_INPUT_UP} };				// KEY↑
 		m_inputMapTable[InputType::DOWN] = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_DOWN },		// PAD↓
