@@ -52,8 +52,8 @@ private:
 		// ステージ名
 		std::string stageName;
 
-		// 惑星のポインタ
-		std::shared_ptr<Planet> pPlanet;
+		// カメラの位置
+		Vector3 cameraPos;
 	};
 
 private:
@@ -61,6 +61,12 @@ private:
 	std::unique_ptr<Camera> m_pCamera;
 	std::unique_ptr<PlanetManager> m_pPlanetManager;
 	std::unique_ptr<SkyDome> m_pSkyDome;
+
+	Vector3 m_cameraStartPos;
+	Vector3 m_cameraGoalPos;
+	Vector3 m_cameraGoalTargetPos;
+	float m_easeTime;
+	bool m_isInput;
 
 	// 選択されている項目
 	int m_currentSelectItem;
@@ -70,5 +76,6 @@ private:
 
 	// スコアランキング
 	std::vector<ScoreSaveData> m_scoreRanking;
+	std::vector<int> m_rankingAlpha;
 };
 

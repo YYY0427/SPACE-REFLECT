@@ -23,6 +23,9 @@ public:
 	// 描画
 	void Draw();
 
+	// セッター
+	void SetPos(Vector3 pos);
+
 private:
 	// ポインタ
 	std::unique_ptr<Model> m_pModel;

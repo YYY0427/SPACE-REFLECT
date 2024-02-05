@@ -48,10 +48,7 @@ private:
 	struct PlanetData
 	{
 		// モデルハンドル
-		int modelHandle;
-
-		// 名前
-		std::string name;
+		int modelHandle = -1;
 
 		// ポインタ
 		std::shared_ptr<Planet> pPlanet;

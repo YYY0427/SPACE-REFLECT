@@ -33,3 +33,5 @@ PausetemSelectBarLeft,],マキナス 4 Square,20,3
 WarningUI,WARNING!!,マキナス 4 Square,100,10
 BossMatrixName,MATRIX,マキナス 4 Square,40,10
 ScoreNumber,-,マキナス 4 Square,30,9
+RankingFont,-,マキナス 4 Square,20,9
+RankingTitle,RANKING,マキナス 4 Square,25,9

@@ -47,3 +47,10 @@ void SkyDome::Draw()
 {
 	m_pModel->Draw();
 }
+
+// À•W‚ÌÝ’è
+void SkyDome::SetPos(Vector3 pos)
+{
+	m_pos = pos;
+	m_pModel->SetPos(m_pos);
+}

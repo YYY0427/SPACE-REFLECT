@@ -123,6 +123,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &744016616
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 744016617}
+  m_Layer: 0
+  m_Name: EarthCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &744016617
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744016616}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 338.1, y: 83.6, z: -45.2}
+  m_LocalScale: {x: 1.227928, y: 1.227928, z: 1.227928}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 880826911}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &880826910
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,12 +178,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880826910}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 27.253, y: -45.788, z: 35.28}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.81438, y: 0.81438, z: 0.81438}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 907615582}
   - {fileID: 7564405329091260266}
+  - {fileID: 1212493126}
+  - {fileID: 744016617}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,15 +206,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8767099359527617177, guid: 488cef4c888e9d446a732a2f53388255, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 186
+      value: 287.4
       objectReference: {fileID: 0}
     - target: {fileID: 8767099359527617177, guid: 488cef4c888e9d446a732a2f53388255, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 56.198643
+      value: 84.4
       objectReference: {fileID: 0}
     - target: {fileID: 8767099359527617177, guid: 488cef4c888e9d446a732a2f53388255, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 90
+      value: 72.8
       objectReference: {fileID: 0}
     - target: {fileID: 8767099359527617177, guid: 488cef4c888e9d446a732a2f53388255, type: 3}
       propertyPath: m_LocalRotation.w
@@ -218,6 +251,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8767099359527617177, guid: 488cef4c888e9d446a732a2f53388255, type: 3}
   m_PrefabInstance: {fileID: 907615581}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1212493125
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1212493126}
+  m_Layer: 0
+  m_Name: MoonCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1212493126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212493125}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 39.2, y: 83.9, z: 2.9}
+  m_LocalScale: {x: 1.227928, y: 1.227928, z: 1.227928}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 880826911}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1646487629
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +333,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -295,7 +359,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646487629}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 308.5, y: 27.4, z: 32.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

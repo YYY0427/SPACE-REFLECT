@@ -133,7 +133,7 @@ void ScoreRanking::CreateNewScoreData(const std::string& stageName, std::string 
 		// ÉXÉRÉAÇÃí«â¡
 		ScoreSaveData scoreData{};
 		strcpy_s(scoreData.playerName, playerName.c_str());
-		if (playerName == "") strcpy_s(scoreData.playerName, "NoName");
+		if (playerName == "") strcpy_s(scoreData.playerName, "NO NAME");
 		scoreData.score = score;
 		stageScore.scoreSaveData.push_back(scoreData);
 	}
@@ -142,7 +142,7 @@ void ScoreRanking::CreateNewScoreData(const std::string& stageName, std::string 
 	for (int i = 0; i < score_ranking_max; i++)
 	{
 		ScoreSaveData scoreData{};
-		strcpy_s(scoreData.playerName, "NoName");
+		strcpy_s(scoreData.playerName, "NO NAME");
 		scoreData.score = 0;
 		stageScore.scoreSaveData.push_back(scoreData);
 	}
