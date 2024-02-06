@@ -11,7 +11,7 @@ class Mosquito final : public EnemyBase
 {
 public:
 	// コンストラクタ
-	Mosquito(int modelHandle, EnemyData data, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
+	Mosquito(EnemyData data, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
 
 	// デストラクタ
 	~Mosquito();

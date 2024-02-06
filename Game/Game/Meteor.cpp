@@ -3,6 +3,7 @@
 #include "../Application.h"
 #include "../Math/Vector2.h"
 #include "../Math/MathUtil.h"
+#include "../ModelHandleManager.h"
 #include <DxLib.h>
 
 namespace
@@ -17,13 +18,13 @@ namespace
 
 // コンストラクタ
 // ランダムに生成、プレイヤーの方向に移動
-Meteor::Meteor(int modelHandle, Vector3 playerPos) :
+Meteor::Meteor(Vector3 playerPos) :
 	m_rot({ 0, 0, 0 }),
 	m_slowValue(1.0f),
 	m_isEnabled(true)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(modelHandle);
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
 
 	// 画面内にランダムに生成
 	Vector3 screenPos{};
@@ -57,7 +58,7 @@ Meteor::Meteor(int modelHandle, Vector3 playerPos) :
 
 // コンストラクタ
 // 配置データ通りに生成、移動しない
-Meteor::Meteor(int modelHandle, UnityGameObject data):
+Meteor::Meteor(UnityGameObject data):
 	m_pos(data.pos),
 	m_rot(data.rot),
 	m_scale(data.scale),
@@ -67,7 +68,7 @@ Meteor::Meteor(int modelHandle, UnityGameObject data):
 	m_rotVec({ 0, 0, 0 })
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(modelHandle);
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
 
 	// モデルの設定
 	m_pModel->SetPos(m_pos);			// 位置

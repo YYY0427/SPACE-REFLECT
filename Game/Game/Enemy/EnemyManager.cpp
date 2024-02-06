@@ -24,10 +24,6 @@ namespace
 	// ファイルの拡張子
 	const std::string file_extension = ".csv";				
 
-	// 敵のモデルのファイルパス
-	const std::string mosquito_model_file_path = "Data/Model/Mosquito.mv1";	// 蚊
-	const std::string matrix_model_file_path = "Data/Model/Matrix.mv1";		// マトリックス
-
 	// ボス敵登場時の警告のフレーム
 	constexpr int warning_frame = 180;
 }
@@ -38,19 +34,12 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	m_isNextWave(false),
 	m_isLoadWave(false),
 	m_isDeadBoss(false),
+	m_isBoss(false),
 	m_pPlayer(pPlayer),
 	m_pLaserManager(pLaserManager),
 	m_pScreenShaker(pScreenShaker),
 	m_bossType(BossEnemyType::NONE)
 {
-	// 雑魚敵モデルハンドルの読み込み
-	m_modelHandleTable[EnemyType::MOSQUITO] = my::MyLoadModel(mosquito_model_file_path.c_str());
-	
-	// ボス敵モデルハンドルの読み込み
-	m_bossModelHandleTable[BossEnemyType::NONE] = -1;
-	m_bossModelHandleTable[BossEnemyType::MOSQUITO] = m_modelHandleTable[EnemyType::MOSQUITO];
-	m_bossModelHandleTable[BossEnemyType::MATRIX] = my::MyLoadModel(matrix_model_file_path.c_str());
-
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::NORMAL, {}, [this]() {UpdateNormal(); }, {});
 	m_stateMachine.AddState(State::WARNING, {}, [this]() {UpdateWarning(); }, {});
@@ -60,17 +49,6 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 // デストラクタ
 EnemyManager::~EnemyManager()
 {
-	// 雑魚敵のモデルハンドルの解放
-	for (auto& model : m_modelHandleTable)
-	{
-		MV1DeleteModel(model.second);
-	}
-
-	// ボス敵のモデルハンドルの解放
-	for (auto& model : m_bossModelHandleTable)
-	{
-		MV1DeleteModel(model.second);
-	}
 }
 
 // 更新
@@ -231,7 +209,6 @@ void EnemyManager::AddEnemy(EnemyData data)
 	// 蚊
 	case EnemyType::MOSQUITO:
 		m_pEnemyList.push_back(std::make_shared<Mosquito>(
-			m_modelHandleTable[data.type], 
 			data,
 			m_pPlayer,
 			m_pLaserManager));
@@ -257,14 +234,12 @@ void EnemyManager::AddBossEnemy(BossEnemyType type)
 	{	
 	case BossEnemyType::MOSQUITO:
 		m_pBossEnemy = std::make_shared<BossMosquito>(
-			m_bossModelHandleTable[type],
 			m_pPlayer,
 			m_pLaserManager);
 		break;
 
 	case BossEnemyType::MATRIX:
 		m_pBossEnemy = std::make_shared<BossMatrix>(
-			m_bossModelHandleTable[type],
 			m_pPlayer,
 			m_pLaserManager,
 			m_pScreenShaker);

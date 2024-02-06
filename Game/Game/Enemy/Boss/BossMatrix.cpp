@@ -15,6 +15,7 @@
 #include "../../../Util/InputState.h"
 #include "../../../MyDebug/DebugText.h"
 #include "../../../Score/Score.h"
+#include "../../../ModelHandleManager.h"
 #include <random>
 #include <algorithm>
 #include <cmath>
@@ -93,7 +94,7 @@ namespace
 }
 
 // コンストラクタ
-BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager, std::shared_ptr<ScreenShaker> pScreenShaker) :
+BossMatrix::BossMatrix(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager, std::shared_ptr<ScreenShaker> pScreenShaker) :
 	m_attackStateIndex(0),
 	m_isMoveEnd(false),
 	m_idleFrame(0),
@@ -147,7 +148,7 @@ BossMatrix::BossMatrix(int modelHandle, std::shared_ptr<Player> pPlayer, std::sh
 	UIManager::GetInstance().AddUI("BossName", m_pBossName, 2, { 0, -1 });
 
 	// モデル設定
-	m_pModel = std::make_shared<Model>(modelHandle);	// インスタンス生成
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::MATRIX));	// インスタンス生成
 	m_pModel->SetUseCollision(true);					// 当たり判定設定
 	m_pModel->SetOpacity(m_opacity);					// 不透明度	
 	m_pModel->SetScale(model_scale);					// 拡大率

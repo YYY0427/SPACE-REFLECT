@@ -3,6 +3,7 @@
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Model.h"
 #include "../Shield.h"
+#include "../../ModelHandleManager.h"
 
 namespace
 {
@@ -19,7 +20,7 @@ namespace
 }
 
 // コンストラクタ
-ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
+ReflectLaser::ReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
 {
 	// 初期化
 	m_pShield = pShield;
@@ -43,7 +44,7 @@ ReflectLaser::ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std
 		m_laserEffectHandle, EffectID::reflect_laser, &m_pos, effect_scale, 1.0f, rotEffectMtx.ToEulerAngle());
 
 	// モデルの設定
-	m_pModel = std::make_shared<Model>(modelHandle);	// インスタンス生成
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::LASER));	// インスタンス生成
 	m_pModel->SetUseCollision(true);					// 当たり判定設定
 	m_pModel->SetScale(model_scale);					// 拡大率
 	m_pModel->SetRotMtx(rotMtx);						// 回転行列

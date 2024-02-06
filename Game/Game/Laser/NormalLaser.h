@@ -19,14 +19,13 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	/// <param name="modelHandle">モデルハンドル</param>
 	/// <param name="pEnemy">発射元の敵のポインタ</param>
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
 	/// <param name="laserChargeFrame">レーザーのチャージフレーム</param>
 	/// <param name="laserFireFrame">レーザーの発射時間フレーム</param>
 	/// <param name="laserSpeed">レーザーの移動速度</param>
 	/// <param name="isPlayerFollowing">プレイヤーを追従するか</param>
-	NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
+	NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
 
 	// デストラクタ
 	~NormalLaser();

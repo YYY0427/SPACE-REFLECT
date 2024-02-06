@@ -35,9 +35,6 @@ private:
 	// è¦Î
 	std::list<std::shared_ptr<Meteor>> m_pMeteorList;
 
-	// è¦Î‚Ìƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
-	int m_modelHandle;	
-
 	// ¶¬ŠÔŠu
 	int m_createIntervalFrameTimer;
 };

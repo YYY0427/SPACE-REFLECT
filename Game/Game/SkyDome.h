@@ -12,19 +12,16 @@ class SkyDome
 {
 public:
 	// コンストラクタ
-	SkyDome(Vector3 cameraPos);
+	SkyDome(Vector3 pos);
 
 	// デストラクタ
 	~SkyDome();
 
 	// 更新
-	void Update(Vector3 cameraPos);
+	void Update(Vector3 pos);
 
 	// 描画
 	void Draw();
-
-	// セッター
-	void SetPos(Vector3 pos);
 
 private:
 	// ポインタ

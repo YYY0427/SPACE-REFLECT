@@ -76,8 +76,5 @@ private:
 	// ポインタ
 	std::list<LaserData> m_pLaserList;	// レーザーリスト
 	std::shared_ptr<Player> m_pPlayer;	// プレイヤーのポインタ
-
-	// モデルハンドルテーブル
-	std::map<LaserType, int> m_modelHandleTable;	
 };
 

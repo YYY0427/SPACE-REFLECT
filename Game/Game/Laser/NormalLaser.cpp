@@ -6,6 +6,7 @@
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Model.h"
 #include "../../MyDebug/DebugText.h"
+#include "../../ModelHandleManager.h"
 #include <DxLib.h>
 #include <random>
 #include <algorithm>
@@ -48,7 +49,7 @@ namespace
 }
 
 // コンストラクタ
-NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing) :
+NormalLaser::NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing) :
 	m_pEnemy(pEnemy),
 	m_pPlayer(pPlayer),
 	m_laserFireFrame(laserFireFrame),
@@ -112,7 +113,7 @@ NormalLaser::NormalLaser(int modelHandle, std::shared_ptr<EnemyBase> pEnemy, std
 	m_stateMachine.SetState(State::CHARGE);
 
 	// 当たり判定に使用するモデルの設定
-	m_pModel = std::make_unique<Model>(modelHandle);	// インスタンス生成
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::LASER));	// インスタンス生成
 	m_pModel->SetUseCollision(true);					// 当たり判定設定
 	m_pModel->SetScale(m_scale);	// 拡大率
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列

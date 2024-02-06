@@ -2,6 +2,7 @@
 #include "../../Model.h"
 #include "../../Math/MathUtil.h"
 #include "../Player.h"
+#include "../../ModelHandleManager.h"
 #include <DxLib.h>
 
 namespace
@@ -17,7 +18,7 @@ namespace
 }
 
 // コンストラクタ
-CubeLaser::CubeLaser(int modelHandle, Vector3 firePos, std::shared_ptr<Player> pPlayer)
+CubeLaser::CubeLaser(Vector3 firePos, std::shared_ptr<Player> pPlayer)
 {
 	// 初期化
 	m_pos = firePos;
@@ -29,7 +30,7 @@ CubeLaser::CubeLaser(int modelHandle, Vector3 firePos, std::shared_ptr<Player> p
 	m_deltaRot = MathUtil::ToRadian(GetRand(100) / 100.0f);
 
 	// モデル設定
-	m_pModel = std::make_unique<Model>(modelHandle);
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::CUBE_LASER));
 	m_pModel->SetUseCollision(true);	// 当たり判定を使用する
 	m_pModel->SetOpacity(m_opacity);	// 不透明度
 	m_pModel->SetRot(m_rot);			// 回転情報

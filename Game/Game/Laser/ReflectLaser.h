@@ -9,7 +9,7 @@ class ReflectLaser : public LaserBase
 {
 public:
 	// コンストラクタ
-	ReflectLaser(int modelHandle, std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos);
+	ReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos);
 
 	// デストラクタ
 	~ReflectLaser();

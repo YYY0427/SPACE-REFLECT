@@ -11,7 +11,7 @@ class CubeLaser : public LaserBase
 {
 public:
 	// コンストラクタ
-	CubeLaser(int modelHandle, Vector3 firePos, std::shared_ptr<Player> pPlayer);
+	CubeLaser(Vector3 firePos, std::shared_ptr<Player> pPlayer);
 
 	// デストラクタ
 	~CubeLaser();

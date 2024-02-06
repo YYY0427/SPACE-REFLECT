@@ -10,22 +10,10 @@
 #include <cassert>
 #include <string>
 
-namespace
-{
-	// 通常レーザーのモデルファイルパス
-	const std::string normal_laser_model_file_path = "Data/Model/Laser.mv1";
-
-	// キューブレーザーのモデルファイルパス
-	const std::string cube_laser_model_file_path = "Data/Model/CubeLaser.mv1";
-} 
-
 // コンストラクタ
 LaserManager::LaserManager(std::shared_ptr<Player> pPlayer) :
 	m_pPlayer(pPlayer)
 {
-	// モデルの読み込み
-	m_modelHandleTable[LaserType::NORMAL] = my::MyLoadModel(normal_laser_model_file_path.c_str());
-	m_modelHandleTable[LaserType::CUBE] = my::MyLoadModel(cube_laser_model_file_path.c_str());
 }
 
 // デストラクタ
@@ -66,7 +54,6 @@ int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, in
 	{
 	case LaserType::NORMAL:
 		laserData.pLaser = std::make_shared<NormalLaser>(
-			m_modelHandleTable[LaserType::NORMAL],
 			pEnemy, m_pPlayer, laserChargeFrame, laserFireFrame, laserSpeed, isPlayerFollowing);
 		break;
 
@@ -109,7 +96,7 @@ int LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_p
 	}
 
 	// レーザーのポインタを設定
-	laserData.pLaser = std::make_shared<ReflectLaser>(m_modelHandleTable[LaserType::NORMAL], pShield, pLaser, firePos);
+	laserData.pLaser = std::make_shared<ReflectLaser>(pShield, pLaser, firePos);
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);
@@ -135,7 +122,7 @@ int LaserManager::AddCubeLaser(Vector3 firePos)
 	}
 
 	// レーザーのポインタを設定
-	laserData.pLaser = std::make_shared<CubeLaser>(m_modelHandleTable[LaserType::CUBE], firePos, m_pPlayer);
+	laserData.pLaser = std::make_shared<CubeLaser>(firePos, m_pPlayer);
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);

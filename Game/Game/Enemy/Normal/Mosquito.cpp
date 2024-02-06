@@ -1,6 +1,7 @@
 #include "Mosquito.h"
 #include "../../../Model.h"
 #include "../../Player.h"
+#include "../../../ModelHandleManager.h"
 #include <DxLib.h>
 
 namespace
@@ -23,10 +24,9 @@ namespace
 }
 
 // コンストラクタ
-Mosquito::Mosquito(int modelHandle, 
-	EnemyData data, 
-	std::shared_ptr<Player> pPlayer, 
-	std::shared_ptr<LaserManager> pLaserManager) :
+Mosquito::Mosquito( EnemyData data, 
+					std::shared_ptr<Player> pPlayer, 
+					std::shared_ptr<LaserManager> pLaserManager) :
 	m_idleFrame(0),
 	m_laserKey(-1)
 {
@@ -57,7 +57,7 @@ Mosquito::Mosquito(int modelHandle,
 	m_state.SetState(State::MOVE);
 
 	// モデルのインスタンスの作成
-	m_pModel = std::make_shared<Model>(modelHandle);
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::MOSQUITO));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);

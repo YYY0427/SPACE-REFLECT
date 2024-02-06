@@ -13,11 +13,11 @@ class Meteor
 {
 public:
 	// コンストラクタ
-	Meteor(int modelHandle, Vector3 playerPos);
+	Meteor(Vector3 playerPos);
 
 	// コンストラクタ
 	// このコンストラクタはUnityからのデータを受け取る
-	Meteor(int modelHandle, UnityGameObject data);
+	Meteor(UnityGameObject data);
 
 	// デストラクタ
 	~Meteor();

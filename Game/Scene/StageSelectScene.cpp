@@ -15,6 +15,7 @@
 #include "../Editor/DataReaderFromUnity.h"
 #include "../Math/Vector3.h"
 #include "../Application.h"
+#include "../ModelHandleManager.h"
 #include <DxLib.h>
 
 namespace
@@ -42,7 +43,7 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_isInput(false)
 {
 	// 画面切り替え演出の初期化
-	m_pTransitor = std::make_unique<FadeTransitor>(60);
+	m_pTransitor = std::make_unique<FadeTransitor>(30);
 	m_pTransitor->Start();
 
 	// オブジェクトのデータを読み込む
@@ -107,7 +108,7 @@ void StageSelectScene::Update()
 	// 更新
 	UpdateCamera();
 	m_pPlanetManager->Update();
-	m_pSkyDome->SetPos(m_pCamera->GetPos());
+	m_pSkyDome->Update(m_pCamera->GetPos());
 
 	// スコアランキングのアルファ値の更新
 	for (int i = m_rankingAlpha.size() - 1; i >= 0; i--)

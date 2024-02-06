@@ -2,15 +2,8 @@
 #include "Planet.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../Util/DrawFunctions.h"
+#include "../ModelHandleManager.h"
 #include <string>
-
-namespace
-{
-	// モデルのファイルパス
-	const std::string sun_model_file_path = "Data/Model/Sun.mv1";
-	const std::string earth_model_file_path = "Data/Model/Earth.mv1";
-	const std::string moon_model_file_path = "Data/Model/Moon.mv1";
-}
 
 // コンストラクタ
 PlanetManager::PlanetManager(std::string objectDataFileName)
@@ -22,10 +15,7 @@ PlanetManager::PlanetManager(std::string objectDataFileName)
 	auto& earthData = dataReader.GetData(objectDataFileName, "Earth");
 	for (auto& earth : earthData)
 	{
-		// モデルのロード
-		if (m_planetData[PlanetType::EARTH].modelHandle == -1)
-			m_planetData[PlanetType::EARTH].modelHandle = my::MyLoadModel(earth_model_file_path.c_str());
-
+		m_planetData[PlanetType::EARTH].modelHandle = ModelHandleManager::GetInstance().GetHandle(ModelType::EARTH);
 		m_planetData[PlanetType::EARTH].pPlanet = std::make_shared<Planet>(m_planetData[PlanetType::EARTH].modelHandle, earth);
 	}
 
@@ -33,10 +23,7 @@ PlanetManager::PlanetManager(std::string objectDataFileName)
 	auto& moonData = dataReader.GetData(objectDataFileName, "Moon");
 	for (auto& moon : moonData)
 	{
-		// モデルのロード
-		if (m_planetData[PlanetType::MOON].modelHandle == -1)
-			m_planetData[PlanetType::MOON].modelHandle = my::MyLoadModel(moon_model_file_path.c_str());
-
+		m_planetData[PlanetType::MOON].modelHandle = ModelHandleManager::GetInstance().GetHandle(ModelType::MOON);
 		m_planetData[PlanetType::MOON].pPlanet = std::make_shared<Planet>(m_planetData[PlanetType::MOON].modelHandle, moon);
 	}
 }

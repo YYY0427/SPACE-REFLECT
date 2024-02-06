@@ -3,24 +3,15 @@
 #include "../Editor/DataReaderFromUnity.h"
 #include <string>
 
-namespace
-{
-	// モデルのファイルパス
-	const std::string model_file_path = "Data/Model/Meteor.mv1";
-}
-
 // コンストラクタ
 MeteorManager::MeteorManager(std::string objectDataFileName) :
 	m_createIntervalFrameTimer(0)
 {
-	// モデルの読み込み
-	m_modelHandle = my::MyLoadModel(model_file_path.c_str());
-
 	// 配置データが存在する場合は配置データから隕石を生成
 	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Meteor");
 	for (auto& meteorData : data)
 	{
-		m_pMeteorList.push_back(std::make_shared<Meteor>(m_modelHandle, meteorData));
+		m_pMeteorList.push_back(std::make_shared<Meteor>(meteorData));
 	}
 }
 
@@ -61,7 +52,7 @@ void MeteorManager::CreateMeteor(int createIntervalFrame, Vector3 playerPos)
 	if (m_createIntervalFrameTimer > createIntervalFrame)
 	{
 		// 隕石の生成
-		m_pMeteorList.push_back(std::make_shared<Meteor>(m_modelHandle, playerPos));
+		m_pMeteorList.push_back(std::make_shared<Meteor>(playerPos));
 
 		// タイマーのリセット
 		m_createIntervalFrameTimer = 0;

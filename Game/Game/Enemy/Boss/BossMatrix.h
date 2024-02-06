@@ -18,8 +18,7 @@ class BossMatrix : public EnemyBase
 {
 public:
 	// コンストラクタ
-	BossMatrix(int modelHandle, 
-			   std::shared_ptr<Player> pPlayer, 
+	BossMatrix(std::shared_ptr<Player> pPlayer, 
 			   std::shared_ptr<LaserManager> pLaserManager,
 			   std::shared_ptr<ScreenShaker> pScreenShaker);
 

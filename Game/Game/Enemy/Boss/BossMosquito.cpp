@@ -1,7 +1,7 @@
 #include "BossMosquito.h"
 
 // コンストラクタ
-BossMosquito::BossMosquito(int modelHandle, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager)
+BossMosquito::BossMosquito(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager)
 {
 }
 

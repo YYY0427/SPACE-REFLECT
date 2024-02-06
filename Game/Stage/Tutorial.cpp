@@ -86,7 +86,7 @@ void Tutorial::UpdateStartAnimation()
 	// 更新
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
-	m_pSkyDome->Update(m_pCamera->GetPos());		// スカイドーム
+	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });		// スカイドーム
 	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());	// 惑星
 
 	// スタート演出が終わったらプレイ中に遷移
@@ -112,7 +112,7 @@ void Tutorial::UpdatePlay()
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos());				// カメラ
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
-	m_pSkyDome->Update(m_pCamera->GetPos());			// スカイドーム
+	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });			// スカイドーム
 	m_pPlanetManager->Update();							// 惑星
 	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
 	m_pDamageFlash->Update();							// ダメージフラッシュ

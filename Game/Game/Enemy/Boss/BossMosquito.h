@@ -8,7 +8,7 @@ class BossMosquito final : public EnemyBase
 {
 public:
 	// コンストラクタ
-	BossMosquito(int modelHandle, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
+	BossMosquito(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
 
 	// デストラクタ
 	~BossMosquito();

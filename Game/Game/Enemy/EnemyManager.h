@@ -127,10 +127,6 @@ private:
 	std::shared_ptr<Warning> m_pWarning;					// 警告
 	std::shared_ptr<ScreenShaker> m_pScreenShaker;			// 画面揺れ
 
-	// モデルハンドルテーブル
-	std::map<EnemyType, int> m_modelHandleTable;			// 雑魚敵
-	std::map<BossEnemyType, int> m_bossModelHandleTable;	// ボス敵
-
 	// フラグ
 	bool m_isDeadBoss;	// ボスが倒されたかどうか
 	bool m_isBoss;		// ボスが出現したかどうか
