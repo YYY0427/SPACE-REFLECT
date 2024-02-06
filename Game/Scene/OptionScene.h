@@ -43,7 +43,6 @@ private:
 		MASTER_VOLUME,	// マスターボリューム
 		BGM_VOLUME,		// BGMボリューム
 		SE_VOLUME,		// SEボリューム
-		EXIT,			// 終了
 		NUM				// 項目数
 	};
 
@@ -55,8 +54,10 @@ private:
 	// 選択中の項目
 	int m_currentSelectItem;
 
-	// サウンドアイコン画像ハンドル
+	// 画像ハンドル
 	int m_soundIconHandle;
+	int m_rbButtonImgHandle;
+	int m_lbButtonImgHandle;
 
 	// 項目の描画色データ
 	std::vector<int> m_itemColorTable;

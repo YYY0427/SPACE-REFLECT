@@ -37,6 +37,9 @@ public:
 	int GetScore(ScoreType type) const;	// スコアの取得
 	int GetTotalScore() const;			// 合計スコアの取得
 
+	// リセット
+	void Reset();
+
 private:
 	// コンストラクタ
 	Score();

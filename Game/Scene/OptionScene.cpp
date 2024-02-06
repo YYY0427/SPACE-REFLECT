@@ -17,6 +17,8 @@ namespace
 {
 	// 画像ファイルのパス
 	const std::string sound_icon_img_file_path = "Data/Image/Sound.png";
+	const std::string xbox_rb_file_path = "Data/Image/xbox_rb.png";
+	const std::string xbox_lb_file_path = "Data/Image/xbox_lb.png";
 
 	// 選択されていないときの描画色
 	constexpr int normal_color = 0x666666;
@@ -25,7 +27,7 @@ namespace
 	constexpr int choose_color = 0xffffff;
 
 	// 表示するテキストの全体の位置
-	constexpr int draw_text_pos_x = 350;
+	constexpr int draw_text_pos_x = 200;
 	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 150;
 
 	// テキストの文字間
@@ -38,7 +40,10 @@ namespace
 // コンストラクタ
 OptionScene::OptionScene(SceneManager& manager, State state) :
 	SceneBase(manager),
-	m_currentSelectItem(0)
+	m_currentSelectItem(0),
+	m_soundIconHandle(-1),
+	m_lbButtonImgHandle(-1),
+	m_rbButtonImgHandle(-1)
 {
 	// 画面切り替え演出の初期化
 	m_pTransitor = std::make_unique<FadeTransitor>(20);
@@ -46,6 +51,8 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 
 	// 画像のロード
 	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
+	m_lbButtonImgHandle = my::MyLoadGraph(xbox_lb_file_path.c_str());
+	m_rbButtonImgHandle = my::MyLoadGraph(xbox_rb_file_path.c_str());
 
 	// ステートマシンの初期化
 	m_updateStateMachine.AddState(State::STAGE_SELECT, {}, [this] { UpdateStageSelect(); }, {});
@@ -114,12 +121,6 @@ void OptionScene::Update()
 	case OptionItem::SE_VOLUME:
 		SaveData::GetInstance().SetSeVolume(volume_division);
 		break;
-
-		// 終了
-	case OptionItem::EXIT:
-		if (InputState::IsTriggered(InputType::DECISION)) m_manager.PopScene();
-		return;
-
 	default:
 		// ありえないので止める
 		assert(false);
@@ -171,31 +172,27 @@ void OptionScene::Draw()
 
 	// 項目の描画
 	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
-	messageManager.DrawStringCenter("OptionItemWindowMode", draw_text_pos_x, 
+	messageManager.DrawString("OptionItemWindowMode", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
 	int masterVolume = static_cast<int>(OptionItem::MASTER_VOLUME);
-	messageManager.DrawStringCenter("OptionItemMasterVolume", draw_text_pos_x, 
+	messageManager.DrawString("OptionItemMasterVolume", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * masterVolume, m_itemColorTable[masterVolume]);
 
 	int bgmVolume = static_cast<int>(OptionItem::BGM_VOLUME);
-	messageManager.DrawStringCenter("OptionItemBgmVolume", draw_text_pos_x, 
+	messageManager.DrawString("OptionItemBgmVolume", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * bgmVolume, m_itemColorTable[bgmVolume]);
 
 	int seVolume = static_cast<int>(OptionItem::SE_VOLUME);
-	messageManager.DrawStringCenter("OptionItemSeVolume", draw_text_pos_x, 
+	messageManager.DrawString("OptionItemSeVolume", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * seVolume, m_itemColorTable[seVolume]);
-
-	int exit = static_cast<int>(OptionItem::EXIT);
-	messageManager.DrawStringCenter("OptionItemBack", size.width / 2, 
-		draw_text_pos_y + text_space_y * exit, m_itemColorTable[exit]);
 
 	// ウィンドウモードの状態の表示
 	auto& saveData = SaveData::GetInstance();
 	(saveData.GetSaveData().windowMode) ?
-		messageManager.DrawStringCenter("OptionItemWindowModeOff", size.width / 2, 
+		messageManager.DrawStringCenter("OptionItemWindowModeOff", size.width / 2 + 120, 
 			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]):
-		messageManager.DrawStringCenter("OptionItemWindowModeOn", size.width / 2,
+		messageManager.DrawStringCenter("OptionItemWindowModeOn", size.width / 2 + 120,
 			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
 	// 音量の表示
@@ -226,10 +223,19 @@ void OptionScene::Draw()
 			int textSpaceX = j * 70;
 
 			// 音量のアイコンを描画
-			DrawRotaGraph(draw_text_pos_x + 170 + textSpaceX,
+			DrawRotaGraph(620 + textSpaceX,
 				draw_text_pos_y + text_space_y * volumeItem + 10, 0.2, 0.0, m_soundIconHandle, true);
 		}
 		volumeItem++;
+	}
+
+	// TODO : 三角形の描画
+	for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
+	{
+		DrawTriangleAA(620 - 100, draw_text_pos_y + (text_space_y * i + 10), 
+					   620 - 100 + 50, draw_text_pos_y + (text_space_y * i + 10) - 50,
+					   620 - 100 - 50, draw_text_pos_y + (text_space_y * i + 10) + 50, 
+					   m_itemColorTable[static_cast<int>(m_currentSelectItem)], true);
 	}
 
 	// 描画輝度をもとに戻す
@@ -250,14 +256,20 @@ void OptionScene::DrawStageSelect()
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
 	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
+	// RBボタンの描画
+	DrawRotaGraph((screenSize.width / 2.0f) + 375, 95, 1.0f, 0.0f, m_rbButtonImgHandle, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// オプションタイトルの描画
 	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
 	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
 
-	// かっこつけるための線の描画
+	// LBボタンの描画
+	DrawRotaGraph((screenSize.width / 2.0f) - 375, 95, 1.0f, 0.0f, m_lbButtonImgHandle, true);
+
+	// 線の描画
 	DrawLineAA(0 + 100, 120, screenSize.width - 100, 120, 0xffffff, 3.0f);
+	DrawLineAA(450, 170, 450, screenSize.height - 100, 0xffffff, 3.0f);
 }
 
 // ポーズの描画

@@ -17,7 +17,7 @@ public:
 
 	// XV
 	virtual void Update() = 0;
-	void UpdateResult(std::string stageName, std::string playerName);
+	void ChangeResultScene(std::string stageName);
 
 	// •`‰æ
 	virtual void Draw() = 0;

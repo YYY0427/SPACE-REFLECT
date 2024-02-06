@@ -41,7 +41,6 @@ Stage1::Stage1(SceneManager& manager) :
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
-	m_stateMachine.AddState(State::RESULT, {}, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
 	// オブジェクト配置データ読み込み
@@ -121,9 +120,6 @@ void Stage1::UpdatePlay()
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 	m_pScreenShaker->Update();							// 画面揺れ
 
-	// 隕石の生成
-//	m_pMeteorManager->CreateMeteor(120, m_pPlayer->GetPos());
-
 	// 当たり判定
 	Collision();
 
@@ -137,13 +133,7 @@ void Stage1::UpdatePlay()
 // ゲームクリアの更新
 void Stage1::UpdateGameClear()
 {
-	m_stateMachine.SetState(State::RESULT);
-}
-
-// リザルトの更新
-void Stage1::UpdateResult()
-{
-	StageBase::UpdateResult("Stage1", "Test");
+	ChangeResultScene("Stage1");
 }
 
 // 描画

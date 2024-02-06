@@ -31,6 +31,12 @@ public:
 	void ChangeScene(std::shared_ptr<SceneBase> nextScene);
 
 	/// <summary>
+	/// シーンを全て削除してから新しいシーンを追加
+	/// </summary>
+	/// <param name="nextScene"></param>
+	void ChangeAndClearScene(std::shared_ptr<SceneBase> nextScene);
+
+	/// <summary>
 	/// 現在のシーンの上にシーンを積む(ポーズ)
 	/// Updateで実行されるのは上につまれたシーン
 	/// </summary>
@@ -40,6 +46,11 @@ public:
 	// 一番上のシーンを削除
 	// ポーズ画面を消すときに使う
 	void PopScene();
+
+	/// <summary>
+	/// シーンを全て削除
+	/// </summary>
+	void ClearScene();
 
 private:
 	// シーン

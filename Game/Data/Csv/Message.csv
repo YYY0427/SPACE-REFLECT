@@ -1,7 +1,6 @@
 ID,文字列,フォント,サイズ,太さ
 TitleLogo,SPACE REFLECT,マキナス 4 Square,100,10
-TitleItemStart,START,マキナス 4 Square,20,3
-TitleItemOption,OPTION,マキナス 4 Square,20,3
+TitleItemStart,Push To Start,マキナス 4 Square,20,3
 TitleItemExit,EXIT,マキナス 4 Square,20,3
 TitleItemSelectBarRight,[,マキナス 4 Square,20,3
 TitleItemSelectBarLeft,],マキナス 4 Square,20,3
@@ -33,6 +32,8 @@ PausetemSelectBarLeft,],マキナス 4 Square,20,3
 WarningUI,WARNING!!,マキナス 4 Square,100,10
 BossMatrixName,MATRIX,マキナス 4 Square,40,10
 ScoreNumber,-,マキナス 4 Square,30,9
-RankingFont,-,マキナス 4 Square,20,9
-RankingTitle,RANKING,マキナス 4 Square,25,9
+RankingFont,-,マキナス 4 Square,15,9
+RankingTitle,RANKING,マキナス 4 Square,20,9
 MissionTitle,MISSION,マキナス 4 Square,25,9
+StageSelectBack,BACK,マキナス 4 Square,25,9
+StageSelectStart,START,マキナス 4 Square,30,9

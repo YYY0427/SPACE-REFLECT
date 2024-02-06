@@ -33,7 +33,6 @@ public:
 	void UpdateStartAnimation();
 	void UpdatePlay();
 	void UpdateGameClear();
-	void UpdateResult();
 
 	// 描画
 	void Draw() override final;
@@ -49,7 +48,6 @@ private:
 		PLAY,				// プレイ中
 		GAME_OVER,			// ゲームオーバー
 		GAME_CLEAR,			// ゲームクリア
-		RESULT,				// リザルト
 		NUM					// 状態の数
 	};
 

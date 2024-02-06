@@ -54,6 +54,9 @@ private:
 
 		// カメラの位置
 		Vector3 cameraPos;
+
+		// 惑星のポインタ
+		std::shared_ptr<Planet> pPlanet;
 	};
 
 private:
@@ -62,20 +65,36 @@ private:
 	std::unique_ptr<PlanetManager> m_pPlanetManager;
 	std::unique_ptr<SkyDome> m_pSkyDome;
 
-	Vector3 m_cameraStartPos;
-	Vector3 m_cameraGoalPos;
-	Vector3 m_cameraGoalTargetPos;
-	float m_easeTime;
-	bool m_isInput;
-
-	// 選択されている項目
-	int m_currentSelectItem;
-
 	// ステージデータ
 	std::map<Stage, StageData> m_stageData;
 
 	// スコアランキング
 	std::vector<ScoreSaveData> m_scoreRanking;
+
+	// カメラ
+	Vector3 m_cameraStartPos;		// カメラの初期位置
+	Vector3 m_cameraGoalPos;		// カメラの目標位置
+	Vector3 m_cameraGoalTargetPos;	// カメラの目標注視点
+
+	// イージングの時間
+	float m_easeTime;	
+
+	// 入力があるかフラグ
+	bool m_isInput;
+
+	// アルファ値
+	int m_line3DAlpha;
+	int m_windowAlpha;
+	int m_rankingTitleAlpa;
 	std::vector<int> m_rankingAlpha;
+
+	// 画像ハンドル
+	int m_rbButtonImgHandle;
+	int m_lbButtonImgHandle;
+	int m_bButtonImgHandle;
+	int m_aButtonImgHandle;
+
+	// 選択されている項目
+	int m_currentSelectItem;
 };
 

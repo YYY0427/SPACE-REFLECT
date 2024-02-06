@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="ModelHandleManager.cpp" />
+    <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="Stage\Stage1.cpp" />
     <ClCompile Include="Util\FileUtil.cpp" />
     <ClCompile Include="String\Font.cpp" />
@@ -218,6 +219,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="ModelHandleManager.h" />
+    <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="Stage\Stage1.h" />
     <ClInclude Include="Util\FileUtil.h" />
     <ClInclude Include="String\Font.h" />

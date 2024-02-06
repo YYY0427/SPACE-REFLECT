@@ -28,6 +28,8 @@ TitleScene::TitleScene(SceneManager& manager) :
 	SceneBase(manager),
 	m_currentSelectSceneItem(0)
 {
+	// ゲームのプレイ動画を再生
+
 	// 画面切り替え演出の設定
 	m_pTransitor = std::make_unique<IrisTransitor>();
 	m_pTransitor->Start();

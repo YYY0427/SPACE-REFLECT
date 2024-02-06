@@ -1,9 +1,6 @@
 #include "StageBase.h"
-#include "../Score/ScoreRanking.h"
-#include "../Score/Score.h"
-#include "../Util/InputState.h"
-#include "../Scene/StageSelectScene.h"
 #include "../Scene/SceneManager.h"
+#include "../Scene/ResultScene.h"
 
 // コンストラクタ
 StageBase::StageBase(SceneManager& manager) :
@@ -17,15 +14,8 @@ StageBase::~StageBase()
 }
 
 // リザルトの更新
-void StageBase::UpdateResult(std::string stageName, std::string playerName)
+void StageBase::ChangeResultScene(std::string stageName)
 {
-	// 決定ボタンが押されたら
-	if (InputState::IsTriggered(InputType::DECISION))
-	{
-		// スコアランキングの更新
-		ScoreRanking::GetInstance().AddScore(stageName, playerName.c_str(), Score::GetInstance().GetTotalScore());
-
-		// シーン遷移
-		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
-	}
+	// シーン遷移
+	m_manager.PushScene(std::make_shared<ResultScene>(m_manager, stageName));
 }

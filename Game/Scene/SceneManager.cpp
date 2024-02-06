@@ -49,7 +49,6 @@ void SceneManager::Draw()
 
 	// fpsの取得
 	float fps = GetFPS();
-//	float fps = Application::GetInstance().GetFps();
 
 	// 画面サイズの取得
 	Size size = Application::GetInstance().GetWindowSize();
@@ -88,6 +87,16 @@ void SceneManager::ChangeScene(std::shared_ptr<SceneBase> nextScene)
 	}
 }
 
+// 
+void SceneManager::ChangeAndClearScene(std::shared_ptr<SceneBase> nextScene)
+{
+	// シーンの全削除
+	ClearScene();
+
+	// シーンの切り替え
+	ChangeScene(nextScene);
+}
+
 // 現在のシーンの上にシーンを積む(ポーズ)
 void SceneManager::PushScene(std::shared_ptr<SceneBase> scene)
 {
@@ -98,4 +107,10 @@ void SceneManager::PushScene(std::shared_ptr<SceneBase> scene)
 void SceneManager::PopScene()
 {
 	m_scenes.pop_front();
+}
+
+// シーンの全削除
+void SceneManager::ClearScene()
+{
+	m_scenes.clear();
 }

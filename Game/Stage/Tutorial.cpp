@@ -24,9 +24,9 @@ namespace
 	const std::string object_data_file_path = "Test";
 
 	// ダメージ
-	constexpr int meteor_damage = 2; // 隕石に当たっている間にプレイヤーに与えるダメージ
-	constexpr int laser_damage = 1;  // レーザーに当たっている間にプレイヤーに与えるダメージ
-	constexpr int enemy_damage = 1;  // 敵に当たっている間にプレイヤーに与えるダメージ
+	constexpr int meteor_damage = 2;			 // 隕石に当たっている間にプレイヤーに与えるダメージ
+	constexpr int laser_damage = 1;				 // レーザーに当たっている間にプレイヤーに与えるダメージ
+	constexpr int enemy_damage = 1;				 // 敵に当たっている間にプレイヤーに与えるダメージ
 	constexpr int boss_reflect_laser_damage = 2; // 反射レーザーに当たっている間にボスに与えるダメージ
 }
 
@@ -38,7 +38,6 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
-	m_stateMachine.AddState(State::RESULT, {}, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
 	// オブジェクト配置データ読み込み
@@ -75,7 +74,7 @@ Tutorial::~Tutorial()
 void Tutorial::Update()
 {
 	// 更新
-	m_stateMachine.Update();	// ステートマシン
+	m_stateMachine.Update();							// ステートマシン
 	Effekseer3DEffectManager::GetInstance().Update();	// エフェクト
 	UIManager::GetInstance().Update();					// UI
 }
@@ -118,9 +117,6 @@ void Tutorial::UpdatePlay()
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 	m_pScreenShaker->Update();							// 画面揺れ
 
-	// 隕石の生成
-//	m_pMeteorManager->CreateMeteor(120, m_pPlayer->GetPos());
-
 	// 当たり判定
 	Collision();
 
@@ -134,13 +130,8 @@ void Tutorial::UpdatePlay()
 // ゲームクリアの更新
 void Tutorial::UpdateGameClear()
 {
-	m_stateMachine.SetState(State::RESULT);
-}
-
-// リザルトの更新
-void Tutorial::UpdateResult()
-{
-	StageBase::UpdateResult("Tutorial", "UNKO");
+	// リザルト画面に切り替え
+	ChangeResultScene("Tutorial");
 }
 
 // 描画
