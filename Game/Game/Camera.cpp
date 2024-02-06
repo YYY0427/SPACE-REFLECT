@@ -33,7 +33,10 @@ Camera::Camera(Vector3 pos, Vector3 target) :
 	m_cameraVertical(0.0f),
 	m_cameraHorizon(DX_PI_F),
 	m_isStartAnimation(false),
-	m_hermiteValue(0.0f)
+	m_hermiteValue(0.0f),
+	m_lerpValue(0.0f),
+	m_slowValue(1.0f),
+	m_windEffectHandle(-1)
 {
 }
 

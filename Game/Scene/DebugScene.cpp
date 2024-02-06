@@ -58,7 +58,7 @@ void DebugScene::Update()
 		case SceneItem::PAUSE:
 			return;
 		case SceneItem::OPTION:
-			m_manager.PushScene(std::make_shared<OptionScene>(m_manager));
+			m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::PAUSE));
 			return;
 		case SceneItem::RESULT:
 			return;

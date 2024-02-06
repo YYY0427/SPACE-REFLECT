@@ -31,8 +31,7 @@ void TransitorBase::Start()
 	m_nextScene = MakeScreen(size.width, size.height);
 
 	// 描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ
-	int result = GetDrawScreenGraph(0, 0, size.width, size.height, m_oldScene, true);
-	assert(result != -1);
+	SetOldScene();
 
 	// 初期化
 	m_frame = 0;
@@ -42,4 +41,21 @@ void TransitorBase::Start()
 bool TransitorBase::IsEnd() const
 {
 	return m_frame >= m_interval;
+}
+
+// フレームの設定
+void TransitorBase::SetFrame(int frame)
+{
+	m_frame = frame;
+}
+
+// 描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ
+void TransitorBase::SetOldScene()
+{
+	// 画面サイズを取得
+	const auto& size = Application::GetInstance().GetWindowSize();
+
+	// 描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ
+	int result = GetDrawScreenGraph(0, 0, size.width, size.height, m_oldScene, true);
+	assert(result != -1);
 }

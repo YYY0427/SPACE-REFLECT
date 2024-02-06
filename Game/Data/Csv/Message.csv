@@ -5,7 +5,7 @@ TitleItemOption,OPTION,マキナス 4 Square,20,3
 TitleItemExit,EXIT,マキナス 4 Square,20,3
 TitleItemSelectBarRight,[,マキナス 4 Square,20,3
 TitleItemSelectBarLeft,],マキナス 4 Square,20,3
-OptionTitle,OPTION,マキナス 4 Square,50,5
+OptionTitle,OPTION,マキナス 4 Square,25,9
 OptionItemLanguage,LANGUAGE,マキナス 4 Square,20,3
 OptionItemWindowMode,WINDOW MODE,マキナス 4 Square,20,3
 OptionItemMasterVolume,MASTER,マキナス 4 Square,20,3
@@ -35,3 +35,4 @@ BossMatrixName,MATRIX,マキナス 4 Square,40,10
 ScoreNumber,-,マキナス 4 Square,30,9
 RankingFont,-,マキナス 4 Square,20,9
 RankingTitle,RANKING,マキナス 4 Square,25,9
+MissionTitle,MISSION,マキナス 4 Square,25,9

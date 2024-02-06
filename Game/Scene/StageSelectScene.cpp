@@ -3,6 +3,8 @@
 #include "SceneManager.h"
 #include "OptionScene.h"
 #include "DebugScene.h"
+#include "TitleScene.h"
+#include "../Transitor/FadeTransitor.h"
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
 #include "../Util/InputState.h"
@@ -12,6 +14,7 @@
 #include "../Game/SkyDome.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../Math/Vector3.h"
+#include "../Application.h"
 #include <DxLib.h>
 
 namespace
@@ -38,6 +41,10 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_easeTime(0.0f),
 	m_isInput(false)
 {
+	// 画面切り替え演出の初期化
+	m_pTransitor = std::make_unique<FadeTransitor>(60);
+	m_pTransitor->Start();
+
 	// オブジェクトのデータを読み込む
 	DataReaderFromUnity::GetInstance().LoadUnityGameObjectData(object_file_path);
 
@@ -77,7 +84,7 @@ void StageSelectScene::Update()
 	{
 		// 選択肢を回す処理
 		int sceneItemTotalValue = static_cast<int>(Stage::NUM);
-		if (InputState::IsTriggered(InputType::UP))
+		if (InputState::IsTriggered(InputType::RIGHT))
 		{
 			m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
 			m_isInput = true;
@@ -86,7 +93,7 @@ void StageSelectScene::Update()
 				alpha = 0;
 			}
 		}
-		else if (InputState::IsTriggered(InputType::DOWN))
+		else if (InputState::IsTriggered(InputType::LEFT))
 		{
 			m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
 			m_isInput = true;
@@ -118,9 +125,14 @@ void StageSelectScene::Update()
 		}
 	}
 	
+	// 画面切り替え演出の更新
+	m_pTransitor->Update();
+
+	// オプション画面に遷移
 	if (InputState::IsTriggered(InputType::RIGTH_SHERDER))
 	{
-		m_manager.PushScene(std::make_shared<OptionScene>(m_manager));
+		m_pTransitor->SetFrame(0);
+		m_manager.ChangeScene(std::make_shared<OptionScene>(m_manager, State::STAGE_SELECT));
 		return;
 	}
 
@@ -137,7 +149,11 @@ void StageSelectScene::Update()
 	if (InputState::IsTriggered(InputType::BACK))
 	{
 		// 戻る
+#ifdef _DEBUG
 		m_manager.ChangeScene(std::make_shared<DebugScene>(m_manager));
+#else
+		m_manager.ChangeScene(std::make_shared<TitleScene>(m_manager));
+#endif
 		return;
 	}
 
@@ -176,21 +192,29 @@ void StageSelectScene::Draw()
 	ClearDrawScreen();
 
 	// モデル描画
+	m_pCamera->SetCamera();
 	m_pPlanetManager->Draw();
 	m_pSkyDome->Draw();
 
-	// 飛べるシーンの項目のテキスト表示
-	constexpr int draw_text_pos_x = 500;
-	constexpr int draw_text_pos_y = 200;
-	constexpr int text_space_y = 32;
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(Stage::TUTORIAL), "TUTORIAL", 0xffffff, true);
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(Stage::STAGE_1), "STAGE_1", 0xffffff, true);
+	// ステージセレクトタイトルの描画
+	auto& screenSize = Application::GetInstance().GetWindowSize();
+	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
+	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
 
-	// 現在選択中の項目の横に→を表示
-	DrawString(draw_text_pos_x - text_space_y, draw_text_pos_y + text_space_y * m_currentSelectItem, "→", 0xff0000);
+	// オプションタイトルの描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
+	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	// かっこつけるための線の描画
+	DrawLineAA(0 + 100, 120, screenSize.width - 100, 120, 0xffffff, 3.0f);
 
 	// スコアランキングの描画
 	DrawScoreRanking();
+
+	// 画面切り替え演出の描画
+	m_pTransitor->Draw();
 }
 
 // スコアランキングの描画
@@ -217,8 +241,6 @@ void StageSelectScene::DrawScoreRanking()
 
 		// 徐々に描画
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_rankingAlpha[i]);
-
-	//	m_rankingAlpha[i] += (score_ranking_alpha_add_speed) * i + 1;
 
 		// 順位の文字列の作成
 		std::string rank = std::to_string(i + 1);

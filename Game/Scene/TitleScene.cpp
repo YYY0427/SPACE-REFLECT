@@ -60,9 +60,6 @@ void TitleScene::Update()
 		case SceneItem::GAME:
 			m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 			return;
-		case SceneItem::OPTION:
-			m_manager.PushScene(std::make_shared<OptionScene>(m_manager));
-			return;
 		case SceneItem::EXIT:
 			Application::GetInstance().Exit();
 			return;
@@ -89,8 +86,6 @@ void TitleScene::Draw()
 	// çÄñ⁄ÇÃï`âÊ
 	messageManager.DrawStringCenter("TitleItemStart", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), 0x000000);
-	messageManager.DrawStringCenter("TitleItemOption", size.width / 2, 
-		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::OPTION), 0x000000);
 	messageManager.DrawStringCenter("TitleItemExit", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::EXIT), 0x000000);
 

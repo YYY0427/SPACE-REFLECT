@@ -27,7 +27,6 @@ private:
 	enum class SceneItem
 	{
 		GAME,	// ゲーム
-		OPTION,	// オプション
 		EXIT,	// 終了
 		NUM		// 項目数
 	};

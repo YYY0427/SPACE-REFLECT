@@ -30,6 +30,10 @@ public:
 	// 演出が終了したかどうか
 	virtual bool IsEnd() const;
 
+	// セッター
+	void SetFrame(int frame);
+	void SetOldScene();
+
 protected:
 	// 切り替えにかかるフレーム数
 	const int m_interval;

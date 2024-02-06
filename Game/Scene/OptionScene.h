@@ -1,6 +1,14 @@
 #pragma once
 #include "SceneBase.h"
+#include "../StateMachine.h"
 #include <vector>
+
+// ステート
+enum class State
+{
+	STAGE_SELECT,	// ステージセレクト
+	PAUSE,			// オプション
+};
 
 /// <summary>
 /// 設定シーン
@@ -12,16 +20,20 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
-	OptionScene(SceneManager& manager);
+	OptionScene(SceneManager& manager, State state);
 	
 	// デストラクタ
 	~OptionScene();
 	
 	// 更新
 	void Update() override final;
+	void UpdateStageSelect();
+	void UpdatePause();
 	
 	// 描画
 	void Draw() override final;
+	void DrawStageSelect();
+	void DrawPause();
 
 private:
 	// 設定項目
@@ -36,6 +48,10 @@ private:
 	};
 
 private:
+	// ステートマシン
+	StateMachine<State> m_updateStateMachine;
+	StateMachine<State> m_drawStateMachine;
+
 	// 選択中の項目
 	int m_currentSelectItem;
 

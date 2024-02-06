@@ -7,6 +7,7 @@
 #include "../String/MessageManager.h"
 #include "../Application.h"
 #include "../Transitor/FadeTransitor.h"
+#include "../StateMachine.h"
 #include "DxLib.h"
 #include <cassert>
 #include <string>
@@ -35,15 +36,24 @@ namespace
 }
 
 // コンストラクタ
-OptionScene::OptionScene(SceneManager& manager) :
+OptionScene::OptionScene(SceneManager& manager, State state) :
 	SceneBase(manager),
 	m_currentSelectItem(0)
 {
-	m_pTransitor = std::make_unique<FadeTransitor>();
+	// 画面切り替え演出の初期化
+	m_pTransitor = std::make_unique<FadeTransitor>(20);
 	m_pTransitor->Start();
 
 	// 画像のロード
 	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
+
+	// ステートマシンの初期化
+	m_updateStateMachine.AddState(State::STAGE_SELECT, {}, [this] { UpdateStageSelect(); }, {});
+	m_updateStateMachine.AddState(State::PAUSE, {}, [this] { UpdatePause(); }, {});
+	m_drawStateMachine.AddState(State::STAGE_SELECT, {}, [this] { DrawStageSelect(); }, {});
+	m_drawStateMachine.AddState(State::PAUSE, {}, [this] { DrawPause(); }, {});
+	m_updateStateMachine.SetState(state);
+	m_drawStateMachine.SetState(state);
 
 	// 項目の描画色を選択されていないときの色に初期化
 	for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
@@ -115,24 +125,36 @@ void OptionScene::Update()
 		assert(false);
 	}
 
-	// 
+	// 画面切り替え演出の更新
+	m_pTransitor->Update();
+
+	// ステートマシンの更新
+	m_updateStateMachine.Update();
+}
+
+// ステージセレクトの更新
+void OptionScene::UpdateStageSelect()
+{
+	// 特定のボタンが押されたとき
 	if (InputState::IsTriggered(InputType::LEFT_SHERDER))
+	{
+		// 終了
+		m_pTransitor->SetFrame(0);
+		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		return;
+	}
+}
+
+// ポーズの更新
+void OptionScene::UpdatePause()
+{
+	// 戻るボタンが押されたとき
+	if (InputState::IsTriggered(InputType::BACK))
 	{
 		// 終了
 		m_manager.PopScene();
 		return;
 	}
-
-	// 戻るボタンが押されたとき
-	//if (InputState::IsTriggered(InputType::BACK))
-	//{
-	//	// 終了
-	//	m_manager.PopScene();
-	//	return;
-	//}
-
-	// 画面切り替え演出の更新
-	m_pTransitor->Update();
 }
 
 // 描画
@@ -145,12 +167,7 @@ void OptionScene::Draw()
 	auto& messageManager = MessageManager::GetInstance();
 
 	// 背景色の描画
-	SetDrawBlendMode(DX_BLENDMODE_MULA, 220);
 	DrawBox(0, 0, size.width, size.height, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// シーンタイトルの描画
-	messageManager.DrawStringCenter("OptionTitle", size.width / 2, 100, 0xffffff);
 
 	// 項目の描画
 	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
@@ -218,6 +235,38 @@ void OptionScene::Draw()
 	// 描画輝度をもとに戻す
 	SetDrawBright(255, 255, 255);
 	
+	// ステートマシンの更新
+	m_drawStateMachine.Update();
+
 	// 画面切り替え演出の描画
 	m_pTransitor->Draw();
+}
+
+// ステージセレクトの描画
+void OptionScene::DrawStageSelect()
+{
+	// ステージセレクトタイトルの描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	auto& screenSize = Application::GetInstance().GetWindowSize();
+	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
+	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	// オプションタイトルの描画
+	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
+	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
+
+	// かっこつけるための線の描画
+	DrawLineAA(0 + 100, 120, screenSize.width - 100, 120, 0xffffff, 3.0f);
+}
+
+// ポーズの描画
+void OptionScene::DrawPause()
+{
+	// ウィンドウサイズの取得
+	const auto& size = Application::GetInstance().GetWindowSize();
+
+	// シーンタイトルの描画
+	auto& messageManager = MessageManager::GetInstance();
+	messageManager.DrawStringCenter("OptionTitle", size.width / 2, 100, 0xffffff);
 }
