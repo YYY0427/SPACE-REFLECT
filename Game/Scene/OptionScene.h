@@ -60,5 +60,5 @@ private:
 	int m_lbButtonImgHandle;
 
 	// 項目の描画色データ
-	std::vector<int> m_itemColorTable;
+	std::vector<unsigned int> m_itemColorTable;
 };

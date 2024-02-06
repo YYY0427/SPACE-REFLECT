@@ -21,10 +21,10 @@ namespace
 	const std::string xbox_lb_file_path = "Data/Image/xbox_lb.png";
 
 	// 選択されていないときの描画色
-	constexpr int normal_color = 0x666666;
+	constexpr unsigned int normal_color = 0x444444;
 
 	// 選択されているときの描画色
-	constexpr int choose_color = 0xffffff;
+	constexpr unsigned int choose_color = 0xffffff;
 
 	// 表示するテキストの全体の位置
 	constexpr int draw_text_pos_x = 200;
@@ -168,7 +168,7 @@ void OptionScene::Draw()
 	auto& messageManager = MessageManager::GetInstance();
 
 	// 背景色の描画
-	DrawBox(0, 0, size.width, size.height, 0x000000, true);
+	DrawBox(0, 0, size.width, size.height, 0x222222, true);
 
 	// 項目の描画
 	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
@@ -228,18 +228,21 @@ void OptionScene::Draw()
 		}
 		volumeItem++;
 	}
-
-	// TODO : 三角形の描画
-	for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
-	{
-		DrawTriangleAA(620 - 100, draw_text_pos_y + (text_space_y * i + 10), 
-					   620 - 100 + 50, draw_text_pos_y + (text_space_y * i + 10) - 50,
-					   620 - 100 - 50, draw_text_pos_y + (text_space_y * i + 10) + 50, 
-					   m_itemColorTable[static_cast<int>(m_currentSelectItem)], true);
-	}
-
 	// 描画輝度をもとに戻す
 	SetDrawBright(255, 255, 255);
+
+	// 三角形の描画
+	/*for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
+	{
+		DrawTriangleAA(620 - 75, draw_text_pos_y + (text_space_y * i + 10), 
+					   620 - 75 + 15, draw_text_pos_y + (text_space_y * i + 10) - 15,
+					   620 - 75 + 15, draw_text_pos_y + (text_space_y * i + 10) + 15, 
+					   m_itemColorTable[i], true);
+		DrawTriangleAA(900 + 75, draw_text_pos_y + (text_space_y * i + 10),
+			900 + 75 - 15, draw_text_pos_y + (text_space_y * i + 10) - 15,
+			900 + 75 - 15, draw_text_pos_y + (text_space_y * i + 10) + 15,
+			m_itemColorTable[i], true);
+	}*/
 	
 	// ステートマシンの更新
 	m_drawStateMachine.Update();
