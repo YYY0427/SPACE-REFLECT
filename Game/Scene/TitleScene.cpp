@@ -31,7 +31,7 @@ TitleScene::TitleScene(SceneManager& manager) :
 	// ゲームのプレイ動画を再生
 
 	// 画面切り替え演出の設定
-	m_pTransitor = std::make_unique<IrisTransitor>();
+	m_pTransitor = std::make_unique<FadeTransitor>();
 	m_pTransitor->Start();
 }
 

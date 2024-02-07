@@ -90,7 +90,7 @@ namespace
 	constexpr int cube_laser_attack_frame = 60 * 10;		// キューブレーザー攻撃のフレーム
 	constexpr int cube_laser_interval_frame = 60 * 2;		// キューブレーザー攻撃の間隔フレーム
 	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
-	constexpr int die_draw_stop_frame = 60 * 5;				// 死亡時の描画停止フレーム
+	constexpr int die_draw_stop_frame = 60 * 7;				// 死亡時の描画停止フレーム
 }
 
 // コンストラクタ
@@ -358,9 +358,18 @@ void BossMatrix::UpdateDie()
 		// エフェクトの再生を開始してから、一定フレーム経過したら
 		else if (m_dieDrawStopFrame-- <= 0)
 		{
-			// 存在フラグを下げる
-			m_isEnabled = false;
+			// 見えなくする
+			m_opacity = 0.0f;
+
+			// エフェクトの再生が終了したら
+			if (!Effekseer3DEffectManager::GetInstance().IsPlayingEffect(m_dieEffectHandle))
+			{
+				// 存在フラグを下げる
+				m_isEnabled = false;
+			}
 		}
+		// エフェクトの位置の更新
+		Effekseer3DEffectManager::GetInstance().SetEffectPos(m_dieEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 300.0f });
 	}
 }
 

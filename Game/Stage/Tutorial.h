@@ -15,6 +15,7 @@ class ScreenShaker;
 class PlanetManager;
 class LaserManager;
 class EnemyManager;
+class ResultWindow;
 
 /// <summary>
 /// チュートリアルステージクラス
@@ -28,11 +29,15 @@ public:
 	// デストラクタ
 	~Tutorial();
 
+	// 開始
+	void EntarResult();
+
 	// 更新
 	void Update() override final;
 	void UpdateStartAnimation();
 	void UpdatePlay();
 	void UpdateGameClear();
+	void UpdateResult();
 
 	// 描画
 	void Draw() override final;
@@ -48,6 +53,7 @@ private:
 		PLAY,				// プレイ中
 		GAME_OVER,			// ゲームオーバー
 		GAME_CLEAR,			// ゲームクリア
+		RESULT,				// リザルト
 		NUM					// 状態の数
 	};
 
@@ -65,4 +71,5 @@ private:
 	std::shared_ptr<PlanetManager> m_pPlanetManager;
 	std::shared_ptr<LaserManager> m_pLaserManager;
 	std::shared_ptr<EnemyManager> m_pEnemyManager;
+	std::shared_ptr<ResultWindow> m_pResultWindow;
 };

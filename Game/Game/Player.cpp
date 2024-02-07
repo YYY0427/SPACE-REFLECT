@@ -352,7 +352,29 @@ void Player::Update(float cameraHorizon)
 	}
 }
 
-void Player::GameOverUpdate()
+// ゲームクリアの更新
+void Player::UpdateGameClear()
+{
+	// 常にZ軸方向に移動
+	m_moveVec.z = (move_z_speed * m_slowValue);
+	m_pos.z += m_moveVec.z;
+
+	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 不透明度
+	m_pModel->SetPos(m_pos);			// 位置
+	m_pModel->SetRot(m_rot);			// 回転
+	m_pModel->Update();					// 更新
+
+	// エフェクトの設定
+	auto& effectManager = Effekseer3DEffectManager::GetInstance();
+	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
+	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
+	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
+	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
+}
+
+// ゲームオーバーの更新
+void Player::UpdateGameOver()
 {
 	// UIを格納
 	UIManager::GetInstance().Store();

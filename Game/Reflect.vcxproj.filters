@@ -272,8 +272,8 @@
     <ClCompile Include="ModelHandleManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\ResultScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+    <ClCompile Include="UI\ResultWindow.cpp">
+      <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -496,8 +496,8 @@
     <ClInclude Include="ModelHandleManager.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\ResultScene.h">
-      <Filter>ソース ファイル\Scene</Filter>
+    <ClInclude Include="UI\ResultWindow.h">
+      <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -35,8 +35,7 @@ Camera::Camera(Vector3 pos, Vector3 target) :
 	m_isStartAnimation(false),
 	m_hermiteValue(0.0f),
 	m_lerpValue(0.0f),
-	m_slowValue(1.0f),
-	m_windEffectHandle(-1)
+	m_slowValue(1.0f)
 {
 }
 
@@ -52,16 +51,6 @@ Camera::Camera(Vector3 playerPos) :
 	m_lerpValue(0.0f),
 	m_slowValue(1.0f)
 {
-
-	// 風エフェクトの再生
-	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
-		m_windEffectHandle,
-		EffectID::wind,
-		m_pos,
-		{ 20000.0f, 20000.0f, 20000.0f },
-		1.0f,
-		{ 0.0f, -DX_PI_F / 2, 0.0f });
-
 	// カメラの設定
 	SetCamera();
 }
@@ -126,8 +115,6 @@ void Camera::UpdatePlay(Vector3 playerPos)
 		m_target += (direction * camera_move_speed * m_slowValue);
 	}
 
-	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, { m_pos.x, m_pos.y, m_pos.z + 3000.0f });
-
 	// カメラの設定
 	SetCamera();
 }
@@ -159,22 +146,47 @@ void Camera::UpdateStart(Vector3 playerPos)
 		{
 			// スタート演出をしたかフラグを立てる
 			m_isStartAnimation = true;
+			m_hermiteValue = 0.0f;
 		}
 	}
-
-	Effekseer3DEffectManager::GetInstance().SetEffectPos(m_windEffectHandle, { m_pos.x, m_pos.y, m_pos.z + 3000.0f });
 
 	// カメラの設定
 	SetCamera();
 }
 
 // ゲームクリア時の更新
-void Camera::GameClearUpdate(Vector3 playerPos)
+bool Camera::UpdateGameClear(Vector3 playerPos)
 {
+	// カメラのターゲットをプレイヤーの位置に徐々に変更
+	m_lerpValue += 0.001f * m_slowValue;
+	m_target = Vector3::Lerp(m_target, playerPos, m_lerpValue);
+
+	// カメラの位置をエルミート曲線で移動させる
+	m_hermiteValue += 0.001f * m_slowValue;
+	Vector3 targetPos = { playerPos.x + 200.0f, playerPos.y + 50, playerPos.z + 200.0f };
+	m_pos = Vector3::Hermite
+	(
+		m_pos,
+		{ 1.0f, 0.0f, 1.0f },
+		targetPos, 
+		{ -1.0f, 0.0f, -1.0f },
+		m_hermiteValue
+	);
+
+	// 目標位置に到達したら
+	if (targetPos.Distance(m_pos) < 10.0f &&  m_target.Distance(playerPos) < 10.0f)
+	{
+		return true;
+	}
+
+	// カメラの設定
+	SetCamera();
+
+	return false;
 }
 
 // ゲームオーバー時の更新
-void Camera::GameOverUpdate(Vector3 playerPos)
+void Camera::UpdateGameOver(Vector3 playerPos)
 {
 	// カメラの垂直方向の回転
 	m_cameraHorizon -= camera_rotate_speed * m_slowValue;

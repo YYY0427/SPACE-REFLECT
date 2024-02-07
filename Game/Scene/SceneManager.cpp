@@ -53,6 +53,7 @@ void SceneManager::Draw()
 	// 画面サイズの取得
 	Size size = Application::GetInstance().GetWindowSize();
 
+#ifdef _DEBUG
 	// 1フレームにかかった描画時間を表示
 	float rate = static_cast<float>(m_updateTime + m_drawTime) / static_cast<long long>(1000000 / fps);
 	int width = static_cast<int>(size.width * rate);
@@ -69,6 +70,7 @@ void SceneManager::Draw()
 
 	// fpsを描画
 	DrawFormatString(300, size.height - 40, 0xffffff, "FPS : %f", fps);
+#endif
 }
 
 // シーンの切り替え

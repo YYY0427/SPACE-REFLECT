@@ -17,7 +17,6 @@ public:
 
 	// XV
 	virtual void Update() = 0;
-	void ChangeResultScene(std::string stageName);
 
 	// •`‰æ
 	virtual void Draw() = 0;

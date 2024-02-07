@@ -133,7 +133,6 @@ void Stage1::UpdatePlay()
 // ゲームクリアの更新
 void Stage1::UpdateGameClear()
 {
-	ChangeResultScene("Stage1");
 }
 
 // 描画

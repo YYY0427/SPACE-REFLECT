@@ -18,8 +18,8 @@ public:
 	void Update(Vector3 pos, Vector3 target);	// 通常時の更新
 	void UpdatePlay(Vector3 playerPos);			// プレイ時の更新
 	void UpdateStart(Vector3 playerPos);		// スタート演出時の更新
-	void GameClearUpdate(Vector3 playerPos);	// ゲームクリア時の更新
-	void GameOverUpdate(Vector3 playerPos);		// ゲームオーバー時の更新
+	bool UpdateGameClear(Vector3 playerPos);	// ゲームクリア時の更新
+	void UpdateGameOver(Vector3 playerPos);		// ゲームオーバー時の更新
 
 	// カメラの設定	
 	void SetCamera();		
@@ -37,8 +37,6 @@ public:
 	void SetSlowValue(float slowValue);
 
 private:
-	int m_windEffectHandle;
-
 	// カメラの座標
 	Vector3 m_pos;
 

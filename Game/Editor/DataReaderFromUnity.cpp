@@ -103,7 +103,7 @@ const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(std::string fil
 	if (it2 == it->second.end())
 	{
 		// データがない場合は空のデータを返す
-		std::vector<UnityGameObject> empty;
+		static std::vector<UnityGameObject> empty;
 		return empty;
 	}
 

@@ -259,6 +259,7 @@ void OptionScene::DrawStageSelect()
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
 	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
+
 	// RBƒ{ƒ^ƒ“‚Ì•`‰æ
 	DrawRotaGraph((screenSize.width / 2.0f) + 375, 95, 1.0f, 0.0f, m_rbButtonImgHandle, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

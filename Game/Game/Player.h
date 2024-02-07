@@ -27,7 +27,8 @@ public:
 	// çXêV
 	void UpdateStart(Vector3 cameraPos);
 	void Update(float cameraHorizon);
-	void GameOverUpdate();
+	void UpdateGameClear();
+	void UpdateGameOver();
 
 	// ï`âÊ
 	void Draw();

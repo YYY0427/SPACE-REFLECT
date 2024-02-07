@@ -1,7 +1,10 @@
 #include "Tutorial.h"
+#include "../Scene/StageSelectScene.h"
+#include "../Scene/SceneManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../UI/UIManager.h"
 #include "../UI/DamageFlash.h"
+#include "../UI/ResultWindow.h"
 #include "../Effect/ScreenShaker.h"
 #include "../Effect/Effekseer3DEffectManager.h"
 #include "../Game/Player.h"
@@ -14,6 +17,7 @@
 #include "../Game/Laser/LaserBase.h"
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/EnemyBase.h"
+#include "../Score/ScoreRanking.h"
 #include "../Score/Score.h"
 #include "../String/MessageManager.h"
 #include <DxLib.h>
@@ -38,6 +42,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
+	m_stateMachine.AddState(State::RESULT, [this]() { EntarResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
 	// オブジェクト配置データ読み込み
@@ -130,8 +135,42 @@ void Tutorial::UpdatePlay()
 // ゲームクリアの更新
 void Tutorial::UpdateGameClear()
 {
-	// リザルト画面に切り替え
-	ChangeResultScene("Tutorial");
+	// ゲームクリア時の更新
+	m_pPlayer->UpdateGameClear();
+
+	// カメラの更新が終了したら
+	if (m_pCamera->UpdateGameClear(m_pPlayer->GetPos()))
+	{
+		// リザルト画面に遷移
+		m_stateMachine.SetState(State::RESULT);
+	}
+}
+
+// リザルトの開始
+void Tutorial::EntarResult()
+{
+	// リザルト画面のインスタンス生成
+	m_pResultWindow = std::make_shared<ResultWindow>();
+}
+
+// リザルトの更新
+void Tutorial::UpdateResult()
+{
+	// リザルト画面の更新
+	m_pResultWindow->Update();
+
+	// リザルト画面が終了したら
+	if (m_pResultWindow->IsEnd())
+	{
+		// スコアをランキングに追加
+		ScoreRanking::GetInstance().AddScore("Tutorial", "No Name", Score::GetInstance().GetTotalScore());
+
+		// スコアを初期化
+		Score::GetInstance().Reset();
+
+		// ステージセレクトに遷移
+		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+	}
 }
 
 // 描画
@@ -154,6 +193,13 @@ void Tutorial::Draw()
 	m_pPlayer->DrawShield();						// シールド
 	UIManager::GetInstance().Draw();				// UI
 	Score::GetInstance().DrawScore();				// スコア
+
+	// リザルト画面が開始されていたら
+	if (m_stateMachine.GetCurrentState() == State::RESULT)
+	{
+		// リザルト画面の描画
+		m_pResultWindow->Draw();
+	}
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
