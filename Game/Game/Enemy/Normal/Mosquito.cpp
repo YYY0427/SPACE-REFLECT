@@ -54,6 +54,7 @@ Mosquito::Mosquito( EnemyData data,
 	m_state.AddState(State::MOVE, [this]() { EntarMove(); }, [this](){ UpdateMove(); }, {});
 	m_state.AddState(State::ATTACK, {}, [this](){ UpdateAttack(); }, {});
 	m_state.AddState(State::DEAD, {}, [this](){ UpdateDead(); }, {});
+	m_state.AddState(State::GAME_OVER, {}, [this](){ UpdateGameOver(); }, {});
 	m_state.SetState(State::MOVE);
 
 	// モデルのインスタンスの作成
@@ -104,17 +105,26 @@ void Mosquito::Update()
 	// ステートマシンの更新
 	m_state.Update();
 
-	// レーザーの発射位置の更新
-	m_laserFirePos = Vector3::FromDxLibVector3(
-		MV1GetFramePosition(m_pModel->GetModelHandle(), laser_fire_frame_pos));
+	// プレイヤーが死んでいたら
+	if (!m_pPlayer->IsLive())
+	{
+		// ゲームオーバー状態に遷移
+		m_state.SetState(State::GAME_OVER);
+	}
+	else
+	{
+		// レーザーの発射位置の更新
+		m_laserFirePos = Vector3::FromDxLibVector3(
+			MV1GetFramePosition(m_pModel->GetModelHandle(), laser_fire_frame_pos));
 
-	// プレイヤーを向くように回転行列を設定
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
+		// プレイヤーを向くように回転行列を設定
+		Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
+		m_pModel->SetRotMtx(rotMtx);
+	}
 
 	// モデルの設定
 	m_pModel->RestoreAllMaterialDifColor();	// ディフューズカラーを元に戻す
 	m_pModel->SetOpacity(m_opacity);
-	m_pModel->SetRotMtx(rotMtx);
 	m_pModel->SetPos(m_pos);
 	m_pModel->Update();
 }
@@ -211,6 +221,11 @@ void Mosquito::UpdateAttack()
 
 // 死亡状態の更新
 void Mosquito::UpdateDead()
+{
+}
+
+// ゲームオーバー状態の更新
+void Mosquito::UpdateGameOver()
 {
 }
 

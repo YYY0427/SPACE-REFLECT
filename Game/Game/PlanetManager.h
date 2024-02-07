@@ -35,7 +35,8 @@ public:
 
 	// XV
 	void UpdateStart(Vector3 playerVec);
-	void Update();
+	void UpdatePlay();
+	void UpdateStageSelect();
 
 	// •`‰æ
 	void Draw();

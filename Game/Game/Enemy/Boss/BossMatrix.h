@@ -44,6 +44,7 @@ private:
 	void UpdateEntry();		// 登場時の更新
 	void UpdateIdle();		// 待機時の更新
 	void UpdateDie();		// 死亡時の更新
+	void UpdateGameOver();	// ゲームオーバー時の更新
 	void UpdateMoveHomingLaserAttack();	// 移動しながらホーミングレーザー攻撃
 	void UpdateCubeLaserAttack();		// キューブレーザー攻撃
 
@@ -67,6 +68,7 @@ private:
 		IDLE,		// 待機
 		BARIER,		// バリア
 		DIE,		// 死亡
+		GAME_OVER,	// ゲームオーバー
 
 		// 攻撃
 		MOVE_HOMING_LASER_ATTACK,	// 移動しながらホーミングレーザー攻撃

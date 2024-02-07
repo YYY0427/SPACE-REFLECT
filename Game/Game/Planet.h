@@ -19,8 +19,8 @@ public:
 	~Planet();
 
 	// 更新
-	void UpdateStart(Vector3 playerVec);
-	void Update();
+	void UpdateStart(Vector3 playerVec, Vector3 rotVec);
+	void Update(Vector3 rotVec);
 
 	// 描画
 	void Draw();
@@ -40,7 +40,4 @@ private:
 
 	// 拡大率
 	Vector3 m_scale;
-
-	// 回転ベクトル
-	Vector3 m_rotVec;
 };

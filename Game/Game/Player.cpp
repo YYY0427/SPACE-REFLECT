@@ -98,7 +98,8 @@ Player::Player(std::string objectDataFileName) :
 	m_boostEffectHandle(-1),
 	m_damageEffectHandle(-1),
 	m_opacity(1.0f),
-	m_dieEffectIntervalTimer(20)
+	m_dieEffectIntervalTimer(20),
+	m_waitFrame(60 * 5)
 {
 	// データの読み込み
 	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
@@ -377,56 +378,86 @@ void Player::UpdateGameClear()
 }
 
 // ゲームオーバーの更新
-void Player::UpdateGameOver()
+bool Player::UpdateGameOver()
 {
 	// エフェクトの停止
 	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_boostEffectHandle);
 
-	// タイマーの更新
-	m_dieEffectIntervalTimer.Update(1);
-
-	// タイマーの制限時間を超えたら 
-	if (m_dieEffectIntervalTimer.IsTimeOut())
+	if (m_waitFrame-- >= 0)
 	{
-		// エフェクトの再生位置をプレイヤーの周りにランダムで設定
-		Vector3 pos =
+		// タイマーの更新
+		m_dieEffectIntervalTimer.Update(1);
+
+		// タイマーの制限時間を超えたら 
+		if (m_dieEffectIntervalTimer.IsTimeOut())
 		{
-			m_pos.x + (GetRand(150) - 50),
-			m_pos.y + (GetRand(150) - 50),
-			m_pos.z + (GetRand(150) - 50)
-		};
+			// エフェクトの再生位置をプレイヤーの周りにランダムで設定
+			Vector3 pos =
+			{
+				m_pos.x + (GetRand(150) - 50),
+				m_pos.y + (GetRand(150) - 50),
+				m_pos.z + (GetRand(150) - 50)
+			};
 
-		// エフェクトの拡大率をランダムで設定
-		float scale = GetRand(5) + 3;
+			// エフェクトの拡大率をランダムで設定
+			float scale = GetRand(5) + 3;
 
-		// エフェクトを再生
-		Effekseer3DEffectManager::GetInstance().PlayEffect(
-			m_playerDeadEffectHandle,
-			EffectID::player_dead,
-			pos,
-			{ scale, scale, scale },
-			1.0f);
+			// エフェクトを再生
+			Effekseer3DEffectManager::GetInstance().PlayEffect(
+				m_playerDeadEffectHandle,
+				EffectID::player_dead,
+				pos,
+				{ scale, scale, scale },
+				1.0f);
 
-		// タイマーのリセット
-		m_dieEffectIntervalTimer.Reset();
+			// タイマーのリセット
+			m_dieEffectIntervalTimer.Reset();
+		}
+
+		// 移動ベクトル作成
+		m_moveVec = { 0.0f, -0.5f, 1.0f };
+		m_moveVec = m_moveVec.Normalized();
+		m_moveVec *= 2.0f;
+
+		// プレイヤーを回転
+		m_rot += { 0, 0, MathUtil::ToRadian(5) };
+
+		// 作成した移動ベクトルで座標の移動
+		m_pos = m_pos + m_moveVec;
+	}
+	else
+	{
+		// まだ再生していない場合
+		if (!m_isPlayerDeadEffect)
+		{
+			// フラグを立てる
+			m_isPlayerDeadEffect = true;
+
+			// でかい爆発エフェクトを再生
+			Effekseer3DEffectManager::GetInstance().PlayEffect(
+				m_playerDeadEffectHandle,
+				EffectID::player_dead,
+				m_pos,
+				{ 50.0f, 50.0f, 50.0f },
+				0.5f);
+		}
+		else
+		{
+			// でかい爆発エフェクトの再生が終了したら
+			if (!Effekseer3DEffectManager::GetInstance().IsPlayingEffect(m_playerDeadEffectHandle))
+			{
+				return true;
+			}
+		}
 	}
 
-	// 移動ベクトル作成
-	m_moveVec = { 0.0f, -0.5f, 1.0f };
-	m_moveVec = m_moveVec.Normalized();
-	m_moveVec *= 2.0f;
+	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 不透明度
+	m_pModel->SetPos(m_pos);	// 位置
+	m_pModel->SetRot(m_rot);	// 回転
+	m_pModel->Update();			// 更新
 
-	// 作成した移動ベクトルで座標の移動
-	m_pos = m_pos + m_moveVec;
-
-	// 位置座標の設定
-	m_pModel->SetPos(m_pos);
-
-	// 向いている方向の設定
-	m_pModel->SetRot(m_rot);
-
-	// アニメーションと当たり判定の更新
-	m_pModel->Update();
+	return false;
 }
 
 // 描画

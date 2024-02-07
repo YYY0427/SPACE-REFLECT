@@ -34,6 +34,7 @@ private:
 	void UpdateMove();	// 移動
 	void UpdateAttack();// 攻撃
 	void UpdateDead();	// 死亡
+	void UpdateGameOver();	// ゲームオーバー
 
 	// ゴールの座標
 	void GetGoalPos();	
@@ -46,6 +47,7 @@ private:
 		MOVE,		// 移動
 		ATTACK,		// 攻撃
 		DEAD,		// 死亡
+		GAME_OVER,	// ゲームオーバー
 	};
 
 private:

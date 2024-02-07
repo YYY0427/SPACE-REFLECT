@@ -28,7 +28,7 @@ public:
 	void UpdateStart(Vector3 cameraPos);
 	void Update(float cameraHorizon);
 	void UpdateGameClear();
-	void UpdateGameOver();
+	bool UpdateGameOver();
 
 	// 描画
 	void Draw();
@@ -103,6 +103,7 @@ private:
 
 	// タイマー
 	Timer<int> m_dieEffectIntervalTimer;	// 死亡エフェクトのインターバルタイマー
+	int m_waitFrame;			// 待機フレーム
 	int m_ultimateTimer;		// 無敵時間のタイマー
 	Timer<int> m_waitTimer;		// 待機時間のタイマー
 };

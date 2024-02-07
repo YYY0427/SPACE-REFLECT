@@ -46,7 +46,7 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	m_rbButtonImgHandle(-1)
 {
 	// 画面切り替え演出の初期化
-	m_pTransitor = std::make_unique<FadeTransitor>(20);
+	m_pTransitor = std::make_unique<FadeTransitor>(10);
 	m_pTransitor->Start();
 
 	// 画像のロード
@@ -150,7 +150,7 @@ void OptionScene::UpdateStageSelect()
 void OptionScene::UpdatePause()
 {
 	// 戻るボタンが押されたとき
-	if (InputState::IsTriggered(InputType::BACK))
+	if (InputState::IsTriggered(InputType::BACK) || InputState::IsTriggered(InputType::PAUSE))
 	{
 		// 終了
 		m_manager.PopScene();

@@ -35,4 +35,3 @@ private:
 	// いまのステージ
 	Stage m_stage;
 };
-

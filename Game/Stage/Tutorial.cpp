@@ -93,7 +93,7 @@ void Tutorial::UpdateStartAnimation()
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });		// スカイドーム
-	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());	// 惑星
+	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());		// 惑星
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
@@ -106,27 +106,6 @@ void Tutorial::UpdateStartAnimation()
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
-	static bool isWaveStart = false;
-	if(!isWaveStart)
-	{
-		m_pEnemyManager->StartWave();
-		isWaveStart = true;
-	}
-
-	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos());				// カメラ
-	m_pEnemyManager->Update();							// 敵
-	m_pLaserManager->Update();							// レーザー
-	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });			// スカイドーム
-	m_pPlanetManager->Update();							// 惑星
-	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
-	m_pDamageFlash->Update();							// ダメージフラッシュ
-	m_pScreenShaker->Update();							// 画面揺れ
-
-	// 当たり判定
-	Collision();
-
 	// ボスが死んだらゲームクリアに遷移
 	if (m_pEnemyManager->IsDeadBoss())
 	{
@@ -138,6 +117,27 @@ void Tutorial::UpdatePlay()
 	{
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
+
+	static bool isWaveStart = false;
+	if(!isWaveStart)
+	{
+		m_pEnemyManager->StartWave();
+		isWaveStart = true;
+	}
+
+	// 更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
+	m_pEnemyManager->Update();							// 敵
+	m_pLaserManager->Update();							// レーザー
+	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
+	m_pPlanetManager->UpdatePlay();						// 惑星
+	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
+	m_pDamageFlash->Update();							// ダメージフラッシュ
+	m_pScreenShaker->Update();							// 画面揺れ
+
+	// 当たり判定
+	Collision();
 }
 
 // ゲームクリアの更新
@@ -160,9 +160,20 @@ void Tutorial::UpdateGameOver()
 	// UIの格納
 	UIManager::GetInstance().Store();
 
+	// 全てのレーザーの削除
+	m_pLaserManager->DeleteAllLaser();
+
 	// ゲームオーバー時の更新
-	m_pPlayer->UpdateGameOver();
 	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
+	m_pEnemyManager->Update();
+	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });
+	m_pPlanetManager->UpdatePlay();
+	m_pScreenShaker->Update();
+	if (m_pPlayer->UpdateGameOver())
+	{
+		// リザルト画面に遷移
+		m_stateMachine.SetState(State::RESULT);
+	}
 
 	DebugText::Log("GameOver");
 }
@@ -177,14 +188,15 @@ void Tutorial::EntarResult()
 // リザルトの更新
 void Tutorial::UpdateResult()
 {
-	// リザルト画面の更新
+	// 更新
 	m_pResultWindow->Update();
+	m_pEnemyManager->Update();
 
 	// リザルト画面が終了したら
 	if (m_pResultWindow->IsEnd())
 	{
 		// スコアをランキングに追加
-		ScoreRanking::GetInstance().AddScore("Tutorial", "No Name", Score::GetInstance().GetTotalScore());
+		ScoreRanking::GetInstance().AddScore("Tutorial", "No NAME", Score::GetInstance().GetTotalScore());
 
 		// スコアを初期化
 		Score::GetInstance().Reset();

@@ -129,6 +129,7 @@ BossMatrix::BossMatrix(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserMan
 	m_stateMachine.AddState(State::DIE, [this]() {EntarDie(); }, [this]() {UpdateDie(); }, {});
 	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, [this]() {EntarMoveHormingLaserAttack(); }, [this]() {UpdateMoveHomingLaserAttack(); }, {});
 	m_stateMachine.AddState(State::CUBE_LASER_ATTACK, [this]() {EntarCubeLaserAttack(); }, [this]() {UpdateCubeLaserAttack(); }, {});
+	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() {UpdateGameOver(); }, {});
 	m_stateMachine.SetState(State::ENTRY);
 
 	// 攻撃ステートの追加
@@ -177,11 +178,19 @@ void BossMatrix::Update()
 	// HPゲージの更新
 	m_pHpGauge->Update();	
 
-	// Z座標の更新
-	m_pos.z += m_pPlayer->GetMoveVec().z;
-
 	// ステートマシンの更新
 	m_stateMachine.Update();
+
+	// プレイヤーが死亡したら
+	if (!m_pPlayer->IsLive())
+	{
+		m_stateMachine.SetState(State::GAME_OVER);
+	}
+	else
+	{
+		// Z座標の更新
+		m_pos.z += m_pPlayer->GetMoveVec().z;
+	}
 
 	// モデル設定
 	m_pModel->RestoreAllMaterialDifColor();	// ディフューズカラーを元に戻す
@@ -371,6 +380,11 @@ void BossMatrix::UpdateDie()
 		// エフェクトの位置の更新
 		Effekseer3DEffectManager::GetInstance().SetEffectPos(m_dieEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 300.0f });
 	}
+}
+
+// ゲームオーバー時の更新
+void BossMatrix::UpdateGameOver()
+{
 }
 
 // 移動しながらホーミングレーザー攻撃

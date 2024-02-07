@@ -1,6 +1,11 @@
 #include "GameScene.h"
+#include "OptionScene.h"
+#include "../Application.h"
 #include "../Stage/Tutorial.h"
 #include "../Stage/Stage1.h"
+#include "../Util/InputState.h"
+#include "../Transitor/FadeTransitor.h"
+#include "../Transitor/TileTransitor.h"
 
 // コンストラクタ
 GameScene::GameScene(SceneManager& manager, Stage stage) :
@@ -16,6 +21,10 @@ GameScene::GameScene(SceneManager& manager, Stage stage) :
 		m_pStage = std::make_unique<Stage1>(manager);
 		break;
 	}
+
+	// 画面切り替え
+	m_pTransitor = std::make_unique<TileTransitor>(60);
+	m_pTransitor->Start();
 }
 
 // デストラクタ
@@ -27,10 +36,21 @@ GameScene::~GameScene()
 void GameScene::Update()
 {
 	m_pStage->Update();
+
+	// ポーズ
+	if (InputState::IsTriggered(InputType::PAUSE))
+	{
+		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::PAUSE));
+	}
+
+	m_pTransitor->Update();
 }
 
 // 描画
 void GameScene::Draw()
 {
+	auto& screenSize = Application::GetInstance().GetWindowSize();
+	DrawBox(0, 0, screenSize.width, screenSize.height, 0x000000, true);
 	m_pStage->Draw();
+	m_pTransitor->Draw();
 }

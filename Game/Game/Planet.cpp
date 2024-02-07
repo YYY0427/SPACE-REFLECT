@@ -3,15 +3,6 @@
 #include "../Model.h"
 #include <DxLib.h>
 
-namespace
-{
-	// 1フレームに回転する量の最大値
-	constexpr float max_rot = 0.01f;
-
-	// 1フレームに回転する量の最小値
-	constexpr float min_rot = 0.0f;
-}
-
 // コンストラクタ
 Planet::Planet(int modelHandle, UnityGameObject data) :
 	m_pos(data.pos),
@@ -20,11 +11,6 @@ Planet::Planet(int modelHandle, UnityGameObject data) :
 {
 	// モデルのインスタンスの作成
 	m_pModel = std::make_unique<Model>(modelHandle);
-
-	// 1フレームに回転する量を0度から～0.1度の間から取得
-	m_rotVec.x = MathUtil::ToRadian(GetRand(10) * (max_rot * 0.1f) + min_rot);
-	m_rotVec.y = MathUtil::ToRadian(GetRand(10) * (max_rot * 0.1f) + min_rot);
-	m_rotVec.z = MathUtil::ToRadian(GetRand(10) * (max_rot * 0.1f) + min_rot);
 
 	// モデルの設定
 	m_pModel->SetPos(m_pos);			// 位置
@@ -39,13 +25,13 @@ Planet::~Planet()
 }
 
 // スタート時の更新
-void Planet::UpdateStart(Vector3 playerVec)
+void Planet::UpdateStart(Vector3 playerVec, Vector3 rotVec)
 {
 	// プレイヤーと同じベクトル移動
 	m_pos += playerVec;
 
 	// 回転
-	m_rot += m_rotVec;
+	m_rot += rotVec;
 
 	// モデルの設定
 	m_pModel->SetPos(m_pos);	// 位置
@@ -54,10 +40,10 @@ void Planet::UpdateStart(Vector3 playerVec)
 }
 
 // 更新
-void Planet::Update()
+void Planet::Update(Vector3 rotVec)
 {
 	// 回転
-	m_rot += m_rotVec;
+	m_rot += rotVec;
 
 	// モデルの設定
 	m_pModel->SetRot(m_rot);	// 回転

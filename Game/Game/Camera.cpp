@@ -9,7 +9,7 @@
 namespace
 {
 	// ƒJƒƒ‰‚Ì‹–ìŠp
-	constexpr float camera_perspective = 90.0f;
+	constexpr float camera_perspective = 70.0f;
 
 	// •`‰æ‹——£(near, far)
 	constexpr float near_distance = 5.0f;

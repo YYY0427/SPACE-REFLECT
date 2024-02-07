@@ -6,10 +6,12 @@
 namespace
 {
 	// ウィンドウサイズ
-	const Vector2 window_size = { 800, 500 };
+//	const Vector2 window_size = { 800, 500 };
+	const Vector2 window_size = { 1280, 570 };
 
 	// ウィンドウの移動速度
 	constexpr float window_move_speed = 20.0f;
+
 }
 
 // コンストラクタ
@@ -17,7 +19,8 @@ ResultWindow::ResultWindow() :
 	m_isEnd(false)
 {
 	auto& screenSize = Application::GetInstance().GetWindowSize();
-	m_windowPos = { screenSize.width * 2.0f, screenSize.height / 2.0f };
+	m_windowPos = { screenSize.width / 2.0f, screenSize.height / 2.0f };
+//	m_windowPos = { screenSize.width * 2.0f, screenSize.height / 2.0f };
 }
 
 // デストラクタ
@@ -29,11 +32,11 @@ ResultWindow::~ResultWindow()
 void ResultWindow::Update()
 {
 	// ウィンドウを移動
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	/*auto& screenSize = Application::GetInstance().GetWindowSize();
 	if (m_windowPos.x > screenSize.width / 2.0f)
 	{
 		m_windowPos.x -= window_move_speed;
-	}
+	}*/
 
 	// 決定ボタンが押されたらシーン遷移
 	if (InputState::IsTriggered(InputType::DECISION))
@@ -48,7 +51,7 @@ void ResultWindow::Draw()
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
 	DrawBox(m_windowPos.x - (window_size.x / 2), m_windowPos.y - (window_size.y / 2),
-			m_windowPos.x + (window_size.x / 2), m_windowPos.y + (window_size.y / 2), 0xffffff, TRUE);
+			m_windowPos.x + (window_size.x / 2), m_windowPos.y + (window_size.y / 2), 0xeeeeee, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

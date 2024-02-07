@@ -56,13 +56,13 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_bButtonImgHandle(-1)
 {
 	// 画面切り替え演出の初期化
-	m_pTransitor = std::make_unique<FadeTransitor>(30);
+	m_pTransitor = std::make_unique<FadeTransitor>(10);
 	m_pTransitor->Start();
 
 	// オブジェクトのデータを読み込む
 	DataReaderFromUnity::GetInstance().LoadUnityGameObjectData(object_file_path);
 
-	// インスタンスの作成
+	// インスタンス作成
 	m_pPlanetManager = std::make_unique<PlanetManager>(object_file_path);
 
 	// ステージの設定
@@ -73,6 +73,7 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_stageData[Stage::STAGE_1].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "EarthCamera")[0].pos;
 	m_stageData[Stage::STAGE_1].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::EARTH);
 
+	// インスタンス作成
 	Vector3 pos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
 	m_pCamera = std::make_unique<Camera>(pos, Vector3{ pos.x, pos.y, pos.z + 10.0f });
 	m_pSkyDome = std::make_unique<SkyDome>(m_pCamera->GetPos());
@@ -86,6 +87,13 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	// 初期化
 	m_cameraStartPos = m_pCamera->GetPos();
 	m_cameraGoalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
+
+	// スコアランキングの初期化
+	if (ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName).empty())
+	{
+		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName);
+	}
+	// アルファ値の初期化
 	for (int i = 0; i < ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName).size(); i++)
 	{
 		m_rankingAlpha.push_back(0);
@@ -136,7 +144,7 @@ void StageSelectScene::Update()
 
 	// 更新
 	UpdateCamera();
-	m_pPlanetManager->Update();
+	m_pPlanetManager->UpdateStageSelect();
 	m_pSkyDome->Update(m_pCamera->GetPos());
 
 	// 3Dの線のアルファ値の更新
@@ -256,16 +264,17 @@ void StageSelectScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
 	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
+
 	// LBボタンの描画
 	DrawRotaGraph((screenSize.width / 2.0f) - 375, 95, 1.0f, 0.0f, m_lbButtonImgHandle, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	
 	// Bボタンの描画
-	DrawRotaGraph(screenSize.width - 180, screenSize.height - 50, 0.8, 0.0f, m_bButtonImgHandle, true);
+	DrawRotaGraph(screenSize.width - 180, screenSize.height - 50, 1.0, 0.0f, m_bButtonImgHandle, true);
 	MessageManager::GetInstance().DrawStringCenter("StageSelectBack", screenSize.width - 100, screenSize.height - 50, 0xffffff);
 
 	// Aボタンの描画
-	DrawRotaGraph(screenSize.width / 2 - 100, screenSize.height - 75, 1.0, 0.0f, m_aButtonImgHandle, true);
+	DrawRotaGraph(screenSize.width / 2 - 120, screenSize.height - 75, 1.0, 0.0f, m_aButtonImgHandle, true);
 	MessageManager::GetInstance().DrawStringCenter("StageSelectStart", screenSize.width / 2, screenSize.height - 75, 0xffffff);
 
 	// 三角形の描画
@@ -279,13 +288,16 @@ void StageSelectScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_line3DAlpha);
 	SetUseLighting(FALSE);
 	DrawCone3D(m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos().ToDxLibVector3(),
-		ConvScreenPosToWorldPos_ZLinear({ screenSize.width / 2.0f + 45, 160, /*m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos.z / GetCameraFar()*/0.02f }), 3.0f, 8, 0xffffff, 0xffffff, true);
+		ConvScreenPosToWorldPos_ZLinear({ screenSize.width / 2.0f + 49, 153, /*m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos.z / GetCameraFar()*/0.02f }), 3.0f, 8, 0xffffff, 0xffffff, true);
 	SetUseLighting(TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// 説明ウィンドウの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_windowAlpha);
 	DrawRoundRectAA(screenSize.width / 2.0f + 50, 150, screenSize.width / 2.0f + 450, 575, 5, 5, 4, 0xffffff, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_line3DAlpha);
+	DrawRoundRectAA(screenSize.width / 2.0f + 50, 150, screenSize.width / 2.0f + 450, 575, 5, 5, 4, 0xffffff, false, 5.0f);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// スコアランキングの描画

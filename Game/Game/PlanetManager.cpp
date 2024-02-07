@@ -3,7 +3,17 @@
 #include "../Editor/DataReaderFromUnity.h"
 #include "../Util/DrawFunctions.h"
 #include "../ModelHandleManager.h"
+#include "../Math/MathUtil.h"
 #include <string>
+
+namespace
+{
+	// ステージセレクト時の回転速度
+	const Vector3 stage_select_rotate_speed = { 0, MathUtil::ToRadian(0.5f), 0 };
+
+	// プレイ画面の回転速度
+	const Vector3 play_rotate_speed = { 0, MathUtil::ToRadian(0.01f), 0 };
+}
 
 // コンストラクタ
 PlanetManager::PlanetManager(std::string objectDataFileName)
@@ -39,16 +49,25 @@ void PlanetManager::UpdateStart(Vector3 playerVec)
 {
 	for (auto& planet : m_planetData)
 	{
-		planet.second.pPlanet->UpdateStart(playerVec);
+		planet.second.pPlanet->UpdateStart(playerVec, play_rotate_speed);
 	}
 }
 
-// 更新
-void PlanetManager::Update()
+// プレイ時の更新
+void PlanetManager::UpdatePlay()
 {
 	for (auto& planet : m_planetData)
 	{
-		planet.second.pPlanet->Update();
+		planet.second.pPlanet->Update(play_rotate_speed);
+	}
+}
+
+// ステージセレクト時の更新
+void PlanetManager::UpdateStageSelect()
+{
+	for (auto& planet : m_planetData)
+	{
+		planet.second.pPlanet->Update(stage_select_rotate_speed);
 	}
 }
 

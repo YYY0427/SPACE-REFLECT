@@ -63,9 +63,9 @@ void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 		assert(result != -1);
 
 		// 度数法を弧度法に変換
-		data.rot.x = MathUtil::ToDegree(data.rot.x);
-		data.rot.y = MathUtil::ToDegree(data.rot.y);
-		data.rot.z = MathUtil::ToDegree(data.rot.z);
+		data.rot.x = MathUtil::ToRadian(data.rot.x);
+		data.rot.y = MathUtil::ToRadian(data.rot.y);
+		data.rot.z = MathUtil::ToRadian(data.rot.z);
 
 		// UnityとDxLibでは回転がずれるため合わせる
 		data.rot.y += DX_PI_F;
