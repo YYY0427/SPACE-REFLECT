@@ -5,7 +5,7 @@
 namespace
 {
 	// UIの格納速度
-	constexpr float store_speed = 5.0f;
+	constexpr float store_speed = 10.0f;
 }
 
 // コンストラクタ

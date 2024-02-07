@@ -241,7 +241,7 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 void BossMatrix::EntarDie()
 {
 	// レーザーを削除
-	m_pLaserManager->DeleteLaser(m_laserKey);
+	m_pLaserManager->DeleteAllLaser();
 
 	// アニメーションの停止
 	m_pModel->StopAnim();

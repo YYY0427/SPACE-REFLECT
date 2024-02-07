@@ -92,7 +92,7 @@ void Stage1::UpdateStartAnimation()
 	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());	// 惑星
 
 	// スタート演出が終わったらプレイ中に遷移
-	if (m_pPlayer->GetIsStartAnimation() &&
+	if (m_pPlayer->IsStartAnimation() &&
 		m_pCamera->GetIsStartAnimation())
 	{
 		m_stateMachine.SetState(State::PLAY);

@@ -92,10 +92,13 @@ Player::Player(std::string objectDataFileName) :
 	m_playerDeadEffectHandle(-1),
 	m_isPlayerDeadEffect(false),
 	m_isStartAnimation(false),
+	m_isReflect(false),
 	m_slowValue(1.0f),
 	m_windEffectHandle(-1),
 	m_boostEffectHandle(-1),
-	m_opacity(1.0f)
+	m_damageEffectHandle(-1),
+	m_opacity(1.0f),
+	m_dieEffectIntervalTimer(20)
 {
 	// データの読み込み
 	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
@@ -376,47 +379,51 @@ void Player::UpdateGameClear()
 // ゲームオーバーの更新
 void Player::UpdateGameOver()
 {
-	// UIを格納
-	UIManager::GetInstance().Store();
+	// エフェクトの停止
+	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_boostEffectHandle);
 
 	// タイマーの更新
-	m_waitTimer.Update(1);
+	m_dieEffectIntervalTimer.Update(1);
 
-	// タイマーが制限時間を超えていてエフェクトを再生していない場合
-	// エフェクトを再生する
-	if (m_waitTimer.IsTimeOut() && !m_isPlayerDeadEffect)
+	// タイマーの制限時間を超えたら 
+	if (m_dieEffectIntervalTimer.IsTimeOut())
 	{
-		// 再生フラグを立てる
-		m_isPlayerDeadEffect = true;
+		// エフェクトの再生位置をプレイヤーの周りにランダムで設定
+		Vector3 pos =
+		{
+			m_pos.x + (GetRand(150) - 50),
+			m_pos.y + (GetRand(150) - 50),
+			m_pos.z + (GetRand(150) - 50)
+		};
 
-		// 再生しているエフェクトを削除
-		auto& effectManager = Effekseer3DEffectManager::GetInstance();
-		effectManager.DeleteEffect(m_boostEffectHandle);
+		// エフェクトの拡大率をランダムで設定
+		float scale = GetRand(5) + 3;
 
-		// プレイヤー死亡エフェクトの再生
-		effectManager.PlayEffectFollow(
-			m_playerDeadEffectHandle, 
-			EffectID::player_dead, 
-			&m_pos, 
-			{ 50.0f, 50.0f, 50.0f }, 0.5f);
+		// エフェクトを再生
+		Effekseer3DEffectManager::GetInstance().PlayEffect(
+			m_playerDeadEffectHandle,
+			EffectID::player_dead,
+			pos,
+			{ scale, scale, scale },
+			1.0f);
+
+		// タイマーのリセット
+		m_dieEffectIntervalTimer.Reset();
 	}
-	// タイマーが制限時間以内の場合は移動
-	else if (!m_waitTimer.IsTimeOut())
-	{
-		// 移動ベクトル作成
-		m_moveVec = { 0.0f, -0.1f, 1.0f };
-		m_moveVec = m_moveVec.Normalized();
-		m_moveVec *= 2.0f;
 
-		// 作成した移動ベクトルで座標の移動
-		m_pos = m_pos + m_moveVec;
-	}
+	// 移動ベクトル作成
+	m_moveVec = { 0.0f, -0.5f, 1.0f };
+	m_moveVec = m_moveVec.Normalized();
+	m_moveVec *= 2.0f;
+
+	// 作成した移動ベクトルで座標の移動
+	m_pos = m_pos + m_moveVec;
 
 	// 位置座標の設定
 	m_pModel->SetPos(m_pos);
 
 	// 向いている方向の設定
-	m_pModel->SetRot({ m_moveVec.Length(), 0.0f, m_moveVec.Length() });
+	m_pModel->SetRot(m_rot);
 
 	// アニメーションと当たり判定の更新
 	m_pModel->Update();
@@ -511,7 +518,7 @@ int Player::GetModelHandle() const
 }
 
  // スタート演出をしたかフラグの取得
-bool Player::GetIsStartAnimation() const
+bool Player::IsStartAnimation() const
 {
 	return m_isStartAnimation;
 }

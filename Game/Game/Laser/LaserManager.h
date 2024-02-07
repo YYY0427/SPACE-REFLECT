@@ -65,6 +65,9 @@ public:
 	// レーザーの削除
 	void DeleteLaser(int key);
 
+	// レーザーの全削除
+	void DeleteAllLaser();
+
 	// ゲッター
 	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
 	const LaserData& GetLaserData(int key) const;		// レーザーデータ

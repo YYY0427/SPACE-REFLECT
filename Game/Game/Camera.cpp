@@ -188,26 +188,9 @@ bool Camera::UpdateGameClear(Vector3 playerPos)
 // ゲームオーバー時の更新
 void Camera::UpdateGameOver(Vector3 playerPos)
 {
-	// カメラの垂直方向の回転
-	m_cameraHorizon -= camera_rotate_speed * m_slowValue;
-	m_cameraHorizon = (std::max)(m_cameraHorizon, MathUtil::ToRadian(30));
-
-	// 基準の長さを垂直方向に回転させたときの水平分の長さ
-	float verticalLength = camera_distance * cosf(m_cameraVertical);
-
-	// 高さ
-	float horizonLength = camera_distance * sinf(m_cameraVertical);
-
-	// カメラ座標の設定
-	// xz座標は水平方向の長さ分進めたところ
-	m_pos.x = playerPos.x + verticalLength * sinf(m_cameraHorizon);
-	m_pos.z = playerPos.z + verticalLength * cosf(m_cameraHorizon);
-
-	// Ｙ座標は垂直方向分上に
-	m_pos.y = playerPos.y + horizonLength;
-
-	// カメラの注視点の設定
-	m_target = playerPos;
+	// カメラのターゲットをプレイヤーの位置に徐々に変更
+	m_lerpValue += 0.001f * m_slowValue;
+	m_target = Vector3::Lerp(m_target, playerPos, m_lerpValue);
 
 	// カメラの設定
 	SetCamera();

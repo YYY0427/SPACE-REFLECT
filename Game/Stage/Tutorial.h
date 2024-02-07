@@ -37,6 +37,7 @@ public:
 	void UpdateStartAnimation();
 	void UpdatePlay();
 	void UpdateGameClear();
+	void UpdateGameOver();
 	void UpdateResult();
 
 	// 描画
@@ -51,8 +52,8 @@ private:
 	{
 		START_ANIMATION,	// スタート演出
 		PLAY,				// プレイ中
-		GAME_OVER,			// ゲームオーバー
 		GAME_CLEAR,			// ゲームクリア
+		GAME_OVER,			// ゲームオーバー
 		RESULT,				// リザルト
 		NUM					// 状態の数
 	};

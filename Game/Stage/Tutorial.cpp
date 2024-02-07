@@ -20,6 +20,7 @@
 #include "../Score/ScoreRanking.h"
 #include "../Score/Score.h"
 #include "../String/MessageManager.h"
+#include "../MyDebug/DebugText.h"
 #include <DxLib.h>
 
 namespace
@@ -42,6 +43,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
+	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
 	m_stateMachine.AddState(State::RESULT, [this]() { EntarResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
@@ -94,7 +96,7 @@ void Tutorial::UpdateStartAnimation()
 	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());	// 惑星
 
 	// スタート演出が終わったらプレイ中に遷移
-	if (m_pPlayer->GetIsStartAnimation() &&
+	if (m_pPlayer->IsStartAnimation() &&
 		m_pCamera->GetIsStartAnimation())
 	{
 		m_stateMachine.SetState(State::PLAY);
@@ -130,6 +132,12 @@ void Tutorial::UpdatePlay()
 	{
 		m_stateMachine.SetState(State::GAME_CLEAR);
 	}
+
+	// プレイヤーが死んだらゲームオーバーに遷移
+	if (!m_pPlayer->IsLive())
+	{
+		m_stateMachine.SetState(State::GAME_OVER);
+	}
 }
 
 // ゲームクリアの更新
@@ -144,6 +152,19 @@ void Tutorial::UpdateGameClear()
 		// リザルト画面に遷移
 		m_stateMachine.SetState(State::RESULT);
 	}
+}
+
+// ゲームオーバーの更新
+void Tutorial::UpdateGameOver()
+{
+	// UIの格納
+	UIManager::GetInstance().Store();
+
+	// ゲームオーバー時の更新
+	m_pPlayer->UpdateGameOver();
+	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
+
+	DebugText::Log("GameOver");
 }
 
 // リザルトの開始

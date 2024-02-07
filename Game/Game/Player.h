@@ -43,29 +43,17 @@ public:
 	// プレイヤーが生きているか
 	bool IsLive() const;
 
-	// 位置情報の取得
-	Vector3 GetPos() const;
+	// ゲッター
+	Vector3 GetPos() const;		// 位置情報
+	Vector3 GetMoveVec() const;	// 移動ベクトル
+	float GetCollsionRadius() const;	// 当たり判定の半径
+	int GetModelHandle() const;			// モデルハンドル
+	bool IsStartAnimation() const;		// スタート演出をしたかフラグ
+	std::shared_ptr<Shield> GetShield() const;	// シールドのポインタ
+	std::deque<Vector3> GetPosLogTable() const;	// 位置情報のテーブル
 
-	// 移動ベクトルの取得
-	Vector3 GetMoveVec() const;
-
-	// プレイヤーの当たり判定の半径の取得
-	float GetCollsionRadius() const;
-
-	// プレイヤーモデルのハンドルの取得
-	int GetModelHandle() const;
-
-	// スタート演出をしたかフラグの取得
-	bool GetIsStartAnimation() const;
-
-	// シールドのインスタンスの取得
-	std::shared_ptr<Shield> GetShield() const;
-
-	// 決められたフレームの数だけ位置情報を保存するテーブルの取得
-	std::deque<Vector3> GetPosLogTable() const;
-
-	// スローの値の設定
-	void SetSlowValue(float slowValue);
+	// セッター
+	void SetSlowValue(float slowValue);	// スローの値
 
 private:
 	// ポインタ
@@ -110,12 +98,11 @@ private:
 	int m_windEffectHandle;			// 風エフェクトのハンドル
 	int m_boostEffectHandle;		// ブーストエフェクトハンドル
 	int m_damageEffectHandle;		// ダメージエフェクトハンドル
-//	Vector3 m_boostEffectScale;		// ブーストエフェクトの拡大率
-//	float m_boostEffectSpeed;		// ブーストエフェクトの再生速度
 	int m_playerDeadEffectHandle;	// プレイヤー死亡エフェクトハンドル
 	bool m_isPlayerDeadEffect;		// プレイヤー死亡エフェクトの再生フラグ
 
 	// タイマー
+	Timer<int> m_dieEffectIntervalTimer;	// 死亡エフェクトのインターバルタイマー
 	int m_ultimateTimer;		// 無敵時間のタイマー
 	Timer<int> m_waitTimer;		// 待機時間のタイマー
 };

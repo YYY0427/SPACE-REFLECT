@@ -24,7 +24,7 @@ LaserManager::~LaserManager()
 // 更新
 void LaserManager::Update()
 {
-	// 不要になったレーザーの削除
+	// 存在フラグが下がっているのレーザーを削除
 	m_pLaserList.remove_if([](const LaserData& laser) { return !laser.pLaser->IsEnabled(); });
 
 	// レーザーの更新
@@ -142,6 +142,17 @@ void LaserManager::DeleteLaser(int key)
 			laser.pLaser->Delete();
 		}
 	}
+}
+
+// 全てのレーザーの削除
+void LaserManager::DeleteAllLaser()
+{
+	// レーザーの削除
+	for (auto& laser : m_pLaserList)
+	{
+		laser.pLaser->Delete();
+	}
+	m_pLaserList.clear();
 }
 
 // レーザーの取得	
