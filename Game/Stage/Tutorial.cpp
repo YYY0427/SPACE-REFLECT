@@ -21,12 +21,22 @@
 #include "../Score/Score.h"
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
+#include "../UI/TutorialUI.h"
 #include <DxLib.h>
 
 namespace
 {
-	// オブジェクト配置データのファイルパス
-	const std::string object_data_file_path = "Test";
+	// オブジェクト配置データのファイル名
+	const std::string object_data_file_name = "Tutorial";
+
+	// 敵の配置データのファイル名
+	const std::string enemy_data_file_name = "Tutorial";
+
+	// 移動チュートリアルのフレーム数
+	constexpr int move_tutorial_frame = 500;
+
+	// ウェーブの待機フレーム数
+	constexpr int wave_wait_frame = 300;
 
 	// ダメージ
 	constexpr int meteor_damage = 2;			 // 隕石に当たっている間にプレイヤーに与えるダメージ
@@ -39,8 +49,13 @@ namespace
 Tutorial::Tutorial(SceneManager& manager) :
 	StageBase(manager)
 {
+	// 初期化
+	m_waitTimer = wave_wait_frame;
+	m_moveTutorialTimer = move_tutorial_frame;
+
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
+	m_stateMachine.AddState(State::MOVE_TUTORIAL, {}, [this]() { UpdateMoveTutorial(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
@@ -49,32 +64,35 @@ Tutorial::Tutorial(SceneManager& manager) :
 
 	// オブジェクト配置データ読み込み
 	auto& dataReader = DataReaderFromUnity::GetInstance();
-	dataReader.LoadUnityGameObjectData(object_data_file_path.c_str());
+	dataReader.LoadUnityGameObjectData(object_data_file_name.c_str());
 
 	// スコアのインスタンス生成
 	auto& score = Score::GetInstance();
 
 	// インスタンスの作成
-	m_pPlayer = std::make_shared<Player>(object_data_file_path);
+	m_pPlayer = std::make_shared<Player>(object_data_file_name);
 	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
-	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_path);
+	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_path);
+	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name);
 	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
+	m_pTutorialUI = std::make_shared<TutorialUI>();
 
 	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
 
 	// ウェーブデータの読み込み
-	m_pEnemyManager->LoadWaveFileData("Test");
+	m_pEnemyManager->LoadWaveFileData(enemy_data_file_name);
 }
 
 // デストラクタ
 Tutorial::~Tutorial()
 {
+	// エフェクトの全削除
+	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
 }
 
 // 更新
@@ -90,8 +108,8 @@ void Tutorial::Update()
 void Tutorial::UpdateStartAnimation()
 {
 	// 更新
-	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
-	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
+	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
+	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });		// スカイドーム
 	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());		// 惑星
 
@@ -99,30 +117,81 @@ void Tutorial::UpdateStartAnimation()
 	if (m_pPlayer->IsStartAnimation() &&
 		m_pCamera->GetIsStartAnimation())
 	{
-		m_stateMachine.SetState(State::PLAY);
+		m_stateMachine.SetState(State::MOVE_TUTORIAL);
+	}
+}
+
+// 移動チュートリアルの更新
+void Tutorial::UpdateMoveTutorial()
+{
+	// 更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
+	m_pEnemyManager->Update();							// 敵
+	m_pLaserManager->Update();							// レーザー
+	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
+	m_pPlanetManager->UpdatePlay();						// 惑星
+	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
+	m_pDamageFlash->Update();							// ダメージフラッシュ
+	m_pScreenShaker->Update();							// 画面揺れ
+	m_pTutorialUI->Update();							// チュートリアルUI
+
+	// 特定のフレームたったら
+	m_waitTimer.Update(1);
+	if (m_waitTimer.IsTimeOut())
+	{
+		// 一度だけ
+		if (m_waitTimer.GetLimitTime() == m_waitTimer.GetTime())
+		{
+			// チュートリアルUIの開始
+			m_pTutorialUI->StartState(TutorialState::MOVE);
+		}
+
+		// 特定のフレームたったら
+		m_moveTutorialTimer.Update(1);
+		if (m_moveTutorialTimer.IsTimeOut())
+		{
+			// タイマーのリセット
+			m_waitTimer.Reset();
+
+			// チュートリアルUIの終了
+			m_pTutorialUI->EndState();
+
+			// プレイ中に遷移
+			m_stateMachine.SetState(State::PLAY);
+		}
 	}
 }
 
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
+	m_waitTimer.Update(1);
+	if (m_waitTimer.IsTimeOut())
+	{
+		// 一度だけ
+		if (!m_isWaveStart)
+		{
+			// チュートリアルUIの開始
+		//	m_pTutorialUI->StartState(TutorialState::WAVE);
+
+			// ウェーブスタート
+			m_pEnemyManager->StartWave();
+
+			// フラグを立てる
+			m_isWaveStart = true;
+		}
+	}
+
 	// ボスが死んだらゲームクリアに遷移
 	if (m_pEnemyManager->IsDeadBoss())
 	{
 		m_stateMachine.SetState(State::GAME_CLEAR);
 	}
-
 	// プレイヤーが死んだらゲームオーバーに遷移
 	if (!m_pPlayer->IsLive())
 	{
 		m_stateMachine.SetState(State::GAME_OVER);
-	}
-
-	static bool isWaveStart = false;
-	if(!isWaveStart)
-	{
-		m_pEnemyManager->StartWave();
-		isWaveStart = true;
 	}
 
 	// 更新
@@ -135,6 +204,7 @@ void Tutorial::UpdatePlay()
 	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 	m_pScreenShaker->Update();							// 画面揺れ
+	m_pTutorialUI->Update();							// チュートリアルUI
 
 	// 当たり判定
 	Collision();
@@ -143,6 +213,9 @@ void Tutorial::UpdatePlay()
 // ゲームクリアの更新
 void Tutorial::UpdateGameClear()
 {
+	// 全てのレーザーの削除
+	m_pLaserManager->DeleteAllLaser();
+
 	// ゲームクリア時の更新
 	m_pPlayer->UpdateGameClear();
 
@@ -196,7 +269,7 @@ void Tutorial::UpdateResult()
 	if (m_pResultWindow->IsEnd())
 	{
 		// スコアをランキングに追加
-		ScoreRanking::GetInstance().AddScore("Tutorial", "No NAME", Score::GetInstance().GetTotalScore());
+		ScoreRanking::GetInstance().AddScore("Tutorial", "NO NAME", Score::GetInstance().GetTotalScore());
 
 		// スコアを初期化
 		Score::GetInstance().Reset();
@@ -226,6 +299,7 @@ void Tutorial::Draw()
 	m_pPlayer->DrawShield();						// シールド
 	UIManager::GetInstance().Draw();				// UI
 	Score::GetInstance().DrawScore();				// スコア
+	m_pTutorialUI->Draw();							// チュートリアルUI
 
 	// リザルト画面が開始されていたら
 	if (m_stateMachine.GetCurrentState() == State::RESULT)

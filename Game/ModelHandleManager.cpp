@@ -11,7 +11,7 @@ namespace
 	const std::string earth_model_file_path = "Data/Model/Earth.mv1";
 	const std::string moon_model_file_path = "Data/Model/Moon.mv1";
 	const std::string sky_dome_model_file_path = "Data/Model/SkyDome.mv1";
-	const std::string meteorite_model_file_path = "Data/Model/Meteor.mv1";
+//	const std::string meteorite_model_file_path = "Data/Model/Meteor.mv1";
 	const std::string laser_model_file_path = "Data/Model/Laser.mv1";
 	const std::string cube_laser_model_file_path = "Data/Model/CubeLaser.mv1";
 }
@@ -32,7 +32,7 @@ ModelHandleManager::ModelHandleManager()
 	m_handleMap[ModelType::MATRIX].modelHandle = LoadModel(matrix_model_file_path.c_str());
 	m_handleMap[ModelType::EARTH].modelHandle = LoadModel(earth_model_file_path.c_str());
 	m_handleMap[ModelType::MOON].modelHandle = LoadModel(moon_model_file_path.c_str());
-	m_handleMap[ModelType::METEOR].modelHandle = LoadModel(meteorite_model_file_path.c_str());
+//	m_handleMap[ModelType::METEOR].modelHandle = LoadModel(meteorite_model_file_path.c_str());
 	m_handleMap[ModelType::SKYDOME].modelHandle = LoadModel(sky_dome_model_file_path.c_str());
 	m_handleMap[ModelType::LASER].modelHandle = LoadModel(laser_model_file_path.c_str());
 	m_handleMap[ModelType::CUBE_LASER].modelHandle = LoadModel(cube_laser_model_file_path.c_str());

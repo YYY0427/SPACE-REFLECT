@@ -60,7 +60,7 @@ public:
 	int AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos);
 
 	// キューブレーザーの追加
-	int AddCubeLaser(Vector3 firePos);
+	int AddCubeLaser(Vector3 firePos, float laserSpeed);
 
 	// レーザーの削除
 	void DeleteLaser(int key);

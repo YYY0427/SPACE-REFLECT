@@ -91,6 +91,9 @@ namespace
 	constexpr int cube_laser_interval_frame = 60 * 2;		// キューブレーザー攻撃の間隔フレーム
 	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
 	constexpr int die_draw_stop_frame = 60 * 7;				// 死亡時の描画停止フレーム
+
+	// レーザー
+	constexpr float cube_laser_speed = 5.0f;	// キューブレーザーの速度
 }
 
 // コンストラクタ
@@ -440,7 +443,7 @@ void BossMatrix::UpdateCubeLaserAttack()
 				MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
 
 			// キューブレーザーの生成
-			int key = m_pLaserManager->AddCubeLaser(firePos);
+			int key = m_pLaserManager->AddCubeLaser(firePos, cube_laser_speed);
 		}
 	}
 	else

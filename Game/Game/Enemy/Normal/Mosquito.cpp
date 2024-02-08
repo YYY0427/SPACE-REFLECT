@@ -195,14 +195,23 @@ void Mosquito::UpdateAttack()
 	// レーザー発射までの待機フレームが終わったら
 	if (m_actionData.laserIdleFrame-- <= 0 && m_actionData.isLaser)
 	{
-		// レーザーの発射
-		m_laserKey = m_pLaserManager->AddLaser(
-			m_actionData.laserType,
-			shared_from_this(),
-			m_actionData.laserChargeFrame,
-			m_actionData.laserFireFrame,
-			m_actionData.laserSpeed,
-			m_actionData.isPlayerFollowing);
+		switch (m_actionData.laserType)
+		{
+		case LaserType::NORMAL:
+			// レーザーの発射
+			m_laserKey = m_pLaserManager->AddLaser(
+				m_actionData.laserType,
+				shared_from_this(),
+				m_actionData.laserChargeFrame,
+				m_actionData.laserFireFrame,
+				m_actionData.laserSpeed,
+				m_actionData.isPlayerFollowing);
+			break;
+		case LaserType::CUBE:
+			// キューブレーザーの発射
+			m_pLaserManager->AddCubeLaser(m_laserFirePos, m_actionData.laserSpeed);
+			break;
+		}
 
 		// レーザーを発射したのでフラグを下げる
 		m_actionData.isLaser = false;

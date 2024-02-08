@@ -23,8 +23,8 @@ GameScene::GameScene(SceneManager& manager, Stage stage) :
 	}
 
 	// 画面切り替え
-	m_pTransitor = std::make_unique<TileTransitor>(60);
-	m_pTransitor->Start();
+//	m_pTransitor = std::make_unique<TileTransitor>(60);
+//	m_pTransitor->Start();
 }
 
 // デストラクタ
@@ -43,14 +43,12 @@ void GameScene::Update()
 		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::PAUSE));
 	}
 
-	m_pTransitor->Update();
+//	m_pTransitor->Update();
 }
 
 // 描画
 void GameScene::Draw()
 {
-	auto& screenSize = Application::GetInstance().GetWindowSize();
-	DrawBox(0, 0, screenSize.width, screenSize.height, 0x000000, true);
 	m_pStage->Draw();
-	m_pTransitor->Draw();
+//	m_pTransitor->Draw();
 }

@@ -105,7 +105,7 @@ int LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_p
 }
 
 // キューブレーザーの追加
-int LaserManager::AddCubeLaser(Vector3 firePos)
+int LaserManager::AddCubeLaser(Vector3 firePos, float laserSpeed)
 {
 	// レーザーのデータを作成
 	LaserData laserData;
@@ -122,7 +122,7 @@ int LaserManager::AddCubeLaser(Vector3 firePos)
 	}
 
 	// レーザーのポインタを設定
-	laserData.pLaser = std::make_shared<CubeLaser>(firePos, m_pPlayer);
+	laserData.pLaser = std::make_shared<CubeLaser>(firePos, laserSpeed, m_pPlayer);
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);

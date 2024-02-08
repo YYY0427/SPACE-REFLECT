@@ -287,8 +287,10 @@ void StageSelectScene::Draw()
 	// 惑星から説明ウィンドウまでの線の描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_line3DAlpha);
 	SetUseLighting(FALSE);
+	SetUseZBuffer3D(FALSE);
 	DrawCone3D(m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos().ToDxLibVector3(),
-		ConvScreenPosToWorldPos_ZLinear({ screenSize.width / 2.0f + 49, 153, /*m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos.z / GetCameraFar()*/0.02f }), 3.0f, 8, 0xffffff, 0xffffff, true);
+		ConvScreenPosToWorldPos_ZLinear({ screenSize.width / 2.0f + 49, 153, 0.02f }), 3.0f, 8, 0xffffff, 0xffffff, true);
+	SetUseZBuffer3D(TRUE);
 	SetUseLighting(TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 

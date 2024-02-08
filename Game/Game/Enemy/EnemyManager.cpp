@@ -85,7 +85,7 @@ void EnemyManager::UpdateNormal()
 	}
 
 	// 次のウェーブへ
-	NextWave();
+//	NextWave();
 }
 
 // 警告時の更新
@@ -280,9 +280,8 @@ void EnemyManager::LoadWaveFileData(std::string filePath)
 		// csvデータ１行を','で複数の文字列に変換
 		std::vector<std::string> strvec = StringUtil::Split(line, ',');
 
-		WaveData data{};
-
 		// 敵のデータの読み込み
+		WaveData data{};
 		for (int i = 0; i < strvec.size(); i++)
 		{
 			if(i == strvec.size() - 1)

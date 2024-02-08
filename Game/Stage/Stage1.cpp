@@ -24,7 +24,7 @@
 namespace
 {
 	// オブジェクト配置データのファイルパス
-	const std::string object_data_file_path = "Test";
+	const std::string object_data_file_name = "Test";
 
 	// ダメージ
 	constexpr int meteor_damage = 2; // 隕石に当たっている間にプレイヤーに与えるダメージ
@@ -45,18 +45,18 @@ Stage1::Stage1(SceneManager& manager) :
 
 	// オブジェクト配置データ読み込み
 	auto& dataReader = DataReaderFromUnity::GetInstance();
-	dataReader.LoadUnityGameObjectData(object_data_file_path.c_str());
+	dataReader.LoadUnityGameObjectData(object_data_file_name.c_str());
 
 	// スコアのインスタンス生成
 	auto& score = Score::GetInstance();
 
 	// インスタンスの作成
-	m_pPlayer = std::make_shared<Player>(object_data_file_path);
+	m_pPlayer = std::make_shared<Player>(object_data_file_name);
 	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
-	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_path);
+	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_path);
+	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name);
 	m_pScreenShaker = std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 

@@ -275,6 +275,9 @@
     <ClCompile Include="UI\ResultWindow.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="UI\TutorialUI.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -497,6 +500,9 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="UI\ResultWindow.h">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\TutorialUI.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>

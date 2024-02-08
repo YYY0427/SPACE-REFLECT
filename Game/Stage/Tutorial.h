@@ -1,6 +1,7 @@
 #pragma once
 #include "StageBase.h"
 #include "../StateMachine.h"
+#include "../Util/Timer.h"
 #include <string>
 #include <memory>
 
@@ -16,6 +17,7 @@ class PlanetManager;
 class LaserManager;
 class EnemyManager;
 class ResultWindow;
+class TutorialUI;
 
 /// <summary>
 /// チュートリアルステージクラス
@@ -35,6 +37,7 @@ public:
 	// 更新
 	void Update() override final;
 	void UpdateStartAnimation();
+	void UpdateMoveTutorial();
 	void UpdatePlay();
 	void UpdateGameClear();
 	void UpdateGameOver();
@@ -51,6 +54,7 @@ private:
 	enum class State
 	{
 		START_ANIMATION,	// スタート演出
+		MOVE_TUTORIAL,		// 移動チュートリアル
 		PLAY,				// プレイ中
 		GAME_CLEAR,			// ゲームクリア
 		GAME_OVER,			// ゲームオーバー
@@ -73,4 +77,12 @@ private:
 	std::shared_ptr<LaserManager> m_pLaserManager;
 	std::shared_ptr<EnemyManager> m_pEnemyManager;
 	std::shared_ptr<ResultWindow> m_pResultWindow;
+	std::shared_ptr<TutorialUI> m_pTutorialUI;
+
+	// タイマー
+	Timer<int> m_waitTimer;			// 待ち時間のタイマー
+	Timer<int> m_moveTutorialTimer;	// 移動チュートリアルのタイマー
+
+	// フラグ
+	bool m_isWaveStart = false;
 };

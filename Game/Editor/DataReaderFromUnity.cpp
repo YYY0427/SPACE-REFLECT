@@ -55,9 +55,6 @@ void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
 		result = FileRead_read(&data.pos, sizeof(data.pos), dataHandle);
 		assert(result != -1);
 
-		// Unityとの座標データを合わせるために100倍
-		data.pos *= 100.0f;
-
 		// 回転データxyzを読む
 		result = FileRead_read(&data.rot, sizeof(data.rot), dataHandle);
 		assert(result != -1);

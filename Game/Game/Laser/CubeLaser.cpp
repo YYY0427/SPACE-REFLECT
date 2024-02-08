@@ -12,19 +12,16 @@ namespace
 
 	// 不透明度の上昇速度
 	constexpr float opacity_speed = 0.01f;
-
-	// 移動速度
-	constexpr float move_speed = 2.5f;
 }
 
 // コンストラクタ
-CubeLaser::CubeLaser(Vector3 firePos, std::shared_ptr<Player> pPlayer)
+CubeLaser::CubeLaser(Vector3 firePos, float laserSpeed, std::shared_ptr<Player> pPlayer)
 {
 	// 初期化
 	m_pos = firePos;
 	m_pPlayer = pPlayer;
 	m_opacity = 0.0f;	
-	m_moveVec = (m_pPlayer->GetPos() - m_pos).Normalized() * move_speed;
+	m_moveVec = (m_pPlayer->GetPos() - m_pos).Normalized() * laserSpeed;
 
 	// 1フレームに回転する量を0度から～1度の間から取得
 	m_deltaRot = MathUtil::ToRadian(GetRand(100) / 100.0f);
