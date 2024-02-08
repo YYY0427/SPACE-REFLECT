@@ -115,7 +115,7 @@ void Tutorial::UpdateStartAnimation()
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
-		m_pCamera->GetIsStartAnimation())
+		m_pCamera->IsStartAnimation())
 	{
 		m_stateMachine.SetState(State::MOVE_TUTORIAL);
 	}
@@ -126,7 +126,7 @@ void Tutorial::UpdateMoveTutorial()
 {
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		// カメラ
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
@@ -196,7 +196,7 @@ void Tutorial::UpdatePlay()
 
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		// カメラ
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム

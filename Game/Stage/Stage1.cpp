@@ -93,7 +93,7 @@ void Stage1::UpdateStartAnimation()
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
-		m_pCamera->GetIsStartAnimation())
+		m_pCamera->IsStartAnimation())
 	{
 		m_stateMachine.SetState(State::PLAY);
 	}
@@ -111,7 +111,7 @@ void Stage1::UpdatePlay()
 
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
+//	m_pCamera->UpdatePlay(m_pPlayer->GetPos());			// カメラ
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム

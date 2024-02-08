@@ -23,6 +23,9 @@ namespace
 
 	// カメラの移動速度
 	constexpr float camera_move_speed = 3.0f;
+
+	// カメラの移動制限範囲
+	const Vector2 camera_move_limit = { 150.0f, 100.0f };
 }
 
 // コンストラクタ
@@ -72,32 +75,22 @@ void Camera::Update(Vector3 pos, Vector3 target)
 }
 
 // プレイ時の更新
-void Camera::UpdatePlay(Vector3 playerPos)
+void Camera::UpdatePlay(Vector3 playerPos, Vector3 playerVec)
 {
-#if false
-	// TODO : カメラがターゲットぱっと切り替わっちゃうので、スムーズに切り替わるようにする
-	// 特定の角度以上なら補完を入れる
-
-	// プレイヤーの位置方向に少しカメラの注視点をずらす
-	Vector3 tempTarget = m_target;
-
-	m_target.x = playerPos.x * 0.2f;
-	m_target.y = playerPos.y * 0.2f;
-
-	// 注視点を特定の角度以上には回転させない
-	Vector3 centerPos = { 0, 0, playerPos.z };
-	Vector3 targetPos = m_target - m_pos;
-	float angle = MathUtil::ToDegree(centerPos.Angle(targetPos));
-	if (angle >= 15.0f)
+	// カメラをプレイヤーのベクトルに合わせて少し移動
+	if (std::fabs(m_pos.x) <= camera_move_limit.x) 
 	{
-		DebugText::Log("15度超えたよ");
-		m_target = tempTarget;
+		m_pos.x += -playerVec.x * 0.3f;
 	}
-#else
-	// プレイヤーの位置方向とは逆に少しカメラの注視点をずらす
-	m_target.x = -playerPos.x * 0.2f;
-	m_target.y = -playerPos.y * 0.2f;
-#endif
+	if (std::fabs(m_pos.y) <= camera_move_limit.y) 
+	{
+		m_pos.y += -playerVec.y * 0.3f;
+	}
+
+	// カメラの移動制限
+	m_pos.x = std::clamp(m_pos.x, -camera_move_limit.x, camera_move_limit.x);
+	m_pos.y = std::clamp(m_pos.y, -camera_move_limit.y, camera_move_limit.y);
+
 
 	// カメラとプレイヤーの差分
 	Vector3 direction = playerPos - m_pos;
@@ -117,6 +110,9 @@ void Camera::UpdatePlay(Vector3 playerPos)
 
 	// カメラの設定
 	SetCamera();
+
+	DebugText::Log("CameraPos", { m_pos.x, m_pos.y, m_pos.z });
+	DebugText::Log("CameraTarget", { m_target.x, m_target.y, m_target.z });
 }
 
 // スタート演出時の更新
@@ -225,7 +221,7 @@ float Camera::GetCameraHorizon() const
 }
 
 // スタート演出をしたかフラグの取得
-bool Camera::GetIsStartAnimation() const
+bool Camera::IsStartAnimation() const
 {
 	return m_isStartAnimation;
 }

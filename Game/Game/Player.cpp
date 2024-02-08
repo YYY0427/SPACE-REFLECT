@@ -28,7 +28,7 @@ namespace
 	const Vector3 player_vec_left = { 1, 0, 0 };
 
 	// プレイヤーの通常移動速度
-	constexpr float move_normal_speed = 1.5f;
+	constexpr float move_normal_speed = 1.0f;
 
 	// プレイヤーのZ軸移動速度
 	constexpr float move_z_speed = 1.5f;
@@ -224,7 +224,7 @@ void Player::Update(float cameraHorizon)
 
 	// 移動情報の初期化
 	m_isInputLeftStick = false;
-	m_moveVec = { 0, 0, 0 };
+	m_moveVec *= 0.98f;
 	Vector3 moveVecX = { 0, 0, 0 };
 	Vector3 moveVecY{ 0, 0, 0 };
 
@@ -331,7 +331,7 @@ void Player::Update(float cameraHorizon)
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
 	// X軸回転は進んでいるように見せるよう傾ける
 	float rotX = MathUtil::ToRadian(25.0f);
-	m_rot = { rotX + m_moveVec.z * 0.01f, 0.0f, -m_moveVec.x * 0.01f };
+	m_rot = { rotX + (m_moveVec.z * 0.05f) + (-m_moveVec.y * 0.05f), 0.0f, -m_moveVec.x * 0.05f };
 
 	// 不透明度を元に戻す
 	m_opacity = 1.0f;

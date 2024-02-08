@@ -16,7 +16,7 @@ public:
 
 	// 更新
 	void Update(Vector3 pos, Vector3 target);	// 通常時の更新
-	void UpdatePlay(Vector3 playerPos);			// プレイ時の更新
+	void UpdatePlay(Vector3 playerPos, Vector3 playerVec);			// プレイ時の更新
 	void UpdateStart(Vector3 playerPos);		// スタート演出時の更新
 	bool UpdateGameClear(Vector3 playerPos);	// ゲームクリア時の更新
 	void UpdateGameOver(Vector3 playerPos);		// ゲームオーバー時の更新
@@ -31,7 +31,7 @@ public:
 	float GetCameraHorizon() const;
 
 	// スタート演出をしたかフラグの取得
-	bool GetIsStartAnimation() const;
+	bool IsStartAnimation() const;
 
 	// スローの値の設定
 	void SetSlowValue(float slowValue);
