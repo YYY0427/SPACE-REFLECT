@@ -36,7 +36,7 @@ namespace
 	constexpr int move_tutorial_frame = 500;
 
 	// ウェーブの待機フレーム数
-	constexpr int wave_wait_frame = 300;
+	constexpr int wave_wait_frame = 200;
 
 	// ダメージ
 	constexpr int meteor_damage = 2;			 // 隕石に当たっている間にプレイヤーに与えるダメージ
@@ -153,18 +153,18 @@ void Tutorial::UpdateMoveTutorial()
 		}
 
 		// 特定のフレームたったら
-		//m_moveTutorialTimer.Update(1);
-		//if (m_moveTutorialTimer.IsTimeOut())
-		//{
-		//	// タイマーのリセット
-		//	m_waitTimer.Reset();
+		m_moveTutorialTimer.Update(1);
+		if (m_moveTutorialTimer.IsTimeOut())
+		{
+			// タイマーのリセット
+			m_waitTimer.Reset();
 
-		//	// チュートリアルUIの終了
-		//	m_pTutorialUI->EndState();
+			// チュートリアルUIの終了
+			m_pTutorialUI->EndState();
 
-		//	// プレイ中に遷移
-		//	m_stateMachine.SetState(State::PLAY);
-		//}
+			// プレイ中に遷移
+			m_stateMachine.SetState(State::PLAY);
+		}
 	}
 }
 
@@ -310,7 +310,6 @@ void Tutorial::Draw()
 	m_pPlayer->DrawShield();						// シールド
 	UIManager::GetInstance().Draw();				// UI
 	Score::GetInstance().DrawScore();				// スコア
-	m_pTutorialUI->Draw();							// チュートリアルUI
 
 	// リザルト画面が開始されていたら
 	if (m_stateMachine.GetCurrentState() == State::RESULT)
@@ -321,6 +320,9 @@ void Tutorial::Draw()
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
+
+	// チュートリアルUIの描画
+	m_pTutorialUI->Draw();							
 }
 
 // 当たり判定

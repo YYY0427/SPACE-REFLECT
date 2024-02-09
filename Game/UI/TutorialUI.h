@@ -55,6 +55,7 @@ private:
 
 		// 画像ハンドル
 		std::vector<int> imgHandle;
+		int messageTextImgHandle;
 		int imgIndex = 0;
 
 		// 位置
@@ -66,6 +67,12 @@ private:
 
 		// アルファ値
 		int imgAlpha = 0;
+
+		// 拡大率
+		float scale = 1.0f;
+
+		// イージング
+		float easing = 0.0f;
 	};
 
 private:

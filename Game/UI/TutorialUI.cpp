@@ -2,6 +2,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
+#include "../Util/Easing.h"
 #include <DxLib.h>
 
 namespace
@@ -56,11 +57,32 @@ void TutorialUI::Update()
 		// 状態が終了している場合
 		if (data.second.isEnd)
 		{
-			// 透明度を減少
-			data.second.imgAlpha -= alpha_speed;
+			//// 透明度を減少
+			//data.second.imgAlpha -= alpha_speed;
 
-			// 徐々に上に移動
-			data.second.imgPos.y -= 1.0f;
+			//// 徐々に上に移動
+			//data.second.imgPos.y -= 1.0f;
+
+			data.second.scale -= 0.01f;
+			data.second.scale = (std::max)(data.second.scale, 0.6f);
+
+			// 目的地の設定
+			auto& screenSize = Application::GetInstance().GetWindowSize();
+			Vector2 goalPos = { static_cast<float>(screenSize.width) - 200.0f, static_cast<float>(screenSize.height - 30.0f) };
+			int count = 0;
+			for (auto& data : m_tutorialDataMap)
+			{
+				if (data.second.isEnd)
+				{
+					count++;
+				}
+			}
+			goalPos.y -= 30.0f * count;
+
+			// 目的地へイージングを使用して移動
+			data.second.easing++;
+			data.second.imgPos.x = Easing::EaseOutCubic(data.second.easing, 300, goalPos.x, data.second.imgPos.x);
+			data.second.imgPos.y = Easing::EaseOutCubic(data.second.easing, 300, goalPos.y, data.second.imgPos.y);
 		}
 		// 状態が開始している場合
 		else if (data.first == m_state && data.second.isStart)
@@ -68,8 +90,6 @@ void TutorialUI::Update()
 			// 透明度を増加
 			data.second.imgAlpha += alpha_speed;
 			data.second.imgAlpha = (std::min)(data.second.imgAlpha, 255);
-			/*data.second.textAlpha += alpha_speed;
-			data.second.textAlpha = (std::min)(data.second.textAlpha, 255);*/
 
 			// 徐々に上に移動
 			data.second.imgPos.y -= 1.0f;
@@ -79,11 +99,6 @@ void TutorialUI::Update()
 			m_changeImageFrame.Update(1);
 			if (m_changeImageFrame.IsTimeOut())
 			{
-				// 画像が2枚以下の場合は透明度を0にする
-				if (data.second.imgHandle.size() >= 2)
-				{
-				//	data.second.imgAlpha = 0;
-				}
 				// 初期化
 				m_changeImageFrame.Reset();
 
@@ -97,20 +112,45 @@ void TutorialUI::Update()
 // 描画
 void TutorialUI::Draw()
 {
-	// 透明度の設定
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_tutorialDataMap[m_state].imgAlpha);
+	for (auto& data : m_tutorialDataMap)
+	{
+		// 透明度の設定
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, data.second.imgAlpha);
 
-	// 画像の描画
-	DrawRotaGraph(m_tutorialDataMap[m_state].imgPos.x, m_tutorialDataMap[m_state].imgPos.y, 
-				  1.0, 0.0,	
-				  m_tutorialDataMap[m_state].imgHandle[m_tutorialDataMap[m_state].imgIndex], TRUE);
+		// 書き込み
+		SetDrawScreen(data.second.messageTextImgHandle);
+		ClearDrawScreen();
+		MessageManager::GetInstance().DrawStringCenter(data.second.messageId,
+			data.second.imgPos.x + 130.0f, data.second.imgPos.y, 0xffffff);
+		SetDrawScreen(DX_SCREEN_BACK);
 
-	// テキストの描画
-	MessageManager::GetInstance().DrawStringCenter(m_tutorialDataMap[m_state].messageId, 
-				  m_tutorialDataMap[m_state].imgPos.x + 130.0f, m_tutorialDataMap[m_state].imgPos.y, 0xffffff);
-	
-	// 透明度を元に戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		// メッセージ画像の描画
+		auto& screenSize = Application::GetInstance().GetWindowSize();
+		DrawRotaGraph(screenSize.width / 2.0f, screenSize.height / 2.0f, data.second.scale, 0.0f, data.second.messageTextImgHandle, true);
+
+		// 画像の描画
+		DrawRotaGraph(data.second.imgPos.x, data.second.imgPos.y,
+			data.second.scale, 0.0,
+			data.second.imgHandle[data.second.imgIndex], TRUE);
+
+		// 透明度を元に戻す
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
+	//// 透明度の設定
+	//SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_tutorialDataMap[m_state].imgAlpha);
+
+	//// 画像の描画
+	//DrawRotaGraph(m_tutorialDataMap[m_state].imgPos.x, m_tutorialDataMap[m_state].imgPos.y, 
+	//			  1.0, 0.0,	
+	//			  m_tutorialDataMap[m_state].imgHandle[m_tutorialDataMap[m_state].imgIndex], TRUE);
+
+	//// テキストの描画
+	//MessageManager::GetInstance().DrawStringCenter(m_tutorialDataMap[m_state].messageId, 
+	//			  m_tutorialDataMap[m_state].imgPos.x + 130.0f, m_tutorialDataMap[m_state].imgPos.y, 0xffffff);
+	//
+	//// 透明度を元に戻す
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
 // 状態の設定
@@ -121,6 +161,9 @@ void TutorialUI::StartState(TutorialState state)
 	m_tutorialDataMap[m_state].isEnd = false;
 	m_tutorialDataMap[m_state].imgPos = 
 		{ m_tutorialDataMap[m_state].imgGoalPos.x, m_tutorialDataMap[m_state].imgGoalPos.y + 20.0f };
+
+	// TODO : メッセージの高さと横幅を取得して画像を作成
+//	m_tutorialDataMap[TutorialState::MOVE].messageTextImgHandle = MakeScreen(data.TRUE);
 }
 
 // 現在の状態を終了
