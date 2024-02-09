@@ -35,7 +35,7 @@ public:
 
 	// XV
 	void UpdateStart(Vector3 playerVec);
-	void UpdatePlay();
+	void UpdatePlay(Vector3 playerVec);
 	void UpdateStageSelect();
 
 	// •`‰æ

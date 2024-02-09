@@ -13,7 +13,7 @@ namespace
 
 	// 描画距離(near, far)
 	constexpr float near_distance = 5.0f;
-	constexpr float far_distance = 25000.0f;
+	constexpr float far_distance = 50000.0f;
 
 	// プレイヤーからのカメラまでの距離
 	constexpr float camera_distance = 400.0f;
@@ -22,7 +22,7 @@ namespace
 	constexpr float camera_rotate_speed = 0.03f;
 
 	// カメラの移動速度
-	constexpr float camera_move_speed = 3.0f;
+	constexpr float camera_move_speed = 7.5f;
 
 	// カメラの移動制限範囲
 	const Vector2 camera_move_limit = { 150.0f, 100.0f };

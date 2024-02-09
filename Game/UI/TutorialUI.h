@@ -61,12 +61,11 @@ private:
 		Vector2 imgPos;
 		Vector2 imgGoalPos;
 
-		// テキスト
-		std::string text;
+		// メッセージID
+		std::string messageId;
 
 		// アルファ値
 		int imgAlpha = 0;
-		int textAlpha = 0;
 	};
 
 private:

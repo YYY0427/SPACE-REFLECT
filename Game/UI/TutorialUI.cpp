@@ -1,6 +1,7 @@
 #include "TutorialUI.h"
 #include "../Util/DrawFunctions.h"
 #include "../Application.h"
+#include "../String/MessageManager.h"
 #include <DxLib.h>
 
 namespace
@@ -20,7 +21,7 @@ TutorialUI::TutorialUI() :
 	m_state(TutorialState::MOVE)
 {
 	// 初期化
-	m_changeImageFrame = 180;
+	m_changeImageFrame = 120;
 
 	// 画面サイズの取得
 	auto& screenSize = Application::GetInstance().GetWindowSize();
@@ -30,7 +31,8 @@ TutorialUI::TutorialUI() :
 	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_down.c_str()));
 	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_left.c_str()));
 	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_right.c_str()));
-	m_tutorialDataMap[TutorialState::MOVE].imgGoalPos = { screenSize.width / 2 + 200.0f, screenSize.height - 200.0f };
+	m_tutorialDataMap[TutorialState::MOVE].imgGoalPos = { screenSize.width / 2 + 150.0f, screenSize.height - 150.0f };
+	m_tutorialDataMap[TutorialState::MOVE].messageId = "TutorialMove";
 }
 
 // デストラクタ
@@ -66,8 +68,8 @@ void TutorialUI::Update()
 			// 透明度を増加
 			data.second.imgAlpha += alpha_speed;
 			data.second.imgAlpha = (std::min)(data.second.imgAlpha, 255);
-			data.second.textAlpha += alpha_speed;
-			data.second.textAlpha = (std::min)(data.second.textAlpha, 255);
+			/*data.second.textAlpha += alpha_speed;
+			data.second.textAlpha = (std::min)(data.second.textAlpha, 255);*/
 
 			// 徐々に上に移動
 			data.second.imgPos.y -= 1.0f;
@@ -80,7 +82,7 @@ void TutorialUI::Update()
 				// 画像が2枚以下の場合は透明度を0にする
 				if (data.second.imgHandle.size() >= 2)
 				{
-					data.second.imgAlpha = 0;
+				//	data.second.imgAlpha = 0;
 				}
 				// 初期化
 				m_changeImageFrame.Reset();
@@ -95,16 +97,19 @@ void TutorialUI::Update()
 // 描画
 void TutorialUI::Draw()
 {
-	// 画像の描画
+	// 透明度の設定
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_tutorialDataMap[m_state].imgAlpha);
+
+	// 画像の描画
 	DrawRotaGraph(m_tutorialDataMap[m_state].imgPos.x, m_tutorialDataMap[m_state].imgPos.y, 
 				  1.0, 0.0,	
 				  m_tutorialDataMap[m_state].imgHandle[m_tutorialDataMap[m_state].imgIndex], TRUE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// テキストの描画
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_tutorialDataMap[m_state].textAlpha);
-
+	MessageManager::GetInstance().DrawStringCenter(m_tutorialDataMap[m_state].messageId, 
+				  m_tutorialDataMap[m_state].imgPos.x + 130.0f, m_tutorialDataMap[m_state].imgPos.y, 0xffffff);
+	
+	// 透明度を元に戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

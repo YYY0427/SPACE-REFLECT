@@ -32,6 +32,7 @@ public:
 	~Tutorial();
 
 	// 開始
+	void EntarMoveTutorial();
 	void EntarResult();
 
 	// 更新
@@ -85,4 +86,7 @@ private:
 
 	// フラグ
 	bool m_isWaveStart = false;
+
+	// ハンドル
+	int m_direcitonalLightHandle;
 };

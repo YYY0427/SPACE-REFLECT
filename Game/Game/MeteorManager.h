@@ -17,6 +17,7 @@ public:
 	~MeteorManager();
 
 	// XV
+	void UpdateStart(Vector3 playerVec);
 	void Update(Vector3 cameraPos);
 
 	// •`‰æ

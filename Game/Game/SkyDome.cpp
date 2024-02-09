@@ -6,7 +6,7 @@
 namespace
 {
 	// モデルの拡大率
-	const Vector3 model_scale = { 100, 100, 100 };
+	const Vector3 model_scale = { 150, 150, 150 };
 }
 
 // コンストラクタ

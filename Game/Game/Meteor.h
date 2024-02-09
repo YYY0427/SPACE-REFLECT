@@ -24,6 +24,7 @@ public:
 
 	// XV
 	void Update(Vector3 cameraPos);
+	void UpdateStart(Vector3 playerPos);
 
 	// •`‰æ
 	void Draw();

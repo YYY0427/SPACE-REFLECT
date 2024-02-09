@@ -54,11 +54,11 @@ void PlanetManager::UpdateStart(Vector3 playerVec)
 }
 
 // プレイ時の更新
-void PlanetManager::UpdatePlay()
+void PlanetManager::UpdatePlay(Vector3 playerVec)
 {
 	for (auto& planet : m_planetData)
 	{
-		planet.second.pPlanet->Update(play_rotate_speed);
+		planet.second.pPlanet->UpdatePlay(playerVec, play_rotate_speed);
 	}
 }
 

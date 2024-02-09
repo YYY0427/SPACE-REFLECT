@@ -115,7 +115,7 @@ void Stage1::UpdatePlay()
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
-	m_pPlanetManager->UpdatePlay();						// 惑星
+//	m_pPlanetManager->UpdatePlay();						// 惑星
 	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 	m_pScreenShaker->Update();							// 画面揺れ

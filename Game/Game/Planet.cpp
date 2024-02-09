@@ -39,6 +39,21 @@ void Planet::UpdateStart(Vector3 playerVec, Vector3 rotVec)
 	m_pModel->Update();			// 更新
 }
 
+// プレイ時の更新
+void Planet::UpdatePlay(Vector3 playerVec, Vector3 rotVec)
+{
+	// プレイヤーと同じZベクトル移動
+	m_pos.z += playerVec.z;
+
+	// 回転
+	m_rot += rotVec;
+
+	// モデルの設定
+	m_pModel->SetPos(m_pos);	// 位置
+	m_pModel->SetRot(m_rot);	// 回転
+	m_pModel->Update();			// 更新
+}
+
 // 更新
 void Planet::Update(Vector3 rotVec)
 {

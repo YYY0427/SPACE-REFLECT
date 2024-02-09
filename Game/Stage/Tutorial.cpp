@@ -49,13 +49,17 @@ namespace
 Tutorial::Tutorial(SceneManager& manager) :
 	StageBase(manager)
 {
+	// 
+	m_direcitonalLightHandle = CreateDirLightHandle({ 1, 1, 0});
+	SetLightDifColorHandle(m_direcitonalLightHandle, GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
+
 	// 初期化
 	m_waitTimer = wave_wait_frame;
 	m_moveTutorialTimer = move_tutorial_frame;
 
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
-	m_stateMachine.AddState(State::MOVE_TUTORIAL, {}, [this]() { UpdateMoveTutorial(); }, {});
+	m_stateMachine.AddState(State::MOVE_TUTORIAL, [this]() {EntarMoveTutorial(); }, [this]() { UpdateMoveTutorial(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
@@ -73,9 +77,9 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_pPlayer = std::make_shared<Player>(object_data_file_name);
 	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
 	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
+	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name);
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name);
 	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 	m_pTutorialUI = std::make_shared<TutorialUI>();
@@ -112,6 +116,7 @@ void Tutorial::UpdateStartAnimation()
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });		// スカイドーム
 	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());		// 惑星
+	m_pMeteorManager->UpdateStart(m_pPlayer->GetMoveVec());		// 隕石
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
@@ -125,12 +130,12 @@ void Tutorial::UpdateStartAnimation()
 void Tutorial::UpdateMoveTutorial()
 {
 	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		// カメラ
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
-	m_pPlanetManager->UpdatePlay();						// 惑星
+	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());						// 惑星
 	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 	m_pScreenShaker->Update();							// 画面揺れ
@@ -148,18 +153,18 @@ void Tutorial::UpdateMoveTutorial()
 		}
 
 		// 特定のフレームたったら
-		m_moveTutorialTimer.Update(1);
-		if (m_moveTutorialTimer.IsTimeOut())
-		{
-			// タイマーのリセット
-			m_waitTimer.Reset();
+		//m_moveTutorialTimer.Update(1);
+		//if (m_moveTutorialTimer.IsTimeOut())
+		//{
+		//	// タイマーのリセット
+		//	m_waitTimer.Reset();
 
-			// チュートリアルUIの終了
-			m_pTutorialUI->EndState();
+		//	// チュートリアルUIの終了
+		//	m_pTutorialUI->EndState();
 
-			// プレイ中に遷移
-			m_stateMachine.SetState(State::PLAY);
-		}
+		//	// プレイ中に遷移
+		//	m_stateMachine.SetState(State::PLAY);
+		//}
 	}
 }
 
@@ -200,7 +205,7 @@ void Tutorial::UpdatePlay()
 	m_pEnemyManager->Update();							// 敵
 	m_pLaserManager->Update();							// レーザー
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
-	m_pPlanetManager->UpdatePlay();						// 惑星
+	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());						// 惑星
 	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
 	m_pDamageFlash->Update();							// ダメージフラッシュ
 	m_pScreenShaker->Update();							// 画面揺れ
@@ -240,7 +245,7 @@ void Tutorial::UpdateGameOver()
 	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
 	m_pEnemyManager->Update();
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });
-	m_pPlanetManager->UpdatePlay();
+	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());
 	m_pScreenShaker->Update();
 	if (m_pPlayer->UpdateGameOver())
 	{
@@ -249,6 +254,12 @@ void Tutorial::UpdateGameOver()
 	}
 
 	DebugText::Log("GameOver");
+}
+
+// 移動チュートリアルの開始
+void Tutorial::EntarMoveTutorial()
+{
+	
 }
 
 // リザルトの開始

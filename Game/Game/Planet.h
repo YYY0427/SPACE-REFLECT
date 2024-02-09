@@ -20,6 +20,7 @@ public:
 
 	// çXêV
 	void UpdateStart(Vector3 playerVec, Vector3 rotVec);
+	void UpdatePlay(Vector3 playerVec, Vector3 rotVec);
 	void Update(Vector3 rotVec);
 
 	// ï`âÊ
