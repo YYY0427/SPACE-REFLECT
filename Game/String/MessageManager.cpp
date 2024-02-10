@@ -103,3 +103,26 @@ MessageData MessageManager::GetMessageData(std::string id)
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());
 	return m_messageDataTable[id];
 }
+
+// メッセージの幅の取得
+int MessageManager::GetMessageWidth(std::string id)
+{
+	// ロードしていない場合は止める
+	assert(m_messageDataTable.find(id) != m_messageDataTable.end());
+
+	// フォントサイズ、、文字列の長さから文字列の横幅の取得
+	std::string string = m_messageDataTable[id].string;
+	int fontHandle = m_messageDataTable[id].fontHandle;
+	return GetDrawStringWidthToHandle(string.c_str(), static_cast<int>(strlen(string.c_str())), fontHandle);
+}
+
+// メッセージの高さの取得
+int MessageManager::GetMessageHeight(std::string id)
+{
+	// ロードしていない場合は止める
+	assert(m_messageDataTable.find(id) != m_messageDataTable.end());
+
+	// フォントサイズ、、文字列の長さから文字列の横幅の取得
+	int fontHandle = m_messageDataTable[id].fontHandle;
+	return GetFontSizeToHandle(fontHandle);
+}

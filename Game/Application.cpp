@@ -126,6 +126,9 @@ bool Application::Init()
 	// ただし、DirectX11を使用する場合は実行する必要はない
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 
+	// SetDrawScreenを使用した際にカメラがリセットされないようにする
+	SetUseSetDrawScreenSettingReset(FALSE);
+
 	// Zバッファを有効化
 	SetUseZBufferFlag(TRUE);
 

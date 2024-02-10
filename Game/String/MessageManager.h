@@ -77,6 +77,12 @@ public:
 	// メッセージのデータの取得
 	MessageData GetMessageData(std::string id);
 
+	// メッセージの幅の取得
+	int GetMessageWidth(std::string id);
+
+	// メッセージの高さの取得
+	int GetMessageHeight(std::string id);
+
 private:
 	// コンストラクタ
 	// シングルトンパターンなのでprivate

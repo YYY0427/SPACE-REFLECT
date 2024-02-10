@@ -53,6 +53,9 @@ void ScreenShaker::PreDraw()
 	// 描画先を切り替え
 	SetDrawScreen(m_screenHandle);
 
+	// 画面をクリア
+	ClearDrawScreen();
+
 	// 描画先を切り替えたらカメラがリセットされるので再設定
 	m_pCamera->SetCamera();
 }

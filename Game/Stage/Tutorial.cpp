@@ -296,9 +296,6 @@ void Tutorial::Draw()
 	// ‰æ–Ê—h‚ê‚Ì‘Oˆ—
 	m_pScreenShaker->PreDraw();
 
-	// ‰æ–Ê‚ðƒNƒŠƒA
-	ClearDrawScreen();
-
 	// •`‰æ
 	m_pSkyDome->Draw();			// ƒXƒJƒCƒh[ƒ€
 	m_pPlanetManager->Draw();	// ˜f¯
@@ -319,10 +316,10 @@ void Tutorial::Draw()
 	}
 
 	// ‰æ–Ê—h‚ê•`‰æ
-	m_pScreenShaker->Draw();
+	m_pScreenShaker->Draw();					
 
 	// ƒ`ƒ…[ƒgƒŠƒAƒ‹UI‚Ì•`‰æ
-	m_pTutorialUI->Draw();							
+	m_pTutorialUI->Draw();
 }
 
 // “–‚½‚è”»’è
