@@ -81,7 +81,7 @@ void MessageManager::DrawString(std::string id, int x, int y, unsigned int color
 }
 
 // ファイルに読み込んだ文字列を指定した座標を中心とした位置に表示
-void MessageManager::DrawStringCenter(std::string id, int x, int y, unsigned int color)
+void MessageManager::DrawStringCenter(std::string id, int x, int y, unsigned int color, unsigned int edgeColor)
 {
 	// ロードしていない場合は止める
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());	
@@ -93,7 +93,7 @@ void MessageManager::DrawStringCenter(std::string id, int x, int y, unsigned int
 	int height = GetFontSizeToHandle(fontHandle);
 
 	// 取得した文字列の横幅から文字列を横中央位置に表示
-	DrawStringToHandle(x - width / 2, y - height / 2, string.c_str(), color, fontHandle);
+	DrawStringToHandle(x - width / 2, y - height / 2, string.c_str(), color, fontHandle, edgeColor);
 }
 
 // メッセージのデータの取得

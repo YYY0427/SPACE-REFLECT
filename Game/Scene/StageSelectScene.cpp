@@ -183,7 +183,7 @@ void StageSelectScene::Update()
 	m_pTransitor->Update();
 
 	// ƒIƒvƒVƒ‡ƒ“‰æ–Ê‚É‘JˆÚ
-	if (InputState::IsTriggered(InputType::RIGTH_SHERDER))
+	if (InputState::IsTriggered(InputType::RIGHT_SHOULDER))
 	{
 		m_pTransitor->SetFrame(0);
 		m_manager.ChangeScene(std::make_shared<OptionScene>(m_manager, State::STAGE_SELECT));

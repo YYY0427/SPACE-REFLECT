@@ -24,8 +24,17 @@ public:
 	bool IsEnd() const;
 
 private:
-	// ウィンドウの位置
-	Vector2 m_windowPos;
+	// ウィンドウ
+	Vector2 m_windowPos;	// 位置
+	Vector2 m_windowSize;	// サイズ
+	bool m_isEndWindow;		// 終了フラグ
+
+	// テキスト
+	Vector2 m_missionPos;	// ミッション
+	Vector2 m_completePos;	// コンプリート
+
+	// イージング
+	Vector2 m_easing;
 
 	// 終了フラグ
 	bool m_isEnd;

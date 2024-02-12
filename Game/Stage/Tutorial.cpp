@@ -22,6 +22,7 @@
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
 #include "../UI/TutorialUI.h"
+#include "../Util/InputState.h"
 #include <DxLib.h>
 
 namespace
@@ -32,8 +33,10 @@ namespace
 	// 敵の配置データのファイル名
 	const std::string enemy_data_file_name = "Tutorial";
 
-	// 移動チュートリアルのフレーム数
-	constexpr int move_tutorial_frame = 500;
+	// 各チュートリアルのフレーム数
+	constexpr int move_tutorial_frame = 500;	// 移動チュートリアルのフレーム数
+	constexpr int shield_tutorial_frame = 500;	// シールドチュートリアルのフレーム数
+	constexpr int reflect_tutorial_frame = 500;	// 反射チュートリアルのフレーム数
 
 	// ウェーブの待機フレーム数
 	constexpr int wave_wait_frame = 200;
@@ -49,21 +52,26 @@ namespace
 Tutorial::Tutorial(SceneManager& manager) :
 	StageBase(manager)
 {
-	// 
-	m_direcitonalLightHandle = CreateDirLightHandle({ 1, 1, 0});
-	SetLightDifColorHandle(m_direcitonalLightHandle, GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
+	// ライトの設定
+	m_directionalLightHandle = CreateDirLightHandle({ 1, 1, 0});
+	SetLightDifColorHandle(m_directionalLightHandle, GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
 
 	// 初期化
+	m_currentFrame = 0;
 	m_waitTimer = wave_wait_frame;
 	m_moveTutorialTimer = move_tutorial_frame;
+	m_shieldTutorialTimer = shield_tutorial_frame;
 
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
-	m_stateMachine.AddState(State::MOVE_TUTORIAL, [this]() {EntarMoveTutorial(); }, [this]() { UpdateMoveTutorial(); }, {});
+	m_stateMachine.AddState(State::MOVE_TUTORIAL, {}, [this]() { UpdateMoveTutorial(); }, {});
+	m_stateMachine.AddState(State::SHIELD_TUTORIAL, {}, [this]() { UpdateShieldTutorial(); }, {});
+	m_stateMachine.AddState(State::REFLECT_TUTORIAL, {}, [this]() { UpdateReflectTutorial(); }, {});
+	m_stateMachine.AddState(State::CUBE_TUTORIAL, {}, [this]() { UpdateCubeTutorial(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
-	m_stateMachine.AddState(State::RESULT, [this]() { EntarResult(); }, [this]() { UpdateResult(); }, {});
+	m_stateMachine.AddState(State::RESULT, [this]() { EnterResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
 	// オブジェクト配置データ読み込み
@@ -103,9 +111,19 @@ Tutorial::~Tutorial()
 void Tutorial::Update()
 {
 	// 更新
-	m_stateMachine.Update();							// ステートマシン
+	m_pTutorialUI->Update();							// チュートリアルUI
+	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });	// スカイドーム
+	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());	// 惑星
+	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
+	m_pLaserManager->Update();								// レーザー
+	m_pEnemyManager->Update();								// レーザー
+	m_pDamageFlash->Update();								// ダメージフラッシュ
+	m_pScreenShaker->Update();								// 画面揺れ
 	Effekseer3DEffectManager::GetInstance().Update();	// エフェクト
 	UIManager::GetInstance().Update();					// UI
+
+	Collision();	// 当たり判定
+	m_stateMachine.Update();							// ステートマシン
 }
 
 // スタート演出の更新
@@ -114,9 +132,6 @@ void Tutorial::UpdateStartAnimation()
 	// 更新
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
-	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });		// スカイドーム
-	m_pPlanetManager->UpdateStart(m_pPlayer->GetMoveVec());		// 惑星
-	m_pMeteorManager->UpdateStart(m_pPlayer->GetMoveVec());		// 隕石
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
@@ -132,87 +147,170 @@ void Tutorial::UpdateMoveTutorial()
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
-	m_pEnemyManager->Update();							// 敵
-	m_pLaserManager->Update();							// レーザー
-	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
-	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());						// 惑星
-	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
-	m_pDamageFlash->Update();							// ダメージフラッシュ
-	m_pScreenShaker->Update();							// 画面揺れ
-	m_pTutorialUI->Update();							// チュートリアルUI
 
 	// 特定のフレームたったら
-	m_waitTimer.Update(1);
-	if (m_waitTimer.IsTimeOut())
+	m_currentFrame++;
+	if (m_currentFrame > wave_wait_frame)
 	{
-		// 一度だけ
-		if (m_waitTimer.GetLimitTime() == m_waitTimer.GetTime())
+		// 移動チュートリアルUIの開始
+		m_pTutorialUI->StartState(TutorialState::MOVE);
+
+		// 移動チュートリアルUIが終了したら
+		if (m_pTutorialUI->IsEndState(TutorialState::MOVE))
 		{
-			// チュートリアルUIの開始
-			m_pTutorialUI->StartState(TutorialState::MOVE);
-		}
-
-		// 特定のフレームたったら
-		m_moveTutorialTimer.Update(1);
-		if (m_moveTutorialTimer.IsTimeOut())
-		{
-			// タイマーのリセット
-			m_waitTimer.Reset();
-
-			// チュートリアルUIの終了
-			m_pTutorialUI->EndState();
-
-			// プレイ中に遷移
-			m_stateMachine.SetState(State::PLAY);
+			// シールドチュートリアルに遷移
+			m_stateMachine.SetState(State::SHIELD_TUTORIAL);
+			m_currentFrame = 0;
 		}
 	}
+}
+
+// シールドチュートリアルの更新
+void Tutorial::UpdateShieldTutorial()
+{
+	// 更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+
+	// 特定のフレームたったら
+	m_currentFrame++;
+	if (m_currentFrame > wave_wait_frame)
+	{
+		// 移動チュートリアルUIの開始
+		m_pTutorialUI->StartState(TutorialState::SHIELD);
+
+		// 移動チュートリアルUIが終了したら
+		if (m_pTutorialUI->IsEndState(TutorialState::SHIELD))
+		{
+			// シールドチュートリアルに遷移
+			m_stateMachine.SetState(State::REFLECT_TUTORIAL);
+			m_currentFrame = 0;
+		}
+	}
+	// デバッグテキストの描画
+	DebugText::Log("ShieldTutorial");
+}
+
+// 反射チュートリアルの更新
+void Tutorial::UpdateReflectTutorial()
+{
+	// 更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+
+	// 特定のフレームたったら
+	m_currentFrame++;
+	if (m_currentFrame > wave_wait_frame)
+	{
+		// 反射チュートリアルUIの開始
+		m_pTutorialUI->StartState(TutorialState::REFLECT);
+
+		// 反射チュートリアルUIが終了したら
+		if (m_pTutorialUI->IsEndState(TutorialState::REFLECT))
+		{
+			// 反射チュートリアルUIの開始
+			m_pTutorialUI->StartState(TutorialState::REFLECT2);
+
+			// 敵のウェーブ開始
+			m_pEnemyManager->StartWave();
+		}
+	}
+	// 現在の敵のウェーブが終了したら
+	if (m_pEnemyManager->IsEndWave() && m_pTutorialUI->IsEndState(TutorialState::REFLECT))
+	{
+		// 反射チュートリアルを終了
+		m_pTutorialUI->EndState();
+		if (m_pTutorialUI->IsEndState(TutorialState::REFLECT2))
+		{
+			// シールドチュートリアルに遷移
+			m_stateMachine.SetState(State::CUBE_TUTORIAL);
+			m_currentFrame = 0;
+		}
+	}
+	// デバッグテキストの描画
+	DebugText::Log("ReflectTutorial");
+}
+
+// キューブチュートリアルの更新
+void Tutorial::UpdateCubeTutorial()
+{
+	// 更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+
+	// 特定のフレームたったら
+	m_currentFrame++;
+	if (m_currentFrame > wave_wait_frame)
+	{
+		// キューブチュートリアルUIの開始
+		m_pTutorialUI->StartState(TutorialState::CUBE);
+
+		if (m_pTutorialUI->IsEndState(TutorialState::CUBE))
+		{
+			// キューブチュートリアルUIの開始
+			m_pTutorialUI->StartState(TutorialState::CUBE2);
+
+			if (!m_isWaveStart)
+			{
+				m_pEnemyManager->NextWave();
+				m_isWaveStart = true;
+			}
+		}
+	}
+	if (m_pEnemyManager->IsEndWave() && m_pTutorialUI->IsEndState(TutorialState::CUBE))
+	{
+		// キューブチュートリアルを終了
+		m_pTutorialUI->EndState();
+		if (m_pTutorialUI->IsEndState(TutorialState::CUBE2))
+		{
+			// シールドチュートリアルに遷移
+			m_stateMachine.SetState(State::PLAY);
+			m_currentFrame = 0;
+			m_isWaveStart = false;
+		}
+	}
+	// デバッグテキストの描画
+	DebugText::Log("CubeTutorial");
 }
 
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
-	m_waitTimer.Update(1);
-	if (m_waitTimer.IsTimeOut())
-	{
-		// 一度だけ
-		if (!m_isWaveStart)
-		{
-			// チュートリアルUIの開始
-		//	m_pTutorialUI->StartState(TutorialState::WAVE);
-
-			// ウェーブスタート
-			m_pEnemyManager->StartWave();
-
-			// フラグを立てる
-			m_isWaveStart = true;
-		}
-	}
-
 	// ボスが死んだらゲームクリアに遷移
-	if (m_pEnemyManager->IsDeadBoss())
+	/*if (m_pEnemyManager->IsDeadBoss())
 	{
 		m_stateMachine.SetState(State::GAME_CLEAR);
-	}
+	}*/
 	// プレイヤーが死んだらゲームオーバーに遷移
 	if (!m_pPlayer->IsLive())
 	{
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
+	m_currentFrame++;
+	if (m_currentFrame > wave_wait_frame)
+	{
+		// キューブチュートリアルUIの開始
+		m_pTutorialUI->StartState(TutorialState::PLAY);
+		if (!m_isWaveStart)
+		{
+			m_pEnemyManager->NextWave();
+			m_isWaveStart = true;
+		}
+	}
+	if (m_pEnemyManager->IsEndWave())
+	{
+		// キューブチュートリアルを終了
+		m_pTutorialUI->EndState();
+		if (m_pTutorialUI->IsEndState(TutorialState::PLAY))
+		{
+			// シールドチュートリアルに遷移
+			m_stateMachine.SetState(State::GAME_CLEAR);
+		}
+	}
 
 	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		// カメラ
-	m_pEnemyManager->Update();							// 敵
-	m_pLaserManager->Update();							// レーザー
-	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });// スカイドーム
-	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());						// 惑星
-	m_pMeteorManager->Update(m_pCamera->GetPos());		// 隕石
-	m_pDamageFlash->Update();							// ダメージフラッシュ
-	m_pScreenShaker->Update();							// 画面揺れ
-	m_pTutorialUI->Update();							// チュートリアルUI
-
-	// 当たり判定
-	Collision();
 }
 
 // ゲームクリアの更新
@@ -243,10 +341,6 @@ void Tutorial::UpdateGameOver()
 
 	// ゲームオーバー時の更新
 	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
-	m_pEnemyManager->Update();
-	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });
-	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());
-	m_pScreenShaker->Update();
 	if (m_pPlayer->UpdateGameOver())
 	{
 		// リザルト画面に遷移
@@ -256,14 +350,8 @@ void Tutorial::UpdateGameOver()
 	DebugText::Log("GameOver");
 }
 
-// 移動チュートリアルの開始
-void Tutorial::EntarMoveTutorial()
-{
-	
-}
-
 // リザルトの開始
-void Tutorial::EntarResult()
+void Tutorial::EnterResult()
 {
 	// リザルト画面のインスタンス生成
 	m_pResultWindow = std::make_shared<ResultWindow>();
@@ -274,7 +362,6 @@ void Tutorial::UpdateResult()
 {
 	// 更新
 	m_pResultWindow->Update();
-	m_pEnemyManager->Update();
 
 	// リザルト画面が終了したら
 	if (m_pResultWindow->IsEnd())

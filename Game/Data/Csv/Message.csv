@@ -38,3 +38,12 @@ MissionTitle,MISSION,マキナス 4 Square,25,9
 StageSelectBack,BACK,マキナス 4 Square,25,9
 StageSelectStart,START,マキナス 4 Square,35,9
 TutorialMove, : 移動,マキナス 4 Square,50,9
+TutorialShield, : シールド,マキナス 4 Square,50,9
+TutorialReflect,シールドにレーザーを当てて反射,マキナス 4 Square,45,9
+TutorialReflect2,反射レーザーで敵を倒せ,マキナス 4 Square,50,9
+TutorialCube,キューブ型のレーザーは反射できない,マキナス 4 Square,45,9
+TutorialCube2,避け続けろ,マキナス 4 Square,50,9
+TutorialPlay,生き残れ,マキナス 4 Square,50,9
+TutorialUI+,+,マキナス 4 Square,50,9
+ResultMission,MISSION,マキナス 4 Square,60,9
+ResultComplete,COMPLETE!,マキナス 4 Square,70,9

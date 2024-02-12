@@ -106,6 +106,7 @@ public:
 	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;	// 雑魚敵リスト
 	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;				// ボス敵
 	bool IsDeadBoss() const;											// ボスが倒されたかどうか
+	bool IsEndWave() const;												// 現在のウェーブが終了したかどうか
 
 private:
 	// ステート
@@ -130,11 +131,12 @@ private:
 	// フラグ
 	bool m_isDeadBoss;	// ボスが倒されたかどうか
 	bool m_isBoss;		// ボスが出現したかどうか
+	bool m_isNextWave;	// 次のウェーブに移行するかどうか
+	bool m_isLoadWave;	// ウェーブデータを読み込んだかどうか
+	bool m_isStartWave;	// ウェーブを開始したかどうか
 
 	// ウェーブ
 	std::vector<WaveData> m_waveTable;	// ウェーブデータ
-	BossEnemyType m_bossType;				// ボスの種類
-	int m_waveNow;		// 現在のウェーブ数
-	bool m_isNextWave;	// 次のウェーブに移行するかどうか
-	bool m_isLoadWave;	// ウェーブデータを読み込んだかどうか
+	BossEnemyType m_bossType;			// ボスの種類
+	int m_waveNow;						// 現在のウェーブ数
 };

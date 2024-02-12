@@ -38,7 +38,8 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	m_pPlayer(pPlayer),
 	m_pLaserManager(pLaserManager),
 	m_pScreenShaker(pScreenShaker),
-	m_bossType(BossEnemyType::NONE)
+	m_bossType(BossEnemyType::NONE),
+	m_isStartWave(false)
 {
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::NORMAL, {}, [this]() {UpdateNormal(); }, {});
@@ -83,9 +84,6 @@ void EnemyManager::UpdateNormal()
 		// 更新
 		m_pBossEnemy->Update();
 	}
-
-	// 次のウェーブへ
-//	NextWave();
 }
 
 // 警告時の更新
@@ -136,6 +134,12 @@ void EnemyManager::Draw()
 // ウェーブのスタート
 void EnemyManager::StartWave()
 {
+	// 既にウェーブが始まっていたらなにもしない
+	if (m_isStartWave) return;
+
+	// フラグを立てる
+	m_isStartWave = true;
+
 	// ウェーブデータを読み込んでいなかったら止める
 	if (!m_isLoadWave)
 	{
@@ -431,6 +435,28 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string f
 bool EnemyManager::IsDeadBoss() const
 {
 	return m_isDeadBoss;
+}
+
+// 現在のウェーブが終了したかどうか
+bool EnemyManager::IsEndWave() const
+{
+	// まだ敵が残っていたら
+	for (auto& enemy : m_pEnemyList)
+	{
+		if (enemy->IsEnabled())
+		{
+			return false;
+		}
+	}
+
+	// ボス敵が出現していたら
+	if (m_pBossEnemy)
+	{
+		return false;
+	}
+
+	// それ以外はウェーブが終了している
+	return true;
 }
 
 // 雑魚敵のリストの取得

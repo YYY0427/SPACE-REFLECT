@@ -137,7 +137,7 @@ void OptionScene::Update()
 void OptionScene::UpdateStageSelect()
 {
 	// “Á’è‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚Æ‚«
-	if (InputState::IsTriggered(InputType::LEFT_SHERDER))
+	if (InputState::IsTriggered(InputType::LEFT_SHOULDER))
 	{
 		// I—¹
 		m_pTransitor->SetFrame(0);

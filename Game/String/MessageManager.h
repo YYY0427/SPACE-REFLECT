@@ -50,7 +50,7 @@ public:
 	/// <param name="x">真ん中に指定したいX軸の座標</param>
 	/// <param name="y">Y軸の座標</param>
 	/// <param name="color">文字の描画色</param>
-	void DrawStringCenter(std::string id, int x, int y, unsigned int color);
+	void DrawStringCenter(std::string id, int x, int y, unsigned int color, unsigned int edgeColor = 0x000000);
 
 	/// <summary>
 	/// フォントに読み込んだデータから作成したフォントデータを使って

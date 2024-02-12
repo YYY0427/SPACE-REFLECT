@@ -11,7 +11,10 @@ enum class TutorialState
 	MOVE,		// 移動
 	SHIELD,		// シールド
 	REFLECT,	// 反射
+	REFLECT2,	// 反射2
 	CUBE,		// キューブ
+	CUBE2,		// キューブ2
+	PLAY,		// プレイ
 	DAMAGE,		// ダメージ
 };
 
@@ -54,13 +57,13 @@ private:
 		bool isEnd = false;
 
 		// 画像ハンドル
-		std::vector<int> imgHandle;
+		std::vector<std::vector<int>> imgHandle;
+		std::vector<int> imgIndex;
 		int messageTextImgHandle;
-		int imgIndex = 0;
 
 		// 位置
 		Vector2 imgPos;
-		Vector2 imgGoalPos;
+		Vector2 goalPos;
 
 		// メッセージID
 		std::string messageId;
@@ -73,6 +76,9 @@ private:
 
 		// イージング
 		float easing = 0.0f;
+
+		// 描画フレーム
+		int drawFrame = 0;
 	};
 
 private:

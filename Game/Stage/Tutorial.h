@@ -32,13 +32,15 @@ public:
 	~Tutorial();
 
 	// 開始
-	void EntarMoveTutorial();
-	void EntarResult();
+	void EnterResult();
 
 	// 更新
 	void Update() override final;
 	void UpdateStartAnimation();
 	void UpdateMoveTutorial();
+	void UpdateShieldTutorial();
+	void UpdateReflectTutorial();
+	void UpdateCubeTutorial();
 	void UpdatePlay();
 	void UpdateGameClear();
 	void UpdateGameOver();
@@ -56,6 +58,9 @@ private:
 	{
 		START_ANIMATION,	// スタート演出
 		MOVE_TUTORIAL,		// 移動チュートリアル
+		SHIELD_TUTORIAL,	// シールドチュートリアル
+		REFLECT_TUTORIAL,	// 反射チュートリアル
+		CUBE_TUTORIAL,		// キューブチュートリアル
 		PLAY,				// プレイ中
 		GAME_CLEAR,			// ゲームクリア
 		GAME_OVER,			// ゲームオーバー
@@ -81,12 +86,14 @@ private:
 	std::shared_ptr<TutorialUI> m_pTutorialUI;
 
 	// タイマー
-	Timer<int> m_waitTimer;			// 待ち時間のタイマー
-	Timer<int> m_moveTutorialTimer;	// 移動チュートリアルのタイマー
+	int m_currentFrame;				// 現在のフレーム
+	Timer<int> m_waitTimer;				// 待ち時間のタイマー
+	Timer<int> m_moveTutorialTimer;		// 移動チュートリアルのタイマー
+	Timer<int> m_shieldTutorialTimer;	// シールドチュートリアルのタイマー
 
 	// フラグ
 	bool m_isWaveStart = false;
 
 	// ハンドル
-	int m_direcitonalLightHandle;
+	int m_directionalLightHandle;
 };

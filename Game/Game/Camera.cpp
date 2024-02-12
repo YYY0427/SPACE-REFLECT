@@ -91,7 +91,6 @@ void Camera::UpdatePlay(Vector3 playerPos, Vector3 playerVec)
 	m_pos.x = std::clamp(m_pos.x, -camera_move_limit.x, camera_move_limit.x);
 	m_pos.y = std::clamp(m_pos.y, -camera_move_limit.y, camera_move_limit.y);
 
-
 	// カメラとプレイヤーの差分
 	Vector3 direction = playerPos - m_pos;
 

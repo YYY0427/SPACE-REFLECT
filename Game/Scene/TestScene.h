@@ -5,6 +5,7 @@
 
 // プロトタイプ宣言
 class Warning;
+class ResultWindow;
 
 /// <summary>
 /// テスト用シーン
@@ -31,6 +32,6 @@ public:
 private:
 	// 警告UI
 	std::unique_ptr<Warning> m_pWarning;
-
+	std::unique_ptr<ResultWindow> m_pResultWindow;
 	std::vector<std::string> m_fileNames;
 };

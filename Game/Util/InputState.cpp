@@ -10,24 +10,30 @@ namespace InputState
 	// 初期化
 	void InputState::Init()
 	{
+
 		// ボタンの入力タイプをどのボタンにするかの設定
 		m_inputMapTable[InputType::DECISION] = { {InputCategory::PAD, XINPUT_BUTTON_A },				// Aボタン
 												 {InputCategory::KEYBORD, KEY_INPUT_RETURN} };			// Enterキー
-		m_inputMapTable[InputType::BACK] = { {InputCategory::PAD, XINPUT_BUTTON_B} };				// Bボタン
-		m_inputMapTable[InputType::PAUSE] = { {InputCategory::PAD, XINPUT_BUTTON_START } };			// STARTボタン
-		m_inputMapTable[InputType::SLOW] = { {InputCategory::PAD, XINPUT_BUTTON_B } };				// スロー
-		m_inputMapTable[InputType::BOOST] = { {InputCategory::PAD, XINPUT_BUTTON_A } };				// ブースト
-		m_inputMapTable[InputType::SHIELD] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };  // シールド
-		m_inputMapTable[InputType::RIGTH_SHERDER] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };  // 右ショルダー
-		m_inputMapTable[InputType::LEFT_SHERDER] = { {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };  // 左ショルダー
-		m_inputMapTable[InputType::UP] = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_UP },			// PAD↑
-												 {InputCategory::KEYBORD, KEY_INPUT_UP} };				// KEY↑
-		m_inputMapTable[InputType::DOWN] = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_DOWN },		// PAD↓
-												 {InputCategory::KEYBORD, KEY_INPUT_DOWN} };			// KEY↓
-		m_inputMapTable[InputType::RIGHT] = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_RIGHT },		// PAD→
-												 {InputCategory::KEYBORD, KEY_INPUT_RIGHT} };			// KEY→
-		m_inputMapTable[InputType::LEFT] = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_LEFT },		// PAD←
-												 {InputCategory::KEYBORD, KEY_INPUT_LEFT} };			// KEY←
+		m_inputMapTable[InputType::BACK]     = { {InputCategory::PAD, XINPUT_BUTTON_B},					// Bボタン
+												 {InputCategory::KEYBORD, KEY_INPUT_SPACE} };			// SPACEキー	
+		m_inputMapTable[InputType::PAUSE]    = { {InputCategory::PAD, XINPUT_BUTTON_START },			// STARTボタン
+												 {InputCategory::KEYBORD, KEY_INPUT_P} };				// Pキー
+		m_inputMapTable[InputType::SHIELD]   = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER},	// RBボタン
+											     {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };	// LBボタン
+		m_inputMapTable[InputType::UP]       = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_UP },			// PAD↑
+												 {InputCategory::KEYBORD, KEY_INPUT_UP},				// KEY↑
+												 {InputCategory::KEYBORD, KEY_INPUT_W} };				// Wキー
+		m_inputMapTable[InputType::DOWN]     = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_DOWN },		// PAD↓
+												 {InputCategory::KEYBORD, KEY_INPUT_DOWN},				// KEY↓
+												 {InputCategory::KEYBORD, KEY_INPUT_S} };				// Sキー
+		m_inputMapTable[InputType::RIGHT]    = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_RIGHT },		// PAD→
+												 {InputCategory::KEYBORD, KEY_INPUT_RIGHT},				// KEY→
+												 {InputCategory::KEYBORD, KEY_INPUT_D} };				// Dキー
+		m_inputMapTable[InputType::LEFT]     = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_LEFT },		// PAD←
+												 {InputCategory::KEYBORD, KEY_INPUT_LEFT},				// KEY←
+												 {InputCategory::KEYBORD, KEY_INPUT_A} };				// Aキー
+		m_inputMapTable[InputType::RIGHT_SHOULDER] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };// RBボタン
+		m_inputMapTable[InputType::LEFT_SHOULDER]  = { {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };	// LBボタン
 
 #ifdef _DEBUG
 		m_inputMapTable[InputType::BOSS_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// デバッグ用　ボスの死亡

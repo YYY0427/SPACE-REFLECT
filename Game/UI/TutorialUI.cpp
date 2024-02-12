@@ -12,9 +12,30 @@ namespace
 	const std::string xbox_stick_l_down = "Data/Image/xbox_stick_l_down.png";
 	const std::string xbox_stick_l_left = "Data/Image/xbox_stick_l_left.png";
 	const std::string xbox_stick_l_right = "Data/Image/xbox_stick_l_right.png";
+	const std::string xbox_stick_r_up = "Data/Image/xbox_stick_r_up.png";
+	const std::string xbox_stick_r_down = "Data/Image/xbox_stick_r_down.png";
+	const std::string xbox_stick_r_left = "Data/Image/xbox_stick_r_left.png";
+	const std::string xbox_stick_r_right = "Data/Image/xbox_stick_r_right.png";
+	const std::string xbox_rb_file_path = "Data/Image/xbox_rb_double.png";
+	const std::string xbox_lb_file_path = "Data/Image/xbox_lb_double.png";
 
 	// アルファ値の増減速度
 	constexpr int alpha_speed = 5;
+
+	// 描画する画像の切り替えフレーム
+	constexpr int change_image_frame = 120;
+
+	// 描画する画像が2枚以上ある場合の画像の間隔
+	constexpr float image_interval = 50.0f;
+
+	// 画像と文字の間隔
+	constexpr float text_interval = 50.0f;
+
+	// 描画フレーム
+	constexpr int move_tutorial_frame = 300;	// 移動
+	constexpr int shield_tutorial_frame = 300;	// シールド
+	constexpr int reflect_tutorial_frame = 300;	// 反射
+	constexpr int cube_tutorial_frame = 300;	// キューブ
 
 	// チュートリアル用のUIが右下に残すのかどうかのフラグ
 	// まだ未完成のためfalse
@@ -26,18 +47,69 @@ TutorialUI::TutorialUI() :
 	m_state(TutorialState::MOVE)
 {
 	// 初期化
-	m_changeImageFrame = 120;
+	m_changeImageFrame = change_image_frame;
 
 	// 画面サイズの取得
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 
-	// データの設定
-	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_up.c_str()));
-	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_down.c_str()));
-	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_left.c_str()));
-	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_right.c_str()));
-	m_tutorialDataMap[TutorialState::MOVE].imgGoalPos = { screenSize.width / 2 + 150.0f, screenSize.height - 150.0f };
+	// 移動のチュートリアルのデータの設定
+	std::vector<int> imgHandle;
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_up.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_down.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_left.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_l_right.c_str()));
+	m_tutorialDataMap[TutorialState::MOVE].imgHandle.push_back(imgHandle);
+	m_tutorialDataMap[TutorialState::MOVE].goalPos = { screenSize.width / 2 + 125.0f, screenSize.height - 100.0f };
 	m_tutorialDataMap[TutorialState::MOVE].messageId = "TutorialMove";
+	m_tutorialDataMap[TutorialState::MOVE].drawFrame = move_tutorial_frame;
+
+	imgHandle.clear();
+	
+	// シールドのチュートリアルのデータの設定
+	imgHandle.push_back(my::MyLoadGraph(xbox_rb_file_path.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_lb_file_path.c_str()));
+	m_tutorialDataMap[TutorialState::SHIELD].imgHandle.push_back(imgHandle);
+	imgHandle.clear();
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_r_up.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_r_down.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_r_left.c_str()));
+	imgHandle.push_back(my::MyLoadGraph(xbox_stick_r_right.c_str()));
+	m_tutorialDataMap[TutorialState::SHIELD].imgHandle.push_back(imgHandle);
+	m_tutorialDataMap[TutorialState::SHIELD].goalPos = 
+	{ screenSize.width / 2.0f, screenSize.height - 100.0f };
+	m_tutorialDataMap[TutorialState::SHIELD].messageId = "TutorialShield";
+	m_tutorialDataMap[TutorialState::SHIELD].drawFrame = shield_tutorial_frame;
+	imgHandle.clear();
+
+	// 反射のチュートリアルのデータの設定
+	m_tutorialDataMap[TutorialState::REFLECT].goalPos = 
+	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	m_tutorialDataMap[TutorialState::REFLECT].messageId = "TutorialReflect";
+	m_tutorialDataMap[TutorialState::REFLECT].drawFrame = reflect_tutorial_frame;
+
+	// 反射2のチュートリアルのデータの設定
+	m_tutorialDataMap[TutorialState::REFLECT2].goalPos =
+	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	m_tutorialDataMap[TutorialState::REFLECT2].messageId = "TutorialReflect2";
+	m_tutorialDataMap[TutorialState::REFLECT2].drawFrame = -1;
+
+	// キューブのチュートリアルのデータの設定
+	m_tutorialDataMap[TutorialState::CUBE].goalPos = 
+	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	m_tutorialDataMap[TutorialState::CUBE].messageId = "TutorialCube";
+	m_tutorialDataMap[TutorialState::CUBE].drawFrame = cube_tutorial_frame;
+
+	// キューブ2のチュートリアルのデータの設定
+	m_tutorialDataMap[TutorialState::CUBE2].goalPos =
+	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	m_tutorialDataMap[TutorialState::CUBE2].messageId = "TutorialCube2";
+	m_tutorialDataMap[TutorialState::CUBE2].drawFrame = -1;
+
+	// プレイのチュートリアルのデータの設定
+	m_tutorialDataMap[TutorialState::PLAY].goalPos =
+	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	m_tutorialDataMap[TutorialState::PLAY].messageId = "TutorialPlay";
+	m_tutorialDataMap[TutorialState::PLAY].drawFrame = -1;
 }
 
 // デストラクタ
@@ -46,10 +118,14 @@ TutorialUI::~TutorialUI()
 	// 画像の解放
 	for (auto& img : m_tutorialDataMap)
 	{
-		for (auto& img : img.second.imgHandle)
+		for (auto& handle : img.second.imgHandle)
 		{
-			DeleteGraph(img);
+			for (auto& data : handle)
+			{
+				DeleteGraph(data);
+			}
 		}
+		DeleteGraph(img.second.messageTextImgHandle);
 	}
 }
 
@@ -102,13 +178,25 @@ void TutorialUI::Update()
 		// 状態が開始している場合
 		else if (data.first == m_state && data.second.isStart)
 		{
+			// フレーム加算
+			if (data.second.drawFrame > -1)
+			{
+				data.second.drawFrame--;
+				data.second.drawFrame = (std::max)(data.second.drawFrame, 0);
+
+				if (data.second.drawFrame <= 0)
+				{
+					EndState();
+				}
+			}
+
 			// 透明度を増加
 			data.second.imgAlpha += alpha_speed;
 			data.second.imgAlpha = (std::min)(data.second.imgAlpha, 255);
 
 			// 徐々に上に移動
 			data.second.imgPos.y -= 1.0f;
-			data.second.imgPos.y = (std::max)(data.second.imgPos.y, data.second.imgGoalPos.y);
+			data.second.imgPos.y = (std::max)(data.second.imgPos.y, data.second.goalPos.y);
 
 			// 特定のフレームごとに画像を切り替え
 			m_changeImageFrame.Update(1);
@@ -118,7 +206,10 @@ void TutorialUI::Update()
 				m_changeImageFrame.Reset();
 
 				// 画像の切り替え
-				data.second.imgIndex = (data.second.imgIndex + 1) % data.second.imgHandle.size();
+				for (size_t i = 0; i < data.second.imgHandle.size(); i++)
+				{
+					data.second.imgIndex[i] = (data.second.imgIndex[i] + 1) % data.second.imgHandle[i].size();
+				}
 			}
 		}
 	}
@@ -151,9 +242,9 @@ void TutorialUI::Draw()
 				data.second.scale, 0.0f, data.second.messageTextImgHandle, true);
 
 			// 画像の描画
-			DrawRotaGraph(data.second.imgPos.x, data.second.imgPos.y,
+		/*	DrawRotaGraph(data.second.imgPos.x, data.second.imgPos.y,
 				data.second.scale, 0.0,
-				data.second.imgHandle[data.second.imgIndex], TRUE);
+				data.second.imgHandle[data.second.imgIndex], TRUE);*/
 
 			// 透明度を元に戻す
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -161,18 +252,63 @@ void TutorialUI::Draw()
 	}
 	else
 	{
+		// 状態がスタートしていない場合は描画しない
+		if(m_tutorialDataMap[m_state].isStart == false) return;
+
 		// 透明度の設定
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_tutorialDataMap[m_state].imgAlpha);
 
+		// 描画位置の保存
+		Vector2 savePos = m_tutorialDataMap[m_state].imgPos;
+
 		// 画像の描画
-		DrawRotaGraph(m_tutorialDataMap[m_state].imgPos.x, m_tutorialDataMap[m_state].imgPos.y, 
-					  1.0, 0.0,	
-					  m_tutorialDataMap[m_state].imgHandle[m_tutorialDataMap[m_state].imgIndex], TRUE);
+		for (size_t i = 0; i < m_tutorialDataMap[m_state].imgHandle.size(); i++)
+		{
+			// 画像の間隔を設定
+			if (i >= 1)
+			{
+				//	画像のサイズを取得
+				float width = 0.0f, height = 0.0f;
+				GetGraphSizeF(m_tutorialDataMap[m_state].imgHandle[i - 1][m_tutorialDataMap[m_state].imgIndex[i -1]],
+					&width, &height);
+
+				// 画像の位置をずらす
+				m_tutorialDataMap[m_state].imgPos.x += (width + image_interval);
+			}
+
+			// 画像の描画
+			DrawRotaGraph(m_tutorialDataMap[m_state].imgPos.x, m_tutorialDataMap[m_state].imgPos.y,
+						  1.0, 0.0,
+						  m_tutorialDataMap[m_state].imgHandle[i][m_tutorialDataMap[m_state].imgIndex[i]], TRUE);
+
+			// 画像と画像の間にテキストを挿入
+			if (m_tutorialDataMap[m_state].imgHandle.size() >= 2 && 
+				i != m_tutorialDataMap[m_state].imgHandle.size() - 1)
+			{
+				//	画像のサイズを取得
+				float width = 0.0f, height = 0.0f;
+				GetGraphSizeF(m_tutorialDataMap[m_state].imgHandle[i][m_tutorialDataMap[m_state].imgIndex[i]],
+					&width, &height);
+
+				// テキストの描画
+				MessageManager::GetInstance().DrawStringCenter(
+					"TutorialUI+", 
+					m_tutorialDataMap[m_state].imgPos.x + ((width + image_interval) / 2.0f),
+					m_tutorialDataMap[m_state].imgPos.y, 
+					0xffffff);
+			}
+
+		}
 
 		// テキストの描画
-		MessageManager::GetInstance().DrawStringCenter(m_tutorialDataMap[m_state].messageId, 
-					  m_tutorialDataMap[m_state].imgPos.x + 130.0f, m_tutorialDataMap[m_state].imgPos.y, 0xffffff);
+		auto messageHeight = MessageManager::GetInstance().GetMessageHeight(m_tutorialDataMap[m_state].messageId);
+		MessageManager::GetInstance().DrawString(m_tutorialDataMap[m_state].messageId, 
+					  m_tutorialDataMap[m_state].imgPos.x + text_interval,
+					  m_tutorialDataMap[m_state].imgPos.y - (messageHeight / 2.0f), 0xffffff);
 		
+		// 描画位置の復元
+		m_tutorialDataMap[m_state].imgPos.x = savePos.x;
+
 		// 透明度を元に戻す
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}
@@ -181,6 +317,13 @@ void TutorialUI::Draw()
 // 状態の設定
 void TutorialUI::StartState(TutorialState state)
 {
+	// すでにスタートしている場合は何もしない
+	if (m_tutorialDataMap[state].isStart) return;
+
+	// 現在の状態が終了していない場合は何もしない
+	if (m_tutorialDataMap[m_state].imgAlpha > 0) return;
+	if (m_tutorialDataMap[m_state].isStart && !m_tutorialDataMap[m_state].isEnd) return;
+
 	// 状態の設定
 	m_state = state;
 	m_tutorialDataMap[m_state].isStart = true;
@@ -188,7 +331,10 @@ void TutorialUI::StartState(TutorialState state)
 
 	// 位置の設定
 	m_tutorialDataMap[m_state].imgPos = 
-		{ m_tutorialDataMap[m_state].imgGoalPos.x, m_tutorialDataMap[m_state].imgGoalPos.y + 20.0f };
+		{ m_tutorialDataMap[m_state].goalPos.x, m_tutorialDataMap[m_state].goalPos.y + 20.0f };
+
+	// 画像のインデックスの初期化
+	m_tutorialDataMap[m_state].imgIndex.resize(m_tutorialDataMap[m_state].imgHandle.size(), 0);
 
 	// チュートリアル用のUIが右下に残すのかどうかのフラグが立っている場合
 	if (is_tutorial_ui_hold_test)
@@ -197,7 +343,7 @@ void TutorialUI::StartState(TutorialState state)
 		MessageManager& message = MessageManager::GetInstance();
 		m_tutorialDataMap[m_state].messageTextImgHandle =
 			MakeScreen(message.GetMessageWidth(m_tutorialDataMap[m_state].messageId),
-				message.GetMessageHeight(m_tutorialDataMap[m_state].messageId));
+					   message.GetMessageHeight(m_tutorialDataMap[m_state].messageId));
 	}
 }
 
