@@ -224,6 +224,8 @@ void Mosquito::UpdateAttack()
 		{
 			// 待機状態に遷移
 			m_state.SetState(State::IDLE);
+			// レーザーの削除
+			m_pLaserManager->DeleteLaser(m_laserKey);
 		}
 	}
 }

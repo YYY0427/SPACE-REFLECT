@@ -27,6 +27,9 @@ namespace
 	const Vector3 player_vec_right = { -1, 0, 0 };
 	const Vector3 player_vec_left = { 1, 0, 0 };
 
+	// プレイヤーの初期の向いている方向
+	const Vector3 init_model_direction = { 0, 0, 1 };
+
 	// プレイヤーの通常移動速度
 	constexpr float move_normal_speed = 1.0f;
 
@@ -338,7 +341,7 @@ void Player::Update(float cameraHorizon)
 
 	// エフェクトの設定
 	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
-	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
+	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, 0.0f, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
 

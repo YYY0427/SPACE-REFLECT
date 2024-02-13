@@ -169,7 +169,7 @@ bool Camera::UpdateGameClear(Vector3 playerPos)
 	);
 
 	// –Ú•WˆÊ’u‚É“ž’B‚µ‚½‚ç
-	if (targetPos.Distance(m_pos) < 200.0f &&  m_target.Distance(playerPos) < 10.0f)
+	if (targetPos.Distance(m_pos) < 50.0f &&  m_target.Distance(playerPos) < 100.0f)
 	{
 		return true;
 	}

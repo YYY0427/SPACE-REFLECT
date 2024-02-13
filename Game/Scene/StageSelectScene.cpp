@@ -67,9 +67,16 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 
 	// ステージの設定
 	m_stageData[Stage::TUTORIAL].stageName = "Tutorial";
+	m_stageData[Stage::TUTORIAL].missionName = "TutorialMissionName";
+	m_stageData[Stage::TUTORIAL].difficultyId = "TutorialDifficulty";
+	m_stageData[Stage::TUTORIAL].conditionsId = "TutorialConditions";
 	m_stageData[Stage::TUTORIAL].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "MoonCamera")[0].pos;
 	m_stageData[Stage::TUTORIAL].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::MOON);
+
 	m_stageData[Stage::STAGE_1].stageName = "Stage1";
+	m_stageData[Stage::STAGE_1].missionName = "EarthMissionName";
+	m_stageData[Stage::STAGE_1].conditionsId = "EarthConditions";
+	m_stageData[Stage::STAGE_1].difficultyId = "EarthDifficulty";
 	m_stageData[Stage::STAGE_1].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "EarthCamera")[0].pos;
 	m_stageData[Stage::STAGE_1].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::EARTH);
 
@@ -306,14 +313,14 @@ void StageSelectScene::Draw()
 
 	// ステージタイトルの描画
 	MessageManager::GetInstance().DrawStringCenter("StageSelectMission", 890, 200, 0xffffff);
-	MessageManager::GetInstance().DrawStringCenter("TutorialStageName", 890, 250, 0xffffff);
+	MessageManager::GetInstance().DrawStringCenter(m_stageData[static_cast<Stage>(m_currentSelectItem)].missionName, 890, 250, 0xffffff);
 
 	// 線の描画
 	DrawLine(screenSize.width / 2.0f + 100, 280,  screenSize.width / 2.0f + 400, 280, 0xffffff, 2.0f);
 
 	// 難易度の描画
-	MessageManager::GetInstance().DrawString("TutorialDifficulty", 790, 310, 0xffffff);
-	MessageManager::GetInstance().DrawString("TutorialConditions", 790, 350, 0xffffff);
+	MessageManager::GetInstance().DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].difficultyId, 790, 310, 0xffffff);
+	MessageManager::GetInstance().DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].conditionsId, 790, 350, 0xffffff);
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 

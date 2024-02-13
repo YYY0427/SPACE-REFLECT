@@ -21,10 +21,6 @@ GameScene::GameScene(SceneManager& manager, Stage stage) :
 		m_pStage = std::make_unique<Stage1>(manager);
 		break;
 	}
-
-	// 画面切り替え
-//	m_pTransitor = std::make_unique<TileTransitor>(60);
-//	m_pTransitor->Start();
 }
 
 // デストラクタ
@@ -42,13 +38,10 @@ void GameScene::Update()
 	{
 		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::PAUSE));
 	}
-
-//	m_pTransitor->Update();
 }
 
 // 描画
 void GameScene::Draw()
 {
 	m_pStage->Draw();
-//	m_pTransitor->Draw();
 }

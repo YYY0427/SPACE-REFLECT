@@ -57,6 +57,15 @@ private:
 
 		// 惑星のポインタ
 		std::shared_ptr<Planet> pPlanet;
+
+		// ミッション名
+		std::string missionName;
+
+		// 脅威度
+		std::string difficultyId;
+
+		// 達成条件
+		std::string conditionsId;
 	};
 
 private:

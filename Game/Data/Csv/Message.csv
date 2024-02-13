@@ -49,7 +49,10 @@ ResultMission,MISSION,マキナス 4 Square,60,9
 ResultComplete,COMPLETE!,マキナス 4 Square,70,9
 ResultScore,-,マキナス 4 Square,120,9
 ResultScoreName,YOUR SCORE,マキナス 4 Square,25,5
-TutorialStageName,訓練,マキナス 4 Square,25,9
+TutorialMissionName,訓練,マキナス 4 Square,25,9
 StageSelectMission,MISSION,マキナス 4 Square,25,9
 TutorialDifficulty,敵脅威度：低度,マキナス 4 Square,20,9
 TutorialConditions,達成条件：生き残る,マキナス 4 Square,20,9
+EarthMissionName,テスト,マキナス 4 Square,25,9
+EarthDifficulty,敵脅威度：中度,マキナス 4 Square,20,9
+EarthConditions,達成条件：MATRIXの撃破,マキナス 4 Square,20,9

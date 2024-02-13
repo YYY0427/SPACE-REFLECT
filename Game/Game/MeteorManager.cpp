@@ -18,6 +18,7 @@ MeteorManager::MeteorManager(std::string objectDataFileName) :
 // デストラクタ
 MeteorManager::~MeteorManager()
 {
+	m_pMeteorList.clear();
 }
 
 // スタート演出時の更新

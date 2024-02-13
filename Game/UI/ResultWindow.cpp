@@ -12,19 +12,19 @@ namespace
 	const Vector2 window_size = { 1280, 570 };
 
 	// MISSIONの位置
-	const Vector2 init_mission_pos = { -300, 200 };
+	const Vector2 init_mission_pos = { -500, 200 };
 	const Vector2 goal_mission_pos = { 300, 200 };
 
 	// COMPLETEの位置
-	const Vector2 init_complete_pos = { 1500, 270 };
+	const Vector2 init_complete_pos = { 1700, 270 };
 	const Vector2 goal_complete_pos = { 440, 270 };
 
 	// YOUR SCOREの位置
-	const Vector2 init_your_score_pos = { 1500, 425 };
+	const Vector2 init_your_score_pos = { 1700, 425 };
 	const Vector2 your_score_pos = { 800, 425 };
 
 	// スコアの位置
-	const Vector2 init_score_pos = { 1500, 450 };
+	const Vector2 init_score_pos = { 1700, 450 };
 	const Vector2 score_pos = { 750, 450 };
 }
 

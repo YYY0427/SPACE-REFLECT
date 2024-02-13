@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="ModelHandleManager.cpp" />
+    <ClCompile Include="Scene\PuseScene.cpp" />
     <ClCompile Include="UI\TutorialUI.cpp" />
     <ClCompile Include="UI\ResultWindow.cpp" />
     <ClCompile Include="Stage\Stage1.cpp" />
@@ -220,6 +221,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="ModelHandleManager.h" />
+    <ClInclude Include="Scene\PuseScene.h" />
     <ClInclude Include="UI\TutorialUI.h" />
     <ClInclude Include="UI\ResultWindow.h" />
     <ClInclude Include="Stage\Stage1.h" />

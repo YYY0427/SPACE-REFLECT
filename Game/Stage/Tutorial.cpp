@@ -105,13 +105,21 @@ Tutorial::~Tutorial()
 {
 	// エフェクトの全削除
 	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
+	// ライトの削除
+	DeleteLightHandleAll();	
 }
 
 // 更新
 void Tutorial::Update()
 {
+	// プレイヤーが死んだらゲームオーバーに遷移
+	if (!m_pPlayer->IsLive())
+	{
+		m_stateMachine.SetState(State::GAME_OVER);
+	}
+
 	// 更新
-	m_pTutorialUI->Update();							// チュートリアルUI
+	m_pTutorialUI->Update();								// チュートリアルUI
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });	// スカイドーム
 	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());	// 惑星
 	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
@@ -119,8 +127,8 @@ void Tutorial::Update()
 	m_pEnemyManager->Update();								// レーザー
 	m_pDamageFlash->Update();								// ダメージフラッシュ
 	m_pScreenShaker->Update();								// 画面揺れ
-	Effekseer3DEffectManager::GetInstance().Update();	// エフェクト
-	UIManager::GetInstance().Update();					// UI
+	Effekseer3DEffectManager::GetInstance().Update();		// エフェクト
+	UIManager::GetInstance().Update();						// UI
 
 	Collision();	// 当たり判定
 	m_stateMachine.Update();							// ステートマシン
@@ -277,11 +285,6 @@ void Tutorial::UpdateCubeTutorial()
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
-	// プレイヤーが死んだらゲームオーバーに遷移
-	if (!m_pPlayer->IsLive())
-	{
-		m_stateMachine.SetState(State::GAME_OVER);
-	}
 	m_currentFrame++;
 	if (m_currentFrame > wave_wait_frame)
 	{

@@ -50,7 +50,7 @@ namespace
 	constexpr int max_enerugy_gage = 1000;
 
 	// プレイヤーからのシールドの距離
-	constexpr float player_distance = 30.0f;
+	constexpr float player_distance = 100.0f;
 
 	// エネルギーの回復速度
 	constexpr int enerugy_recovery_speed = 1;

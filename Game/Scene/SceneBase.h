@@ -4,6 +4,7 @@
 
 // プロトタイプ宣言
 class SceneManager;
+class Fade;
 
 /// <summary>
 /// シーンの基底クラス
@@ -32,4 +33,7 @@ protected:
 
 	// 画面切り替え演出のインスタンス
 	std::unique_ptr<TransitorBase> m_pTransitor;
+
+	// フェード
+	std::unique_ptr<Fade> m_pFade;
 };
