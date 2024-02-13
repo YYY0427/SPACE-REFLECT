@@ -32,9 +32,14 @@ private:
 	// テキスト
 	Vector2 m_missionPos;	// ミッション
 	Vector2 m_completePos;	// コンプリート
+	Vector2 m_scorePos;		// スコア
+	Vector2 m_yourScorePos;	// YOUR SCORE
 
 	// イージング
 	Vector2 m_easing;
+
+	// タイトル終了フラグ
+	bool m_isTitleEnd;
 
 	// 終了フラグ
 	bool m_isEnd;

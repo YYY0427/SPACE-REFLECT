@@ -50,7 +50,7 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_isInput(false),
 	m_line3DAlpha(0),
 	m_windowAlpha(0),
-	m_rankingTitleAlpa(0),
+	m_textAlpa(0),
 	m_rbButtonImgHandle(-1),
 	m_lbButtonImgHandle(-1),
 	m_bButtonImgHandle(-1)
@@ -112,35 +112,35 @@ void StageSelectScene::Update()
 	m_isInput = false;
 
 	// イージングが終了してたら入力を受け付ける
-	if (m_easeTime >= camera_move_frame)
-	{
-		// 選択肢を回す処理
-		int sceneItemTotalValue = static_cast<int>(Stage::NUM);
-		if (InputState::IsTriggered(InputType::RIGHT))
-		{
-			m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
-			m_isInput = true;
-			m_line3DAlpha = 0;
-			m_windowAlpha = 0;
-			m_rankingTitleAlpa = 0;
-			for (auto& alpha : m_rankingAlpha)
-			{
-				alpha = 0;
-			}
-		}
-		else if (InputState::IsTriggered(InputType::LEFT))
-		{
-			m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
-			m_isInput = true;
-			m_line3DAlpha = 0;
-			m_windowAlpha = 0;
-			m_rankingTitleAlpa = 0;
-			for (auto& alpha : m_rankingAlpha)
-			{
-				alpha = 0;
-			}
-		}
-	}
+	//if (m_easeTime >= camera_move_frame)
+	//{
+	//	// 選択肢を回す処理
+	//	int sceneItemTotalValue = static_cast<int>(Stage::NUM);
+	//	if (InputState::IsTriggered(InputType::RIGHT))
+	//	{
+	//		m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
+	//		m_isInput = true;
+	//		m_line3DAlpha = 0;
+	//		m_windowAlpha = 0;
+	//		m_textAlpa = 0;
+	//		for (auto& alpha : m_rankingAlpha)
+	//		{
+	//			alpha = 0;
+	//		}
+	//	}
+	//	else if (InputState::IsTriggered(InputType::LEFT))
+	//	{
+	//		m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
+	//		m_isInput = true;
+	//		m_line3DAlpha = 0;
+	//		m_windowAlpha = 0;
+	//		m_textAlpa = 0;
+	//		for (auto& alpha : m_rankingAlpha)
+	//		{
+	//			alpha = 0;
+	//		}
+	//	}
+	//}
 
 	// 更新
 	UpdateCamera();
@@ -155,7 +155,7 @@ void StageSelectScene::Update()
 	{
 		// ウィンドウのアルファ値の更新
 		m_windowAlpha = (std::min)(m_windowAlpha += 3, 100);
-		m_rankingTitleAlpa = (std::min)(m_rankingTitleAlpa += 3, 255);
+		m_textAlpa = (std::min)(m_textAlpa += 3, 255);
 
 		// ウィンドウのアルファ値が特定の値を超えたか
 		if (m_windowAlpha >= 100)
@@ -302,6 +302,21 @@ void StageSelectScene::Draw()
 	DrawRoundRectAA(screenSize.width / 2.0f + 50, 150, screenSize.width / 2.0f + 450, 575, 5, 5, 4, 0xffffff, false, 5.0f);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpa);
+
+	// ステージタイトルの描画
+	MessageManager::GetInstance().DrawStringCenter("StageSelectMission", 890, 200, 0xffffff);
+	MessageManager::GetInstance().DrawStringCenter("TutorialStageName", 890, 250, 0xffffff);
+
+	// 線の描画
+	DrawLine(screenSize.width / 2.0f + 100, 280,  screenSize.width / 2.0f + 400, 280, 0xffffff, 2.0f);
+
+	// 難易度の描画
+	MessageManager::GetInstance().DrawString("TutorialDifficulty", 790, 310, 0xffffff);
+	MessageManager::GetInstance().DrawString("TutorialConditions", 790, 350, 0xffffff);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
 	// スコアランキングの描画
 	DrawScoreRanking();
 
@@ -322,8 +337,8 @@ void StageSelectScene::DrawScoreRanking()
 	}
 
 	// ランキングタイトルの描画
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_rankingTitleAlpa);
-	MessageManager::GetInstance().DrawStringCenter("RankingTitle", 900, 425, 0xffffff);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpa);
+	MessageManager::GetInstance().DrawStringCenter("RankingTitle", 805, 425, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// スコアランキングの描画

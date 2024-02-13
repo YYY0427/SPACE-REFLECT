@@ -62,7 +62,7 @@ public:
 	/// <param name="y">Y軸の座標</param>
 	/// <param name="color">文字の描画色</param>
 	template<typename T>
-	void DrawNumberCenter(std::string id, T value, int x, int y, unsigned int color)
+	void DrawNumberCenter(std::string id, T value, int x, int y, unsigned int color, unsigned int edgeColor = 0x000000)
 	{
 		// ロードしていない場合は止める
 		assert(m_messageDataTable.find(id) != m_messageDataTable.end());
@@ -71,7 +71,7 @@ public:
 		std::string str = std::to_string(value);
 
 		// 数字の描画
-		StringUtil::DrawStringCenter(x, y, color, str, m_messageDataTable[id].fontHandle);
+		StringUtil::DrawStringCenter(x, y, color, str, m_messageDataTable[id].fontHandle, edgeColor);
 	}
 
 	// メッセージのデータの取得

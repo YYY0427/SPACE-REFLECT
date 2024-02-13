@@ -216,6 +216,9 @@ void NormalLaser::UpdateCharge()
 		{
 			// プレイヤーを追従する場合
 			m_stateMachine.SetState(State::FIRE_PLYER_FOLLOWING);
+
+			// レーザーの向く座標を設定
+			m_directionPos = m_pPlayer->GetPosLogTable().back();
 		}
 		else
 		{
@@ -290,6 +293,7 @@ void NormalLaser::UpdateFirePlayerFollowing()
 	}
 
 	// 座標の更新
+	m_directionPos.z += m_pPlayer->GetMoveVec().z;
 	m_directionPos += m_directionVec;
 }
 

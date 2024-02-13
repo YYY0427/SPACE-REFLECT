@@ -26,5 +26,5 @@ namespace StringUtil
 	/// <param name="color">色</param>
 	/// <param name="str">文字列</param>
 	/// <param name="fontHandle">フォントハンドル</param>
-	void DrawStringCenter(int x, int y, unsigned int color, std::string str, int fontHandle);
+	void DrawStringCenter(int x, int y, unsigned int color, std::string str, int fontHandle, unsigned int edgeColor = 0x000000);
 }

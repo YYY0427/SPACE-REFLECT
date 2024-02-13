@@ -44,9 +44,6 @@ void Score::AddScore(ScoreType type)
 	case ScoreType::DAMAGE:
 		m_score[static_cast<int>(type)] += damage_score;
 		break;
-	case ScoreType::DEATH:
-		m_score[static_cast<int>(type)] += death_score;
-		break;
 	default:
 		break;
 	}	

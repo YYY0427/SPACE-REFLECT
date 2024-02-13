@@ -32,8 +32,8 @@ namespace
 	constexpr float text_interval = 50.0f;
 
 	// 描画フレーム
-	constexpr int move_tutorial_frame = 300;	// 移動
-	constexpr int shield_tutorial_frame = 300;	// シールド
+	constexpr int move_tutorial_frame = 500;	// 移動
+	constexpr int shield_tutorial_frame = 500;	// シールド
 	constexpr int reflect_tutorial_frame = 300;	// 反射
 	constexpr int cube_tutorial_frame = 300;	// キューブ
 
@@ -89,25 +89,25 @@ TutorialUI::TutorialUI() :
 
 	// 反射2のチュートリアルのデータの設定
 	m_tutorialDataMap[TutorialState::REFLECT2].goalPos =
-	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	{ screenSize.width / 2.0f - 120.0f, screenSize.height - 100.0f };
 	m_tutorialDataMap[TutorialState::REFLECT2].messageId = "TutorialReflect2";
 	m_tutorialDataMap[TutorialState::REFLECT2].drawFrame = -1;
 
 	// キューブのチュートリアルのデータの設定
 	m_tutorialDataMap[TutorialState::CUBE].goalPos = 
-	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	{ screenSize.width / 2.0f - 240.0f, screenSize.height - 100.0f };
 	m_tutorialDataMap[TutorialState::CUBE].messageId = "TutorialCube";
 	m_tutorialDataMap[TutorialState::CUBE].drawFrame = cube_tutorial_frame;
 
 	// キューブ2のチュートリアルのデータの設定
 	m_tutorialDataMap[TutorialState::CUBE2].goalPos =
-	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	{ screenSize.width / 2.0f, screenSize.height - 100.0f };
 	m_tutorialDataMap[TutorialState::CUBE2].messageId = "TutorialCube2";
 	m_tutorialDataMap[TutorialState::CUBE2].drawFrame = -1;
 
 	// プレイのチュートリアルのデータの設定
 	m_tutorialDataMap[TutorialState::PLAY].goalPos =
-	{ screenSize.width / 2.0f - 225.0f, screenSize.height - 100.0f };
+	{ screenSize.width / 2.0f, screenSize.height - 100.0f };
 	m_tutorialDataMap[TutorialState::PLAY].messageId = "TutorialPlay";
 	m_tutorialDataMap[TutorialState::PLAY].drawFrame = -1;
 }

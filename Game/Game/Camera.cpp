@@ -157,7 +157,7 @@ bool Camera::UpdateGameClear(Vector3 playerPos)
 	m_target = Vector3::Lerp(m_target, playerPos, m_lerpValue);
 
 	// カメラの位置をエルミート曲線で移動させる
-	m_hermiteValue += 0.001f * m_slowValue;
+	m_hermiteValue += 0.002f * m_slowValue;
 	Vector3 targetPos = { playerPos.x + 200.0f, playerPos.y + 50, playerPos.z + 200.0f };
 	m_pos = Vector3::Hermite
 	(
@@ -169,7 +169,7 @@ bool Camera::UpdateGameClear(Vector3 playerPos)
 	);
 
 	// 目標位置に到達したら
-	if (targetPos.Distance(m_pos) < 10.0f &&  m_target.Distance(playerPos) < 10.0f)
+	if (targetPos.Distance(m_pos) < 200.0f &&  m_target.Distance(playerPos) < 10.0f)
 	{
 		return true;
 	}

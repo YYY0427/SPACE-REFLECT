@@ -51,6 +51,7 @@ public:
 	bool IsStartAnimation() const;		// スタート演出をしたかフラグ
 	std::shared_ptr<Shield> GetShield() const;	// シールドのポインタ
 	std::deque<Vector3> GetPosLogTable() const;	// 位置情報のテーブル
+	float GetMoveZVec() const;					// Z軸の移動ベクトル
 
 	// セッター
 	void SetSlowValue(float slowValue);	// スローの値

@@ -85,7 +85,7 @@ private:
 	// アルファ値
 	int m_line3DAlpha;
 	int m_windowAlpha;
-	int m_rankingTitleAlpa;
+	int m_textAlpa;
 	std::vector<int> m_rankingAlpha;
 
 	// 画像ハンドル

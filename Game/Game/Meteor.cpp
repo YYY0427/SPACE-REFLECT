@@ -113,7 +113,7 @@ void Meteor::Update(Vector3 cameraPos)
 void Meteor::UpdateStart(Vector3 playerVec)
 {
 	// ˆÚ“®
-	m_pos += playerVec;
+	m_pos.z += (25.0f - playerVec.z);
 
 	// ‰ñ“]
 	m_rot += m_rotVec;

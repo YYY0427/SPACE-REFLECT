@@ -26,7 +26,7 @@ namespace StringUtil
 	}
 
 	// 指定した座標を中心に文字列を描画する 
-	void DrawStringCenter(int x, int y, unsigned int color, std::string str, int fontHandle)
+	void DrawStringCenter(int x, int y, unsigned int color, std::string str, int fontHandle, unsigned int edgeColor)
 	{
 		// 文字列の幅と長さを取得
 		int width = -1;
@@ -42,7 +42,7 @@ namespace StringUtil
 			assert(height != -1 && "文字列の高さの取得に失敗");
 
 			// フォントハンドルを指定せずに描画
-			DrawString(x - width / 2, y - height / 2, str.c_str(), color);
+			DrawString(x - width / 2, y - height / 2, str.c_str(), color, edgeColor);
 		}
 		else
 		{
@@ -55,7 +55,7 @@ namespace StringUtil
 			assert(height != -1 && "文字列の高さの取得に失敗");
 
 			// フォントハンドルを指定して描画
-			DrawStringToHandle(x - width / 2, y - height / 2, str.c_str(), color, fontHandle);
+			DrawStringToHandle(x - width / 2, y - height / 2, str.c_str(), color, fontHandle, edgeColor);
 		}
 	}
 }

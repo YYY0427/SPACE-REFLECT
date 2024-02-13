@@ -11,7 +11,6 @@ enum class ScoreType
 
 	// 減少項目
 	DAMAGE,		// ダメージをスコア
-	DEATH,		// 死亡時のスコア
 
 	// スコアの種類の数
 	NUM			

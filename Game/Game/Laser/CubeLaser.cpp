@@ -48,6 +48,7 @@ void CubeLaser::Update()
 	m_opacity = (std::min)(m_opacity + opacity_speed, 1.0f);
 
 	// ˆÚ“®
+	m_pos.z += m_pPlayer->GetMoveVec().z;
 	m_pos += m_moveVec;
 
 	// Šg‘å

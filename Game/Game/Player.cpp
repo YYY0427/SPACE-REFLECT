@@ -571,3 +571,9 @@ std::deque<Vector3> Player::GetPosLogTable() const
 {
 	return m_posLogTable;
 }
+
+// ZŽ²‚ÌˆÚ“®ƒxƒNƒgƒ‹
+float Player::GetMoveZVec() const
+{
+	return move_z_speed;
+}

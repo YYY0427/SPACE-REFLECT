@@ -27,11 +27,16 @@ private:
 	enum class SceneItem
 	{
 		GAME,	// ゲーム
-		EXIT,	// 終了
+	//	EXIT,	// 終了
 		NUM		// 項目数
 	};
 
 private:
 	// 現在選択しているシーン項目
 	int m_currentSelectSceneItem;
+
+	// アルファ値
+	int m_alpha;
+
+	int m_frame;
 };

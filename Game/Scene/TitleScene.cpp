@@ -17,16 +17,20 @@
 namespace
 {
 	// 表示するテキストの全体の位置
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 + 100;
+	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 + 150;
 
 	// テキストの文字間
 	constexpr int text_space_y = 50;
+
+	// 文字の点滅の速さ
+	constexpr float string_fade_speed = 0.1f;
 }
 
 // コンストラクタ
 TitleScene::TitleScene(SceneManager& manager) :
 	SceneBase(manager),
-	m_currentSelectSceneItem(0)
+	m_currentSelectSceneItem(0),
+	m_alpha(255)
 {
 	// ゲームのプレイ動画を再生
 
@@ -62,11 +66,12 @@ void TitleScene::Update()
 		case SceneItem::GAME:
 			m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 			return;
-		case SceneItem::EXIT:
-			Application::GetInstance().Exit();
-			return;
 		}
 	}
+
+	// 255と0を行ったり来たりする
+	m_frame++;
+	m_alpha = (0.5f * sinf(m_frame * string_fade_speed) + 0.5f) * 255.0f;
 
 	// 画面切り替え演出の更新
 	m_pTransitor->Update();
@@ -86,16 +91,18 @@ void TitleScene::Draw()
 	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0x000000);
 
 	// 項目の描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);
 	messageManager.DrawStringCenter("TitleItemStart", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), 0x000000);
-	messageManager.DrawStringCenter("TitleItemExit", size.width / 2, 
-		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::EXIT), 0x000000);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	/*messageManager.DrawStringCenter("TitleItemExit", size.width / 2, 
+		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::EXIT), 0x000000);*/
 
 	// 選択中の項目にバーを描画
-	messageManager.DrawStringCenter("TitleItemSelectBarRight", size.width / 2 - 100, 
+	/*messageManager.DrawStringCenter("TitleItemSelectBarRight", size.width / 2 - 100, 
 		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);
 	messageManager.DrawStringCenter("TitleItemSelectBarLeft", size.width / 2 + 100, 
-		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);
+		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);*/
 
 	// 画面切り替え演出の描画
 	m_pTransitor->Draw();

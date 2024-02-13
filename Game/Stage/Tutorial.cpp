@@ -132,6 +132,7 @@ void Tutorial::UpdateStartAnimation()
 	// 更新
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
+	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveZVec() });				// 隕石
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
@@ -276,11 +277,6 @@ void Tutorial::UpdateCubeTutorial()
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
-	// ボスが死んだらゲームクリアに遷移
-	/*if (m_pEnemyManager->IsDeadBoss())
-	{
-		m_stateMachine.SetState(State::GAME_CLEAR);
-	}*/
 	// プレイヤーが死んだらゲームオーバーに遷移
 	if (!m_pPlayer->IsLive())
 	{
@@ -343,8 +339,8 @@ void Tutorial::UpdateGameOver()
 	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
 	if (m_pPlayer->UpdateGameOver())
 	{
-		// リザルト画面に遷移
-		m_stateMachine.SetState(State::RESULT);
+		// ステージセレクトに遷移
+		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 	}
 
 	DebugText::Log("GameOver");

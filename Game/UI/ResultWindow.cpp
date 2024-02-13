@@ -3,6 +3,7 @@
 #include "../Util/InputState.h"
 #include "../Util/Easing.h"
 #include "../String/MessageManager.h"
+#include "../Score/Score.h"
 #include <DxLib.h>
 
 namespace
@@ -17,6 +18,14 @@ namespace
 	// COMPLETEの位置
 	const Vector2 init_complete_pos = { 1500, 270 };
 	const Vector2 goal_complete_pos = { 440, 270 };
+
+	// YOUR SCOREの位置
+	const Vector2 init_your_score_pos = { 1500, 425 };
+	const Vector2 your_score_pos = { 800, 425 };
+
+	// スコアの位置
+	const Vector2 init_score_pos = { 1500, 450 };
+	const Vector2 score_pos = { 750, 450 };
 }
 
 // コンストラクタ
@@ -25,7 +34,10 @@ ResultWindow::ResultWindow() :
 	m_isEndWindow(false),
 	m_easing({ 0.0f, 0.0f }),
 	m_missionPos(init_mission_pos),
-	m_completePos(init_complete_pos)
+	m_completePos(init_complete_pos),
+	m_isTitleEnd(false),
+	m_scorePos(init_score_pos),
+	m_yourScorePos(init_your_score_pos)
 {
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	m_windowPos = { screenSize.width / 2.0f, screenSize.height / 2.0f };
@@ -58,7 +70,7 @@ void ResultWindow::Update()
 	}
 
 	// ウィンドウが終了したら
-	if (m_isEndWindow)
+	if (m_isEndWindow && !m_isTitleEnd)
 	{
 		// MISSIONの位置を移動
 		m_easing.x++;
@@ -69,6 +81,25 @@ void ResultWindow::Update()
 		m_easing.y++;
 		m_completePos.x = Easing::EaseOutCubic(m_easing.y, 100, goal_complete_pos.x, m_completePos.x);
 		m_completePos.y = Easing::EaseOutCubic(m_easing.y, 100, goal_complete_pos.y, m_completePos.y);
+
+		// タイトル終了フラグ
+		if (m_completePos.x == goal_complete_pos.x && m_completePos.y == goal_complete_pos.y)
+		{
+			// 初期化
+			m_isTitleEnd = true;
+			m_easing = { 0.0f, 0.0f };
+		}
+	}
+
+	if (m_isTitleEnd)
+	{
+		m_easing.x++;
+		m_scorePos.x = Easing::EaseOutCubic(m_easing.x, 100, score_pos.x, m_scorePos.x);
+		m_scorePos.y = Easing::EaseOutCubic(m_easing.x, 100, score_pos.y, m_scorePos.y);
+
+		m_easing.y++;
+		m_yourScorePos.x = Easing::EaseOutCubic(m_easing.y, 100, your_score_pos.x, m_yourScorePos.x);
+		m_yourScorePos.y = Easing::EaseOutCubic(m_easing.y, 100, your_score_pos.y, m_yourScorePos.y);
 	}
 
 	// 決定ボタンが押されたらシーン遷移
@@ -93,6 +124,28 @@ void ResultWindow::Draw()
 	// COMPLETEの描画
 	MessageManager::GetInstance().DrawStringCenter(
 		"ResultComplete", m_completePos.x, m_completePos.y, GetColor(255, 255, 255), 0xffffff);
+
+	// タイトルが終了したら
+	if (m_isTitleEnd)
+	{
+		// フォントの取得
+		auto data = MessageManager::GetInstance().GetMessageData("ResultScore");
+		int score = Score::GetInstance().GetTotalScore();
+		std::string str = std::to_string(score);
+		while (str.size() < 4)
+		{
+			str = "0" + str;
+		}
+
+		// YOUR SCOREの描画
+		MessageManager::GetInstance().DrawStringCenter("ResultScoreName", m_yourScorePos.x, m_yourScorePos.y, 0xffffff, 0xffffff);
+
+		// スコアを1文字ずつ描画
+		for (int i = 0; i < 4; i++)
+		{
+			DrawStringToHandle(m_scorePos.x + (i * 100), m_scorePos.y, str.substr(i, 1).c_str(), 0xffffff, data.fontHandle, 0xffffff);
+		}
+	}
 }
 
 // 終了フラグの取得
