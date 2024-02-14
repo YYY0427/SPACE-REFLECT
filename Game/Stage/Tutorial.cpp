@@ -49,7 +49,7 @@ namespace
 Tutorial::Tutorial(SceneManager& manager) :
 	StageBase(manager)
 {
-	// ダメージの初期化
+	// ダメージの設定
 	m_meteorDamage= meteor_damage;
 	m_laserDamage = laser_damage;
 	m_enemyDamage = enemy_damage;
@@ -71,9 +71,6 @@ Tutorial::Tutorial(SceneManager& manager) :
 	// オブジェクト配置データ読み込み
 	auto& dataReader = DataReaderFromUnity::GetInstance();
 	dataReader.LoadUnityGameObjectData(object_data_file_name.c_str());
-
-	// スコアのインスタンス生成
-	auto& score = Score::GetInstance();
 
 	// インスタンスの作成
 	m_pPlayer = std::make_shared<Player>(object_data_file_name);
@@ -129,11 +126,11 @@ void Tutorial::Update()
 void Tutorial::UpdateStartAnimation()
 {
 	// 更新
-	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
-	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
-	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveZVec() });				// 隕石
+	m_pPlayer->UpdateStart(m_pCamera->GetPos());						// プレイヤー
+	m_pCamera->UpdateStart(m_pPlayer->GetPos());						// カメラ
+	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveZVec() });	// 隕石
 
-	// スタート演出が終わったらプレイ中に遷移
+	// スタート演出が終わったら移動チュートリアルに遷移
 	if (m_pPlayer->IsStartAnimation() &&
 		m_pCamera->IsStartAnimation())
 	{
@@ -168,9 +165,10 @@ void Tutorial::UpdateMoveTutorial()
 // シールドチュートリアルの更新
 void Tutorial::UpdateShieldTutorial()
 {
-	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+	// プレイヤーの更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					
+	// カメラの更新
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 
 	// 特定のフレームたったら
 	m_currentFrame++;
@@ -187,16 +185,18 @@ void Tutorial::UpdateShieldTutorial()
 			m_currentFrame = 0;
 		}
 	}
-	// デバッグテキストの描画
+
+	// デバッグテキストの追加
 	DebugText::Log("ShieldTutorial");
 }
 
 // 反射チュートリアルの更新
 void Tutorial::UpdateReflectTutorial()
 {
-	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+	// プレイヤーの更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
+	// カメラの更新
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 
 	// 特定のフレームたったら
 	m_currentFrame++;

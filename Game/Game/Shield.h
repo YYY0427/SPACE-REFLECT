@@ -2,6 +2,7 @@
 #include <memory>
 #include <DxLib.h>
 #include <array>
+#include "../Math/Vector2.h"
 #include "../Math/Vector3.h"
 
 // プロトタイプ宣言
@@ -39,9 +40,6 @@ public:
 	// シールドの頂点情報の取得
 	std::array<VERTEX3D, 6> GetVertex() const;
 
-	// スローの値の設定
-	void SetSlowValue(float slowValue);
-
 private:
 	// ポインタ
 	std::shared_ptr<Image3D> m_pImage;
@@ -56,18 +54,21 @@ private:
 	// エネルギーゲージ
 	int m_enerugyGage;
 
-	// スローの値
-	float m_slowValue;
-
 	// シールドの位置
 	Vector3 m_pos;
 
 	// シールドの回転
 	Vector3 m_rot;
 
+	// シールドの拡大率
+	Vector2 m_scale;
+
 	// プレイヤーからの相対位置
 	Vector3 m_relativePosToPlayer;
 
 	// 入力されたか
 	bool m_isInput;
+
+	// 
+	int m_sinFrame;
 };

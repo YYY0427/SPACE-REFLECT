@@ -17,10 +17,7 @@ namespace
 Score::Score()
 {
 	// スコアの初期化
-	for (int i = 0; i < static_cast<int>(ScoreType::NUM); i++)
-	{
-		m_score[i] = 0;
-	}
+	Reset();
 }
 
 // デストラクタ

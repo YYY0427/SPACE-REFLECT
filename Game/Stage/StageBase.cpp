@@ -13,6 +13,7 @@
 #include "../Game/Enemy/EnemyBase.h"
 #include "../Effect/ScreenShaker.h"
 #include "../UI/DamageFlash.h"
+#include "../Score/Score.h"
 #include <DxLib.h>
 
 // コンストラクタ
@@ -34,6 +35,9 @@ StageBase::StageBase(SceneManager& manager) :
 	// ライトの設定
 	m_directionalLightHandle = CreateDirLightHandle({ 1, 1, 0 });
 	SetLightDifColorHandle(m_directionalLightHandle, GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
+
+	// スコアの初期化
+	Score::GetInstance().Reset();
 }
 
 // デストラクタ
@@ -47,6 +51,11 @@ StageBase::~StageBase()
 	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
+}
+
+// 描画
+void StageBase::Draw()
+{
 }
 
 // 当たり判定

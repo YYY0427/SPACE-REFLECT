@@ -6,6 +6,7 @@
 #include "../Util/InputState.h"
 #include "../Transitor/FadeTransitor.h"
 #include "../Transitor/TileTransitor.h"
+#include "../Scene/SceneManager.h"
 
 // コンストラクタ
 GameScene::GameScene(SceneManager& manager, Stage stage) :

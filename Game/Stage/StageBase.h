@@ -32,7 +32,7 @@ public:
 	virtual void Update() = 0;
 
 	// •`‰æ
-	virtual void Draw() = 0;
+	virtual void Draw();
 
 	// “–‚½‚è”»’è
 	void Collision();

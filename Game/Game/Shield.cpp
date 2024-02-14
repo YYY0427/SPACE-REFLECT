@@ -65,7 +65,8 @@ Shield::Shield(Player& player) :
 	m_isInput(false),
 	m_effectHandle(-1),
 	m_enerugyGage(max_enerugy_gage),
-	m_slowValue(1.0f)
+	m_scale({ shield_width, shield_height }),
+	m_sinFrame(0)
 {
 	// 3D画像のインスタンスの作成
 	m_pImage = std::make_shared<Image3D>(img_file_path);
@@ -94,8 +95,8 @@ Shield::Shield(Player& player) :
 
 	// シールド画像の初期化
 	m_pImage->SetPos(m_player.GetPos());		 // 位置	
-	m_pImage->SetImgWidth(shield_width);		 // 横幅
-	m_pImage->SetImgHeight(shield_height);		 // 縦幅
+	m_pImage->SetImgWidth(m_scale.x);		 // 横幅
+	m_pImage->SetImgHeight(m_scale.y);		 // 縦幅
 }
 
 // デストラクタ
@@ -130,7 +131,7 @@ void Shield::Update()
 		int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
 
 		// シールドの位置の計算
-		Vector3 tempVec = { (right + -left) * 10 * m_slowValue, (up + -down) * 10 * m_slowValue, player_distance };
+		Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
 
 		// プレイヤーの平行移動行列の取得
 		Matrix playerMtx = Matrix::GetTranslate(m_player.GetPos());
@@ -149,7 +150,7 @@ void Shield::Update()
 			if (m_enerugyGage > 0)
 			{
 				// シールドを出している間は常にエネルギーゲージを減らす
-				m_enerugyGage -= enerugy_decrease_speed * m_slowValue;
+				m_enerugyGage -= enerugy_decrease_speed;
 
 				// シールドエフェクトの再生
 			/*	effectManager.PlayEffect(
@@ -164,13 +165,20 @@ void Shield::Update()
 		else
 		{
 			// 入力されていないならエネルギーゲージを回復させる
-			m_enerugyGage += enerugy_recovery_speed * m_slowValue;
+			m_enerugyGage += enerugy_recovery_speed;
 		}
 
 		// エネルギーゲージの範囲を制限
 		m_enerugyGage = enerugyGageRange.Clamp(m_enerugyGage);
 
+		// シールドの拡縮
+		m_sinFrame++;
+		m_scale.x = shield_width + (sinf(m_sinFrame * 0.1f) * 1);
+		m_scale.y = shield_height + (sinf(m_sinFrame * 0.1f) * 1);
+
 		// 画像の設定
+		m_pImage->SetImgWidth(m_scale.x);		 // 横幅
+		m_pImage->SetImgHeight(m_scale.y);		 // 縦幅
 		m_pImage->SetPos(m_pos); // 位置
 		m_pImage->SetRot(m_rot); // 回転
 		m_pImage->Update();		 // 更新
@@ -215,10 +223,4 @@ bool Shield::IsShield() const
 std::array<VERTEX3D, 6> Shield::GetVertex() const
 {
 	return m_pImage->GetVertex();
-}
-
-// スローの値の設定
-void Shield::SetSlowValue(float slowValue)
-{
-	m_slowValue = slowValue;
 }
