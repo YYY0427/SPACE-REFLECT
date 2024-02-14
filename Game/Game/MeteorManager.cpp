@@ -18,7 +18,6 @@ MeteorManager::MeteorManager(std::string objectDataFileName) :
 // デストラクタ
 MeteorManager::~MeteorManager()
 {
-	m_pMeteorList.clear();
 }
 
 // スタート演出時の更新
@@ -28,6 +27,15 @@ void MeteorManager::UpdateStart(Vector3 playerVec)
 	for (auto& meteor : m_pMeteorList)
 	{
 		meteor->UpdateStart(playerVec);
+	}
+}
+
+void MeteorManager::UpdateSmallMeteor()
+{
+	// 隕石の更新
+	for (auto& meteor : m_pMeteorList)
+	{
+//		meteor->UpdateSmallMeteor();
 	}
 }
 

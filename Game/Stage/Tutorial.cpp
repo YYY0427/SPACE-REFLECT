@@ -380,9 +380,12 @@ void Tutorial::UpdateResult()
 		// スコアをランキングに追加
 		ScoreRanking::GetInstance().AddScore("Tutorial", "NO NAME", Score::GetInstance().GetTotalScore());
 
-		// スコアを初期化
-		Score::GetInstance().Reset();
-
+		// フェードアウトの演出の開始
+		m_pFade->StartFadeOut(255, 2);
+	}
+	// フェードアウトが終了したら
+	if(m_pFade->IsFadeOutEnd())
+	{
 		// ステージセレクトに遷移
 		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 	}
@@ -401,8 +404,8 @@ void Tutorial::Draw()
 	m_pEnemyManager->Draw();	// 敵
 	m_pLaserManager->Draw();	// レーザー
 	m_pPlayer->Draw();								// プレイヤー
-	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	m_pPlayer->DrawShield();						// シールド
+	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	UIManager::GetInstance().Draw();				// UI
 	Score::GetInstance().DrawScore();				// スコア
 

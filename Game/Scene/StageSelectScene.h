@@ -103,6 +103,9 @@ private:
 	int m_bButtonImgHandle;
 	int m_aButtonImgHandle;
 
+	// ライトハンドル
+	int m_lightHandle;
+
 	// 選択されている項目
 	int m_currentSelectItem;
 };

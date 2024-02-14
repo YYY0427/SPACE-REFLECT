@@ -18,6 +18,7 @@ public:
 
 	// XV
 	void UpdateStart(Vector3 playerVec);
+	void UpdateSmallMeteor();
 	void Update(Vector3 cameraPos);
 
 	// •`‰æ

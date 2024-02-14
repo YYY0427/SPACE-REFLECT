@@ -24,7 +24,7 @@ namespace
 	constexpr int text_space_y = 50;
 
 	// 文字の点滅の速さ
-	constexpr float string_fade_speed = 0.1f;
+	constexpr float string_fade_speed = 0.05f;
 }
 
 // コンストラクタ

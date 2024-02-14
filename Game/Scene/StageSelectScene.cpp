@@ -56,6 +56,10 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_lbButtonImgHandle(-1),
 	m_bButtonImgHandle(-1)
 {
+	// ライトの設定
+	m_lightHandle = CreateDirLightHandle({ -1, -1, 1 });
+	SetLightDifColorHandle(m_lightHandle, GetColorF(1.0f, 1.0f, 1.0f, 0.0f));
+
 	// フェードインの演出
 	m_pFade = std::make_unique<Fade>();
 	m_pFade->StartFadeIn(0);
@@ -115,6 +119,8 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 // デストラクタ
 StageSelectScene::~StageSelectScene()
 {
+	// ライトのハンドルを全て削除
+	DeleteLightHandleAll();
 }
 
 // 更新
@@ -270,9 +276,9 @@ void StageSelectScene::Draw()
 	// モデル描画
 	m_pCamera->SetCamera();
 	m_pSkyDome->Draw();
-	SetUseLighting(FALSE);
+//	SetUseLighting(FALSE);
 	m_pPlanetManager->Draw();
-	SetUseLighting(TRUE);
+//	SetUseLighting(TRUE);
 
 	// ステージセレクトタイトルの描画
 	auto& screenSize = Application::GetInstance().GetWindowSize();

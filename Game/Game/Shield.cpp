@@ -16,11 +16,11 @@
 namespace
 {
 	// シールド画像のファイルパス
-	const std::string img_file_path = "Data/Image/Shield.png";	
+	const std::string img_file_path = "Data/Image/Shield1.png";	
 
 	// シールド画像のサイズ
-	constexpr float shield_width = 90.0f;	// 横幅サイズ
-	constexpr float shield_height = 90.0f;	// 縦幅サイズ
+	constexpr float shield_width = 110.0f;	// 横幅サイズ
+	constexpr float shield_height = 110.0f;	// 縦幅サイズ
 
 	// シールドのエフェクトの拡大率
 	const Vector3 effect_scale = { 80.0f,  80.0f, 80.0f, };	
@@ -173,8 +173,8 @@ void Shield::Update()
 
 		// シールドの拡縮
 		m_sinFrame++;
-		m_scale.x = shield_width + (sinf(m_sinFrame * 0.1f) * 1);
-		m_scale.y = shield_height + (sinf(m_sinFrame * 0.1f) * 1);
+		m_scale.x = shield_width + (sinf(m_sinFrame * 0.1f) * 3.0f);
+		m_scale.y = shield_height + (sinf(m_sinFrame * 0.1f) * 3.0f);
 
 		// 画像の設定
 		m_pImage->SetImgWidth(m_scale.x);		 // 横幅

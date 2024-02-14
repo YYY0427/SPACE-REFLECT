@@ -95,6 +95,10 @@ void StageBase::Collision()
 		// レーザーの種類が反射レーザーなら判定しない
 		if (laser.type == LaserType::REFLECT)	continue;
 
+		// キューブレーザーなら判定しない
+		if (laser.type == LaserType::CUBE) continue;
+
+		// プレイヤーのシールドがなければ判定しない
 		if (!m_pPlayer->GetShield()->IsShield())
 		{
 			// レーザーを元に戻す
