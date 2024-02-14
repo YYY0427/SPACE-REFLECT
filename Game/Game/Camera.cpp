@@ -77,6 +77,7 @@ void Camera::Update(Vector3 pos, Vector3 target)
 // プレイ時の更新
 void Camera::UpdatePlay(Vector3 playerPos, Vector3 playerVec)
 {
+#if false
 	// カメラをプレイヤーのベクトルに合わせて少し移動
 	if (std::fabs(m_pos.x) <= camera_move_limit.x) 
 	{
@@ -90,6 +91,7 @@ void Camera::UpdatePlay(Vector3 playerPos, Vector3 playerVec)
 	// カメラの移動制限
 	m_pos.x = std::clamp(m_pos.x, -camera_move_limit.x, camera_move_limit.x);
 	m_pos.y = std::clamp(m_pos.y, -camera_move_limit.y, camera_move_limit.y);
+#endif
 
 	// カメラとプレイヤーの差分
 	Vector3 direction = playerPos - m_pos;

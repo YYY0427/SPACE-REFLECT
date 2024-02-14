@@ -107,3 +107,9 @@ const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(std::string fil
 	// データを返す
 	return it2->second;
 }
+
+// すべてのデータの削除
+void DataReaderFromUnity::DeleteAllData()
+{
+	m_data.clear();
+}

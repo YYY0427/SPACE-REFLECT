@@ -88,6 +88,9 @@ void Fade::StartFadeIn(int fadeBrightUpperLimitValue, int fadeSpeed)
 // フェードアウトの開始
 void Fade::StartFadeOut(int fadeBrightUpperLimitValue, int fadeSpeed)
 {
+	// フェードアウトが行われている場合は何もしない
+	if(m_isFadeOut) return;
+
 	// フェードアウトが行われたかどうかのフラグを立てる
 	m_isFadeOut = true;
 

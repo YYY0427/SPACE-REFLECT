@@ -23,6 +23,7 @@
 #include "../MyDebug/DebugText.h"
 #include "../UI/TutorialUI.h"
 #include "../Util/InputState.h"
+#include "../Transitor/Fade.h"
 #include <DxLib.h>
 
 namespace
@@ -33,11 +34,6 @@ namespace
 	// 敵の配置データのファイル名
 	const std::string enemy_data_file_name = "Tutorial";
 
-	// 各チュートリアルのフレーム数
-	constexpr int move_tutorial_frame = 500;	// 移動チュートリアルのフレーム数
-	constexpr int shield_tutorial_frame = 500;	// シールドチュートリアルのフレーム数
-	constexpr int reflect_tutorial_frame = 500;	// 反射チュートリアルのフレーム数
-
 	// ウェーブの待機フレーム数
 	constexpr int wave_wait_frame = 200;
 
@@ -45,22 +41,20 @@ namespace
 	constexpr int meteor_damage = 2;			 // 隕石に当たっている間にプレイヤーに与えるダメージ
 	constexpr int laser_damage = 1;				 // レーザーに当たっている間にプレイヤーに与えるダメージ
 	constexpr int enemy_damage = 1;				 // 敵に当たっている間にプレイヤーに与えるダメージ
-	constexpr int boss_reflect_laser_damage = 2; // 反射レーザーに当たっている間にボスに与えるダメージ
+	constexpr int normal_enemy_reflect_laser_damage = 1000;  // 反射レーザーに当たっている間に通常の敵に与えるダメージ
+	constexpr int boss_reflect_laser_damage = 2;		  // 反射レーザーに当たっている間にボスに与えるダメージ
 }
 
 // コンストラクタ
 Tutorial::Tutorial(SceneManager& manager) :
 	StageBase(manager)
 {
-	// ライトの設定
-	m_directionalLightHandle = CreateDirLightHandle({ 1, 1, 0});
-	SetLightDifColorHandle(m_directionalLightHandle, GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
-
-	// 初期化
-	m_currentFrame = 0;
-	m_waitTimer = wave_wait_frame;
-	m_moveTutorialTimer = move_tutorial_frame;
-	m_shieldTutorialTimer = shield_tutorial_frame;
+	// ダメージの初期化
+	m_meteorDamage= meteor_damage;
+	m_laserDamage = laser_damage;
+	m_enemyDamage = enemy_damage;
+	m_playerToEnemyDamage = normal_enemy_reflect_laser_damage;
+	m_playerToBossDamage = boss_reflect_laser_damage;
 
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
@@ -103,10 +97,6 @@ Tutorial::Tutorial(SceneManager& manager) :
 // デストラクタ
 Tutorial::~Tutorial()
 {
-	// エフェクトの全削除
-	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
-	// ライトの削除
-	DeleteLightHandleAll();	
 }
 
 // 更新
@@ -130,7 +120,8 @@ void Tutorial::Update()
 	Effekseer3DEffectManager::GetInstance().Update();		// エフェクト
 	UIManager::GetInstance().Update();						// UI
 
-	Collision();	// 当たり判定
+	Collision();										// 当たり判定
+	m_pFade->Update();									// フェード
 	m_stateMachine.Update();							// ステートマシン
 }
 
@@ -243,9 +234,10 @@ void Tutorial::UpdateReflectTutorial()
 // キューブチュートリアルの更新
 void Tutorial::UpdateCubeTutorial()
 {
-	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+	// プレイヤーの更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					
+	// カメラの更新
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 
 	// 特定のフレームたったら
 	m_currentFrame++;
@@ -278,28 +270,40 @@ void Tutorial::UpdateCubeTutorial()
 			m_isWaveStart = false;
 		}
 	}
-	// デバッグテキストの描画
+
+	// デバッグテキストの追加
 	DebugText::Log("CubeTutorial");
 }
 
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
+	// フレームカウント
 	m_currentFrame++;
+
+	// ウェーブの待機フレーム数を過ぎたら
 	if (m_currentFrame > wave_wait_frame)
 	{
-		// キューブチュートリアルUIの開始
+		// 実践チュートリアルUIの開始
 		m_pTutorialUI->StartState(TutorialState::PLAY);
+
+		// ウェーブが開始されていなかったら
 		if (!m_isWaveStart)
 		{
+			// ウェーブ開始
 			m_pEnemyManager->NextWave();
+
+			// ウェーブが開始されたフラグを立てる
 			m_isWaveStart = true;
 		}
 	}
+	// 現在の敵のウェーブが終了したら
 	if (m_pEnemyManager->IsEndWave())
 	{
 		// キューブチュートリアルを終了
 		m_pTutorialUI->EndState();
+
+		// 実践チュートリアルUIが終了したら
 		if (m_pTutorialUI->IsEndState(TutorialState::PLAY))
 		{
 			// シールドチュートリアルに遷移
@@ -307,9 +311,10 @@ void Tutorial::UpdatePlay()
 		}
 	}
 
-	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());	// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		// カメラ
+	// プレイヤーの更新
+	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
+	// カメラの更新
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		
 }
 
 // ゲームクリアの更新
@@ -342,10 +347,17 @@ void Tutorial::UpdateGameOver()
 	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
 	if (m_pPlayer->UpdateGameOver())
 	{
+		// フェードアウトの演出の開始
+		m_pFade->StartFadeOut(255, 2);
+	}
+	// フェードアウトが終了したら
+	if (m_pFade->IsFadeOutEnd())
+	{
 		// ステージセレクトに遷移
 		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 	}
 
+	// デバッグテキストの追加
 	DebugText::Log("GameOver");
 }
 
@@ -359,7 +371,7 @@ void Tutorial::EnterResult()
 // リザルトの更新
 void Tutorial::UpdateResult()
 {
-	// 更新
+	// リザルト画面の更新
 	m_pResultWindow->Update();
 
 	// リザルト画面が終了したら
@@ -403,205 +415,8 @@ void Tutorial::Draw()
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();					
-
 	// チュートリアルUIの描画
 	m_pTutorialUI->Draw();
-}
-
-// 当たり判定
-void Tutorial::Collision()
-{
-	// プレイヤーと隕石の当たり判定
-	for (auto& meteor : m_pMeteorManager->GetMeteor())
-	{
-		// 球とメッシュの当たり判定
-		MV1_COLL_RESULT_POLY_DIM result{};
-		result = MV1CollCheck_Sphere(				
-			meteor->GetModelHandle(), 
-			-1, 
-			m_pPlayer->GetPos().ToDxLibVector3(),
-			m_pPlayer->GetCollsionRadius());
-
-		// 当たっていたら
-		if (result.HitNum > 0)
-		{
-			// プレイヤーのダメージ処理
-			m_pPlayer->OnDamage(meteor_damage);
-
-			// ダメージフラッシュの演出
-			m_pDamageFlash->Start(60, 50, 0xff0000);
-
-			// 画面揺れの演出
-			m_pScreenShaker->StartShake({ meteor_damage * 10.0f, meteor_damage * 10.0f}, 30);
-		}
-
-		// 当たり判定情報の後始末
-		MV1CollResultPolyDimTerminate(result);
-	}
-
-	// シールドと敵レーザーの当たり判定
-	for (auto& laser : m_pLaserManager->GetLaserList())
-	{
-		// レーザーの種類が反射レーザーなら判定しない
-		if (laser.type == LaserType::REFLECT)	continue;
-
-		if (!m_pPlayer->GetShield()->IsShield())
-		{
-			// レーザーを元に戻す
-			laser.pLaser->UndoReflect();
-
-			// シールドがなければ判定しない
-			continue;
-		}
-
-		// シールドの頂点の座標を取得
-		Vector3 shieldLeftTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[0].pos);
-		Vector3 shieldRightTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[1].pos);
-		Vector3 shieldLeftBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[2].pos);
-		Vector3 shieldRightBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[3].pos);
-
-		// シールドは2つのポリゴンからできてるので2つのポリゴンともチェック
-		HITRESULT_LINE result = HitCheck_Line_Triangle(
-			laser.pLaser->GetPos().ToDxLibVector3(), laser.pLaser->GetEndPos().ToDxLibVector3(),
-			shieldLeftTopPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3());
-
-		HITRESULT_LINE result2 = HitCheck_Line_Triangle(
-			laser.pLaser->GetPos().ToDxLibVector3(), laser.pLaser->GetEndPos().ToDxLibVector3(),
-			shieldRightBottomPos.ToDxLibVector3(), shieldLeftBottomPos.ToDxLibVector3(), shieldRightTopPos.ToDxLibVector3());
-
-		// どっちかのポリゴンが当たっていたら
-		if (result.HitFlag || result2.HitFlag)
-		{
-			// 反射レーザーの発射位置を取得
-			Vector3 firePos{};
-			if(result.HitFlag)	firePos = Vector3::FromDxLibVector3(result.Position);
-			else				firePos = Vector3::FromDxLibVector3(result2.Position);
-
-			// まだ反射レーザーがなければ反射レーザーを追加
-			if (!laser.pLaser->IsReflect())
-			{
-				// 反射レーザーを追加
-				int key = m_pLaserManager->AddReflectLaser(m_pPlayer->GetShield(), laser.pLaser, firePos);
-				laser.pLaser->SetReflectLaserKey(key);
-			}
-			// 既に反射レーザーがあれば反射レーザーの位置を設定
-			else
-			{
-				// 反射レーザーの位置を設定
-				m_pLaserManager->SetLaserPosition(laser.pLaser->GetReflectLaserKey(), firePos);
-			}
-
-			// 敵のレーザーを止める
-			laser.pLaser->Reflect(m_pPlayer->GetShield()->GetPos());
-
-			// プレイヤーの反射処理
-		//	m_pPlayer->OnReflect();
-		}
-	}
-
-	// プレイヤーと敵のレーザーの当たり判定
-	for (auto& laser : m_pLaserManager->GetLaserList())
-	{
-		// 反射中レーザーなら判定しない
-		if(laser.pLaser->IsReflect()) continue;	
-
-		// レーザーの種類が反射レーザーなら判定しない
-		if (laser.type == LaserType::REFLECT)	continue;
-
-		// 球とメッシュの当たり判定
-		MV1_COLL_RESULT_POLY_DIM result{};
-		result = MV1CollCheck_Sphere(
-			laser.pLaser->GetModelHandle(),
-			-1,
-			m_pPlayer->GetPos().ToDxLibVector3(),
-			m_pPlayer->GetCollsionRadius());
-
-		// 当たっていたら
-		if (result.HitNum > 0)
-		{
-			// プレイヤーのダメージ処理
-			m_pPlayer->OnDamage(laser_damage);
-
-			// ダメージフラッシュの演出
-			m_pDamageFlash->Start(60, 50, 0xff0000);
-
-			// 画面揺れの演出
-			m_pScreenShaker->StartShake({ laser_damage * 10.0f, laser_damage * 10.0f }, 30);
-
-			// 当たっていたレーザーが通常のレーザーなら
-			if (laser.type == LaserType::NORMAL)
-			{
-				// レーザーを止める
-				laser.pLaser->Stop(m_pPlayer->GetPos());
-			}
-		}
-		// 当たり判定情報の後始末
-		MV1CollResultPolyDimTerminate(result);
-	}
-
-	// 反射したレーザーと敵の当たり判定
-	for (auto& laser : m_pLaserManager->GetLaserList())
-	{
-		// 反射中レーザーでなければ判定しない
-		if(laser.type != LaserType::REFLECT) continue;
-
-		// 雑魚敵
-		for (auto& enemy : m_pEnemyManager->GetEnemyList())
-		{
-			// 球とメッシュの当たり判定
-			MV1_COLL_RESULT_POLY_DIM result{};
-			result = MV1CollCheck_Sphere(
-				laser.pLaser->GetModelHandle(),
-				-1,
-				enemy->GetPos().ToDxLibVector3(),
-				enemy->GetCollisionRadius());
-
-			// 当たっていたら
-			if (result.HitNum > 0)
-			{
-				// 敵にダメージ処理
-				enemy->OnDamage(1000, Vector3::FromDxLibVector3(result.Dim->HitPosition));
-			}
-			// 当たり判定情報の後始末
-			MV1CollResultPolyDimTerminate(result);
-		}
-		// ボス
-		if (m_pEnemyManager->GetBossEnemy())
-		{
-			MV1_COLL_RESULT_POLY_DIM result{};
-			result = MV1CollCheck_Sphere(
-				laser.pLaser->GetModelHandle(),
-				-1,
-				m_pEnemyManager->GetBossEnemy()->GetPos().ToDxLibVector3(),
-				m_pEnemyManager->GetBossEnemy()->GetCollisionRadius());
-
-			// 当たっていたら
-			if (result.HitNum > 0)
-			{
-				// ボスにダメージ処理
-				m_pEnemyManager->GetBossEnemy()->OnDamage(
-					boss_reflect_laser_damage, Vector3::FromDxLibVector3(result.Dim->HitPosition));
-			}
-			// 当たり判定情報の後始末
-			MV1CollResultPolyDimTerminate(result);
-		}
-	}
-
-	// プレイヤーと敵の当たり判定
-	for (auto& enemy : m_pEnemyManager->GetEnemyList())
-	{
-		// 球と球の当たり判定
-		float distance = (enemy->GetPos() - m_pPlayer->GetPos()).Length();
-		if (distance < enemy->GetCollisionRadius() + m_pPlayer->GetCollsionRadius())
-		{
-			// プレイヤーのダメージ処理
-			m_pPlayer->OnDamage(enemy_damage);
-
-			// ダメージフラッシュの演出
-			m_pDamageFlash->Start(60, 50, 0xff0000);
-
-			// 画面揺れの演出
-			m_pScreenShaker->StartShake({ enemy_damage * 10.0f, enemy_damage * 10.0f }, 30);
-		}
-	}
+	// フェードの描画
+	m_pFade->DrawFade(true);
 }

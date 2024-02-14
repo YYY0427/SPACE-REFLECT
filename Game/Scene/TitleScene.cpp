@@ -36,7 +36,7 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_isInput(false)
 {
 	// フェードインの演出
-	m_pFade = std::make_shared<Fade>();
+	m_pFade = std::make_unique<Fade>();
 	m_pFade->StartFadeIn(0);
 
 	// ゲームのプレイ動画を再生

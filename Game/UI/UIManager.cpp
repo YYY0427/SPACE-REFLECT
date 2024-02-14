@@ -86,6 +86,13 @@ void UIManager::DeleteUI(std::string key)
 	m_uiTable.erase(itr);
 }
 
+// ‚·‚×‚Ä‚ÌUI‚Ìíœ
+void UIManager::DeleteAllUI()
+{
+	// ‘S‚Ä‚ÌUI‚ğíœ
+	m_uiTable.clear();
+}
+
 // UI‚ÌŠi”[
 void UIManager::Store()
 {

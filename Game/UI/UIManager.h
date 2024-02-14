@@ -38,6 +38,9 @@ public:
 	// UI‚Ìíœ
 	void DeleteUI(std::string key);
 
+	// ‚·‚×‚Ä‚ÌUI‚Ìíœ
+	void DeleteAllUI();
+
 	// UI‚ÌŠi”[
 	void Store();
 

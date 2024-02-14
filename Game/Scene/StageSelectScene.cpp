@@ -57,7 +57,7 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_bButtonImgHandle(-1)
 {
 	// フェードインの演出
-	m_pFade = std::make_shared<Fade>();
+	m_pFade = std::make_unique<Fade>();
 	m_pFade->StartFadeIn(0);
 
 	// 画面切り替え演出の初期化
