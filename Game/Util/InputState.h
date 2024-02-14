@@ -15,6 +15,7 @@ enum class InputType
 	LEFT,		// 左
 	RIGHT_SHOULDER,	// 右ショルダー
 	LEFT_SHOULDER,	// 左ショルダー
+	ANY_BUTTON,		// どのボタンでもいい
 
 	// デバッグ用
 	NORMAL_ENEMY_DEBUG,	// 雑魚敵を自由に動かせる

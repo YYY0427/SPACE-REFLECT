@@ -46,8 +46,8 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	m_rbButtonImgHandle(-1)
 {
 	// 画面切り替え演出の初期化
-	m_pTransitor = std::make_unique<FadeTransitor>(10);
-	m_pTransitor->Start();
+//	m_pTransitor = std::make_unique<FadeTransitor>(10);
+//	m_pTransitor->Start();
 
 	// 画像のロード
 	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
@@ -127,7 +127,7 @@ void OptionScene::Update()
 	}
 
 	// 画面切り替え演出の更新
-	m_pTransitor->Update();
+//	m_pTransitor->Update();
 
 	// ステートマシンの更新
 	m_updateStateMachine.Update();
@@ -140,8 +140,8 @@ void OptionScene::UpdateStageSelect()
 	if (InputState::IsTriggered(InputType::LEFT_SHOULDER))
 	{
 		// 終了
-		m_pTransitor->SetFrame(0);
-		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+	//	m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		m_manager.PopScene();
 		return;
 	}
 }
@@ -248,7 +248,7 @@ void OptionScene::Draw()
 	m_drawStateMachine.Update();
 
 	// 画面切り替え演出の描画
-	m_pTransitor->Draw();
+//	m_pTransitor->Draw();
 }
 
 // ステージセレクトの描画

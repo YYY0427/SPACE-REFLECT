@@ -6,12 +6,16 @@
 #include "../Util/InputState.h"
 #include "../Transitor/FadeTransitor.h"
 #include "../Transitor/TileTransitor.h"
+#include "../Transitor/Fade.h"
 
 // コンストラクタ
 GameScene::GameScene(SceneManager& manager, Stage stage) :
 	SceneBase(manager),
 	m_stage(stage)
 {
+	m_pFade = std::make_shared<Fade>();
+	m_pFade->StartFadeIn(0);
+
 	switch (m_stage)
 	{
 	case Stage::TUTORIAL:
@@ -31,6 +35,7 @@ GameScene::~GameScene()
 // 更新
 void GameScene::Update()
 {
+	// ステージの更新
 	m_pStage->Update();
 
 	// ポーズ
@@ -38,10 +43,14 @@ void GameScene::Update()
 	{
 		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::PAUSE));
 	}
+
+	// フェードの更新
+	m_pFade->Update();
 }
 
 // 描画
 void GameScene::Draw()
 {
 	m_pStage->Draw();
+	m_pFade->DrawFade(true);
 }

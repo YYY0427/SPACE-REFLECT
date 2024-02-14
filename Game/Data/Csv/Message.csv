@@ -1,6 +1,6 @@
 ID,文字列,フォント,サイズ,太さ
-TitleLogo,SPACE REFLECT,マキナス 4 Square,100,10
-TitleItemStart,Push To Start,マキナス 4 Square,20,3
+TitleLogo,SPACE REFLECT,マキナス 4 Square,100,9
+TitleItemStart,PRESS ANY BUTTON,マキナス 4 Square,20,3
 TitleItemExit,EXIT,マキナス 4 Square,20,3
 TitleItemSelectBarRight,[,マキナス 4 Square,20,3
 TitleItemSelectBarLeft,],マキナス 4 Square,20,3

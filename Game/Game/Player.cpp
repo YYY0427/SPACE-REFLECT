@@ -362,8 +362,11 @@ void Player::Update(float cameraHorizon)
 // ゲームクリアの更新
 void Player::UpdateGameClear()
 {
+	// シールドの削除
+	m_pShield.reset();
+
 	// 常にZ軸方向に移動
-	m_moveVec.z = (move_z_speed * m_slowValue);
+	m_moveVec.z = move_z_speed;
 	m_pos.z += m_moveVec.z;
 
 	// モデルの設定

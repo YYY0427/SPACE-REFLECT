@@ -117,6 +117,12 @@ bool Fade::IsFading() const
 	return IsFadingIn() || IsFadingOut();
 }
 
+// フェードアウトが行われて終了したかどうか
+bool Fade::IsFadeOutEnd() const
+{
+	return (m_isFadeOut && !IsFadingOut());
+}
+
 // フェードの明るさの取得
 int Fade::GetFadeBright() const
 {

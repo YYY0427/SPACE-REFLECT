@@ -34,6 +34,10 @@ namespace InputState
 												 {InputCategory::KEYBORD, KEY_INPUT_A} };				// Aキー
 		m_inputMapTable[InputType::RIGHT_SHOULDER] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };// RBボタン
 		m_inputMapTable[InputType::LEFT_SHOULDER]  = { {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };	// LBボタン
+		m_inputMapTable[InputType::ANY_BUTTON] = { {InputCategory::PAD, XINPUT_BUTTON_A },
+													{InputCategory::PAD, XINPUT_BUTTON_B },
+													{InputCategory::PAD, XINPUT_BUTTON_X },
+													{InputCategory::PAD, XINPUT_BUTTON_Y } };
 
 #ifdef _DEBUG
 		m_inputMapTable[InputType::BOSS_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// デバッグ用　ボスの死亡

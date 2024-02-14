@@ -54,6 +54,9 @@ public:
 	/// <returns>true : フェード中, false : フェードしてない</returns>
 	bool IsFading() const;
 
+	// フェードアウトが行われた後で終了したかどうか
+	bool IsFadeOutEnd() const;
+
 	// フェードの明るさの取得
 	int GetFadeBright() const;
 

@@ -35,5 +35,5 @@ protected:
 	std::unique_ptr<TransitorBase> m_pTransitor;
 
 	// フェード
-	std::unique_ptr<Fade> m_pFade;
+	std::shared_ptr<Fade> m_pFade;
 };

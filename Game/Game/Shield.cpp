@@ -137,10 +137,9 @@ void Shield::Update()
 
 		// シールドの相対位置とプレイヤーの平行行列から位置情報を作成
 		m_pos = Vector3::Transform(tempVec, playerMtx);
-		//	pos_ = { player_.GetPos().x, player_.GetPos().y, player_.GetPos().z + player_distance };
 
 		// ベクトルから角度を求める
-		m_rot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({0, 0, 1}, tempVec));
+		m_rot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({ 0, 0, 1 }, tempVec));
 		Vector3 effectRot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({ 1, 0, 0 }, tempVec));
 
 		// 入力されていたら
@@ -153,7 +152,7 @@ void Shield::Update()
 				m_enerugyGage -= enerugy_decrease_speed * m_slowValue;
 
 				// シールドエフェクトの再生
-				/*effectManager.PlayEffect(
+			/*	effectManager.PlayEffect(
 					m_effectHandle, 
 					EffectID::player_shield, 
 					{ m_pos.x, m_pos.y - 100.0f, m_pos.z },

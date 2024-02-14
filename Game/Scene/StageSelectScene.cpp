@@ -17,6 +17,7 @@
 #include "../Math/Vector3.h"
 #include "../Application.h"
 #include "../ModelHandleManager.h"
+#include "../Transitor/Fade.h"
 #include <DxLib.h>
 
 namespace
@@ -55,9 +56,13 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_lbButtonImgHandle(-1),
 	m_bButtonImgHandle(-1)
 {
+	// フェードインの演出
+	m_pFade = std::make_shared<Fade>();
+	m_pFade->StartFadeIn(0);
+
 	// 画面切り替え演出の初期化
-	m_pTransitor = std::make_unique<FadeTransitor>(10);
-	m_pTransitor->Start();
+//	m_pTransitor = std::make_unique<FadeTransitor>(10);
+//	m_pTransitor->Start();
 
 	// オブジェクトのデータを読み込む
 	DataReaderFromUnity::GetInstance().LoadUnityGameObjectData(object_file_path);
@@ -119,35 +124,35 @@ void StageSelectScene::Update()
 	m_isInput = false;
 
 	// イージングが終了してたら入力を受け付ける
-	//if (m_easeTime >= camera_move_frame)
-	//{
-	//	// 選択肢を回す処理
-	//	int sceneItemTotalValue = static_cast<int>(Stage::NUM);
-	//	if (InputState::IsTriggered(InputType::RIGHT))
-	//	{
-	//		m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
-	//		m_isInput = true;
-	//		m_line3DAlpha = 0;
-	//		m_windowAlpha = 0;
-	//		m_textAlpa = 0;
-	//		for (auto& alpha : m_rankingAlpha)
-	//		{
-	//			alpha = 0;
-	//		}
-	//	}
-	//	else if (InputState::IsTriggered(InputType::LEFT))
-	//	{
-	//		m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
-	//		m_isInput = true;
-	//		m_line3DAlpha = 0;
-	//		m_windowAlpha = 0;
-	//		m_textAlpa = 0;
-	//		for (auto& alpha : m_rankingAlpha)
-	//		{
-	//			alpha = 0;
-	//		}
-	//	}
-	//}
+	if (m_easeTime >= camera_move_frame)
+	{
+		// 選択肢を回す処理
+		int sceneItemTotalValue = static_cast<int>(Stage::NUM);
+		if (InputState::IsTriggered(InputType::RIGHT))
+		{
+			m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
+			m_isInput = true;
+			m_line3DAlpha = 0;
+			m_windowAlpha = 0;
+			m_textAlpa = 0;
+			for (auto& alpha : m_rankingAlpha)
+			{
+				alpha = 0;
+			}
+		}
+		else if (InputState::IsTriggered(InputType::LEFT))
+		{
+			m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
+			m_isInput = true;
+			m_line3DAlpha = 0;
+			m_windowAlpha = 0;
+			m_textAlpa = 0;
+			for (auto& alpha : m_rankingAlpha)
+			{
+				alpha = 0;
+			}
+		}
+	}
 
 	// 更新
 	UpdateCamera();
@@ -185,25 +190,20 @@ void StageSelectScene::Update()
 			}
 		}
 	}
-	
-	// 画面切り替え演出の更新
-	m_pTransitor->Update();
 
 	// オプション画面に遷移
 	if (InputState::IsTriggered(InputType::RIGHT_SHOULDER))
 	{
-		m_pTransitor->SetFrame(0);
-		m_manager.ChangeScene(std::make_shared<OptionScene>(m_manager, State::STAGE_SELECT));
+	//	m_pTransitor->SetFrame(0);
+		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::STAGE_SELECT));
 		return;
 	}
 
 	// 決定ボタンが押されたらシーン遷移
 	if (InputState::IsTriggered(InputType::DECISION))
 	{
-		// ゲームシーンに遷移
-		m_manager.ChangeScene(
-			std::make_shared<GameScene>(m_manager, static_cast<Stage>(m_currentSelectItem)));
-		return;
+		// フェードアウトの演出の開始
+		m_pFade->StartFadeOut(255);
 	}
 
 	// キャンセルボタンが押されたらシーン遷移
@@ -218,8 +218,23 @@ void StageSelectScene::Update()
 		return;
 	}
 
+	// フェードアウトが終了したら次のシーンに遷移
+	if (m_pFade->IsFadeOutEnd())
+	{
+		// ゲームシーンに遷移
+		m_manager.ChangeScene(
+			std::make_shared<GameScene>(m_manager, static_cast<Stage>(m_currentSelectItem)));
+		return;
+	}
+
 	DebugText::Log("easeTime", { m_easeTime });
 	DebugText::Log("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
+
+	// 画面切り替え演出の更新
+//	m_pTransitor->Update();
+
+	// フェードの更新
+	m_pFade->Update();
 }
 
 // カメラの更新
@@ -328,7 +343,10 @@ void StageSelectScene::Draw()
 	DrawScoreRanking();
 
 	// 画面切り替え演出の描画
-	m_pTransitor->Draw();
+//	m_pTransitor->Draw();
+
+	// フェードの描画
+	m_pFade->DrawFade(true);
 }
 
 // スコアランキングの描画

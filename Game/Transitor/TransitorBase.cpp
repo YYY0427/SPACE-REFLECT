@@ -8,7 +8,8 @@ TransitorBase::TransitorBase(int interval) :
 	m_interval(interval),
 	m_frame(0),
 	m_oldScene(-1),
-	m_nextScene(-1)
+	m_nextScene(-1),
+	m_isOldScene(false)
 {
 }
 

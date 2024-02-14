@@ -46,4 +46,7 @@ protected:
 
 	// シーン遷移後の画面
 	int m_nextScene;
+
+	// 前のシーンを使うかどうか
+	bool m_isOldScene;
 };

@@ -27,7 +27,6 @@ private:
 	enum class SceneItem
 	{
 		GAME,	// ゲーム
-	//	EXIT,	// 終了
 		NUM		// 項目数
 	};
 
@@ -38,5 +37,12 @@ private:
 	// アルファ値
 	int m_alpha;
 
+	// フレーム
 	int m_frame;
+
+	// ガウスハンドル
+	int m_gaussHandle;
+
+	// ボタンが押されたかどうか
+	bool m_isInput;
 };

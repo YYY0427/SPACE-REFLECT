@@ -1,6 +1,7 @@
 #include "TitleScene.h"
 #include "DebugScene.h"
 #include "OptionScene.h"
+#include "../Transitor/Fade.h"
 #include "SceneManager.h"
 #include "../Util/InputState.h"
 #include "../Application.h"
@@ -30,13 +31,24 @@ namespace
 TitleScene::TitleScene(SceneManager& manager) :
 	SceneBase(manager),
 	m_currentSelectSceneItem(0),
-	m_alpha(255)
+	m_alpha(255),
+	m_frame(0),
+	m_isInput(false)
 {
+	// フェードインの演出
+	m_pFade = std::make_shared<Fade>();
+	m_pFade->StartFadeIn(0);
+
 	// ゲームのプレイ動画を再生
 
+
 	// 画面切り替え演出の設定
-	m_pTransitor = std::make_unique<FadeTransitor>();
-	m_pTransitor->Start();
+	/*m_pTransitor = std::make_unique<TileTransitor>();
+	m_pTransitor->Start();*/
+
+	// ガウスハンドルの作成
+	auto& size = Application::GetInstance().GetWindowSize();
+	m_gaussHandle = MakeScreen(size.width, size.height);
 }
 
 // デストラクタ
@@ -47,19 +59,23 @@ TitleScene::~TitleScene()
 // 更新
 void TitleScene::Update()
 {
-	// 選択肢を回す処理
-	int sceneItemTotalValue = static_cast<int>(SceneItem::NUM);
-	if (InputState::IsTriggered(InputType::UP))
+	// どこかのボタンが押されたら次のシーンに遷移
+	if (InputState::IsTriggered(InputType::ANY_BUTTON))
 	{
-		m_currentSelectSceneItem = ((m_currentSelectSceneItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
-	}
-	else if (InputState::IsTriggered(InputType::DOWN))
-	{
-		m_currentSelectSceneItem = (m_currentSelectSceneItem + 1) % sceneItemTotalValue;
+		// フェードアウトの演出の開始
+		m_pFade->StartFadeOut(255);
+
+		// フラグを立てる
+		m_isInput = true;
 	}
 
-	// 決定ボタンが押されたらシーン遷移
-	if (InputState::IsTriggered(InputType::DECISION))
+	// PRESS ANY BUTTONの点滅処理
+	// 255と0を行ったり来たりする
+	m_frame++;
+	m_alpha = (0.5f * sinf(m_frame * string_fade_speed) + 0.5f) * 255.0f;
+
+	// ボタンが押されてフェードアウトが終了したら次のシーンに遷移
+	if (!m_pFade->IsFading() && m_isInput)
 	{
 		switch (static_cast<SceneItem>(m_currentSelectSceneItem))
 		{
@@ -69,12 +85,9 @@ void TitleScene::Update()
 		}
 	}
 
-	// 255と0を行ったり来たりする
-	m_frame++;
-	m_alpha = (0.5f * sinf(m_frame * string_fade_speed) + 0.5f) * 255.0f;
-
-	// 画面切り替え演出の更新
-	m_pTransitor->Update();
+	// フェードの更新
+	m_pFade->Update();
+//	m_pTransitor->Update();
 }
 
 void TitleScene::Draw()
@@ -82,28 +95,32 @@ void TitleScene::Draw()
 	// 画面をクリア
 	ClearDrawScreen();
 
-	// 背景色の描画
+	// タイトルロゴの描画
 	auto& size = Application::GetInstance().GetWindowSize();	
-	DrawBox(0, 0, size.width, size.height, 0xffffff, true);
-
-	// タイトルの描画
 	auto& messageManager = MessageManager::GetInstance();
-	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0x000000);
+	SetDrawScreen(m_gaussHandle);
+	ClearDrawScreen();
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 170);
+	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0xffffff);
+	GraphFilter(m_gaussHandle, DX_GRAPH_FILTER_GAUSS, 32, 1400);
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	DrawGraph(0, 0, m_gaussHandle, true);
+	DrawGraph(0, 0, m_gaussHandle, true);
+	DrawGraph(0, 0, m_gaussHandle, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); 
+	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0xffffff, 0xffffff);
 
 	// 項目の描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);
 	messageManager.DrawStringCenter("TitleItemStart", size.width / 2, 
-		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), 0x000000);
+		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	/*messageManager.DrawStringCenter("TitleItemExit", size.width / 2, 
-		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::EXIT), 0x000000);*/
 
-	// 選択中の項目にバーを描画
-	/*messageManager.DrawStringCenter("TitleItemSelectBarRight", size.width / 2 - 100, 
-		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);
-	messageManager.DrawStringCenter("TitleItemSelectBarLeft", size.width / 2 + 100, 
-		draw_text_pos_y + text_space_y * m_currentSelectSceneItem, 0x000000);*/
+	// フェードの描画
+	m_pFade->DrawFade(true);
 
 	// 画面切り替え演出の描画
-	m_pTransitor->Draw();
+//	m_pTransitor->Draw();
 }
