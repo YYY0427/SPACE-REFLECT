@@ -18,17 +18,14 @@ public:
 
 	// 更新
 	void UpdateStart(Vector3 playerVec);
-	void UpdateSmallMeteor();
 	void Update(Vector3 cameraPos);
 
 	// 描画
 	void Draw();
 
 	// 隕石の生成
+	void SmallMeteorCreate(Vector3 playerPos);
 	void CreateMeteor(int createIntervalFrame, Vector3 playerPos);
-
-	// スローの値の設定
-	void SetSlowValue(float slowValue);
 
 	// 隕石の取得
 	const std::list<std::shared_ptr<Meteor>>& GetMeteor() const;
@@ -38,5 +35,6 @@ private:
 	std::list<std::shared_ptr<Meteor>> m_pMeteorList;
 
 	// 生成間隔
-	int m_createIntervalFrameTimer;
+	int m_createIntervalFrame;
+	int m_smallCreateIntervalFrame;
 };

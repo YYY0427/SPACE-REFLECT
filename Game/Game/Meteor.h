@@ -6,6 +6,13 @@
 // プロトタイプ宣言
 class Model;
 
+// 隕石の種類
+enum class MeteorType
+{
+	SMALL,
+	NORMAL
+};
+
 /// <summary>
 /// 隕石クラス
 /// </summary>
@@ -13,7 +20,7 @@ class Meteor
 {
 public:
 	// コンストラクタ
-	Meteor(Vector3 playerPos);
+	Meteor(MeteorType type,Vector3 playerPos);
 
 	// コンストラクタ
 	// このコンストラクタはUnityからのデータを受け取る
@@ -29,18 +36,17 @@ public:
 	// 描画
 	void Draw();
 
-	// スローの値の設定
-	void SetSlowValue(float slowValue);
-
-	// 存在フラグの取得
-	bool IsEnabled() const;
-
-	// モデルハンドルの取得
-	int GetModelHandle() const;
+	// ゲッター
+	bool IsEnabled() const;		// 存在フラグの取得
+	int GetModelHandle() const;	// モデルのハンドルの取得
+	MeteorType GetType() const;	// 隕石の種類の取得
 
 private:
 	// ポインタ
 	std::unique_ptr<Model> m_pModel;
+
+	// 隕石の種類
+	MeteorType m_type;
 
 	// 位置情報
 	Vector3 m_pos;
@@ -56,9 +62,6 @@ private:
 
 	// 回転ベクトル
 	Vector3 m_rotVec;
-
-	// スローの値
-	float m_slowValue;
 
 	// 存在フラグ
 	bool m_isEnabled;

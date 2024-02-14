@@ -3,9 +3,16 @@
 #include "../Editor/DataReaderFromUnity.h"
 #include <string>
 
+namespace
+{
+	// 小さい隕石の生成間隔
+	const int small_create_interval_frame = 10;
+}
+
 // コンストラクタ
 MeteorManager::MeteorManager(std::string objectDataFileName) :
-	m_createIntervalFrameTimer(0)
+	m_createIntervalFrame(0),
+	m_smallCreateIntervalFrame(0)
 {
 	// 配置データが存在する場合は配置データから隕石を生成
 	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Meteor2");
@@ -27,15 +34,6 @@ void MeteorManager::UpdateStart(Vector3 playerVec)
 	for (auto& meteor : m_pMeteorList)
 	{
 		meteor->UpdateStart(playerVec);
-	}
-}
-
-void MeteorManager::UpdateSmallMeteor()
-{
-	// 隕石の更新
-	for (auto& meteor : m_pMeteorList)
-	{
-//		meteor->UpdateSmallMeteor();
 	}
 }
 
@@ -61,29 +59,32 @@ void MeteorManager::Draw()
 	}
 }
 
+// 小さい隕石の生成
+void MeteorManager::SmallMeteorCreate(Vector3 playerPos)
+{
+	m_smallCreateIntervalFrame++;
+	if (small_create_interval_frame < m_smallCreateIntervalFrame)
+	{
+		// 小さい隕石の生成
+		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::SMALL, playerPos));
+		m_smallCreateIntervalFrame = 0;
+	}
+}
+
 // 隕石の生成
 void MeteorManager::CreateMeteor(int createIntervalFrame, Vector3 playerPos)
 {
 	// タイマーの更新
-	m_createIntervalFrameTimer++;
+	m_createIntervalFrame++;
 
 	// タイマーが指定フレームを超えたら
-	if (m_createIntervalFrameTimer > createIntervalFrame)
+	if (m_createIntervalFrame > createIntervalFrame)
 	{
 		// 隕石の生成
-		m_pMeteorList.push_back(std::make_shared<Meteor>(playerPos));
+		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::NORMAL, playerPos));
 
 		// タイマーのリセット
-		m_createIntervalFrameTimer = 0;
-	}
-}
-
-// スロー値の設定
-void MeteorManager::SetSlowValue(float slowValue)
-{
-	for (auto& meteor : m_pMeteorList)
-	{
-		meteor->SetSlowValue(slowValue);
+		m_createIntervalFrame = 0;
 	}
 }
 

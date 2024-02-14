@@ -105,6 +105,9 @@ void Tutorial::Update()
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 
+	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());					// 小さい隕石の生成
+
+
 	// 更新
 	m_pTutorialUI->Update();								// チュートリアルUI
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });	// スカイドーム
@@ -320,6 +323,9 @@ void Tutorial::UpdatePlay()
 // ゲームクリアの更新
 void Tutorial::UpdateGameClear()
 {
+	// UIの格納
+	UIManager::GetInstance().Store();
+
 	// 全てのレーザーの削除
 	m_pLaserManager->DeleteAllLaser();
 

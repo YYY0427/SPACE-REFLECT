@@ -51,11 +51,19 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_isInput(false),
 	m_line3DAlpha(0),
 	m_windowAlpha(0),
-	m_textAlpa(0),
+	m_textAlpha(0),
 	m_rbButtonImgHandle(-1),
 	m_lbButtonImgHandle(-1),
-	m_bButtonImgHandle(-1)
+	m_bButtonImgHandle(-1),
+	m_lightHandle(-1),
+	m_uiAlpha(255),
+	m_easeTime2(0.0f)
 {
+	// ステートマシンの設定
+	m_stateMachine.AddState(State::STAGE_SELECT, {}, [this]() {UpdateSelectStage(); }, {});
+	m_stateMachine.AddState(State::START_ANIMATION, [this]() {EnterStartAnimation(); }, [this]() {UpdateStartAnimation(); }, {});
+	m_stateMachine.SetState(State::STAGE_SELECT);
+
 	// ライトの設定
 	m_lightHandle = CreateDirLightHandle({ -1, -1, 1 });
 	SetLightDifColorHandle(m_lightHandle, GetColorF(1.0f, 1.0f, 1.0f, 0.0f));
@@ -94,6 +102,11 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_pCamera = std::make_unique<Camera>(pos, Vector3{ pos.x, pos.y, pos.z + 10.0f });
 	m_pSkyDome = std::make_unique<SkyDome>(m_pCamera->GetPos());
 
+	// スクリーンの作成
+	m_screenHandle = MakeScreen(
+		Application::GetInstance().GetWindowSize().width, 
+		Application::GetInstance().GetWindowSize().height, TRUE);
+
 	// 画像の読み込み
 	m_rbButtonImgHandle = my::MyLoadGraph(xbox_rb_file_path.c_str());
 	m_lbButtonImgHandle = my::MyLoadGraph(xbox_lb_file_path.c_str());
@@ -123,8 +136,32 @@ StageSelectScene::~StageSelectScene()
 	DeleteLightHandleAll();
 }
 
+// スタート演出の開始
+void StageSelectScene::EnterStartAnimation()
+{
+	m_cameraStartTargetPos = m_pCamera->GetTarget();
+	m_cameraStartPos = m_pCamera->GetPos();
+}
+
 // 更新
 void StageSelectScene::Update()
+{
+	// デバッグテキスト
+	DebugText::Log("easeTime", { m_easeTime });
+	DebugText::Log("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
+
+	// フェードの更新
+	m_pFade->Update();
+
+	// ステートマシンの更新
+	m_stateMachine.Update();
+
+	// 画面切り替え演出の更新
+//	m_pTransitor->Update();
+}
+
+// ステージ選択の更新
+void StageSelectScene::UpdateSelectStage()
 {
 	// 初期化
 	m_isInput = false;
@@ -140,7 +177,7 @@ void StageSelectScene::Update()
 			m_isInput = true;
 			m_line3DAlpha = 0;
 			m_windowAlpha = 0;
-			m_textAlpa = 0;
+			m_textAlpha = 0;
 			for (auto& alpha : m_rankingAlpha)
 			{
 				alpha = 0;
@@ -152,7 +189,7 @@ void StageSelectScene::Update()
 			m_isInput = true;
 			m_line3DAlpha = 0;
 			m_windowAlpha = 0;
-			m_textAlpa = 0;
+			m_textAlpha = 0;
 			for (auto& alpha : m_rankingAlpha)
 			{
 				alpha = 0;
@@ -172,11 +209,11 @@ void StageSelectScene::Update()
 	if (m_line3DAlpha >= 255)
 	{
 		// ウィンドウのアルファ値の更新
-		m_windowAlpha = (std::min)(m_windowAlpha += 3, 100);
-		m_textAlpa = (std::min)(m_textAlpa += 3, 255);
+		m_windowAlpha = (std::min)(m_windowAlpha += 3, 180);
+		m_textAlpha = (std::min)(m_textAlpha += 3, 255);
 
 		// ウィンドウのアルファ値が特定の値を超えたか
-		if (m_windowAlpha >= 100)
+		if (m_windowAlpha >= 180)
 		{
 			// スコアランキングのアルファ値の更新
 			// 一番下の順位が255になったら次の順位を更新
@@ -200,16 +237,16 @@ void StageSelectScene::Update()
 	// オプション画面に遷移
 	if (InputState::IsTriggered(InputType::RIGHT_SHOULDER))
 	{
-	//	m_pTransitor->SetFrame(0);
-		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::STAGE_SELECT));
+		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::STAGE_SELECT));
 		return;
 	}
 
-	// 決定ボタンが押されたらシーン遷移
+	// 決定ボタンが押されたらスタート演出に遷移
 	if (InputState::IsTriggered(InputType::DECISION))
 	{
-		// フェードアウトの演出の開始
-		m_pFade->StartFadeOut(255);
+		m_stateMachine.SetState(State::START_ANIMATION);
+		m_easeTime = 0.0f;
+		return;
 	}
 
 	// キャンセルボタンが押されたらシーン遷移
@@ -223,6 +260,42 @@ void StageSelectScene::Update()
 #endif
 		return;
 	}
+}
+
+// スタート演出の更新
+void StageSelectScene::UpdateStartAnimation()
+{
+	// UI全体のアルファ値を下げる
+	m_uiAlpha -= 10.0f;
+
+	// 惑星の更新
+	m_pPlanetManager->UpdateStageSelect();
+
+	// イージングでカメラの注視点を移動
+	m_easeTime++;
+	m_easeTime = (std::min)(m_easeTime, 100.0f);
+	Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
+	float x = Easing::EaseOutCubic(m_easeTime, 100, goalPos.x, m_cameraStartTargetPos.x);
+	float y = Easing::EaseOutCubic(m_easeTime, 100, goalPos.y, m_cameraStartTargetPos.y);
+	m_pCamera->Update(m_pCamera->GetPos(), { x, y, goalPos.z });
+
+	if (m_easeTime >= 100.0f)
+	{
+		// イージングでカメラを移動
+		m_easeTime2++;
+		m_easeTime2 = (std::min)(m_easeTime2, 300.0f);
+		Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
+		float posX = Easing::EaseOutCubic(m_easeTime2, 300.0f, goalPos.x, m_cameraStartPos.x);
+		float posY = Easing::EaseOutCubic(m_easeTime2, 300.0f, goalPos.y, m_cameraStartPos.y);
+		float posZ = Easing::EaseOutCubic(m_easeTime2, 300.0f, goalPos.z, m_cameraStartPos.z);
+		m_pCamera->Update({ posX, posY, posZ }, { m_pCamera->GetTarget().x, m_pCamera->GetTarget().y, goalPos.z });
+
+		if (m_easeTime2 >= 60)
+		{
+			// フェードアウトの演出の開始
+			m_pFade->StartFadeOut(255, 10);
+		}
+	}
 
 	// フェードアウトが終了したら次のシーンに遷移
 	if (m_pFade->IsFadeOutEnd())
@@ -232,15 +305,6 @@ void StageSelectScene::Update()
 			std::make_shared<GameScene>(m_manager, static_cast<Stage>(m_currentSelectItem)));
 		return;
 	}
-
-	DebugText::Log("easeTime", { m_easeTime });
-	DebugText::Log("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
-
-	// 画面切り替え演出の更新
-//	m_pTransitor->Update();
-
-	// フェードの更新
-	m_pFade->Update();
 }
 
 // カメラの更新
@@ -273,12 +337,8 @@ void StageSelectScene::Draw()
 	// 画面をクリア
 	ClearDrawScreen();
 
-	// モデル描画
-	m_pCamera->SetCamera();
-	m_pSkyDome->Draw();
-//	SetUseLighting(FALSE);
-	m_pPlanetManager->Draw();
-//	SetUseLighting(TRUE);
+	SetDrawScreen(m_screenHandle);
+	ClearDrawScreen();
 
 	// ステージセレクトタイトルの描画
 	auto& screenSize = Application::GetInstance().GetWindowSize();
@@ -289,10 +349,9 @@ void StageSelectScene::Draw()
 	DrawRotaGraph((screenSize.width / 2.0f) + 375, 95, 1.0f, 0.0f, m_rbButtonImgHandle, true);
 
 	// オプションタイトルの描画
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
 	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
-
 	// LBボタンの描画
 	DrawRotaGraph((screenSize.width / 2.0f) - 375, 95, 1.0f, 0.0f, m_lbButtonImgHandle, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -330,23 +389,30 @@ void StageSelectScene::Draw()
 	DrawRoundRectAA(screenSize.width / 2.0f + 50, 150, screenSize.width / 2.0f + 450, 575, 5, 5, 4, 0xffffff, false, 5.0f);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpa);
-
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpha);
 	// ステージタイトルの描画
 	MessageManager::GetInstance().DrawStringCenter("StageSelectMission", 890, 200, 0xffffff);
 	MessageManager::GetInstance().DrawStringCenter(m_stageData[static_cast<Stage>(m_currentSelectItem)].missionName, 890, 250, 0xffffff);
-
 	// 線の描画
 	DrawLine(screenSize.width / 2.0f + 100, 280,  screenSize.width / 2.0f + 400, 280, 0xffffff, 2.0f);
-
 	// 難易度の描画
 	MessageManager::GetInstance().DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].difficultyId, 790, 310, 0xffffff);
 	MessageManager::GetInstance().DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].conditionsId, 790, 350, 0xffffff);
-
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// スコアランキングの描画
 	DrawScoreRanking();
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	// モデル描画
+	m_pCamera->SetCamera();
+	m_pSkyDome->Draw();
+	m_pPlanetManager->Draw();
+
+	// UIの描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_uiAlpha);
+	DrawGraph(0, 0, m_screenHandle, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// 画面切り替え演出の描画
 //	m_pTransitor->Draw();
@@ -368,7 +434,7 @@ void StageSelectScene::DrawScoreRanking()
 	}
 
 	// ランキングタイトルの描画
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpa);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpha);
 	MessageManager::GetInstance().DrawStringCenter("RankingTitle", 805, 425, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 

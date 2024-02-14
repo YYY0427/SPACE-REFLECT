@@ -24,17 +24,11 @@ public:
 	// カメラの設定	
 	void SetCamera();		
 
-	// カメラの座標を取得
-	Vector3 GetPos() const;
-
-	// カメラの水平方向を取得
-	float GetCameraHorizon() const;
-
-	// スタート演出をしたかフラグの取得
-	bool IsStartAnimation() const;
-
-	// スローの値の設定
-	void SetSlowValue(float slowValue);
+	// ゲッター
+	Vector3 GetPos() const;			// カメラの座標の取得
+	Vector3 GetTarget() const;		// カメラの注視点の取得
+	float GetCameraHorizon() const;	// カメラの水平方向の取得
+	bool IsStartAnimation() const;	// スタート演出をしたかフラグの取得
 
 private:
 	// カメラの座標
@@ -57,9 +51,6 @@ private:
 
 	// ラープの値
 	float m_lerpValue;
-
-	// スローの値
-	float m_slowValue;			
 
 	// フラグ
 	bool m_isStartAnimation;	// スタート演出をしたか

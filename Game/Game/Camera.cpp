@@ -37,8 +37,7 @@ Camera::Camera(Vector3 pos, Vector3 target) :
 	m_cameraHorizon(DX_PI_F),
 	m_isStartAnimation(false),
 	m_hermiteValue(0.0f),
-	m_lerpValue(0.0f),
-	m_slowValue(1.0f)
+	m_lerpValue(0.0f)
 {
 }
 
@@ -51,8 +50,7 @@ Camera::Camera(Vector3 playerPos) :
 	m_cameraHorizon(DX_PI_F),
 	m_isStartAnimation(false),
 	m_hermiteValue(0.0f),
-	m_lerpValue(0.0f),
-	m_slowValue(1.0f)
+	m_lerpValue(0.0f)
 {
 	// カメラの設定
 	SetCamera();
@@ -105,8 +103,8 @@ void Camera::UpdatePlay(Vector3 playerPos, Vector3 playerVec)
 	{
 		// カメラと注視点の移動
 		direction.Normalize();
-		m_pos += (direction * camera_move_speed * m_slowValue);
-		m_target += (direction * camera_move_speed * m_slowValue);
+		m_pos += (direction * camera_move_speed);
+		m_target += (direction * camera_move_speed);
 	}
 
 	// カメラの設定
@@ -126,7 +124,7 @@ void Camera::UpdateStart(Vector3 playerPos)
 	if (playerPos.z > m_pos.z + 200)
 	{
 		// エルミート曲線の値を増やす
-		m_hermiteValue += 0.005f * m_slowValue;
+		m_hermiteValue += 0.005f;
 
 		// カメラの位置をエルミート曲線で移動させる
 		m_pos = Vector3::Hermite
@@ -155,11 +153,11 @@ void Camera::UpdateStart(Vector3 playerPos)
 bool Camera::UpdateGameClear(Vector3 playerPos)
 {
 	// カメラのターゲットをプレイヤーの位置に徐々に変更
-	m_lerpValue += 0.001f * m_slowValue;
+	m_lerpValue += 0.001f;
 	m_target = Vector3::Lerp(m_target, playerPos, m_lerpValue);
 
 	// カメラの位置をエルミート曲線で移動させる
-	m_hermiteValue += 0.002f * m_slowValue;
+	m_hermiteValue += 0.002f;
 	Vector3 targetPos = { playerPos.x + 200.0f, playerPos.y + 50, playerPos.z + 200.0f };
 	m_pos = Vector3::Hermite
 	(
@@ -186,7 +184,7 @@ bool Camera::UpdateGameClear(Vector3 playerPos)
 void Camera::UpdateGameOver(Vector3 playerPos)
 {
 	// カメラのターゲットをプレイヤーの位置に徐々に変更
-	m_lerpValue += 0.001f * m_slowValue;
+	m_lerpValue += 0.001f;
 	m_target = Vector3::Lerp(m_target, playerPos, m_lerpValue);
 
 	// カメラの設定
@@ -215,6 +213,12 @@ Vector3 Camera::GetPos() const
 	return m_pos;
 }
 
+// カメラの注視点の取得
+Vector3 Camera::GetTarget() const
+{
+	return m_target;
+}
+
 // カメラの水平方向を取得
 float Camera::GetCameraHorizon() const
 {
@@ -225,10 +229,4 @@ float Camera::GetCameraHorizon() const
 bool Camera::IsStartAnimation() const
 {
 	return m_isStartAnimation;
-}
-
-// スローの値の設定
-void Camera::SetSlowValue(float slowValue)
-{
-	m_slowValue = slowValue;
 }

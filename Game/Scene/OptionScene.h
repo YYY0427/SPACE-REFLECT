@@ -3,18 +3,19 @@
 #include "../StateMachine.h"
 #include <vector>
 
-// ステート
-enum class State
-{
-	STAGE_SELECT,	// ステージセレクト
-	PAUSE,			// オプション
-};
-
 /// <summary>
 /// 設定シーン
 /// </summary>
 class OptionScene final : public SceneBase
 {
+public:
+	// ステート
+	enum class State
+	{
+		STAGE_SELECT,	// ステージセレクト
+		PAUSE,			// オプション
+	};
+
 public:
 	/// <summary>
 	/// コンストラクタ

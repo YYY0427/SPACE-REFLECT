@@ -9,8 +9,15 @@
 namespace
 {
 	// モデルの拡大率
-	constexpr int meteor_max_scale = 5;	// 最大拡大率
-	constexpr int meteor_min_scale = 1;	// 最小拡大率
+	constexpr float normal_meteor_max_scale = 5.0f;	// 最大拡大率
+	constexpr float normal_meteor_min_scale = 1.0f;	// 最小拡大率
+
+	//constexpr float small_meteor_max_scale = 0.1f;	// 最大拡大率
+	//constexpr float small_meteor_min_scale = 0.05f;	// 最小拡大率
+
+	constexpr float small_meteor_max_scale = 5.0f;	// 最大拡大率
+	constexpr float small_meteor_min_scale = 5.0f;	// 最小拡大率
+
 
 	// 移動速度
 	constexpr float meteor_move_speed = -10.0f;
@@ -18,41 +25,55 @@ namespace
 
 // コンストラクタ
 // ランダムに生成、プレイヤーの方向に移動
-Meteor::Meteor(Vector3 playerPos) :
+Meteor::Meteor(MeteorType type, Vector3 playerPos) :
 	m_rot({ 0, 0, 0 }),
-	m_slowValue(1.0f),
-	m_isEnabled(true)
+	m_isEnabled(true),
+	m_moveVec({ 0, 0, 0 }),
+	m_rotVec({ 0, 0, 0 }),
+	m_type(type)
 {
 	// モデルのインスタンスの作成
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
-
-	// 画面内にランダムに生成
-	Vector3 screenPos{};
-	screenPos.x = GetRand(static_cast<int>(Application::GetInstance().GetWindowSize().width - 500));
-	screenPos.y = GetRand(static_cast<int>(Application::GetInstance().GetWindowSize().height - 500));
-	screenPos.z = 0.1f;
-	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
-
-	// 隕石の拡大率をランダムに設定
-	float scale = GetRand(meteor_max_scale - meteor_min_scale) + meteor_min_scale;
-	m_scale = { scale, scale, scale };
 
 	// 1フレームに回転する量を0度から～1度の間から取得
 	m_rotVec.x = MathUtil::ToRadian(GetRand(10) * 0.1f);
 	m_rotVec.y = MathUtil::ToRadian(GetRand(10) * 0.1f);
 	m_rotVec.z = MathUtil::ToRadian(GetRand(10) * 0.1f);
-	
-	// 移動ベクトル
-	Vector3 distance = playerPos - m_pos;
-	distance.Normalize();
-	distance *= meteor_move_speed;
-	m_moveVec = distance;
+
+	// 隕石の種類によって処理を変える
+	// 小さい隕石
+	if (type == MeteorType::SMALL)
+	{
+		// 隕石の拡大率をランダムに設定
+		float scale = GetRand(small_meteor_max_scale - small_meteor_min_scale) + small_meteor_min_scale;
+		m_scale = { scale, scale, scale };
+	}
+	// 通常の隕石
+	else if (type == MeteorType::NORMAL)
+	{
+		// 隕石の拡大率をランダムに設定
+		float scale = GetRand(normal_meteor_max_scale - normal_meteor_min_scale) + normal_meteor_min_scale;
+		m_scale = { scale, scale, scale };
+
+		// 移動ベクトル
+		Vector3 distance = playerPos - m_pos;
+		distance.Normalize();
+		distance *= meteor_move_speed;
+		m_moveVec = distance;
+	}
+
+	// 画面内にランダムに生成
+	Vector3 screenPos{};
+	screenPos.x = GetRand(static_cast<int>(Application::GetInstance().GetWindowSize().width));
+	screenPos.y = GetRand(static_cast<int>(Application::GetInstance().GetWindowSize().height));
+	screenPos.z = 0.01f;
+	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
+	m_pos.z = playerPos.z + 1000.0f;
 
 	// モデルの設定
 	m_pModel->SetPos(m_pos);			// 位置
 	m_pModel->SetRot(m_rot);			// 回転
 	m_pModel->SetScale(m_scale);		// 拡大率
-	m_pModel->SetUseCollision(true);	// 当たり判定を使用する
 	m_pModel->Update();					// 更新
 }
 
@@ -62,10 +83,10 @@ Meteor::Meteor(UnityGameObject data):
 	m_pos(data.pos),
 	m_rot(data.rot),
 	m_scale(data.scale),
-	m_slowValue(1.0f),
 	m_isEnabled(true),
 	m_moveVec({ 0, 0, 0 }),
-	m_rotVec({ 0, 0, 0 })
+	m_rotVec({ 0, 0, 0 }),
+	m_type(MeteorType::NORMAL)
 {
 	// モデルのインスタンスの作成
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
@@ -98,7 +119,7 @@ void Meteor::Update(Vector3 cameraPos)
 	}
 
 	// 移動
-	m_pos += m_moveVec;
+//	m_pos += m_moveVec;
 
 	// 回転
 	m_rot += m_rotVec;
@@ -130,12 +151,6 @@ void Meteor::Draw()
 	m_pModel->Draw();
 }
 
-// スローの値の設定
-void Meteor::SetSlowValue(float slowValue)
-{
-	m_slowValue = slowValue;
-}
-
 // 存在フラグの取得
 bool Meteor::IsEnabled() const
 {
@@ -146,4 +161,10 @@ bool Meteor::IsEnabled() const
 int Meteor::GetModelHandle() const
 {
 	return m_pModel->GetModelHandle();
+}
+
+// 隕石の種類の取得
+MeteorType Meteor::GetType() const
+{
+	return m_type;
 }

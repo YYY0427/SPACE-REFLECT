@@ -64,6 +64,9 @@ void StageBase::Collision()
 	// プレイヤーと隕石の当たり判定
 	for (auto& meteor : m_pMeteorManager->GetMeteor())
 	{
+		// 小さい隕石なら判定しない
+		if(meteor->GetType() == MeteorType::SMALL) continue;
+
 		// 球とメッシュの当たり判定
 		MV1_COLL_RESULT_POLY_DIM result{};
 		result = MV1CollCheck_Sphere(

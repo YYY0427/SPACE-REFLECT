@@ -3,6 +3,7 @@
 #include "../Score/ScoreRanking.h"
 #include "../Math/Vector3.h"
 #include "../Game/Planet.h"
+#include "../StateMachine.h"
 #include <memory>
 #include <vector>
 #include <map>
@@ -37,8 +38,13 @@ public:
 	// デストラクタ
 	~StageSelectScene();
 
+	// 開始
+	void EnterStartAnimation();
+
 	// 更新
 	void Update() override final;
+	void UpdateSelectStage();
+	void UpdateStartAnimation();
 	void UpdateCamera();
 
 	// 描画
@@ -69,6 +75,17 @@ private:
 	};
 
 private:
+	// ステート
+	enum class State
+	{
+		STAGE_SELECT,		// ステージ選択
+		START_ANIMATION,	// スタート演出
+	};
+
+private:
+	// ステートマシン
+	StateMachine<State> m_stateMachine;
+
 	// ポインタ
 	std::unique_ptr<Camera> m_pCamera;
 	std::unique_ptr<PlanetManager> m_pPlanetManager;
@@ -83,10 +100,12 @@ private:
 	// カメラ
 	Vector3 m_cameraStartPos;		// カメラの初期位置
 	Vector3 m_cameraGoalPos;		// カメラの目標位置
+	Vector3 m_cameraStartTargetPos;	// カメラの初期注視点
 	Vector3 m_cameraGoalTargetPos;	// カメラの目標注視点
 
 	// イージングの時間
-	float m_easeTime;	
+	float m_easeTime;
+	float m_easeTime2;
 
 	// 入力があるかフラグ
 	bool m_isInput;
@@ -94,8 +113,12 @@ private:
 	// アルファ値
 	int m_line3DAlpha;
 	int m_windowAlpha;
-	int m_textAlpa;
+	int m_textAlpha;
 	std::vector<int> m_rankingAlpha;
+	int m_uiAlpha;
+
+	// スクリーンハンドル
+	int m_screenHandle;
 
 	// 画像ハンドル
 	int m_rbButtonImgHandle;

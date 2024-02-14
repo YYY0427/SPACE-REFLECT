@@ -39,7 +39,7 @@ void GameScene::Update()
 	// É|Å[ÉY
 	if (InputState::IsTriggered(InputType::PAUSE))
 	{
-		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, State::PAUSE));
+		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::PAUSE));
 		return;
 	}
 }
