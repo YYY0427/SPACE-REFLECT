@@ -410,8 +410,8 @@ void Tutorial::Draw()
 	m_pEnemyManager->Draw();	// 敵
 	m_pLaserManager->Draw();	// レーザー
 	m_pPlayer->Draw();								// プレイヤー
-	m_pPlayer->DrawShield();						// シールド
 	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
+	m_pPlayer->DrawShield();						// シールド
 	UIManager::GetInstance().Draw();				// UI
 	Score::GetInstance().DrawScore();				// スコア
 
