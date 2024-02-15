@@ -132,8 +132,8 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 // デストラクタ
 StageSelectScene::~StageSelectScene()
 {
-	// ライトのハンドルを全て削除
-	DeleteLightHandleAll();
+	// ライトのハンドルを削除
+	DeleteLightHandle(m_lightHandle);
 }
 
 // スタート演出の開始

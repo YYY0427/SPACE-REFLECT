@@ -30,7 +30,8 @@ Meteor::Meteor(MeteorType type, Vector3 playerPos) :
 	m_isEnabled(true),
 	m_moveVec({ 0, 0, 0 }),
 	m_rotVec({ 0, 0, 0 }),
-	m_type(type)
+	m_type(type),
+	m_opacity(1.0f)
 {
 	// モデルのインスタンスの作成
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
@@ -71,6 +72,7 @@ Meteor::Meteor(MeteorType type, Vector3 playerPos) :
 	m_pos.z = playerPos.z + 1000.0f;
 
 	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 透明度
 	m_pModel->SetPos(m_pos);			// 位置
 	m_pModel->SetRot(m_rot);			// 回転
 	m_pModel->SetScale(m_scale);		// 拡大率
@@ -86,7 +88,8 @@ Meteor::Meteor(UnityGameObject data):
 	m_isEnabled(true),
 	m_moveVec({ 0, 0, 0 }),
 	m_rotVec({ 0, 0, 0 }),
-	m_type(MeteorType::NORMAL)
+	m_type(MeteorType::NORMAL),
+	m_opacity(1.0f)
 {
 	// モデルのインスタンスの作成
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
@@ -97,6 +100,7 @@ Meteor::Meteor(UnityGameObject data):
 	m_rotVec.z = MathUtil::ToRadian(GetRand(3) * 0.1f);
 
 	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 透明度
 	m_pModel->SetPos(m_pos);			// 位置
 	m_pModel->SetRot(m_rot);			// 回転
 	m_pModel->SetScale(m_scale);		// 拡大率
@@ -119,12 +123,13 @@ void Meteor::Update(Vector3 cameraPos)
 	}
 
 	// 移動
-//	m_pos += m_moveVec;
+	m_pos += m_moveVec;
 
 	// 回転
 	m_rot += m_rotVec;
 
 	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 透明度
 	m_pModel->SetPos(m_pos);	// 位置
 	m_pModel->SetRot(m_rot);	// 回転
 	m_pModel->Update();			// 更新

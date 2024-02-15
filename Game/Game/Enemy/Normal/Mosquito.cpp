@@ -10,7 +10,7 @@ namespace
 	constexpr int idle_anim_num = 1;	// 待機
 
 	// レーザーの発射位置のフレーム
-	constexpr int laser_fire_frame_pos = 37;
+	constexpr int laser_fire_frame_pos = 50;
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）

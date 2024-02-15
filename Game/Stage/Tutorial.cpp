@@ -105,8 +105,8 @@ void Tutorial::Update()
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 
-	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());					// 小さい隕石の生成
-
+	// 小さい隕石の生成
+	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());					
 
 	// 更新
 	m_pTutorialUI->Update();								// チュートリアルUI
@@ -377,24 +377,7 @@ void Tutorial::EnterResult()
 // リザルトの更新
 void Tutorial::UpdateResult()
 {
-	// リザルト画面の更新
-	m_pResultWindow->Update();
-
-	// リザルト画面が終了したら
-	if (m_pResultWindow->IsEnd())
-	{
-		// スコアをランキングに追加
-		ScoreRanking::GetInstance().AddScore("Tutorial", "NO NAME", Score::GetInstance().GetTotalScore());
-
-		// フェードアウトの演出の開始
-		m_pFade->StartFadeOut(255, 2);
-	}
-	// フェードアウトが終了したら
-	if(m_pFade->IsFadeOutEnd())
-	{
-		// ステージセレクトに遷移
-		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
-	}
+	StageBase::UpdateResult("Tutorial");
 }
 
 // 描画

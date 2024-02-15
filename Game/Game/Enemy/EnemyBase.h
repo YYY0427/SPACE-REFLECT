@@ -37,6 +37,7 @@ public:
 	Vector3 GetPos() const;				// 位置情報
 	Vector3 GetLaserFirePos() const;	// レーザーの発射位置
 	bool IsEnabled() const;				// 存在フラグ
+	virtual bool IsDeadAnim();		// ボスの死亡演出中かどうか
 	float GetCollisionRadius() const;	// 当たり判定の半径
 
 protected:

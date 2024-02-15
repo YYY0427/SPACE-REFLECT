@@ -32,10 +32,10 @@ namespace
 	constexpr float text_interval = 50.0f;
 
 	// 描画フレーム
-	constexpr int move_tutorial_frame = 500;	// 移動
-	constexpr int shield_tutorial_frame = 500;	// シールド
-	constexpr int reflect_tutorial_frame = 300;	// 反射
-	constexpr int cube_tutorial_frame = 300;	// キューブ
+	constexpr int move_tutorial_frame = 600;	// 移動
+	constexpr int shield_tutorial_frame = 600;	// シールド
+	constexpr int reflect_tutorial_frame = 400;	// 反射
+	constexpr int cube_tutorial_frame = 400;	// キューブ
 
 	// チュートリアル用のUIが右下に残すのかどうかのフラグ
 	// まだ未完成のためfalse

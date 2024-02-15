@@ -27,6 +27,9 @@ public:
 	void SmallMeteorCreate(Vector3 playerPos);
 	void CreateMeteor(int createIntervalFrame, Vector3 playerPos);
 
+	// 覐΂̍폜
+	void DeleteMeteor();
+
 	// 覐΂̎擾
 	const std::list<std::shared_ptr<Meteor>>& GetMeteor() const;
 

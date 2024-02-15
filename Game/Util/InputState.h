@@ -19,7 +19,7 @@ enum class InputType
 
 	// デバッグ用
 	NORMAL_ENEMY_DEBUG,	// 雑魚敵を自由に動かせる
-	BOSS_DETH_DEBUG,	// ボスの死亡
+	ENEMY_DETH_DEBUG,	// ボスの死亡
 
 	// ボタンの入力タイプの合計値
 	NUM	

@@ -9,6 +9,7 @@
 #include "../../UI/UIManager.h"
 #include "../../MyDebug/DebugText.h"
 #include "../Player.h"
+#include "../../Util/InputState.h"
 #include <fstream>
 #include <sstream>
 #include <cassert>
@@ -55,6 +56,21 @@ EnemyManager::~EnemyManager()
 // 更新
 void EnemyManager::Update()
 {
+	// デバッグ用
+#ifdef _DEBUG
+	if (InputState::IsTriggered(InputType::ENEMY_DETH_DEBUG))
+	{
+		for (auto& enemy : m_pEnemyList)
+		{
+			enemy->OnDamage(100000, Vector3());
+		}
+		if (m_pBossEnemy)
+		{
+			m_pBossEnemy->OnDamage(100000, Vector3());
+		}
+	}
+#endif
+
 	// ステートマシンの更新
 	m_stateMachine.Update();
 }
@@ -118,8 +134,6 @@ void EnemyManager::Draw()
 		m_pBossEnemy->Draw();
 	}
 
-	// デバッグ用
-#ifdef _DEBUG
 	// 雑魚敵の座標の描画
 	for (int i = 0; i < m_pEnemyList.size(); i++)
 	{
@@ -128,7 +142,6 @@ void EnemyManager::Draw()
 
 		DebugText::Log("NormalEnemyPos", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
 	}
-#endif
 }
 
 // ウェーブのスタート
@@ -159,17 +172,11 @@ void EnemyManager::StartWave()
 // 次のウェーブへ
 void EnemyManager::NextWave()
 {
-	// まだ敵が残っていたらなにもしない
-	for (auto& enemy : m_pEnemyList)
-	{
-		if (enemy->IsEnabled())
-		{
-			return;
-		}
-	};
+	// ウェーブが始まっていなかったらなにもしない
+	if(!m_isStartWave) return;
 
-	// ボス敵が出現していたらなにもしない
-	if (m_pBossEnemy)	return;
+	// ウェーブが終わっていなかったらなにもしない
+	if (!IsEndWave())	return;
 
 	// 最後のウェーブだったらボス敵を生成
 	if(m_waveNow == m_waveTable.size() - 1)
@@ -180,7 +187,8 @@ void EnemyManager::NextWave()
 			// ボス敵が倒されたことにする
 			m_isDeadBoss = true;
 		}
-		else
+		// まだ警告が出ていなかったら
+		else if(!m_pWarning)
 		{
 			// 警告状態に遷移
 			m_stateMachine.SetState(State::WARNING);

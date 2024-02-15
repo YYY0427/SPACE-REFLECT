@@ -23,14 +23,11 @@ namespace
 ReflectLaser::ReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
 {
 	// 初期化
+	m_pos = firePos;
 	m_pShield = pShield;
 	m_pLaser = pLaser;
 	m_isReflect = true;
 	m_isEnabled = true;
-
-	// 位置をシールドに合わせる
-//	m_pos = m_pShield->GetPos();
-	m_pos = firePos;
 
 	// 反射ベクトルを作成
 	m_directionVec = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
@@ -68,9 +65,6 @@ void ReflectLaser::Update()
 		m_isEnabled = false;
 		return;
 	}
-
-	// 位置をシールドに合わせる
-//	m_pos = m_pShield->GetPos();
 
 #if false
 	m_directionVec = Vector3::Reflect(

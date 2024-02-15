@@ -81,6 +81,12 @@ bool EnemyBase::IsEnabled() const
 	return m_isEnabled;
 }
 
+// ƒ{ƒX‚Ì€–S‰‰o’†‚©
+bool EnemyBase::IsDeadAnim()
+{
+	return false;
+}
+
 // “–‚½‚è”»’è‚Ì”¼Œa‚Ìæ“¾
 float EnemyBase::GetCollisionRadius() const
 {

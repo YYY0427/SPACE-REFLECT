@@ -23,6 +23,7 @@ public:
 	void UpdateStartAnimation();
 	void UpdatePlay();
 	void UpdateGameClear();
+	void UpdateGameOver();
 	void UpdateResult();
 
 	// •`‰æ

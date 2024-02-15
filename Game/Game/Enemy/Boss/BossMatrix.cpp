@@ -22,6 +22,7 @@
 
 // TODO : HPが半分以下になったら透明になる(レーザーの発射場所はランダムにする)
 // TODO : HPが半分以下になったらプレイヤーのシールドの回転を逆にする
+// TODO : ボスの登場時の演出
 
 namespace
 {
@@ -30,8 +31,8 @@ namespace
 
 	// 位置
 	const Vector3 init_pos = { 0.0f, 300.0f, 5000.0f };				// 初期位置(ワールド座標)
-	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1500.0f };		// 登場時の位置(ワールド座標)
-	const Vector3 normal_pos = { 640, 360, 1300 };					// 通常時の位置(スクリーン座標)
+	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1800.0f };		// 登場時の位置(ワールド座標)
+	const Vector3 normal_pos = { 640, 360, 1800.0f };					// 通常時の位置(スクリーン座標)
 
 	// モデル
 	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
@@ -55,14 +56,14 @@ namespace
 	// 移動
 	constexpr float entry_move_speed = 10.0f;	// 登場時の移動速度
 	constexpr float move_speed = 20.0f;			// 移動速度
-	constexpr float distance_threshold = 10.0f; // 目的地に到達したかどうか測る閾値
+	constexpr float distance_threshold = 100.0f; // 目的地に到達したかどうか測る閾値
 	const Vector3 move_pos[] =					// 移動先の座標
 	{
-		{ screenSize. width / 2.0f, screenSize.height / 2.0f, 1600 },
+		{ screenSize. width / 2.0f, screenSize.height / 2.0f, 1800 },
 		{ 0 + 200, 0 + 200, 1600 },
-		{ screenSize. width - 200.0f, 0 + 200, 1600 },
-		{ 0 + 200, screenSize.height - 200.0f, 1600 },
-		{ screenSize.width - 200.0f, screenSize.height - 200.0f, 1600 }
+		{ screenSize. width - 200.0f, 0 + 200, 1800 },
+		{ 0 + 200, screenSize.height - 200.0f, 1800 },
+		{ screenSize.width - 200.0f, screenSize.height - 200.0f, 1800 }
 	};
 
 	// HP
@@ -129,9 +130,9 @@ BossMatrix::BossMatrix(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserMan
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::ENTRY, {}, [this]() {UpdateEntry(); }, {});
 	m_stateMachine.AddState(State::IDLE, {}, [this]() {UpdateIdle(); }, {});
-	m_stateMachine.AddState(State::DIE, [this]() {EntarDie(); }, [this]() {UpdateDie(); }, {});
-	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, [this]() {EntarMoveHormingLaserAttack(); }, [this]() {UpdateMoveHomingLaserAttack(); }, {});
-	m_stateMachine.AddState(State::CUBE_LASER_ATTACK, [this]() {EntarCubeLaserAttack(); }, [this]() {UpdateCubeLaserAttack(); }, {});
+	m_stateMachine.AddState(State::DIE, [this]() {EnterDie(); }, [this]() {UpdateDie(); }, {});
+	m_stateMachine.AddState(State::MOVE_HOMING_LASER_ATTACK, [this]() {EnterMoveHormingLaserAttack(); }, [this]() {UpdateMoveHomingLaserAttack(); }, {});
+	m_stateMachine.AddState(State::CUBE_LASER_ATTACK, [this]() {EnterCubeLaserAttack(); }, [this]() {UpdateCubeLaserAttack(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() {UpdateGameOver(); }, {});
 	m_stateMachine.SetState(State::ENTRY);
 
@@ -169,15 +170,6 @@ BossMatrix::~BossMatrix()
 // 更新
 void BossMatrix::Update()
 {
-#ifdef _DEBUG
-	// デバッグ用
-	if (InputState::IsTriggered(InputType::BOSS_DETH_DEBUG))
-	{
-		m_hp = 0;
-		OnDamage(0, m_pos);
-	}
-#endif
-
 	// HPゲージの更新
 	m_pHpGauge->Update();	
 
@@ -250,11 +242,8 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 }
 
 // 死亡演出の開始
-void BossMatrix::EntarDie()
+void BossMatrix::EnterDie()
 {
-	// レーザーを削除
-	m_pLaserManager->DeleteAllLaser();
-
 	// アニメーションの停止
 	m_pModel->StopAnim();
 
@@ -263,7 +252,7 @@ void BossMatrix::EntarDie()
 }
 
 // 移動しながらホーミングレーザー攻撃の開始
-void BossMatrix::EntarMoveHormingLaserAttack()
+void BossMatrix::EnterMoveHormingLaserAttack()
 {
 	// フレームの初期化
 	m_laserFrame = move_normal_laser_attack_frame;
@@ -279,7 +268,7 @@ void BossMatrix::EntarMoveHormingLaserAttack()
 }
 
 // キューブレーザー攻撃の開始
-void BossMatrix::EntarCubeLaserAttack()
+void BossMatrix::EnterCubeLaserAttack()
 {
 	// フレームの初期化
 	m_laserFrame = cube_laser_attack_frame;
@@ -331,6 +320,11 @@ void BossMatrix::UpdateEntry()
 // 待機時の更新
 void BossMatrix::UpdateIdle()
 {
+	// プレイヤーの方向を向く
+	Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
+
 	// 待機アニメーションに変更
 	m_pModel->ChangeAnimation(idle_anim_no, true, false, 8);
 
@@ -348,6 +342,9 @@ void BossMatrix::UpdateIdle()
 // 死亡時の更新
 void BossMatrix::UpdateDie()
 {
+	// レーザーを削除
+	m_pLaserManager->DeleteAllLaser();
+
 	// 特定のフレームが経過したら演出開始
 	if (m_dieIdleFrame-- <= 0)
 	{
@@ -524,6 +521,12 @@ void BossMatrix::SetGoalPos()
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
+}
+
+// 死亡演出中か 
+bool BossMatrix::IsDeadAnim()
+{
+	return m_stateMachine.GetCurrentState() == State::DIE;
 }
 
 // 攻撃ステートの設定

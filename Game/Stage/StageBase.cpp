@@ -1,4 +1,5 @@
 #include "StageBase.h"
+#include "../Scene/StageSelectScene.h"
 #include "../Scene/SceneManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../UI/UIManager.h"
@@ -14,6 +15,8 @@
 #include "../Effect/ScreenShaker.h"
 #include "../UI/DamageFlash.h"
 #include "../Score/Score.h"
+#include "../Score/ScoreRanking.h"
+#include "../UI/ResultWindow.h"
 #include <DxLib.h>
 
 // コンストラクタ
@@ -44,13 +47,38 @@ StageBase::StageBase(SceneManager& manager) :
 StageBase::~StageBase()
 {
 	// ライトの削除
-	DeleteLightHandleAll();
+	DeleteLightHandle(m_directionalLightHandle);
 	// すべてのUIを削除
 	UIManager::GetInstance().DeleteAllUI();
 	// エフェクトの全削除
 	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
+}
+
+// リザルト画面の更新
+void StageBase::UpdateResult(std::string stageName)
+{
+	// フェードが終了したら
+	if (m_pFade->IsFadeOutEnd())
+	{
+		// ステージセレクトに遷移
+		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		return;
+	}
+
+	// リザルト画面の更新
+	m_pResultWindow->Update();
+
+	// リザルト画面が終了したら
+	if (m_pResultWindow->IsEnd() && !m_pFade->IsFadingOut())
+	{
+		// スコアをランキングに追加
+		ScoreRanking::GetInstance().AddScore(stageName, "NO NAME", Score::GetInstance().GetTotalScore());
+
+		// フェードアウト開始
+		m_pFade->StartFadeOut(255);
+	}
 }
 
 // 描画

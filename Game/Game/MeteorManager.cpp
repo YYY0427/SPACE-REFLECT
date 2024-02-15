@@ -88,6 +88,12 @@ void MeteorManager::CreateMeteor(int createIntervalFrame, Vector3 playerPos)
 	}
 }
 
+// 覐΂̍폜
+void MeteorManager::DeleteMeteor()
+{
+	m_pMeteorList.clear();
+}
+
 // 覐΂̎擾
 const std::list<std::shared_ptr<Meteor>>& MeteorManager::GetMeteor() const
 {

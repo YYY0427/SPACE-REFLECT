@@ -1,5 +1,11 @@
 #pragma once
 #include "SceneBase.h"
+#include "../Math/Vector2.h"
+#include <vector>
+
+// プロトタイプ宣言
+class Camera;
+class SkyDome;
 
 /// <summary>
 /// タイトルシーン
@@ -21,6 +27,7 @@ public:
 	
 	// 描画
 	void Draw() override final;
+	void SetLaser(Vector2 pos1, Vector2 pos2, unsigned int color);
 
 private:
 	// ここから飛べるシーン項目
@@ -31,11 +38,33 @@ private:
 	};
 
 private:
+	// レーザーのデータ
+	struct LaserData
+	{
+		Vector2 pos1;	
+		Vector2 pos2;
+		Vector2 startPos;
+		float thickness;
+		int alpha;
+		unsigned int color;
+	};
+
+private:
+	// ポインタ
+	std::shared_ptr<Camera> m_pCamera;
+	std::shared_ptr<SkyDome> m_pSkyDome;
+
+	// レーザーのデータ
+	std::vector<LaserData> m_laserData;
+
 	// 現在選択しているシーン項目
 	int m_currentSelectSceneItem;
 
 	// アルファ値
 	int m_alpha;
+
+	// アルファ値の加算値
+	int m_alphaAdd;
 
 	// フレーム
 	int m_frame;

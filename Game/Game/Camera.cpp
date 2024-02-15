@@ -38,7 +38,9 @@ Camera::Camera(Vector3 pos, Vector3 target) :
 	m_isStartAnimation(false),
 	m_hermiteValue(0.0f),
 	m_lerpValue(0.0f)
-{
+{	
+	// カメラの設定
+	SetCamera();
 }
 
 // コンストラクタ

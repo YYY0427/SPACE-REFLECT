@@ -39,7 +39,10 @@ void Fade::Update()
 	m_fadeBright += m_fadeSpeed;
 
 	// フェードの明るさが設定した範囲を超えたらフェードを止める
-	if (!m_fadeBrightRange.IsInside(m_fadeBright))	m_fadeSpeed = 0;
+	if (!m_fadeBrightRange.IsInside(m_fadeBright))
+	{
+		m_fadeSpeed = 0;
+	}
 
 	// フェードの明るさを設定した範囲内にクランプする
 	m_fadeBright = m_fadeBrightRange.Clamp(m_fadeBright);
@@ -99,7 +102,7 @@ void Fade::StartFadeOut(int fadeBrightUpperLimitValue, int fadeSpeed)
 	m_fadeBrightRange = Range<int>(0, fadeBrightUpperLimitValue);
 
 	// フェード速度の設定
-	m_fadeSpeed = abs(fadeSpeed);;
+	m_fadeSpeed = abs(fadeSpeed);
 }
 
 // フェードイン中かどうか

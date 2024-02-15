@@ -36,9 +36,9 @@ public:
 
 private:
 	// 開始
-	void EntarMoveHormingLaserAttack();	// 移動しながらホーミングレーザー攻撃
-	void EntarCubeLaserAttack();		// キューブレーザー攻撃
-	void EntarDie();					// 死亡
+	void EnterMoveHormingLaserAttack();	// 移動しながらホーミングレーザー攻撃
+	void EnterCubeLaserAttack();		// キューブレーザー攻撃
+	void EnterDie();					// 死亡
 
 	// 更新
 	void UpdateEntry();		// 登場時の更新
@@ -59,6 +59,9 @@ private:
 
 	// 攻撃ステートの設定
 	void SetAttackState();
+
+	// ゲッター
+	bool IsDeadAnim() override;	// 死亡演出中か
 
 private:
 	// ステート

@@ -1,6 +1,7 @@
 #pragma once
-#include <memory>
 #include "../Scene/SceneBase.h"
+#include <memory>
+#include <string>
 
 // プロトタイプ宣言
 class UIManager;
@@ -30,6 +31,7 @@ public:
 
 	// 更新
 	virtual void Update() = 0;
+	virtual void UpdateResult(std::string stageName);
 
 	// 描画
 	virtual void Draw();

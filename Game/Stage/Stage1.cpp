@@ -60,6 +60,7 @@ Stage1::Stage1(SceneManager& manager) :
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
+	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
 	m_stateMachine.AddState(State::RESULT, [this]() { EnterResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
@@ -104,6 +105,19 @@ void Stage1::Update()
 	if (!m_pPlayer->IsLive())
 	{
 		m_stateMachine.SetState(State::GAME_OVER);
+	}
+
+
+	// 小さい隕石の生成
+	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());
+
+	// ボスが死んだら隕石の削除
+	if (m_pEnemyManager->GetBossEnemy())
+	{
+		if (m_pEnemyManager->GetBossEnemy()->IsDeadAnim())
+		{
+			m_pMeteorManager->DeleteMeteor();
+		}	
 	}
 
 	// 更新
@@ -191,31 +205,37 @@ void Stage1::UpdateGameClear()
 	}
 }
 
-// リザルトの更新
-void Stage1::UpdateResult()
+// ゲームオーバーの更新
+void Stage1::UpdateGameOver()
 {
-	// リザルト画面の更新
-	m_pResultWindow->Update();
+	// UIの格納
+	UIManager::GetInstance().Store();
 
-	// リザルト画面が終了したら
-	if (m_pResultWindow->IsEnd())
+	// 全てのレーザーの削除
+	m_pLaserManager->DeleteAllLaser();
+
+	// ゲームオーバー時の更新
+	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
+	if (m_pPlayer->UpdateGameOver())
 	{
-		// スコアをランキングに追加
-		ScoreRanking::GetInstance().AddScore("Tutorial", "NO NAME", Score::GetInstance().GetTotalScore());
-
-		// スコアを初期化
-		Score::GetInstance().Reset();
-
-		// フェードアウト開始
-		m_pFade->StartFadeOut(255);		
+		// フェードアウトの演出の開始
+		m_pFade->StartFadeOut(255, 2);
 	}
-
-	// フェードが終了したら
+	// フェードアウトが終了したら
 	if (m_pFade->IsFadeOutEnd())
 	{
 		// ステージセレクトに遷移
 		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
 	}
+
+	// デバッグテキストの追加
+	DebugText::Log("GameOver");
+}
+
+// リザルトの更新
+void Stage1::UpdateResult()
+{
+	StageBase::UpdateResult("Stage1");
 }
 
 // 描画

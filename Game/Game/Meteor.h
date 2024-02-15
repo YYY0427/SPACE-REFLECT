@@ -63,6 +63,9 @@ private:
 	// 回転ベクトル
 	Vector3 m_rotVec;
 
+	// 透明度
+	float m_opacity;
+
 	// 存在フラグ
 	bool m_isEnabled;
 };

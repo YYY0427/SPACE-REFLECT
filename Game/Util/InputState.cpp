@@ -10,7 +10,6 @@ namespace InputState
 	// 初期化
 	void InputState::Init()
 	{
-
 		// ボタンの入力タイプをどのボタンにするかの設定
 		m_inputMapTable[InputType::DECISION] = { {InputCategory::PAD, XINPUT_BUTTON_A },				// Aボタン
 												 {InputCategory::KEYBORD, KEY_INPUT_RETURN} };			// Enterキー
@@ -40,7 +39,8 @@ namespace InputState
 													{InputCategory::PAD, XINPUT_BUTTON_Y } };
 
 #ifdef _DEBUG
-		m_inputMapTable[InputType::BOSS_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// デバッグ用　ボスの死亡
+		// デバッグ用　
+		m_inputMapTable[InputType::ENEMY_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// 敵の死亡
 #endif
 
 		// 設定したボタンの数によって配列の数を変更
