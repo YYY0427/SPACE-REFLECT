@@ -30,6 +30,12 @@ Vector3 Vector3::operator-(const Vector3& rval) const
 	return { x - rval.x, y - rval.y, z - rval.z };
 }
 
+// Vec3 = Vec3 * Vec3
+Vector3 Vector3::operator*(const Vector3& rval) const
+{
+	return { x * rval.x, y * rval.y, z * rval.z };
+}
+
 // Vec3 = (Vec3 += Vec3)
 void Vector3::operator+=(const Vector3& rval)
 {

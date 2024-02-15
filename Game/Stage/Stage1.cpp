@@ -29,10 +29,10 @@
 namespace
 {
 	// オブジェクト配置データのファイル名
-	const std::string object_data_file_name = "Test";
+	const std::string object_data_file_name = "Stage1";
 
 	// 敵の配置データのファイル名
-	const std::string enemy_data_file_name = "Test";
+	const std::string enemy_data_file_name = "Stage1";
 
 	// ウェーブの待機フレーム数
 	constexpr int wave_wait_frame = 200;
@@ -63,6 +63,10 @@ Stage1::Stage1(SceneManager& manager) :
 	m_stateMachine.AddState(State::RESULT, [this]() { EnterResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
+	// オブジェクト配置データ読み込み
+	auto& dataReader = DataReaderFromUnity::GetInstance();
+	dataReader.LoadUnityGameObjectData(object_data_file_name.c_str());
+
 	// インスタンスの作成
 	m_pPlayer = std::make_shared<Player>(object_data_file_name);
 	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
@@ -77,9 +81,8 @@ Stage1::Stage1(SceneManager& manager) :
 	m_pDamageFlash = std::make_shared<DamageFlash>();
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
 
-	// オブジェクト配置データ読み込み
-	auto& dataReader = DataReaderFromUnity::GetInstance();
-	dataReader.LoadUnityGameObjectData(object_data_file_name.c_str());
+	// ウェーブデータの読み込み
+	m_pEnemyManager->LoadWaveFileData(enemy_data_file_name);
 }
 
 // デストラクタ

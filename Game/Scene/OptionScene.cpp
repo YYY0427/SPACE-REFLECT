@@ -28,7 +28,7 @@ namespace
 
 	// 表示するテキストの全体の位置
 	constexpr int draw_text_pos_x = 200;
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 150;
+	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 100;
 
 	// テキストの文字間
 	constexpr int text_space_y = 64;

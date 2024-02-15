@@ -19,6 +19,9 @@ public:
 	// Vec3 = Vec3 - Vec3
 	Vector3 operator- (const Vector3& rval) const;
 
+	// Vec3 = Vec3 * Vec3
+	Vector3 operator* (const Vector3& rval) const;
+
 	// Vec3 = (Vec3 += Vec3)
 	void operator+= (const Vector3& rval);
 

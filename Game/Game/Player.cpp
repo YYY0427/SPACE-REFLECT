@@ -139,7 +139,7 @@ Player::~Player()
 void Player::UpdateStart(Vector3 cameraPos)
 {
 	// Z軸方向に移動
-	m_moveVec.z = (start_move_speed * m_slowValue);
+	m_moveVec.z = start_move_speed;
 	m_pos.z += m_moveVec.z;
 
 	if (m_pos.z > cameraPos.z + 200)
@@ -227,6 +227,7 @@ void Player::Update(float cameraHorizon)
 
 	// 移動情報の初期化
 	m_isInputLeftStick = false;
+	m_moveVec.z = 0;
 	m_moveVec *= 0.98f;
 	Vector3 moveVecX = { 0, 0, 0 };
 	Vector3 moveVecY{ 0, 0, 0 };
@@ -258,10 +259,10 @@ void Player::Update(float cameraHorizon)
 	if (m_isInputLeftStick)
 	{
 		// プレイヤーから見てx方向とz方向のベクトルを足して移動ベクトルを作成する
-		m_moveVec = moveVecY + moveVecX;
+		m_moveVec = moveVecY + moveVecX; 
 
 		// プレイヤーのスピードを掛ける
-		m_moveVec *= (m_moveSpeed * m_slowValue);
+		m_moveVec *= m_moveSpeed;
 
 		// 作成した移動ベクトルで座標の移動
 		Vector3 tempPos = m_pos + m_moveVec;

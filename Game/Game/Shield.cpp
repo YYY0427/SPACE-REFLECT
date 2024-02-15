@@ -47,13 +47,13 @@ namespace
 	const Vector2 enerugy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
-	constexpr int max_enerugy_gage = 1000;
+	constexpr int max_enerugy_gage = 300;
 
 	// プレイヤーからのシールドの距離
 	constexpr float player_distance = 100.0f;
 
 	// エネルギーの回復速度
-	constexpr int enerugy_recovery_speed = 1;
+	constexpr int enerugy_recovery_speed = 2;
 
 	// エネルギーの減る速度
 	constexpr int enerugy_decrease_speed = 1;
@@ -66,7 +66,8 @@ Shield::Shield(Player& player) :
 	m_effectHandle(-1),
 	m_enerugyGage(max_enerugy_gage),
 	m_scale({ shield_width, shield_height }),
-	m_sinFrame(0)
+	m_sinFrame(0),
+	m_alpha(255)
 {
 	// 3D画像のインスタンスの作成
 	m_pImage = std::make_shared<Image3D>(img_file_path);
@@ -141,7 +142,6 @@ void Shield::Update()
 
 		// ベクトルから角度を求める
 		m_rot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({ 0, 0, 1 }, tempVec));
-		Vector3 effectRot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({ 1, 0, 0 }, tempVec));
 
 		// 入力されていたら
 		if (m_isInput)
@@ -152,14 +152,16 @@ void Shield::Update()
 				// シールドを出している間は常にエネルギーゲージを減らす
 				m_enerugyGage -= enerugy_decrease_speed;
 
-				// シールドエフェクトの再生
-			/*	effectManager.PlayEffect(
-					m_effectHandle, 
-					EffectID::player_shield, 
-					{ m_pos.x, m_pos.y - 100.0f, m_pos.z },
-					effect_scale, 
-					1.0f, 
-					effectRot);*/
+				// エネルギーゲージの残量が3割を切ったら
+				if (m_enerugyGage < max_enerugy_gage * 0.35f)
+				{
+					// シールドを点滅
+					m_alpha = (0.5f * sinf(m_sinFrame * 0.5f) + 0.5f) * 255.0f;
+				}
+				else
+				{
+					m_alpha = 255;
+				}
 			}
 		}
 		else
@@ -177,6 +179,7 @@ void Shield::Update()
 		m_scale.y = shield_height + (sinf(m_sinFrame * 0.1f) * 3.0f);
 
 		// 画像の設定
+		m_pImage->SetAlpha(m_alpha);			 // 透明度
 		m_pImage->SetImgWidth(m_scale.x);		 // 横幅
 		m_pImage->SetImgHeight(m_scale.y);		 // 縦幅
 		m_pImage->SetPos(m_pos); // 位置
@@ -185,12 +188,6 @@ void Shield::Update()
 
 		// エネルギーゲージの設定
 		m_pEnergyGage->SetValue(m_enerugyGage);
-	}
-	else
-	{
-		// プレイヤーが死んでいたらエフェクトを消す
-		auto& effectManager = Effekseer3DEffectManager::GetInstance();
-		effectManager.DeleteEffect(m_effectHandle);
 	}
 }
 
@@ -201,9 +198,7 @@ void Shield::Draw()
 	// シールドを出していたら
 	if (IsShield() && m_player.IsLive())
 	{
-//#ifdef _DEBUG
 		m_pImage->Draw();
-//#endif
 	}
 }
 

@@ -8,7 +8,8 @@ Image3D::Image3D(std::string filePath) :
 	m_rot({}),
 	m_imgWidth(0),
 	m_imgHeight(0),
-	m_vertex({})
+	m_vertex({}),
+	m_alpha(255)
 {
 	// 画像の読み込み
 	m_imgHandle = my::MyLoadGraph(filePath.c_str());
@@ -21,7 +22,8 @@ Image3D::Image3D(int imgHandle) :
 	m_rot({}),
 	m_imgWidth(0),
 	m_imgHeight(0),
-	m_vertex({})
+	m_vertex({}),
+	m_alpha(255)
 {
 	// 画像ハンドルが無効なら止める
 	assert(m_imgHandle != -1);
@@ -103,8 +105,14 @@ void Image3D::Draw()
 	// ライティングは行わない
 	SetUseLighting(FALSE);
 
+	// 透明度を設定
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);
+
 	// ２ポリゴンの描画
 	DrawPolygon3D(m_vertex.data(), 2, m_imgHandle, true);
+
+	// 透明度を戻す
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// ライティングは行わない
 	SetUseLighting(TRUE);
@@ -147,6 +155,12 @@ void Image3D::SetImgWidth(float width)
 void Image3D::SetImgHeight(float height)
 {
 	m_imgHeight = height;
+}
+
+// 画像の透明度の設定
+void Image3D::SetAlpha(int alpha)
+{
+	m_alpha = alpha;
 }
 
 // 画像の横幅と立幅の拡大率を元の画像のサイズに戻す

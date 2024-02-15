@@ -49,6 +49,9 @@ public:
 	// 画像の縦幅の設定
 	void SetImgHeight(float height);
 
+	// 画像の透明度の設定
+	void SetAlpha(int alpha);
+
 	// 画像の横幅と立幅の拡大率を元の画像のサイズに戻す
 	void SetImgDafualtScale();
 
@@ -61,6 +64,9 @@ private:
 
 	// 画像の回転
 	Vector3 m_rot;
+
+	// 画像の透明度
+	int m_alpha;
 
 	// 画像のハンドル
 	int m_imgHandle;

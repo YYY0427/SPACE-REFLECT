@@ -69,6 +69,9 @@ private:
 	// 入力されたか
 	bool m_isInput;
 
-	// 
+	// sinカーブのフレーム
 	int m_sinFrame;
+
+	// アルファ値
+	int m_alpha;
 };
