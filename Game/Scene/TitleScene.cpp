@@ -19,7 +19,7 @@
 namespace
 {
 	// 表示するテキストの全体の位置
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 + 150;
+	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 + 200;
 
 	// テキストの文字間
 	constexpr int text_space_y = 50;
@@ -49,8 +49,8 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_pSkyDome = std::make_shared<SkyDome>(Vector3(0, 0, 0));
 
 	// レーザーの配置
-	SetLaser({ 0, 0 }, { 1280, 720 }, 0xff0000);
-	SetLaser({ 1280, 0 }, { 0, 720 }, 0x0000ff);
+	SetLaser({ 0, 210 }, { 1280, 210 }, 0xff0000);
+	SetLaser({ 0, 390 }, { 1280, 390 }, 0x0000ff);
 
 	// ガウスハンドルの作成
 	auto& size = Application::GetInstance().GetWindowSize();

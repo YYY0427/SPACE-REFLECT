@@ -171,15 +171,15 @@ void Stage1::UpdatePlay()
 		// ウェーブ開始
 		m_pEnemyManager->StartWave();
 
-		// 現在の敵のウェーブが終了したら
-		if (m_pEnemyManager->IsEndWave())
-		{
-			// 次のウェーブに進む
-			m_pEnemyManager->NextWave();		
+		//// 現在の敵のウェーブが終了したら
+		//if (m_pEnemyManager->IsEndWave())
+		//{
+		//	// 次のウェーブに進む
+		//	m_pEnemyManager->NextWave();		
 
-			// ウェーブの待機フレーム数をリセット
-			m_currentFrame = 0;
-		}
+		//	// ウェーブの待機フレーム数をリセット
+		//	m_currentFrame = 0;
+		//}
 	}
 
 	// プレイヤーの更新

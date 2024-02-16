@@ -129,7 +129,6 @@ void Model::Update()
 	if (m_isUseCollision && m_isUpdateColision)
 	{
 		int result = MV1RefreshCollInfo(m_modelHandle, m_colFrameIndex);
-
 	}
 }
 

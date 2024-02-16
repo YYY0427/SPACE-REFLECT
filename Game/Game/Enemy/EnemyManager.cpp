@@ -159,13 +159,25 @@ void EnemyManager::StartWave()
 		assert(!"ウェーブデータを読み込んでください");
 	}
 
-	// 最初のウェーブデータを実行
-	auto& waveData = m_waveTable.front();
-
-	// 雑魚敵の生成
-	for (auto& data : waveData.enemyDataList)
+	if (m_waveTable.empty())
 	{
-		AddEnemy(data);
+		// 警告状態に遷移
+		m_stateMachine.SetState(State::WARNING);
+
+		// 警告の生成
+		m_pWarning = std::make_shared<Warning>(warning_frame);
+		UIManager::GetInstance().AddUI("Warning", m_pWarning, 0, { 0, 0 });
+	}
+	else
+	{
+		// 最初のウェーブデータを実行
+		auto& waveData = m_waveTable.front();
+
+		// 雑魚敵の生成
+		for (auto& data : waveData.enemyDataList)
+		{
+			AddEnemy(data);
+		}
 	}
 }
 
