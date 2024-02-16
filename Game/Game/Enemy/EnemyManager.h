@@ -68,39 +68,68 @@ struct WaveData
 class EnemyManager
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	/// <param name="pLaserManager">レーザー管理のポインタ</param>
+	/// <param name="pScreenShaker">画面揺れのポインタ</param>
 	EnemyManager(
 		std::shared_ptr<Player> pPlayer, 
 		std::shared_ptr<LaserManager> pLaserManager,
 		std::shared_ptr<ScreenShaker> pScreenShaker);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~EnemyManager();
 
-	// 更新
+	/// <summary>
+	/// ステートの更新
+	/// </summary>
 	void Update();
+
+	/// <summary>
+	/// 通常の更新
+	/// </summary>
 	void UpdateNormal();
+
+	/// <summary>
+	/// 警告時の更新
+	/// </summary>
 	void UpdateWarning();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// ウェーブスタート
+	/// <summary>
+	/// ウェーブの開始
+	/// </summary>
 	void StartWave();
 
-	// 次のウェーブへ
+	/// <summary>
+	/// 次のウェーブに移行
+	/// </summary>
 	void NextWave();
 
-	// 雑魚敵の追加
-	void AddEnemy(EnemyData data);
+	/// <summary>
+	/// 敵の追加
+	/// </summary>
+	/// <param name="data">敵のデータ</param>
+	void AddEnemy(const EnemyData& data);
 
-	// ボス敵の追加
-	void AddBossEnemy(BossEnemyType type);
+	/// <summary>
+	/// ボス敵の追加
+	/// </summary>
+	/// <param name="type">ボス敵の種類</param>
+	void AddBossEnemy(const BossEnemyType& type);
 
 	// ファイルデータの読み込み
-	void LoadWaveFileData(std::string filePath);		// ウェーブ
-	std::vector<EnemyData> LoadEnemyFileData(std::string filePath);	// 敵
-	std::vector<EnemyActionData> LoadEnemyActionFileData(std::string filePath);	// 敵の行動
+	void LoadWaveFileData(const std::string filePath);		// ウェーブ
+	std::vector<EnemyData> LoadEnemyFileData(const std::string filePath);	// 敵
+	std::vector<EnemyActionData> LoadEnemyActionFileData(const std::string filePath);	// 敵の行動
 
 	// ゲッター
 	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;	// 雑魚敵リスト

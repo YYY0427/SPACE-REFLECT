@@ -107,7 +107,6 @@ void Stage1::Update()
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 
-
 	// 小さい隕石の生成
 	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());
 
@@ -142,7 +141,7 @@ void Stage1::UpdateStartAnimation()
 	// 更新
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
-	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveZVec() });				// 隕石
+	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveZVec() });	// 隕石
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
@@ -171,15 +170,15 @@ void Stage1::UpdatePlay()
 		// ウェーブ開始
 		m_pEnemyManager->StartWave();
 
-		//// 現在の敵のウェーブが終了したら
-		//if (m_pEnemyManager->IsEndWave())
-		//{
-		//	// 次のウェーブに進む
-		//	m_pEnemyManager->NextWave();		
+		// 現在の敵のウェーブが終了したら
+		if (m_pEnemyManager->IsEndWave())
+		{
+			// 次のウェーブに進む
+			m_pEnemyManager->NextWave();		
 
-		//	// ウェーブの待機フレーム数をリセット
-		//	m_currentFrame = 0;
-		//}
+			// ウェーブの待機フレーム数をリセット
+			m_currentFrame = 0;
+		}
 	}
 
 	// プレイヤーの更新

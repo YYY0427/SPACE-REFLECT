@@ -159,8 +159,17 @@ void EnemyManager::StartWave()
 		assert(!"ウェーブデータを読み込んでください");
 	}
 
+	// ウェーブデータがなかったら
 	if (m_waveTable.empty())
 	{
+		// ボス敵がいなかったら
+		if (m_bossType == BossEnemyType::NONE)
+		{
+			// ボス敵が倒されたことにしてなにもしない
+			m_isDeadBoss = true;
+			return;
+		}
+
 		// 警告状態に遷移
 		m_stateMachine.SetState(State::WARNING);
 
@@ -189,6 +198,9 @@ void EnemyManager::NextWave()
 
 	// ウェーブが終わっていなかったらなにもしない
 	if (!IsEndWave())	return;
+
+	// データがなかったらなにもしない
+	if(m_waveTable.empty()) return;
 
 	// 最後のウェーブだったらボス敵を生成
 	if(m_waveNow == m_waveTable.size() - 1)
@@ -225,7 +237,7 @@ void EnemyManager::NextWave()
 }
 
 // 敵の追加
-void EnemyManager::AddEnemy(EnemyData data)
+void EnemyManager::AddEnemy(const EnemyData& data)
 {
 	// 敵の種類によって生成する敵を変える
 	switch (data.type)
@@ -245,7 +257,7 @@ void EnemyManager::AddEnemy(EnemyData data)
 }
 
 // ボス敵の追加
-void EnemyManager::AddBossEnemy(BossEnemyType type)
+void EnemyManager::AddBossEnemy(const BossEnemyType& type)
 {
 	// 既にボス敵が生成されていたら
 	if(m_pBossEnemy)
@@ -278,7 +290,7 @@ void EnemyManager::AddBossEnemy(BossEnemyType type)
 }
 
 // ウェーブのデータの読み込み
-void EnemyManager::LoadWaveFileData(std::string filePath)
+void EnemyManager::LoadWaveFileData(const std::string filePath)
 {
 	// フラグを立てる
 	m_isLoadWave = true;
@@ -326,7 +338,7 @@ void EnemyManager::LoadWaveFileData(std::string filePath)
 }
 
 // 敵のデータの読み込み
-std::vector<EnemyData> EnemyManager::LoadEnemyFileData(std::string filePath)
+std::vector<EnemyData> EnemyManager::LoadEnemyFileData(const std::string filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
 	std::string localFilePath = enemy_file_hierarchy + filePath + file_extension;
@@ -384,7 +396,7 @@ std::vector<EnemyData> EnemyManager::LoadEnemyFileData(std::string filePath)
 }
 
 // 敵の行動のデータの読み込み
-std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(std::string filePath)
+std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(const std::string filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
 	std::string localFilePath = enemy_action_file_hierarchy + filePath + file_extension;
