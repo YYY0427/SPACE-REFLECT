@@ -1,7 +1,12 @@
 #include "MessageManager.h"
 #include "StringUtil.h"
-#include <fstream>
-#include <sstream>
+#include "../Util/FileUtil.h"
+
+namespace
+{
+	// メッセージデータのファイルパス
+	const std::string message_file_path = "Data/Csv/Message.csv";
+}
 
 // コンストラクタ
 MessageManager::MessageManager()
@@ -24,40 +29,24 @@ MessageManager& MessageManager::GetInstance()
 }
 
 // ファイルから文字列のデータを読み取ってデータテーブルに格納
-void MessageManager::LoadAndStoreStringFileData()
+void MessageManager::LoadMessageFileData()
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
-	std::ifstream ifs("Data/Csv/Message.csv");
-	assert(ifs);
-
-	// csvデータを1行ずつ読み取る
-	bool isFirst = false;
-	std::string line;
-	while (getline(ifs, line))
+	std::vector<std::vector<std::string>> str = FileUtil::LoadCsvFile(message_file_path);
+	for (auto& data : str)
 	{
-		// 1行目は読み込まない
-		// 1行目には項目が書いてあるため
-		if (!isFirst)
-		{
-			isFirst = true;
-			continue;
-		}
-
-		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringUtil::Split(line, ',');
-
 		// csvデータから取得したデータからフォントハンドルの作成して格納
-		MessageData data;
-		std::string font = strvec[static_cast<int>(MessageDataType::FONT)];		
-		int size = std::stoi(strvec[static_cast<int>(MessageDataType::SIZE)]);
-		int thick = std::stoi(strvec[static_cast<int>(MessageDataType::THICK)]);
-		data.fontHandle = CreateFontToHandle(font.c_str(), size, thick, DX_FONTTYPE_ANTIALIASING_EDGE_8X8);
+		MessageData messageData;
+		std::string font = data[static_cast<int>(MessageDataType::FONT)];
+		int size = std::stoi(data[static_cast<int>(MessageDataType::SIZE)]);
+		int thick = std::stoi(data[static_cast<int>(MessageDataType::THICK)]);
+		messageData.fontHandle = CreateFontToHandle(font.c_str(), size, thick, DX_FONTTYPE_ANTIALIASING_EDGE_8X8);
 
 		// 文字列の格納
-		data.string = strvec[static_cast<int>(MessageDataType::STRING)];	
+		messageData.string = data[static_cast<int>(MessageDataType::STRING)];
 
 		// データの格納
-		m_messageDataTable[strvec[static_cast<int>(MessageDataType::ID)]] = data;
+		m_messageDataTable[data[static_cast<int>(MessageDataType::ID)]] = messageData;
 	}
 }
 

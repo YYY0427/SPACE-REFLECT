@@ -51,8 +51,8 @@ struct EnemyData
 	EnemyType type;	// 敵の種類
 	int hp;			// 敵の体力
 	int attack;		// 敵の攻撃力
-	float speed;		// 敵の移動速度
-	float scale;		// 敵の大きさ
+	float speed;	// 敵の移動速度
+	float scale;	// 敵の大きさ
 	std::vector<EnemyActionData> actionDataList;	// 敵の行動データリスト
 };
 
@@ -126,16 +126,49 @@ public:
 	/// <param name="type">ボス敵の種類</param>
 	void AddBossEnemy(const BossEnemyType& type);
 
-	// ファイルデータの読み込み
-	void LoadWaveFileData(const std::string filePath);		// ウェーブ
-	std::vector<EnemyData> LoadEnemyFileData(const std::string filePath);	// 敵
-	std::vector<EnemyActionData> LoadEnemyActionFileData(const std::string filePath);	// 敵の行動
+	/// <summary>
+	/// 敵のステージデータを読み込み
+	/// </summary>
+	/// <param name="filePath">ファイルパス</param>
+	void LoadEnemyStageFileData(const std::string filePath);		
 
-	// ゲッター
-	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;	// 雑魚敵リスト
-	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;				// ボス敵
-	bool IsDeadBoss() const;											// ボスが倒されたかどうか
-	bool IsEndWave() const;												// 現在のウェーブが終了したかどうか
+	/// <summary>
+	/// 敵のウェーブのデータを読み込み
+	/// </summary>
+	/// <param name="filePath">ファイルパス</param>
+	/// <returns>読み込んだデータ</returns>
+	std::vector<EnemyData> LoadEnemyWaveFileData(const std::string filePath);	
+
+	/// <summary>
+	/// 敵の行動データを読み込み
+	/// </summary>
+	/// <param name="filePath">ファイルパス</param>
+	/// <returns>読み込んだデータ</returns>
+	std::vector<EnemyActionData> LoadEnemyActionFileData(const std::string filePath);	
+
+	/// <summary>
+	/// 雑魚敵リストの取得
+	/// </summary>
+	/// <returns>雑魚敵リスト</returns>
+	const std::list<std::shared_ptr<EnemyBase>>& GetEnemyList() const;	
+
+	/// <summary>
+	/// ボス敵の取得
+	/// </summary>
+	/// <returns>ボス敵</returns>
+	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;				
+
+	/// <summary>
+	/// ボスが倒されたかどうかの取得 
+	/// </summary>
+	/// <returns>true : 倒された、false : 倒されていない</returns>
+	bool IsDeadBoss() const;											
+
+	/// <summary>
+	/// 現在のウェーブが終了したかどうかの取得
+	/// </summary>
+	/// <returns>true : 終了、false : 途中</returns>
+	bool IsEndWave() const;												
 
 private:
 	// ステート

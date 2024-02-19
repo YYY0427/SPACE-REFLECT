@@ -59,7 +59,9 @@ public:
 	/// <param name="fileName">止めたいサウンドのファイル名(拡張子は含まない)</param>
 	void StopSound(std::string fileName);
 
-	// すべてのサウンドを止める
+	/// <summary>
+	/// すべてのサウンドを止める
+	/// </summary>
 	void StopAllSound();
 
 	/// <summary>
@@ -76,6 +78,7 @@ public:
 	/// <param name="pos">リスナーの座標</param>
 	/// <param name="angle">リスナーの向いている角度(ラジアン)</param>
 	void Set3DSoundListenerPosAndFrontPos_UpVecY(VECTOR pos, VECTOR angle);
+
 private:
 	// コンストラクタ
 	// シングルトンパターンなのでprivate
@@ -109,6 +112,7 @@ private:
 		SE2D,
 		SE3D,
 	};
+
 	// サウンドのデータの種類
 	enum class SoundDataType
 	{

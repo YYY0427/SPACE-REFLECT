@@ -1,5 +1,9 @@
 #include "FileUtil.h"
+#include "../String/StringUtil.h"
 #include <filesystem>
+#include <fstream>
+#include <sstream>
+#include <cassert>
 
 namespace FileUtil
 {
@@ -24,17 +28,46 @@ namespace FileUtil
 		return fileNames;
 	}
 
-	// フォルダ配下のフォルダ名の一括読み込み
-	std::vector<std::string> LoadDirectoryNames(std::string folderPath)
+	// CSVファイルの読み込み
+	// 1行目は読み込まない
+	std::vector<std::vector<std::string>> LoadCsvFile(std::string filePath)
 	{
-		std::vector<std::string> directoryNames;
+		std::vector<std::vector<std::string>> data;
 
-		// フォルダ名の一括読み込み
-		for (auto& p : std::filesystem::directory_iterator(folderPath))
+		// ファイルを開く
+		std::ifstream inputFile(filePath);
+
+		// ファイルが開けたか
+		bool isFirstLine = true;
+		if (inputFile.is_open())
 		{
-			// フォルダ名の保存
-			directoryNames.push_back(p.path().filename().string());
+			// 1行ずつ読み込む
+			std::string line;
+			while (getline(inputFile, line))
+			{
+				// 1行目は読み込まない
+				if (isFirstLine)
+				{
+					isFirstLine = false;
+					continue;
+				}
+
+				// csvデータ１行を','で複数の文字列に変換
+				std::vector<std::string> lineData = StringUtil::Split(line, ',');
+
+				// 1行分のデータを保存
+				data.push_back(lineData);
+			}
+
+			// ファイルを閉じる
+			inputFile.close();
 		}
-		return directoryNames;
+		else
+		{
+			// ファイルが開けなかった
+			filePath += "が開けませんでした";
+			assert(0 && filePath.c_str());
+		}
+		return data;
 	}
 }

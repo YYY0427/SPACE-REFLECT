@@ -8,7 +8,7 @@
 namespace
 {
 	// エフェクトのファイルパス
-	const std::string data_file_path = "Data/Effect/";
+	const std::string sound_resourse_file_path = "Data/Effect/";
 
 	// エフェクトの拡張子
 	const std::string data_extension = ".efk";
@@ -143,7 +143,7 @@ void Effekseer3DEffectManager::End()
 void Effekseer3DEffectManager::LoadEffectFile(std::string fileName)
 {
 	// エフェクトのファイルパスの生成
-	std::string path = data_file_path;
+	std::string path = sound_resourse_file_path;
 	path += fileName;
 	path += data_extension;
 

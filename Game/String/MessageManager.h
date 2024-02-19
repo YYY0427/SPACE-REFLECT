@@ -19,7 +19,9 @@ struct MessageData
 class MessageManager
 {
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~MessageManager();
 
 	/// <summary>
@@ -28,10 +30,14 @@ public:
 	/// <returns>唯一の実態の参照</returns>
 	static MessageManager& GetInstance();
 
-	// ファイルから文字列のデータを読み取ってデータテーブルに格納
-	void LoadAndStoreStringFileData();
+	/// <summary>
+	/// メッセージファイルのデータを読み込む
+	/// </summary>
+	void LoadMessageFileData();
 
-	// 終了処理
+	/// <summary>
+	/// 終了処理
+	/// </summary>
 	void End();
 
 	/// <summary>
@@ -74,23 +80,45 @@ public:
 		StringUtil::DrawStringCenter(x, y, color, str, m_messageDataTable[id].fontHandle, edgeColor);
 	}
 
-	// メッセージのデータの取得
+	/// <summary>
+	/// メッセージのデータの取得
+	/// </summary>
+	/// <param name="id">メッセージID</param>
+	/// <returns>メッセージデータ</returns>
 	MessageData GetMessageData(std::string id);
 
-	// メッセージの幅の取得
+	/// <summary>
+	/// メッセージの幅の取得
+	/// </summary>
+	/// <param name="id">メッセージID</param>
+	/// <returns>メッセージの幅</returns>
 	int GetMessageWidth(std::string id);
 
-	// メッセージの高さの取得
+	/// <summary>
+	/// メッセージの高さの取得
+	/// </summary>
+	/// <param name="id">メッセージID</param>
+	/// <returns>メッセージの高さ</returns>
 	int GetMessageHeight(std::string id);
 
 private:
-	// コンストラクタ
-	// シングルトンパターンなのでprivate
+	/// <summary>
+	/// コンストラクタ
+	/// シングルトンのためprivate
+	/// </summary>
 	MessageManager();
 
-	// コピーと代入の禁止
-	MessageManager(const MessageManager&) = delete;			// コピーコンストラクタ禁止
-	void operator = (const MessageManager&) = delete;		// 代入禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="">コピー元のインスタンス</param>
+	MessageManager(const MessageManager&) = delete;			
+
+	/// <summary>
+	/// 代入禁止
+	/// </summary>
+	/// <param name="">代入元のインスタンス</param>
+	void operator = (const MessageManager&) = delete;		
 
 private:
 	// 文字列データの種類

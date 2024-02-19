@@ -1,14 +1,18 @@
 #include "SoundManager.h"
 #include "SaveData.h"
 #include "String/StringUtil.h"
+#include "Util/FileUtil.h"
 #include <cassert>
 #include <fstream>
 #include <sstream>
 
 namespace
 {
-	// サウンドのファイルパス
-	const std::string data_file_path = "Data/Sound/";
+	// サウンドデータのファイルパス
+	const std::string sound_data_file_path = "Data/Csv/Sound.csv";
+
+	// サウンドリソースのファイルパス
+	const std::string sound_resourse_file_path = "Data/Sound/";
 
 	// 設定する音量を何個に分けるか
 	constexpr int config_volume_num = 5;
@@ -37,7 +41,7 @@ SoundManager& SoundManager::GetInstance()
 // 2Dサウンドのロード
 void SoundManager::LoadSoundFile2D(std::string fileName, std::string extension)
 {
-	std::string path = data_file_path;
+	std::string path = sound_resourse_file_path;
 	path += fileName;
 	path += extension;
 	int handle = LoadSoundMem(path.c_str());
@@ -48,7 +52,7 @@ void SoundManager::LoadSoundFile2D(std::string fileName, std::string extension)
 // 3Dサウンドのロード
 void SoundManager::LoadSoundFile3D(std::string fileName, std::string extension)
 {
-	std::string path = data_file_path;
+	std::string path = sound_resourse_file_path;
 	path += fileName;
 	path += extension;
 	SetCreate3DSoundFlag(TRUE);
@@ -62,56 +66,44 @@ void SoundManager::LoadSoundFile3D(std::string fileName, std::string extension)
 void SoundManager::LoadAndStoreSoundFileData()
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
-	std::ifstream ifs("Data/Csv/Sound.csv");
-	assert(ifs);
-
-	// csvデータを1行ずつ読み取る
-	bool isFirst = false;
-	std::string line;
-	while (getline(ifs, line))
+	auto str = FileUtil::LoadCsvFile(sound_data_file_path);
+	for (auto& data : str)
 	{
-		// 1行目は読み込まない
-		// 1行目には項目が書いてあるため
-		if (!isFirst)
-		{
-			isFirst = true;
-			continue;
-		}
+		// csvデータから取得したデータからフォントハンドルの作成して格納
+		SoundData soundData;
+		soundData.handle = -1;	
 
-		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringUtil::Split(line, ',');
-		
-		// 文字列を適切なデータ型に変換して格納
-		SoundData data;
-		data.handle = -1;	// 初期化
-		data.volumeRate = std::stof(strvec[static_cast<int>(SoundDataType::VOLUM_RATE)]);	// string型からfloat型に変換し格納
-		data.extension = strvec[static_cast<int>(SoundDataType::EXTENSION)];				// string型で格納
-		
+		// string型からfloat型に変換し格納
+		soundData.volumeRate = std::stof(data[static_cast<int>(SoundDataType::VOLUM_RATE)]);
+
+		// string型で格納
+		soundData.extension = data[static_cast<int>(SoundDataType::EXTENSION)];				
+
 		// サウンドタイプの保存
 		// 変換したデータをファイル名をIDとして格納
 		// サウンドのタイプによってそれぞれロード
-		int iSoundType = std::stoi(strvec[static_cast<int>(SoundDataType::SOUND_TYPE)]);	// string型からint型に変換
-		SoundType soundType = static_cast<SoundType>(iSoundType);							// int型からSoundType型に変換
+		int iSoundType = std::stoi(data[static_cast<int>(SoundDataType::SOUND_TYPE)]);	// string型からint型に変換
+		SoundType soundType = static_cast<SoundType>(iSoundType);						// int型からSoundType型に変換
 		switch (soundType)
 		{
 		case SoundType::BGM:
-			data.type = SoundType::BGM;
-			m_soundDataTable[strvec[static_cast<int>(SoundDataType::FILE_NAME)]] = data;
-			LoadSoundFile2D(strvec[static_cast<int>(SoundDataType::FILE_NAME)], data.extension);
+			soundData.type = SoundType::BGM;
+			m_soundDataTable[data[static_cast<int>(SoundDataType::FILE_NAME)]] = soundData;
+			LoadSoundFile2D(data[static_cast<int>(SoundDataType::FILE_NAME)], soundData.extension);
 			break;
 		case SoundType::SE2D:
-			data.type = SoundType::SE2D;
-			m_soundDataTable[strvec[static_cast<int>(SoundDataType::FILE_NAME)]] = data;
-			LoadSoundFile2D(strvec[static_cast<int>(SoundDataType::FILE_NAME)], data.extension);
+			soundData.type = SoundType::SE2D;
+			m_soundDataTable[data[static_cast<int>(SoundDataType::FILE_NAME)]] = soundData;
+			LoadSoundFile2D(data[static_cast<int>(SoundDataType::FILE_NAME)], soundData.extension);
 			break;
 		case SoundType::SE3D:
-			data.type = SoundType::SE3D;
-			m_soundDataTable[strvec[static_cast<int>(SoundDataType::FILE_NAME)]] = data;
-			LoadSoundFile3D(strvec[static_cast<int>(SoundDataType::FILE_NAME)], data.extension);
+			soundData.type = SoundType::SE3D;
+			m_soundDataTable[data[static_cast<int>(SoundDataType::FILE_NAME)]] = soundData;
+			LoadSoundFile3D(data[static_cast<int>(SoundDataType::FILE_NAME)], soundData.extension);
 			break;
 		default:
 			// あり得ない値なので止める
-			assert(0);
+			assert(!"サウンドタイプが無効です");
 			break;
 		}
 	}

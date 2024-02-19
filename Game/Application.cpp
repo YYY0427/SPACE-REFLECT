@@ -112,7 +112,7 @@ bool Application::Init()
 	ScoreRanking::GetInstance().LoadScore();
 
 	// メッセージをロード
-	MessageManager::GetInstance().LoadAndStoreStringFileData();
+	MessageManager::GetInstance().LoadMessageFileData();
 
 	// Effekseerの初期化
 	Effekseer3DEffectManager::GetInstance().Init();

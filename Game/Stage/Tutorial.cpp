@@ -88,7 +88,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
 
 	// ウェーブデータの読み込み
-	m_pEnemyManager->LoadWaveFileData(enemy_data_file_name);
+	m_pEnemyManager->LoadEnemyStageFileData(enemy_data_file_name);
 }
 
 // デストラクタ

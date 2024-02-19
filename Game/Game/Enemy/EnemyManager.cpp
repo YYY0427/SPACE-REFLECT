@@ -10,17 +10,20 @@
 #include "../../MyDebug/DebugText.h"
 #include "../Player.h"
 #include "../../Util/InputState.h"
+#include "../../Util/FileUtil.h"
 #include <fstream>
 #include <sstream>
 #include <cassert>
 #include <DxLib.h>
 
+// TODO : レーザーの反射がむずかしすぎるので
+
 namespace
 {
 	// ファイルの階層
-	const std::string wave_file_hierarchy = "Data/Wave/";					// ウェーブ
-	const std::string enemy_file_hierarchy = "Data/Enemy/";					// 敵
-	const std::string enemy_action_file_hierarchy = "Data/EnemyAction/";	// 敵の行動
+	const std::string wave_file_hierarchy = "Data/Csv/EnemyStage/";					// ステージ
+	const std::string enemy_file_hierarchy = "Data/Csv/EnemyWave/";					// ウェーブ
+	const std::string enemy_action_file_hierarchy = "Data/Csv/EnemyAction/";	// 敵の行動
 
 	// ファイルの拡張子
 	const std::string file_extension = ".csv";				
@@ -58,6 +61,7 @@ void EnemyManager::Update()
 {
 	// デバッグ用
 #ifdef _DEBUG
+	// 敵の全滅デバッグ
 	if (InputState::IsTriggered(InputType::ENEMY_DETH_DEBUG))
 	{
 		for (auto& enemy : m_pEnemyList)
@@ -290,107 +294,71 @@ void EnemyManager::AddBossEnemy(const BossEnemyType& type)
 }
 
 // ウェーブのデータの読み込み
-void EnemyManager::LoadWaveFileData(const std::string filePath)
+void EnemyManager::LoadEnemyStageFileData(const std::string filePath)
 {
 	// フラグを立てる
 	m_isLoadWave = true;
 
-	// ファイル情報の読み込み(読み込みに失敗したら止める)
-	std::string localFilePath = wave_file_hierarchy + filePath + file_extension;
-	std::ifstream ifs(localFilePath);
-	assert(ifs && "Waveデータの読み込み失敗");
-
-	// csvデータを1行ずつ読み取る
-	bool isFirst = false;
-	std::string line;
-	while (getline(ifs, line))
+	// ファイルの読み込み
+	auto data = FileUtil::LoadCsvFile(wave_file_hierarchy + filePath + file_extension);
+	for (auto& line : data)
 	{
-		// 1行目は読み込まない
-		// 1行目には項目が書いてあるため
-		if (!isFirst)
-		{
-			isFirst = true;
-			continue;
-		}
-
-		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringUtil::Split(line, ',');
-
 		// 敵のデータの読み込み
-		WaveData data{};
-		for (int i = 0; i < strvec.size(); i++)
+		WaveData waveData{};
+		for (int i = 0; i < line.size(); i++)
 		{
-			if(i == strvec.size() - 1)
+			if (i == line.size() - 1)
 			{
 				// ボス敵の種類の読み込み
-				m_bossType = static_cast<BossEnemyType>(std::stoi(strvec[i]));
+				m_bossType = static_cast<BossEnemyType>(std::stoi(line[i]));
 			}
 			else
 			{
 				// 敵のデータの追加
-				data.enemyDataList = LoadEnemyFileData(strvec[i]);
+				waveData.enemyDataList = LoadEnemyWaveFileData(line[i]);
 
 				// ウェーブのデータの追加
-				m_waveTable.push_back(data);
+				m_waveTable.push_back(waveData);
 			}
 		}
 	}
 }
 
 // 敵のデータの読み込み
-std::vector<EnemyData> EnemyManager::LoadEnemyFileData(const std::string filePath)
+std::vector<EnemyData> EnemyManager::LoadEnemyWaveFileData(const std::string filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
-	std::string localFilePath = enemy_file_hierarchy + filePath + file_extension;
-	std::ifstream ifs(localFilePath);
-	assert(ifs && "Enemyデータの読み込み失敗");
-
-	// 初期化
-	std::vector<EnemyData> dataTable{};
-	bool isFirst = false;
-	std::string line;
-
-	// csvデータを1行ずつ読み取る
-	while (getline(ifs, line))
+	auto data = FileUtil::LoadCsvFile(enemy_file_hierarchy + filePath + file_extension);
+	std::vector<EnemyData> dataTable;
+	for (auto& line : data)
 	{
-		// 1行目は読み込まない
-		// 1行目には項目が書いてあるため
-		if (!isFirst)
-		{
-			isFirst = true;
-			continue;
-		}
-
-		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringUtil::Split(line, ',');
-
-		EnemyData data{};
+		EnemyData enemyData{};
 
 		// 座標の読み込み
-		data.pos.x = std::stof(strvec[0]);
-		data.pos.y = std::stof(strvec[1]);
-		data.pos.z = std::stof(strvec[2]);
+		enemyData.pos.x = std::stof(line[0]);
+		enemyData.pos.y = std::stof(line[1]);
+		enemyData.pos.z = std::stof(line[2]);
 
 		// 種類の読み込み
-		data.type = static_cast<EnemyType>(std::stoi(strvec[3]));
+		enemyData.type = static_cast<EnemyType>(std::stoi(line[3]));
 
 		// HPの読み込み
-		data.hp = std::stoi(strvec[4]);
+		enemyData.hp = std::stoi(line[4]);
 
 		// 攻撃力の読み込み
-		data.attack = std::stoi(strvec[5]);
+		enemyData.attack = std::stoi(line[5]);
 
 		// 大きさの読み込み
-		data.scale = std::stof(strvec[6]);
+		enemyData.scale = std::stof(line[6]);
 
 		// 移動速度の読み込み
-		data.speed = std::stof(strvec[7]);
+		enemyData.speed = std::stof(line[7]);
 
 		// 行動データの読み込み
-		data.actionDataList = LoadEnemyActionFileData(strvec[8]);
+		enemyData.actionDataList = LoadEnemyActionFileData(line[8]);
 
 		// データの追加
-		dataTable.push_back(data);
+		dataTable.push_back(enemyData);
 	}
 	return dataTable;
 }
@@ -398,67 +366,47 @@ std::vector<EnemyData> EnemyManager::LoadEnemyFileData(const std::string filePat
 // 敵の行動のデータの読み込み
 std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(const std::string filePath)
 {
-	// ファイル情報の読み込み(読み込みに失敗したら止める)
-	std::string localFilePath = enemy_action_file_hierarchy + filePath + file_extension;
-	std::ifstream ifs(localFilePath);
-	assert(ifs && "EnemyActionデータの読み込み失敗");
-
-	// 初期化
+	auto data = FileUtil::LoadCsvFile(enemy_action_file_hierarchy + filePath + file_extension);
 	std::vector<EnemyActionData> dataTable;
-	bool isFirst = false;
-	std::string line;
-
-	// csvデータを1行ずつ読み取る
-	while (getline(ifs, line))
+	for (auto& line : data)
 	{
-		// 1行目は読み込まない
-		// 1行目には項目が書いてあるため
-		if (!isFirst)
-		{
-			isFirst = true;
-			continue;
-		}
-
-		// csvデータ１行を','で複数の文字列に変換
-		std::vector<std::string> strvec = StringUtil::Split(line, ',');
-
-		EnemyActionData data{};
+		EnemyActionData enemyActionData{};
 
 		// 目的地の読み込み
-		data.goalPos.x = std::stof(strvec[0]);
-		data.goalPos.y = std::stof(strvec[1]);
-		data.goalPos.z = std::stof(strvec[2]);
+		enemyActionData.goalPos.x = std::stof(line[0]);
+		enemyActionData.goalPos.y = std::stof(line[1]);
+		enemyActionData.goalPos.z = std::stof(line[2]);
 
 		// 目的地に到達してから次の目的地に向かうまでの待機フレームの読み込み
-		data.idleFrame = std::stoi(strvec[3]);
+		enemyActionData.idleFrame = std::stoi(line[3]);
 
 		// 目的地に到達したらレーザーを発射するかどうかのフラグの読み込み
-		data.isLaser = std::stoi(strvec[4]);
+		enemyActionData.isLaser = std::stoi(line[4]);
 
 		// レーザーを発射する場合
-		if (data.isLaser)
+		if (enemyActionData.isLaser)
 		{
 			// レーザーの種類の読み込み
-			data.laserType = static_cast<LaserType>(std::stoi(strvec[5]));
+			enemyActionData.laserType = static_cast<LaserType>(std::stoi(line[5]));
 
 			// レーザーを発射するまでのチャージフレームの読み込み
-			data.laserChargeFrame = std::stoi(strvec[6]);
+			enemyActionData.laserChargeFrame = std::stoi(line[6]);
 
 			// レーザーを発射するまでの待機フレームの読み込み
-			data.laserIdleFrame = std::stoi(strvec[7]);
+			enemyActionData.laserIdleFrame = std::stoi(line[7]);
 
 			// レーザーの速度の読み込み
-			data.laserSpeed = std::stof(strvec[8]);
+			enemyActionData.laserSpeed = std::stof(line[8]);
 
 			// レーザーを何フレームの間、発射するかの読み込み
-			data.laserFireFrame = std::stoi(strvec[9]);
+			enemyActionData.laserFireFrame = std::stoi(line[9]);
 
 			// レーザーがプレイヤーを追従するかどうかのフラグの読み込み
-			data.isPlayerFollowing = std::stoi(strvec[10]);
-		}
+			enemyActionData.isPlayerFollowing = std::stoi(line[10]);
 
+		}
 		// データの追加
-		dataTable.push_back(data);
+		dataTable.push_back(enemyActionData);
 	}
 	return dataTable;
 }

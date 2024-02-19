@@ -30,8 +30,7 @@ public:
 	 void Draw() override final;
 
 private:
-	// åxçêUI
 	std::unique_ptr<Warning> m_pWarning;
 	std::unique_ptr<ResultWindow> m_pResultWindow;
-	std::vector<std::string> m_fileNames;
+	std::vector<std::vector<std::string>> m_fileNames;
 };

@@ -31,7 +31,7 @@ ScoreRanking::~ScoreRanking()
 void ScoreRanking::LoadScore()
 {
 	// フォルダ名の一覧を取得
-	std::vector<std::string> directoryNames = FileUtil::LoadDirectoryNames(file_directory);
+	std::vector<std::string> directoryNames = FileUtil::LoadFileNames(file_directory);
 
 	// 全てのフォルダを読み込む
 	for (auto& directory : directoryNames)
