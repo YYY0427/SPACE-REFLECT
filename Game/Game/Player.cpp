@@ -14,6 +14,7 @@
 #include "../UI/UIManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
+#include "../ModelHandleManager.h"
 #include <algorithm>
 
 namespace
@@ -111,7 +112,7 @@ Player::Player(std::string objectDataFileName) :
 	m_scale = data.front().scale;
 
 	// プレイヤーモデルのインスタンスの生成
-	m_pModel = std::make_shared<Model>(model_file_path.c_str());
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::PLAYER));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);// 不透明度

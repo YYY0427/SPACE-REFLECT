@@ -16,8 +16,6 @@
 #include <cassert>
 #include <DxLib.h>
 
-// TODO : レーザーの反射がむずかしすぎるので
-
 namespace
 {
 	// ファイルの階層
