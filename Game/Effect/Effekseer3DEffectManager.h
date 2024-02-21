@@ -1,41 +1,8 @@
 #pragma once
-#include <DxLib.h>
+#include "../Math/Vector3.h"
 #include <string>
 #include <map>
 #include <list>
-#include "../Math/Vector3.h"
-
-// エフェクトのファイルパス
-namespace EffectID
-{
-	const std::string player_dead = "Explosion";			// プレイヤー死亡時に出すエフェクト
-	const std::string player_shield = "MagicShield";		// プレイヤーのシールド	
-	const std::string player_boost = "Boost";				// プレイヤーに常に出すエフェクト
-	const std::string normal_laser = "Laser";				// 敵のレーザーエフェクト
-	const std::string reflect_laser = "ReflectLaser";		// 敵のレーザーを反射したレーザー
-	const std::string enemy_died = "Explosion";				// 敵の死亡時のエフェクト
-	const std::string enemy_boss_entry = "EnemyBossEntry";	// 敵のボスが出現するときのエフェクト
-	const std::string enemy_attack_hit_effect = "EnemyAttackHitEffect";	// 敵の攻撃のヒットエフェクト 
-	const std::string player_attack_hit_effect = "PlayerAttackHitEffect";	// プレイヤーの攻撃のヒットエフェクト
-	const std::string wind = "Wind";									// 風のエフェクト
-	const std::string enemy_boss_die = "BossDeath";						// ボスの死亡時のエフェクト
-
-	// まとめてロードするための配列
-	const std::string effect_file_path[] =
-	{ 
-		player_dead,
-		player_shield,
-		player_boost,
-		reflect_laser,
-		enemy_died,
-		enemy_boss_entry,
-		wind,
-		normal_laser,
-		enemy_attack_hit_effect,
-		enemy_boss_die,
-		player_attack_hit_effect
-	};
-}
 
 /// <summary>
 /// Effekseerを使った3Dエフェクトの管理を行うシングルトンクラス
@@ -43,7 +10,9 @@ namespace EffectID
 class Effekseer3DEffectManager
 {
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Effekseer3DEffectManager();
 
 	/// <summary>
@@ -56,58 +25,84 @@ public:
 	// 初期化に失敗したら止める
 	void Init();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 終了処理
+	/// <summary>
+	/// 終了処理
+	/// </summary>
 	void End();
 
 	/// <summary>
 	/// 指定のエフェクトの再生
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル(返ってきたエフェクトハンドルを使って値の変更を行う)</param>
-	/// <param name="fileName">再生したいエフェクトのファイル名(拡張子は含まない)</param>
+	/// <param name="id">外部ファイルで設定したID</param>
 	/// <param name="pos">位置</param>
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffect(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffect(int& playingEffectHandle, 
+					const std::string& id, 
+					const Vector3& pos, 
+					const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
+					float speed = 1.0f, 
+					const Vector3& rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// 指定のエフェクトのループ再生
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル(返ってきたエフェクトハンドルを使って値の変更を行う)</param>
-	/// <param name="fileName">再生したいエフェクトのファイル名(拡張子は含まない)</param>
+	/// <param name="id">外部ファイルで設定したID</param>
 	/// <param name="pos">位置</param>
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffectLoop(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffectLoop(int& playingEffectHandle, 
+						const std::string& id, 
+						const Vector3& pos,
+						const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
+						float speed = 1.0f, 
+						const Vector3& rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// 指定のエフェクトの追従再生
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル(返ってきたエフェクトハンドルを使って値の変更を行う)</param>
-	/// <param name="fileName">再生したいエフェクトのファイル名(拡張子は含まない)</param>
+	/// <param name="id">外部ファイルで設定したID</param>
 	/// <param name="pos">追従したい位置情報変数のアドレス</param>
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffectFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffectFollow(int& playingEffectHandle, 
+						  const std::string& id, 
+						  Vector3* pos, 
+						  const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
+						  const float speed = 1.0f, 
+						  const Vector3& rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// 指定のエフェクトの追従とループ再生
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル(返ってきたエフェクトハンドルを使って値の変更を行う)</param>
-	/// <param name="fileName">再生したいエフェクトのファイル名(拡張子は含まない)</param>
+	/// <param name="id">外部ファイルで設定したID</param>
 	/// <param name="pos">追従したい位置情報変数のアドレス</param>
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void PlayEffectLoopAndFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale = { 1.0f, 1.0f, 1.0f }, float speed = 1.0f, Vector3 rot = { 0.0f, 0.0f, 0.0f });
+	void PlayEffectLoopAndFollow(int& playingEffectHandle, 
+								 const std::string& id, 
+								 Vector3* pos, 
+								 const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
+								 const float speed = 1.0f, 
+								 const Vector3& rot = { 0.0f, 0.0f, 0.0f });
 
 	/// <summary>
 	/// エフェクトの全ての値の変更
@@ -117,49 +112,49 @@ public:
 	/// <param name="scale">拡大率</param>
 	/// <param name="speed">再生速度</param>
 	/// <param name="rot">回転率</param>
-	void SetEffectAllParam(int playingEffectHandle, Vector3 pos, Vector3 scale, float speed, Vector3 rot);
+	void SetEffectAllParam(const int playingEffectHandle, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot);
 
 	/// <summary>
 	/// エフェクトの拡大率の変更
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="scale">拡大率</param>
-	void SetEffectScale(int playingEffectHandle, Vector3 scale);
+	void SetEffectScale(const int playingEffectHandle, const Vector3& scale);
 
 	/// <summary>
 	/// エフェクトの再生速度の変更
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="speed">再生速度</param>
-	void SetEffectSpeed(int playingEffectHandle, float speed);
+	void SetEffectSpeed(const int playingEffectHandle, const float speed);
 
 	/// <summary>
 	/// エフェクトの回転率の変更
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="rot">回転率</param>
-	void SetEffectRot(int playingEffectHandle, Vector3 rot);
+	void SetEffectRot(const int playingEffectHandle, const Vector3& rot);
 
 	/// <summary>
 	/// エフェクトの位置の変更
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="pos">位置</param>
-	void SetEffectPos(int playingEffectHandle, Vector3 pos);
+	void SetEffectPos(const int playingEffectHandle, const Vector3& pos);
 
 	/// <summary>
 	/// 特定のエフェクトが再生中か
 	/// </summary>
-	/// <param name="fileName">エフェクトのハンドル</param>
+	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <returns>true : 再生中、false : 再生していない</returns>
-	bool IsPlayingEffect(int effectPlayingHandle);
+	bool IsPlayingEffect(const int playingEffectHandle);
 
 	/// <summary>
 	/// 特定のエフェクトの再生をストップ
 	/// 再生タイプがループのエフェクトの場合は止まった後、次のフレームで再生される
 	/// </summary>
-	/// <param name="fileName">エフェクトのハンドル</param>
-	void StopEffect(int effectPlayingHandle);
+	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
+	void StopEffect(const int playingEffectHandle);
 
 	// エフェクト全ての再生をストップ
 	// 再生タイプがループのエフェクトの場合は止まった後、次のフレームで再生される
@@ -170,34 +165,45 @@ public:
 	/// 保存しているデータテーブルから削除する
 	/// 主に再生タイプがループのエフェクトを削除するのに使う
 	/// </summary>
-	/// <param name="effectPlayingHandle">エフェクトのハンドル</param>
-	void DeleteEffect(int effectPlayingHandle);
+	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
+	void DeleteEffect(const int playingEffectHandle);
 
-	// 全てのエフェクトの削除
+	/// <summary>
+	/// 全てのエフェクトの削除
+	/// </summary>
 	void DeleteAllEffect();
 
 private:
-	// コンストラクタ
-	// シングルトンパターンなのでprivate
+	/// <summary>
+	/// コンストラクタ
+	/// シングルトンパターンなのでprivate</summary>
 	Effekseer3DEffectManager();
 
-	// コピーも代入も禁止
-	Effekseer3DEffectManager(const Effekseer3DEffectManager&) = delete;	// コピーコンストラクタ禁止
-	void operator = (const Effekseer3DEffectManager&) = delete;			// 代入禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name=""></param>
+	Effekseer3DEffectManager(const Effekseer3DEffectManager&) = delete;	
+
+	/// <summary>
+	/// 代入禁止
+	/// </summary>
+	/// <param name=""></param>
+	void operator = (const Effekseer3DEffectManager&) = delete;			
 
 	/// <summary>
 	/// エフェクトのロード
 	/// </summary>
-	/// <param name="fileName">ロードしたいエフェクトのファイル名(拡張子は含まない)</param>
-	void LoadEffectFile(std::string fileName);
+	/// <param name="filePath">ファイルパス</param>
+	void LoadEffectFile(const std::string& filePath);
 
 	/// <summary>
 	/// ループエフェクトの再再生
 	/// ループエフェクトの再生が終了していたらエフェクトを再生する
 	/// </summary>
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
-	/// <param name="fileName">再再生するエフェクトのファイル名(拡張子は含まない)</param>
-	void PlayEffectLoop(int& playingEffectHandle, std::string fileName);
+	/// <param name="id">外部ファイルで設定したのID</param>
+	void PlayEffectLoop(int& playingEffectHandle, const std::string& id);
 
 private:
 	// エフェクトの再生タイプ
@@ -209,34 +215,48 @@ private:
 		LOOP_AND_FOLLOW,
 	};
 
+	// エフェクトのファイルタイプ
+	enum class EffectFileType
+	{
+		ID,			// エフェクトのID
+		FILE_PATH,	// エフェクトのファイルパス
+	};	
+
 private:
 	// エフェクトデータ
 	struct EffectData
 	{
-		std::string effectFileName;
-		int* playingEffectHandle;
-		PlayType type;
-		Vector3 pos;
-		Vector3 rot;
-		Vector3 scale;
-		float speed;
+		std::string effectId;				// エフェクトのID
+		int*        playingEffectHandle;	// エフェクトのハンドル
+		PlayType	type;					// 再生タイプ
+		Vector3		pos;					// 位置	
+		Vector3		rot;					// 回転
+		Vector3		scale;					// 拡大率
+		float		speed;					// 再生速度
 	};
 
 	// 追従エフェクトデータ
 	struct FollowEffectData
 	{
-		std::string effectFileName;
-		int* playingEffectHandle;
-		PlayType type;
-		Vector3* pos;
-		Vector3 rot;
-		Vector3 scale;
-		float speed;
+		std::string effectId;				// エフェクトのID
+		int*        playingEffectHandle;	// エフェクトのハンドル
+		PlayType    type;					// 再生タイプ
+		Vector3*    pos;					// 追従したい位置情報変数のアドレス
+		Vector3     rot;					// 回転
+		Vector3		scale;					// 拡大率
+		float		speed;					// 再生速度
+	};
+
+	// エフェクトリソースデータ
+	struct EffectResourceData
+	{
+		std::string effectFilePath;		// エフェクトのファイルパス
+		int         effectHandle;		// エフェクトのハンドル
 	};
 
 private:
-	// エフェクトのファイル名をIDとしたエフェクトリソースのハンドルのテーブル
-	std::map<std::string, int> m_effectResourceHandleTable;
+	// エフェクトのリソーステーブル
+	std::map<std::string, EffectResourceData> m_effectResourceTable;
 
 	// エフェクトのデータを保存したテーブル
 	std::list<EffectData> m_effectDataTable;

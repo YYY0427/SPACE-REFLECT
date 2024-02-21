@@ -2,6 +2,7 @@
 #include "SceneBase.h"
 #include "../Score/ScoreRanking.h"
 #include "../Math/Vector3.h"
+#include "../Math/Vector2.h"
 #include "../Game/Planet.h"
 #include "../StateMachine.h"
 #include <memory>
@@ -35,8 +36,13 @@ public:
 	/// <param name="manager">シーンマネージャー</param>
 	StageSelectScene(SceneManager& manager);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~StageSelectScene();
+
+	// ステージを切り替え時の処理
+	void SelectStageProcess();
 
 	// 開始
 	void EnterStartAnimation();
@@ -55,23 +61,12 @@ private:
 	// ステージデータ
 	struct StageData
 	{
-		// ステージ名
-		std::string stageName;
-
-		// カメラの位置
-		Vector3 cameraPos;
-
-		// 惑星のポインタ
-		std::shared_ptr<Planet> pPlanet;
-
-		// ミッション名
-		std::string missionName;
-
-		// 脅威度
-		std::string difficultyId;
-
-		// 達成条件
-		std::string conditionsId;
+		Vector3					cameraPos;		// カメラの位置
+		std::string				stageNameId;		// ステージ名
+		std::string				missionNameId;	// ミッション名
+		std::string				difficultyId;	// 脅威度
+		std::string				conditionsId;	// 達成条件
+		std::shared_ptr<Planet> pPlanet;		// 惑星のポインタ
 	};
 
 private:
@@ -131,5 +126,9 @@ private:
 
 	// 選択されている項目
 	int m_currentSelectItem;
+
+	// 説明ウィンドウ
+	Vector2 m_explanationWindowEasingTime;
+	Vector2 m_explanationWindowSize;	// ウィンドウのサイズ
 };
 

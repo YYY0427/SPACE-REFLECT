@@ -48,7 +48,7 @@ void EnemyBase::OnDamage(int damage, Vector3 pos)
 		// 死亡エフェクトの再生
 		Effekseer3DEffectManager::GetInstance().PlayEffect(
 			m_deadEffectHandle,
-			EffectID::enemy_died,
+			"EnemyDied",
 			m_pos,
 			dead_effect_scale,
 			dead_effect_play_speed);

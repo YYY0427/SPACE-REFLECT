@@ -1,19 +1,13 @@
 #include "ModelHandleManager.h"
 #include "Util/DrawFunctions.h"
+#include "Util/FileUtil.h"
 #include <DxLib.h>
+#include <cassert>
 
 namespace
 {
 	// モデルのファイルパス
-	const std::string player_model_file_path = "Data/Model/Player.mv1";
-	const std::string mosquito_model_file_path = "Data/Model/Mosquito.mv1";
-	const std::string matrix_model_file_path = "Data/Model/Matrix.mv1";
-	const std::string earth_model_file_path = "Data/Model/Earth.mv1";
-	const std::string moon_model_file_path = "Data/Model/Moon.mv1";
-	const std::string sky_dome_model_file_path = "Data/Model/SkyDome.mv1";
-	const std::string meteorite_model_file_path = "Data/Model/Meteor2.mv1";
-	const std::string laser_model_file_path = "Data/Model/Laser.mv1";
-	const std::string cube_laser_model_file_path = "Data/Model/CubeLaser.mv1";
+	const std::string model_list_file_path = "Data/Csv/Model.csv";		
 }
 
 // インスタンスの取得
@@ -26,16 +20,16 @@ ModelHandleManager& ModelHandleManager::GetInstance()
 // コンストラクタ
 ModelHandleManager::ModelHandleManager()
 {
-	// モデルの読み込み
-	m_handleMap[ModelType::PLAYER].modelHandle = LoadModel(player_model_file_path.c_str());
-	m_handleMap[ModelType::MOSQUITO].modelHandle = LoadModel(mosquito_model_file_path.c_str());
-	m_handleMap[ModelType::MATRIX].modelHandle = LoadModel(matrix_model_file_path.c_str());
-	m_handleMap[ModelType::EARTH].modelHandle = LoadModel(earth_model_file_path.c_str());
-	m_handleMap[ModelType::MOON].modelHandle = LoadModel(moon_model_file_path.c_str());
-	m_handleMap[ModelType::METEOR].modelHandle = LoadModel(meteorite_model_file_path.c_str());
-	m_handleMap[ModelType::SKYDOME].modelHandle = LoadModel(sky_dome_model_file_path.c_str());
-	m_handleMap[ModelType::LASER].modelHandle = LoadModel(laser_model_file_path.c_str());
-	m_handleMap[ModelType::CUBE_LASER].modelHandle = LoadModel(cube_laser_model_file_path.c_str());
+	// モデルのファイルパスの読み込み
+	auto data = FileUtil::LoadCsvFile(model_list_file_path);
+	for (auto& line : data)
+	{
+		// モデルの読み込み
+		m_handleMap[line[static_cast<int>(ModelFileType::ID)]].modelHandle = LoadModel(line[static_cast<int>(ModelFileType::FILE_PATH)]);
+
+		// ファイルパスの登録
+		m_handleMap[line[static_cast<int>(ModelFileType::ID)]].filePath = line[static_cast<int>(ModelFileType::FILE_PATH)];
+	}
 }
 
 // デストラクタ
@@ -72,14 +66,33 @@ int ModelHandleManager::LoadModel(const std::string& filePath)
 }
 
 // ハンドルの取得
-int ModelHandleManager::GetHandle(ModelType type)
+int ModelHandleManager::GetHandle(const std::string& id)
 {
-	return m_handleMap[type].modelHandle;
+	// ハンドルが存在していたら
+	if (m_handleMap.find(id) != m_handleMap.end())
+	{
+		return m_handleMap[id].modelHandle;
+	}
+	// 存在しなかったら
+	assert(!"モデルのIDが見つかりません");
+	return -1;
 }
 
 // ハンドルの削除
-void ModelHandleManager::DeleteHandle(ModelType type)
+void ModelHandleManager::DeleteHandle(const std::string& id)
 {
-	MV1DeleteModel(m_handleMap[type].modelHandle);
-	m_handleMap.erase(type);
+	// ハンドルが存在していたら
+	if (m_handleMap.find(id) != m_handleMap.end())
+	{
+		// モデルのハンドルを解放
+		MV1DeleteModel(m_handleMap[id].modelHandle);
+
+		// マップから削除
+		m_handleMap.erase(id);
+	}
+	// 存在しなかったら
+	else
+	{
+		assert(!"モデルのIDが見つかりません");
+	}
 }

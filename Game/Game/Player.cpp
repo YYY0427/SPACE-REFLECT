@@ -1,8 +1,7 @@
 #include "Player.h"
 #include "Shield.h"
 #include "../Util/InputState.h"
-#include "../Model.h"
-#include "../Effect/Effekseer3DEffectManager.h"
+#include "../Util/FileUtil.h"
 #include "../Util/Range.h"
 #include "../Application.h"
 #include "../Math/Matrix.h"
@@ -12,15 +11,17 @@
 #include "../UI/StatusBack.h"
 #include "../UI/ImageUI.h"
 #include "../UI/UIManager.h"
+#include "../Model.h"
+#include "../ModelHandleManager.h"
+#include "../Effect/Effekseer3DEffectManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
-#include "../ModelHandleManager.h"
 #include <algorithm>
 
 namespace
 {
-	// プレイヤーモデルのファイルのパス
-	const std::string model_file_path = "Data/Model/Player.mv1";
+	// プレイヤーのパラメータのファイルパス
+	const std::string player_param_file_path = "Data/Csv/PlayerParam.csv";
 
 	// プレイヤーの移動量
 	const Vector3 player_vec_up = { 0, 1, 0 };
@@ -31,38 +32,8 @@ namespace
 	// プレイヤーの初期の向いている方向
 	const Vector3 init_model_direction = { 0, 0, 1 };
 
-	// プレイヤーの通常移動速度
-	constexpr float move_normal_speed = 1.0f;
-
-	// プレイヤーのZ軸移動速度
-	constexpr float move_z_speed = 7.5f;
-
-	// プレイヤーの当たり判定の半径
-	constexpr float model_collision_radius = 50.0f;
-
-	// 無敵時間のフレーム数
-	constexpr int ultimate_frames = 120;
-
-	// 最大HP
-	constexpr int max_hp = 300;
-
 	// 何フレーム前まで位置情報を保存するか
 	constexpr int log_frame = 10;
-
-	// プレイヤーの横幅
-	constexpr float player_width = 50.0f;
-
-	// プレイヤーの縦幅
-	constexpr float player_height = 50.0f;
-
-	// プレイヤーのHPバーのファイルパス
-	const std::string hp_bar_file_path = "Data/Image/HPBar.png";
-
-	// プレイヤーのHPバーの背景画像のファイルパス
-	const std::string hp_bar_back_file_path = "Data/Image/StatusBase.png";
-
-	// プレイヤーのHP文字のファイルパス
-	const std::string hp_string_file_path = "Data/Image/Life.png";
 
 	// プレイヤーのHP文字の位置
 	const Vector2 hp_string_pos = { 70, 560 };
@@ -76,29 +47,25 @@ namespace
 	// プレイヤーのHPバーのサイズ
 	const Vector2 hp_bar_size = { 300, 13 };
 
-	// ゲームのスタート演出の移動速度
-	constexpr float start_move_speed = 25.0f;
+	// プレイヤーのHPバーのファイルパス
+	const std::string hp_bar_file_path = "Data/Image/HPBar.png";
 
-	// ブーストエフェクトの拡大率
-	const Vector3 boost_effect_scale = { 30.0f, 30.0f, 30.0f };
+	// プレイヤーのHPバーの背景画像のファイルパス
+	const std::string hp_bar_back_file_path = "Data/Image/StatusBase.png";
 
-	// ブーストエフェクトのスピード
-	constexpr float boost_effect_speed = 1.0f;
+	// プレイヤーのHP文字のファイルパス
+	const std::string hp_string_file_path = "Data/Image/Life.png";
 }
 
 //  コンストラクタ
-Player::Player(std::string objectDataFileName) :
+Player::Player(const std::string& objectDataFileName) :
 	m_moveVec(0, 0, 0),
-	m_hp(max_hp),
 	m_ultimateTimer(0),
 	m_isInputLeftStick(false),
-	m_moveSpeed(move_normal_speed),
 	m_playerDeadEffectHandle(-1),
 	m_isPlayerDeadEffect(false),
 	m_isStartAnimation(false),
 	m_isReflect(false),
-	m_slowValue(1.0f),
-	m_windEffectHandle(-1),
 	m_boostEffectHandle(-1),
 	m_damageEffectHandle(-1),
 	m_opacity(1.0f),
@@ -107,12 +74,26 @@ Player::Player(std::string objectDataFileName) :
 {
 	// データの読み込み
 	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
-	m_pos = data.front().pos;
-	m_rot = data.front().rot;
+	m_pos   = data.front().pos;
+	m_rot   = data.front().rot;
 	m_scale = data.front().scale;
 
+	// 外部ファイルからパラメータを読み込み
+	LoadParameter(player_param_file_path);
+	m_maxHp = m_parameterTable["maxHp"];
+	m_hp    = m_maxHp;
+	m_boostEffectScale.x = GetParameter("boostEffectScaleX");
+	m_boostEffectScale.y = GetParameter("boostEffectScaleY");
+	m_boostEffectScale.z = GetParameter("boostEffectScaleZ");
+	m_boostEffectSpeed   = GetParameter("boostEffectSpeed");
+	m_playerSize.x		 = GetParameter("playerWidth");	
+	m_playerSize.y       = GetParameter("playerHeight");
+	m_collisionRadius	 = GetParameter("collisionRadius");
+	m_moveSpeedZ		 = GetParameter("moveSpeedZ");
+	m_moveSpeedXY		 = GetParameter("moveSpeedXY");
+
 	// プレイヤーモデルのインスタンスの生成
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::PLAYER));
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Player"));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);// 不透明度
@@ -124,10 +105,10 @@ Player::Player(std::string objectDataFileName) :
 	// ブーストエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
 		m_boostEffectHandle, 
-		EffectID::player_boost, 
+		"PlayerBoost",
 		{ m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f },
-		boost_effect_scale,
-		boost_effect_speed,
+		m_boostEffectScale,
+		m_boostEffectSpeed,
 		{ m_rot.x, 0.0f, 0.0f });
 }
 
@@ -137,10 +118,10 @@ Player::~Player()
 }
 
 // スタート演出の更新
-void Player::UpdateStart(Vector3 cameraPos)
+void Player::UpdateStart(const Vector3& cameraPos)
 {
 	// Z軸方向に移動
-	m_moveVec.z = start_move_speed;
+	m_moveVec.z = GetParameter("startMoveSpeed");
 	m_pos.z += m_moveVec.z;
 
 	if (m_pos.z > cameraPos.z + 200)
@@ -156,8 +137,8 @@ void Player::UpdateStart(Vector3 cameraPos)
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
 	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
-	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
-	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
+	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
+	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
 
 	// モデルの設定
 	m_pModel->SetPos(m_pos);	// 位置
@@ -194,7 +175,7 @@ void Player::Update(float cameraHorizon)
 			hp_bar_file_path,
 			hp_bar_back_file_path,
 			"",
-			max_hp,
+			m_maxHp,
 			hp_bar_pos,
 			hp_bar_size,
 			true,
@@ -263,7 +244,7 @@ void Player::Update(float cameraHorizon)
 		m_moveVec = moveVecY + moveVecX; 
 
 		// プレイヤーのスピードを掛ける
-		m_moveVec *= m_moveSpeed;
+		m_moveVec *= m_moveSpeedXY;
 
 		// 作成した移動ベクトルで座標の移動
 		Vector3 tempPos = m_pos + m_moveVec;
@@ -274,36 +255,36 @@ void Player::Update(float cameraHorizon)
 
 		// 画面外に出ないようにする
 		Size size = Application::GetInstance().GetWindowSize();
-		if (screenPos.x > size.width - player_width)
+		if (screenPos.x > size.width - m_playerSize.x)
 		{
-			screenPos.x = size.width - player_width;
+			screenPos.x = size.width - m_playerSize.x;
 
 			Vector3 worldPos = Vector3::FromDxLibVector3(
 				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 			m_pos.x = worldPos.x;
 			m_pos.y = worldPos.y;
 		}
-		else if (screenPos.x < 0 + player_width)
+		else if (screenPos.x < 0 + m_playerSize.x)
 		{
-			screenPos.x = 0 + player_width;
+			screenPos.x = 0 + m_playerSize.x;
 
 			Vector3 worldPos = Vector3::FromDxLibVector3(
 				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 			m_pos.x = worldPos.x;
 			m_pos.y = worldPos.y;
 		}
-		else if (screenPos.y > size.height - player_height)
+		else if (screenPos.y > size.height - m_playerSize.y)
 		{
-			screenPos.y = size.height - player_height;
+			screenPos.y = size.height - m_playerSize.y;
 
 			Vector3 worldPos = Vector3::FromDxLibVector3(
 				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 			m_pos.x = worldPos.x;
 			m_pos.y = worldPos.y;
 		}
-		else if (screenPos.y < 0 + player_height)
+		else if (screenPos.y < 0 + m_playerSize.y)
 		{
-			screenPos.y = 0 + player_height;
+			screenPos.y = 0 + m_playerSize.y;
 
 			Vector3 worldPos = Vector3::FromDxLibVector3(
 				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
@@ -317,7 +298,7 @@ void Player::Update(float cameraHorizon)
 	}
 
 	// 常にZ軸方向に移動
-	m_moveVec.z = (move_z_speed * m_slowValue);
+	m_moveVec.z = m_moveSpeedZ;
 	m_pos.z += m_moveVec.z;
 
 	// ログに追加
@@ -344,8 +325,8 @@ void Player::Update(float cameraHorizon)
 	// エフェクトの設定
 	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, 0.0f, -m_rot.z });
-	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
-	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
+	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
+	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);	// 不透明度
@@ -368,7 +349,7 @@ void Player::UpdateGameClear()
 	m_pShield.reset();
 
 	// 常にZ軸方向に移動
-	m_moveVec.z = move_z_speed;
+	m_moveVec.z = m_moveSpeedZ;
 	m_pos.z += m_moveVec.z;
 
 	// モデルの設定
@@ -381,8 +362,8 @@ void Player::UpdateGameClear()
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
 	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
-	effectManager.SetEffectScale(m_boostEffectHandle, boost_effect_scale);
-	effectManager.SetEffectSpeed(m_boostEffectHandle, boost_effect_speed * m_slowValue);
+	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
+	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
 }
 
 // ゲームオーバーの更新
@@ -413,7 +394,7 @@ bool Player::UpdateGameOver()
 			// エフェクトを再生
 			Effekseer3DEffectManager::GetInstance().PlayEffect(
 				m_playerDeadEffectHandle,
-				EffectID::player_dead,
+				"PlayerDied",
 				pos,
 				{ scale, scale, scale },
 				1.0f);
@@ -444,7 +425,7 @@ bool Player::UpdateGameOver()
 			// でかい爆発エフェクトを再生
 			Effekseer3DEffectManager::GetInstance().PlayEffect(
 				m_playerDeadEffectHandle,
-				EffectID::player_dead,
+				"PlayerDied",
 				m_pos,
 				{ 50.0f, 50.0f, 50.0f },
 				0.5f);
@@ -479,7 +460,7 @@ void Player::Draw()
 
 #ifdef _DEBUG
 		// プレイヤーの当たり判定の描画
-		DrawSphere3D(m_pos.ToDxLibVector3(), model_collision_radius, 8, 0xff0000, 0xff0000, false);
+		DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 8, 0xff0000, 0xff0000, false);
 
 		// プレイヤーの位置情報の描画
 		DebugText::Log("PlayerPos", { m_pos.x, m_pos.y, m_pos.z});
@@ -499,6 +480,35 @@ void Player::DrawShield()
 	}
 }
 
+// 外部ファイルからパラメータを読み込む
+void Player::LoadParameter(const std::string& fileName)
+{
+	// ファイルの読み込み
+	auto data = FileUtil::LoadCsvFile(fileName);
+
+	// 値の格納
+	for (auto& line : data)
+	{
+		std::string key;
+		for (size_t i = 0; i < line.size(); i++)
+		{
+			// 1列目は説明が書いてあるので飛ばす
+			if (i == 0) continue;
+
+			if (i == 1)
+			{
+				// キーの設定
+				key = line[i];
+			}
+			else
+			{
+				// パラメータの設定
+				m_parameterTable[key] = std::stof(line[i]);
+			}
+		}
+	}
+}
+
 // ダメージ処理
 void Player::OnDamage(int damage)
 {
@@ -512,7 +522,7 @@ void Player::OnDamage(int damage)
 	// エフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffect(
 		m_damageEffectHandle,
-		EffectID::enemy_attack_hit_effect,
+		"EnemyAttackHitEffect",
 		{ m_pos.x, m_pos.y, m_pos.z },
 		{ 25.0f, 25.0f, 25.0f },
 		1.0f);
@@ -533,21 +543,21 @@ bool Player::IsLive() const
 }
 
 // 位置情報の取得
-Vector3 Player::GetPos() const
+const Vector3& Player::GetPos() const
 {
 	return m_pos;
 }
 
 // 移動ベクトルの取得
-Vector3 Player::GetMoveVec() const
+const Vector3& Player::GetMoveVec() const
 {
 	return m_moveVec;
 }
 
 // プレイヤーの当たり判定の半径の取得
-float Player::GetCollsionRadius() const
+float Player::GetCollisionRadius() const
 {
-	return model_collision_radius;
+	return m_collisionRadius;
 }
 
 // プレイヤーモデルのハンドルの取得
@@ -562,26 +572,33 @@ bool Player::IsStartAnimation() const
 	return m_isStartAnimation;
 }
 
-// スローの値の設定
-void Player::SetSlowValue(float slowValue)
-{
-	m_slowValue = slowValue;
-}
-
 // シールドのインスタンスの取得
-std::shared_ptr<Shield> Player::GetShield() const
+const std::shared_ptr<Shield>& Player::GetShield() const
 {
 	return m_pShield;
 }
 
 // 決められたフレームの数だけ位置情報を保存するテーブルの取得
-std::deque<Vector3> Player::GetPosLogTable() const
+const std::deque<Vector3>& Player::GetPosLogTable() const
 {
 	return m_posLogTable;
 }
 
-// Z軸の移動ベクトル
-float Player::GetMoveZVec() const
+// パラメータの取得
+float Player::GetParameter(const std::string& key) const
 {
-	return move_z_speed;
+	if (m_parameterTable.find(key) != m_parameterTable.end())
+	{
+		return m_parameterTable.at(key);
+	}
+	// キーが存在しない場合
+	// エラーメッセージを出力
+	assert(!"Playerクラスのパラメータにkeyが存在しません");
+	return -1;
+}
+
+// Z軸の移動ベクトル
+float Player::GetMoveSpeedZ() const
+{
+	return m_moveSpeedZ;
 }

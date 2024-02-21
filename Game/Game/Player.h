@@ -1,10 +1,11 @@
 #pragma once
-#include <DxLib.h>
-#include <memory>
-#include <deque>
 #include "../Math/Vector3.h"
+#include "../Math/Vector2.h"
 #include "../Util/Timer.h"
+#include <deque>
+#include <memory>
 #include <string>
+#include <map>
 
 // プロトタイプ宣言
 class Model;
@@ -19,13 +20,13 @@ class Player
 {
 public:
 	// コンストラクタ
-	Player(std::string objectDataFileName);
+	Player(const std::string& objectDataFileName);
 
 	// デストラクタ
 	~Player();
 
 	// 更新
-	void UpdateStart(Vector3 cameraPos);
+	void UpdateStart(const Vector3& cameraPos);
 	void Update(float cameraHorizon);
 	void UpdateGameClear();
 	bool UpdateGameOver();
@@ -34,61 +35,63 @@ public:
 	void Draw();
 	void DrawShield();
 
-	// プレイヤーのダメージ処理
+	/// <summary>
+	/// 外部ファイルからパラメータを読み込む
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	void LoadParameter(const std::string& fileName);
+
+	/// <summary>
+	/// ダメージを受けた時の処理
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
 	void OnDamage(int damage);
 
-	// シールドが反射した時の処理
+	/// <summary>
+	/// シールドが反射した時の処理
+	/// </summary>
 	void OnReflect();
 
-	// プレイヤーが生きているか
-	bool IsLive() const;
-
 	// ゲッター
-	Vector3 GetPos() const;		// 位置情報
-	Vector3 GetMoveVec() const;	// 移動ベクトル
-	float GetCollsionRadius() const;	// 当たり判定の半径
-	int GetModelHandle() const;			// モデルハンドル
-	bool IsStartAnimation() const;		// スタート演出をしたかフラグ
-	std::shared_ptr<Shield> GetShield() const;	// シールドのポインタ
-	std::deque<Vector3> GetPosLogTable() const;	// 位置情報のテーブル
-	float GetMoveZVec() const;					// Z軸の移動ベクトル
+	int     GetModelHandle() const;			// モデルハンドル
+	float   GetCollisionRadius() const;		// 当たり判定の半径
+	float   GetMoveSpeedZ() const;			// Z軸の移動ベクトル
+	bool    IsStartAnimation() const;		// スタート演出をしたかフラグ
+	bool    IsLive() const;					// 生存フラグ
+	const Vector3& GetPos() const;			// 位置
+	const Vector3& GetMoveVec() const;		// 移動ベクトル
+	const std::shared_ptr<Shield>& GetShield() const;		// シールドのポインタ
+	const std::deque<Vector3>&     GetPosLogTable() const;	// 位置情報のテーブル
 
-	// セッター
-	void SetSlowValue(float slowValue);	// スローの値
+private:
+	/// <summary>
+	/// パラメータの取得
+	/// </summary>
+	/// <param name="key">キー</param>
+	/// <returns>パラメータ</returns>
+	float GetParameter(const std::string& key) const;	
 
 private:
 	// ポインタ
-	std::shared_ptr<Model> m_pModel;
-	std::shared_ptr<Shield> m_pShield;
-	std::shared_ptr<Gauge> m_pHPbar;
-	std::shared_ptr<StatusBack> m_pBackUI;
+	std::shared_ptr<Model> m_pModel;		// モデル
+	std::shared_ptr<Shield> m_pShield;		// シールド
+	std::shared_ptr<Gauge> m_pHPbar;		// HPバー
+	std::shared_ptr<StatusBack> m_pBackUI;	// ステータスバックUI
 
-	// 決められたフレーム前まで位置情報を保存しているテーブル
-	std::deque<Vector3> m_posLogTable;
+	// パラメーター
+	Vector3 m_pos;				// 位置
+	Vector3 m_rot;				// 回転
+	Vector3 m_scale;			// 拡大率
+	Vector3 m_moveVec;			// 移動ベクトル
+	Vector2 m_playerSize;		// プレイヤーのサイズ
+	float   m_opacity;			// 透明度
+	float   m_moveSpeedXY;		// 移動速度
+	float	m_moveSpeedZ;		// Z軸の移動速度
+	float   m_collisionRadius;	// 当たり判定の半径
 
-	// 位置情報
-	Vector3 m_pos;
-
-	// 回転情報
-	Vector3 m_rot;
-
-	// 拡大率
-	Vector3 m_scale;
-
-	// 移動ベクトル
-	Vector3 m_moveVec;
-
-	// 不透明度
-	float m_opacity;
-
-	// プレイヤーの移動速度
-	float m_moveSpeed;
-
-	// 命
+	// HP
 	int m_hp;
-
-	// スローの値
-	float m_slowValue;
+	int m_maxHp;
 
 	// フラグ
 	bool m_isInputLeftStick;	// 左スティックの入力フラグ
@@ -96,15 +99,22 @@ private:
 	bool m_isStartAnimation;	// スタート演出をしたかフラグ
 
 	// エフェクト
-	int m_windEffectHandle;			// 風エフェクトのハンドル
-	int m_boostEffectHandle;		// ブーストエフェクトハンドル
-	int m_damageEffectHandle;		// ダメージエフェクトハンドル
-	int m_playerDeadEffectHandle;	// プレイヤー死亡エフェクトハンドル
-	bool m_isPlayerDeadEffect;		// プレイヤー死亡エフェクトの再生フラグ
+	int		m_boostEffectHandle;		// ブーストエフェクトハンドル
+	Vector3 m_boostEffectScale;			// ブーストエフェクトの拡大率
+	float	m_boostEffectSpeed;			// ブーストエフェクトの速度
+	int		m_damageEffectHandle;		// ダメージエフェクトハンドル
+	int		m_playerDeadEffectHandle;	// プレイヤー死亡エフェクトハンドル
+	bool	m_isPlayerDeadEffect;		// プレイヤー死亡エフェクトの再生フラグ
 
 	// タイマー
+	int		   m_waitFrame;					// 待機フレーム
+	int		   m_ultimateTimer;				// 無敵時間のタイマー
 	Timer<int> m_dieEffectIntervalTimer;	// 死亡エフェクトのインターバルタイマー
-	int m_waitFrame;			// 待機フレーム
-	int m_ultimateTimer;		// 無敵時間のタイマー
-	Timer<int> m_waitTimer;		// 待機時間のタイマー
+	Timer<int> m_waitTimer;					// 待機時間のタイマー
+
+	// 外部ファイルから読み込んだパラメータ
+	std::map<std::string, float> m_parameterTable;
+
+	// 決められたフレーム前まで位置情報を保存しているテーブル
+	std::deque<Vector3> m_posLogTable;
 };

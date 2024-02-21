@@ -153,7 +153,7 @@ BossMatrix::BossMatrix(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserMan
 	UIManager::GetInstance().AddUI("BossName", m_pBossName, 2, { 0, -1 });
 
 	// モデル設定
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::MATRIX));	// インスタンス生成
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Matrix"));	// インスタンス生成
 	m_pModel->SetUseCollision(true);					// 当たり判定設定
 	m_pModel->SetOpacity(m_opacity);					// 不透明度	
 	m_pModel->SetScale(model_scale);					// 拡大率
@@ -223,7 +223,7 @@ void BossMatrix::OnDamage(int damage, Vector3 pos)
 	// ダメージエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffect(
 		m_damageEffectHandle,
-		EffectID::player_attack_hit_effect,
+		"PlayerAttackHitEffect",
 		pos,
 		{ 100.0f, 100.0f, 100.0f }
 	);
@@ -360,7 +360,7 @@ void BossMatrix::UpdateDie()
 			// エフェクトの再生
 			Effekseer3DEffectManager::GetInstance().PlayEffect(
 				m_dieEffectHandle,
-				EffectID::enemy_boss_die,
+				"EnemyBossDie",
 				m_pos,
 				{ 100.0f, 100.0f, 100.0f });
 		}

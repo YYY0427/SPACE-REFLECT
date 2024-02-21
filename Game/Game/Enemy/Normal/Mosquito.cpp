@@ -58,7 +58,7 @@ Mosquito::Mosquito( EnemyData data,
 	m_state.SetState(State::MOVE);
 
 	// モデルのインスタンスの作成
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::MOSQUITO));
+	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Mosquito"));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);

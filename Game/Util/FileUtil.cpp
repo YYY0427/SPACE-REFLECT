@@ -65,8 +65,7 @@ namespace FileUtil
 		else
 		{
 			// ファイルが開けなかった
-			filePath += "が開けませんでした";
-			assert(0 && filePath.c_str());
+			assert(!"ファイルが開けませんでした");
 		}
 		return data;
 	}

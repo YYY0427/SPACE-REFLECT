@@ -23,24 +23,25 @@
 namespace
 {
 	// オブジェクトのファイルパス
-	const std::string object_file_path = "StageSelect";
-
-	// モデルファイルパス
-	const std::string earth_model_file_path = "Data/Model/Earth.mv1";
+	const std::string object_file_name  = "StageSelect";
 
 	// 画像ファイルパス
 	const std::string xbox_rb_file_path = "Data/Image/xbox_rb.png";
 	const std::string xbox_lb_file_path = "Data/Image/xbox_lb.png";
-	const std::string xbox_b_file_path = "Data/Image/xbox_button_b.png";
-	const std::string xbox_a_file_path = "Data/Image/xbox_button_a.png";
+	const std::string xbox_b_file_path  = "Data/Image/xbox_button_b.png";
+	const std::string xbox_a_file_path  = "Data/Image/xbox_button_a.png";
 
 	// カメラの移動にかかるフレーム
-	constexpr float camera_move_frame = 70.0f;
+	constexpr float camera_move_frame = 55.0f;
 
 	// スコアランキング
-	constexpr int score_ranking_space = 20;				// 文字間隔
-	constexpr int score_ranking_alpha_add_speed = 10;	// アルファ値
+	constexpr int score_ranking_alpha_add_speed = 15;	// アルファ値
+	constexpr int score_ranking_space           = 20;	// 文字間隔
 
+	// 説明ウィンドウ
+	const Vector2 explanation_window_size = { 400, 425 };	// ウィンドウのサイズ
+	const Vector2 window_scale_frame      = { 20, 50 };		// ウィンドウの拡大のフレーム
+	constexpr int window_max_alpha        = 180;			// ウィンドウの最大アルファ値
 }
 
 // コンストラクタ
@@ -50,14 +51,15 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_easeTime(0.0f),
 	m_isInput(false),
 	m_line3DAlpha(0),
-	m_windowAlpha(0),
 	m_textAlpha(0),
 	m_rbButtonImgHandle(-1),
 	m_lbButtonImgHandle(-1),
 	m_bButtonImgHandle(-1),
 	m_lightHandle(-1),
 	m_uiAlpha(255),
-	m_easeTime2(0.0f)
+	m_easeTime2(0.0f),
+	m_explanationWindowSize(0, 0),
+	m_windowAlpha(window_max_alpha)
 {
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::STAGE_SELECT, {}, [this]() {UpdateSelectStage(); }, {});
@@ -72,29 +74,25 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_pFade = std::make_unique<Fade>();
 	m_pFade->StartFadeIn(0);
 
-	// 画面切り替え演出の初期化
-//	m_pTransitor = std::make_unique<FadeTransitor>(10);
-//	m_pTransitor->Start();
-
 	// オブジェクトのデータを読み込む
-	DataReaderFromUnity::GetInstance().LoadUnityGameObjectData(object_file_path);
+	DataReaderFromUnity::GetInstance().LoadUnityGameObjectData(object_file_name);
 
 	// インスタンス作成
-	m_pPlanetManager = std::make_unique<PlanetManager>(object_file_path);
+	m_pPlanetManager = std::make_unique<PlanetManager>(object_file_name);
 
 	// ステージの設定
-	m_stageData[Stage::TUTORIAL].stageName = "Tutorial";
-	m_stageData[Stage::TUTORIAL].missionName = "TutorialMissionName";
+	m_stageData[Stage::TUTORIAL].stageNameId = "Tutorial";
+	m_stageData[Stage::TUTORIAL].missionNameId = "TutorialMissionName";
 	m_stageData[Stage::TUTORIAL].difficultyId = "TutorialDifficulty";
 	m_stageData[Stage::TUTORIAL].conditionsId = "TutorialConditions";
-	m_stageData[Stage::TUTORIAL].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "MoonCamera")[0].pos;
+	m_stageData[Stage::TUTORIAL].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_name, "MoonCamera")[0].pos;
 	m_stageData[Stage::TUTORIAL].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::MOON);
 
-	m_stageData[Stage::STAGE_1].stageName = "Stage1";
-	m_stageData[Stage::STAGE_1].missionName = "EarthMissionName";
+	m_stageData[Stage::STAGE_1].stageNameId = "Stage1";
+	m_stageData[Stage::STAGE_1].missionNameId = "EarthMissionName";
 	m_stageData[Stage::STAGE_1].conditionsId = "EarthConditions";
 	m_stageData[Stage::STAGE_1].difficultyId = "EarthDifficulty";
-	m_stageData[Stage::STAGE_1].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_path, "EarthCamera")[0].pos;
+	m_stageData[Stage::STAGE_1].cameraPos = DataReaderFromUnity::GetInstance().GetData(object_file_name, "EarthCamera")[0].pos;
 	m_stageData[Stage::STAGE_1].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::EARTH);
 
 	// インスタンス作成
@@ -118,12 +116,12 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_cameraGoalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
 
 	// スコアランキングの初期化
-	if (ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName).empty())
+	if (ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId).empty())
 	{
-		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName);
+		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 	}
 	// アルファ値の初期化
-	for (int i = 0; i < ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName).size(); i++)
+	for (int i = 0; i < ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId).size(); i++)
 	{
 		m_rankingAlpha.push_back(0);
 	}
@@ -134,6 +132,20 @@ StageSelectScene::~StageSelectScene()
 {
 	// ライトのハンドルを削除
 	DeleteLightHandle(m_lightHandle);
+}
+
+// ステージ選択時の初期化
+void StageSelectScene::SelectStageProcess()
+{
+	m_isInput = true;
+	m_line3DAlpha = 0;
+	m_textAlpha = 0;
+	m_explanationWindowEasingTime = { 0, 0 };
+	m_explanationWindowSize = { 0, 0 };
+	for (auto& alpha : m_rankingAlpha)
+	{
+		alpha = 0;
+	}
 }
 
 // スタート演出の開始
@@ -155,9 +167,6 @@ void StageSelectScene::Update()
 
 	// ステートマシンの更新
 	m_stateMachine.Update();
-
-	// 画面切り替え演出の更新
-//	m_pTransitor->Update();
 }
 
 // ステージ選択の更新
@@ -174,26 +183,12 @@ void StageSelectScene::UpdateSelectStage()
 		if (InputState::IsTriggered(InputType::RIGHT))
 		{
 			m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
-			m_isInput = true;
-			m_line3DAlpha = 0;
-			m_windowAlpha = 0;
-			m_textAlpha = 0;
-			for (auto& alpha : m_rankingAlpha)
-			{
-				alpha = 0;
-			}
+			SelectStageProcess();
 		}
 		else if (InputState::IsTriggered(InputType::LEFT))
 		{
 			m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
-			m_isInput = true;
-			m_line3DAlpha = 0;
-			m_windowAlpha = 0;
-			m_textAlpha = 0;
-			for (auto& alpha : m_rankingAlpha)
-			{
-				alpha = 0;
-			}
+			SelectStageProcess();
 		}
 	}
 
@@ -202,19 +197,28 @@ void StageSelectScene::UpdateSelectStage()
 	m_pPlanetManager->UpdateStageSelect();
 	m_pSkyDome->Update(m_pCamera->GetPos());
 
+	// 説明ウィンドウの幅を徐々に広げる
+	m_explanationWindowEasingTime.x++;
+	m_explanationWindowEasingTime.x = (std::min)(m_explanationWindowEasingTime.x, window_scale_frame.x);
+	m_explanationWindowSize.x = Easing::EaseOutCubic(m_explanationWindowEasingTime.x, window_scale_frame.x, explanation_window_size.x, 0);
+
 	// 3Dの線のアルファ値の更新
-	m_line3DAlpha = (std::min)(m_line3DAlpha += 3, 255);
+	m_line3DAlpha = (std::min)(m_line3DAlpha += 6, 255);
 
-	// 3Dの線のアルファ値が特定の値を超えたか
-	if (m_line3DAlpha >= 255)
+	// 最大サイズに達したら高さを広げる
+	if (m_explanationWindowSize.x >= explanation_window_size.x)
 	{
-		// ウィンドウのアルファ値の更新
-		m_windowAlpha = (std::min)(m_windowAlpha += 3, 180);
-		m_textAlpha = (std::min)(m_textAlpha += 3, 255);
+		// 説明ウィンドウの高さを徐々に広げる
+		m_explanationWindowEasingTime.y++;
+		m_explanationWindowEasingTime.y = (std::min)(m_explanationWindowEasingTime.y, window_scale_frame.y);
+		m_explanationWindowSize.y = Easing::EaseOutCubic(m_explanationWindowEasingTime.y, window_scale_frame.y, explanation_window_size.y, 0);
 
-		// ウィンドウのアルファ値が特定の値を超えたか
-		if (m_windowAlpha >= 180)
+		// 最大サイズに達したらアルファ値を上げる
+		if (m_explanationWindowSize.y >= explanation_window_size.y)
 		{
+			// ウィンドウのアルファ値の更新
+			m_textAlpha = (std::min)(m_textAlpha += 6, 255);
+
 			// スコアランキングのアルファ値の更新
 			// 一番下の順位が255になったら次の順位を更新
 			for (int i = m_rankingAlpha.size() - 1; i >= 0; i--)
@@ -383,16 +387,24 @@ void StageSelectScene::Draw()
 
 	// 説明ウィンドウの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_windowAlpha);
-	DrawRoundRectAA(screenSize.width / 2.0f + 50, 150, screenSize.width / 2.0f + 450, 575, 5, 5, 4, 0xffffff, true);
+	DrawRoundRectAA(890 - (m_explanationWindowSize.x / 2), 
+					362 - (m_explanationWindowSize.y / 2), 
+					890 + (m_explanationWindowSize.x / 2), 
+					362 + (m_explanationWindowSize.y / 2), 
+					5, 5, 4, 0xffffff, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_line3DAlpha);
-	DrawRoundRectAA(screenSize.width / 2.0f + 50, 150, screenSize.width / 2.0f + 450, 575, 5, 5, 4, 0xffffff, false, 5.0f);
+	DrawRoundRectAA(890 - (m_explanationWindowSize.x / 2),
+					362 - (m_explanationWindowSize.y / 2),
+					890 + (m_explanationWindowSize.x / 2),
+					362 + (m_explanationWindowSize.y / 2),
+					5, 5, 4, 0xffffff, false, 5.0f);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpha);
 	// ステージタイトルの描画
 	MessageManager::GetInstance().DrawStringCenter("StageSelectMission", 890, 200, 0xffffff);
-	MessageManager::GetInstance().DrawStringCenter(m_stageData[static_cast<Stage>(m_currentSelectItem)].missionName, 890, 250, 0xffffff);
+	MessageManager::GetInstance().DrawStringCenter(m_stageData[static_cast<Stage>(m_currentSelectItem)].missionNameId, 890, 250, 0xffffff);
 	// 線の描画
 	DrawLine(screenSize.width / 2.0f + 100, 280,  screenSize.width / 2.0f + 400, 280, 0xffffff, 2.0f);
 	// 難易度の描画
@@ -414,9 +426,6 @@ void StageSelectScene::Draw()
 	DrawGraph(0, 0, m_screenHandle, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	// 画面切り替え演出の描画
-//	m_pTransitor->Draw();
-
 	// フェードの描画
 	m_pFade->DrawFade(true);
 }
@@ -425,12 +434,12 @@ void StageSelectScene::Draw()
 void StageSelectScene::DrawScoreRanking()
 {
 	// スコアランキングの取得
-	m_scoreRanking = ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName);
+	m_scoreRanking = ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 
 	// スコアランキングが空だったら新規作成
 	if (m_scoreRanking.empty())
 	{
-		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageName);
+		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 	}
 
 	// ランキングタイトルの描画

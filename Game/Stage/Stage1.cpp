@@ -141,7 +141,7 @@ void Stage1::UpdateStartAnimation()
 	// 更新
 	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
-	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveZVec() });	// 隕石
+	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveSpeedZ() });	// 隕石
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&

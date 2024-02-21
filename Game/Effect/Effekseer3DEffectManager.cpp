@@ -1,17 +1,20 @@
 #include "Effekseer3DEffectManager.h"
 #include "EffekseerForDXLib.h"
 #include "../Util/DrawFunctions.h"
+#include "../Util/FileUtil.h"
 #include <cassert>
-
-
+#include <DxLib.h>
 
 namespace
 {
 	// エフェクトのファイルパス
-	const std::string sound_resourse_file_path = "Data/Effect/";
+	const std::string effect_list_file_path = "Data/Csv/Effect.csv";
 
-	// エフェクトの拡張子
-	const std::string data_extension = ".efk";
+	// Effekseer用の画像ファイルパス
+	const std::string img_file_path = "Data/Effect/background.png";
+
+	// エフェクトの最大パーティクル数
+	constexpr int max_particle = 8000;
 }
 
 // コンストラクタ
@@ -29,10 +32,8 @@ Effekseer3DEffectManager::~Effekseer3DEffectManager()
 // Effekseer3DEffectManagerの唯一のインスタンスを返す
 Effekseer3DEffectManager& Effekseer3DEffectManager::GetInstance()
 {
-	// 唯一の実態
-	static Effekseer3DEffectManager instance;
-
 	// 唯一の実態参照を返す
+	static Effekseer3DEffectManager instance;
 	return instance;
 }
 
@@ -41,20 +42,17 @@ void Effekseer3DEffectManager::Init()
 {
 	// Effekseerを初期化する
 	// 引数には画面に表示する最大パーティクル数を設定する
-	if (Effkseer_Init(8000) == -1)
+	if (Effkseer_Init(max_particle) == -1)
 	{
 		// 初期化の失敗
-		assert(0);
+		assert(!"Effekseerの初期化に失敗");
 	}
 
 	// 画像のロード
-	m_imgHandle = my::MyLoadGraph("Data/Effect/background.png");
+	m_imgHandle = my::MyLoadGraph(img_file_path.c_str());
 
-	// Effectのロード
-	for (auto& filePath : EffectID::effect_file_path)
-	{
-		LoadEffectFile(filePath.c_str());
-	}
+	// エフェクトのロード
+	LoadEffectFile(effect_list_file_path);
 }
 
 // 更新
@@ -69,7 +67,7 @@ void Effekseer3DEffectManager::Update()
 		if (IsPlayingEffect(*effect.playingEffectHandle)) continue;
 
 		// エフェクトの再再生
-		PlayEffectLoop(*effect.playingEffectHandle, effect.effectFileName);
+		PlayEffectLoop(*effect.playingEffectHandle, effect.effectId);
 
 		// エフェクトのパラメーターの設定
 		SetEffectAllParam(*effect.playingEffectHandle, effect.pos, effect.scale, effect.speed, effect.rot);
@@ -86,7 +84,7 @@ void Effekseer3DEffectManager::Update()
 		if (isLoop && !isPlay)
 		{
 			// エフェクトの再再生
-			PlayEffectLoop(*effect.playingEffectHandle, effect.effectFileName);
+			PlayEffectLoop(*effect.playingEffectHandle, effect.effectId);
 		}
 
 		// 再生中の場合エフェクトのパラメーターの更新
@@ -125,13 +123,13 @@ void Effekseer3DEffectManager::End()
 	DeleteGraph(m_imgHandle);
 
 	// エフェクトリソースを削除する(Effekseer終了時に破棄されるので削除しなくてもいいが一応)
-	for (auto& effectResource : m_effectResourceHandleTable)
+	for (auto& effectResource : m_effectResourceTable)
 	{
-		DeleteEffekseerEffect(effectResource.second);
+		DeleteEffekseerEffect(effectResource.second.effectHandle);
 	}
 
 	// 配列の削除
-	m_effectResourceHandleTable.clear();
+	m_effectResourceTable.clear();
 	m_effectDataTable.clear();
 	m_followEffectDataTable.clear();
 
@@ -140,39 +138,52 @@ void Effekseer3DEffectManager::End()
 }
 
 // エフェクトのロード
-void Effekseer3DEffectManager::LoadEffectFile(std::string fileName)
+void Effekseer3DEffectManager::LoadEffectFile(const std::string& filePath)
 {
-	// エフェクトのファイルパスの生成
-	std::string path = sound_resourse_file_path;
-	path += fileName;
-	path += data_extension;
+	// ファイルの読み込み
+	auto data = FileUtil::LoadCsvFile(filePath);
 
-	// エフェクトのロード(失敗したら止める)
-	int handle = LoadEffekseerEffect(path.c_str());
-	assert(handle != -1);	// -1以外じゃなかったら止める
+	for (auto& list : data)
+	{
+		// 同じファイルパスが登録されている場合はそのハンドルを使う
+		for (auto& effect : m_effectResourceTable)
+		{
+			if (effect.second.effectFilePath == list[static_cast<int>(EffectFileType::FILE_PATH)])
+			{
+				m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]] = effect.second;
+				continue;
+			}
+		}
 
-	// ロードしたエフェクトのハンドルの保存
-	m_effectResourceHandleTable[fileName] = handle;
+		// エフェクトのファイルパスを保存
+		m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]].effectFilePath = 
+			list[static_cast<int>(EffectFileType::FILE_PATH)];
+
+		// エフェクトのロード(失敗したら止める)
+		m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]].effectHandle = 
+			LoadEffekseerEffect(list[static_cast<int>(EffectFileType::FILE_PATH)].c_str());
+		assert(m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]].effectHandle != -1 && "エフェクトのロードに失敗したよ");
+	}
 }
 
 // ループエフェクトの再生
-void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::string fileName)
+void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, const std::string& id)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
-	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
+	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
 
 	// エフェクトの再再生
-	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceHandleTable[fileName]);
+	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceTable[id].effectHandle);
 }
 
 // 指定のエフェクトの再生
-void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale, float speed, Vector3 rot)
+void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, float speed, const Vector3& rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
-	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
+	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
 
 	// エフェクトの再生
-	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceHandleTable[fileName]);
+	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceTable[id].effectHandle);
 
 	// エフェクトのパラメーターの設定
 	SetEffectAllParam(playingEffectHandle, pos, scale, speed, rot);
@@ -185,13 +196,13 @@ void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, std::string 
 }
 
 // 指定のエフェクトのループ再生
-void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::string fileName, Vector3 pos, Vector3 scale, float speed, Vector3 rot)
+void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, float speed, const Vector3& rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
-	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
+	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
 
 	// エフェクトの再生
-	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceHandleTable[fileName]);
+	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceTable[id].effectHandle);
 
 	// エフェクトのパラメーターの設定
 	SetEffectAllParam(playingEffectHandle, pos, scale, speed, rot);
@@ -199,7 +210,7 @@ void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::str
 	// データを保存
 	EffectData effect{};
 	effect.playingEffectHandle = &playingEffectHandle;
-	effect.effectFileName = fileName;
+	effect.effectId = id;
 	effect.pos = pos;
 	effect.scale = scale;
 	effect.speed = speed;
@@ -209,13 +220,13 @@ void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, std::str
 }
 
 // 指定のエフェクトの追従再生
-void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale, float speed, Vector3 rot)
+void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
-	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
+	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
 
 	// エフェクトの再生
-	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceHandleTable[fileName]);
+	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceTable[id].effectHandle);
 
 	// エフェクトのパラメーターの設定
 	SetEffectAllParam(playingEffectHandle, *pos, scale, speed, rot);
@@ -223,7 +234,7 @@ void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, std::s
 	// データを保存
 	FollowEffectData effect{};
 	effect.playingEffectHandle = &playingEffectHandle;
-	effect.effectFileName = fileName;
+	effect.effectId = id;
 	effect.pos = pos;
 	effect.scale = scale;
 	effect.speed = speed;
@@ -233,13 +244,13 @@ void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, std::s
 }
 
 // 指定のエフェクトの追従とループ再生
-void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle, std::string fileName, Vector3* pos, Vector3 scale, float speed, Vector3 rot)
+void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
-	assert(m_effectResourceHandleTable.find(fileName) != m_effectResourceHandleTable.end());
+	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
 
 	// エフェクトの再生
-	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceHandleTable[fileName]);
+	playingEffectHandle = PlayEffekseer3DEffect(m_effectResourceTable[id].effectHandle);
 
 	// エフェクトのパラメーターの設定
 	SetEffectAllParam(playingEffectHandle, *pos, scale, speed, rot);
@@ -247,7 +258,7 @@ void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle,
 	// データを保存
 	FollowEffectData effect{};
 	effect.playingEffectHandle = &playingEffectHandle;
-	effect.effectFileName = fileName;
+	effect.effectId = id;
 	effect.pos = pos;
 	effect.scale = scale;
 	effect.speed = speed;
@@ -257,7 +268,7 @@ void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle,
 }
 
 // エフェクトの全ての値の変更
-void Effekseer3DEffectManager::SetEffectAllParam(int playingEffectHandle, Vector3 pos, Vector3 scale, float speed, Vector3 rot)
+void Effekseer3DEffectManager::SetEffectAllParam(const int playingEffectHandle, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot)
 {
 	// 再生速度
 	SetEffectSpeed(playingEffectHandle, speed);
@@ -273,7 +284,7 @@ void Effekseer3DEffectManager::SetEffectAllParam(int playingEffectHandle, Vector
 }
 
 // エフェクトの拡大率の変更
-void Effekseer3DEffectManager::SetEffectScale(int playingEffectHandle, Vector3 scale)
+void Effekseer3DEffectManager::SetEffectScale(const int playingEffectHandle, const Vector3& scale)
 {
 	// エフェクトの拡大率の設定
 	int result = SetScalePlayingEffekseer3DEffect(playingEffectHandle, scale.x, scale.y, scale.z);
@@ -300,7 +311,7 @@ void Effekseer3DEffectManager::SetEffectScale(int playingEffectHandle, Vector3 s
 }
 
 // エフェクトの再生速度の変更
-void Effekseer3DEffectManager::SetEffectSpeed(int playingEffectHandle, float speed)
+void Effekseer3DEffectManager::SetEffectSpeed(const int playingEffectHandle, const float speed)
 {
 	// エフェクトの再生速度の設定
 	int result = SetSpeedPlayingEffekseer3DEffect(playingEffectHandle, speed);
@@ -327,7 +338,7 @@ void Effekseer3DEffectManager::SetEffectSpeed(int playingEffectHandle, float spe
 }
 
 // エフェクトの回転率の変更
-void Effekseer3DEffectManager::SetEffectRot(int playingEffectHandle, Vector3 rot)
+void Effekseer3DEffectManager::SetEffectRot(const int playingEffectHandle, const Vector3& rot)
 {
 	// エフェクトの回転率の設定
 	int result = SetRotationPlayingEffekseer3DEffect(playingEffectHandle, rot.x, rot.y, rot.z);
@@ -354,7 +365,7 @@ void Effekseer3DEffectManager::SetEffectRot(int playingEffectHandle, Vector3 rot
 }
 
 // エフェクトの位置の変更
-void Effekseer3DEffectManager::SetEffectPos(int playingEffectHandle, Vector3 pos)
+void Effekseer3DEffectManager::SetEffectPos(const int playingEffectHandle, const Vector3& pos)
 {
 	// エフェクトの位置の設定
 	int result = SetPosPlayingEffekseer3DEffect(playingEffectHandle, pos.x, pos.y, pos.z);
@@ -374,19 +385,19 @@ void Effekseer3DEffectManager::SetEffectPos(int playingEffectHandle, Vector3 pos
 }
 
 // 特定のエフェクトが再生中か
-bool Effekseer3DEffectManager::IsPlayingEffect(int effectPlayingHandle)
+bool Effekseer3DEffectManager::IsPlayingEffect(const int playingEffectHandle)
 {
-	if (IsEffekseer3DEffectPlaying(effectPlayingHandle) == 0)
+	if (IsEffekseer3DEffectPlaying(playingEffectHandle) == -1)
 	{
-		return true;
+		return false;
 	}
-	return false;
+	return true;
 }
 
 // 特定のエフェクトの再生をストップ
-void Effekseer3DEffectManager::StopEffect(int effectPlayingHandle)
+void Effekseer3DEffectManager::StopEffect(const int playingEffectHandle)
 {
-	int result = StopEffekseer3DEffect(effectPlayingHandle);
+	int result = StopEffekseer3DEffect(playingEffectHandle);
 	assert(result != -1);
 }
 
@@ -404,18 +415,18 @@ void Effekseer3DEffectManager::StopAllEffect()
 }
 
 // 特定のエフェクトの削除
-void Effekseer3DEffectManager::DeleteEffect(int effectPlayingHandle)
+void Effekseer3DEffectManager::DeleteEffect(const int playingEffectHandle)
 {
 	// エフェクトの再生を止める
-	StopEffect(effectPlayingHandle);
+	StopEffect(playingEffectHandle);
 
 	// どっちのテーブルに格納されているか分からないため両方のテーブルを確認しハンドルが一致したデータを削除
 	m_effectDataTable.remove_if(
-		[effectPlayingHandle](EffectData data) 
-		{ return *data.playingEffectHandle == effectPlayingHandle; });
+		[playingEffectHandle](EffectData data) 
+		{ return *data.playingEffectHandle == playingEffectHandle; });
 	m_followEffectDataTable.remove_if(
-		[effectPlayingHandle](FollowEffectData data) 
-		{ return *data.playingEffectHandle == effectPlayingHandle; });
+		[playingEffectHandle](FollowEffectData data) 
+		{ return *data.playingEffectHandle == playingEffectHandle; });
 }
 
 // 全てのエフェクトの削除

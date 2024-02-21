@@ -14,7 +14,7 @@ SkyDome::SkyDome(Vector3 pos) :
 	m_pos(pos)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::SKYDOME));
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("SkyDome"));
 
 	// モデルの位置を設定
 	m_pModel->SetPos(m_pos);

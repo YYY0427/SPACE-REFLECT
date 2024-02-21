@@ -101,7 +101,7 @@ void StageBase::Collision()
 			meteor->GetModelHandle(),
 			-1,
 			m_pPlayer->GetPos().ToDxLibVector3(),
-			m_pPlayer->GetCollsionRadius());
+			m_pPlayer->GetCollisionRadius());
 
 		// 当たっていたら
 		if (result.HitNum > 0)
@@ -199,7 +199,7 @@ void StageBase::Collision()
 			laser.pLaser->GetModelHandle(),
 			-1,
 			m_pPlayer->GetPos().ToDxLibVector3(),
-			m_pPlayer->GetCollsionRadius());
+			m_pPlayer->GetCollisionRadius());
 
 		// 当たっていたら
 		if (result.HitNum > 0)
@@ -277,7 +277,7 @@ void StageBase::Collision()
 	{
 		// 球と球の当たり判定
 		float distance = (enemy->GetPos() - m_pPlayer->GetPos()).Length();
-		if (distance < enemy->GetCollisionRadius() + m_pPlayer->GetCollsionRadius())
+		if (distance < enemy->GetCollisionRadius() + m_pPlayer->GetCollisionRadius())
 		{
 			// プレイヤーのダメージ処理
 			m_pPlayer->OnDamage(m_enemyDamage);

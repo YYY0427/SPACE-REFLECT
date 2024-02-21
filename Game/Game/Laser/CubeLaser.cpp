@@ -27,7 +27,7 @@ CubeLaser::CubeLaser(Vector3 firePos, float laserSpeed, std::shared_ptr<Player> 
 	m_deltaRot = MathUtil::ToRadian(GetRand(100) / 100.0f);
 
 	// モデル設定
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::CUBE_LASER));
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("CubeLaser"));
 	m_pModel->SetUseCollision(true);	// 当たり判定を使用する
 	m_pModel->SetOpacity(m_opacity);	// 不透明度
 	m_pModel->SetRot(m_rot);			// 回転情報

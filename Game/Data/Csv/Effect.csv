@@ -1,0 +1,9 @@
+﻿ID,ファイルパス
+PlayerDied,Data/Effect/Explosion.efk
+PlayerBoost,Data/Effect/Boost.efk
+NormalLaser,Data/Effect/Laser.efk
+ReflectLaser,Data/Effect/ReflectLaser.efk
+EnemyDied,Data/Effect/Explosion.efk
+EnemyAttackHitEffect,Data/Effect/EnemyAttackHitEffect.efk
+PlayerAttackHitEffect,Data/Effect/PlayerAttackHitEffect.efk
+EnemyBossDie,Data/Effect/BossDeath.efk

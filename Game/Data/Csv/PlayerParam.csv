@@ -1,0 +1,12 @@
+﻿説明,キー,数値
+,startMoveSpeed,25
+,moveSpeedXY,1
+,moveSpeedZ,7.5
+,maxHp,300
+,collisionRadius,50
+,playerWidth,50
+,playerHeight,50
+,boostEffectScaleX,30
+,boostEffectScaleY,30
+,boostEffectScaleZ,30
+,boostEffectSpeed,1

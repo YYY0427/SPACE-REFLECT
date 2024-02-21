@@ -100,7 +100,7 @@ NormalLaser::NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Play
 	// エフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectFollow(
 		m_laserEffectHandle,
-		EffectID::normal_laser,
+		"NormalLaser",
 		&m_pos,
 		laser_effect_scale,
 		effectSpeed,
@@ -113,7 +113,7 @@ NormalLaser::NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Play
 	m_stateMachine.SetState(State::CHARGE);
 
 	// 当たり判定に使用するモデルの設定
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::LASER));	// インスタンス生成
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
 	m_pModel->SetUseCollision(true);					// 当たり判定設定
 	m_pModel->SetScale(m_scale);	// 拡大率
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列

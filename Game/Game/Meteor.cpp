@@ -34,7 +34,7 @@ Meteor::Meteor(MeteorType type, Vector3 playerPos) :
 	m_opacity(1.0f)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Meteor"));
 
 	// 1フレームに回転する量を0度から～1度の間から取得
 	m_rotVec.x = MathUtil::ToRadian(GetRand(10) * 0.1f);
@@ -92,7 +92,7 @@ Meteor::Meteor(UnityGameObject data):
 	m_opacity(1.0f)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle(ModelType::METEOR));
+	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Meteor"));
 
 	// 1フレームに回転する量をランダムに取得
 	m_rotVec.x = MathUtil::ToRadian(GetRand(3) * 0.1f);

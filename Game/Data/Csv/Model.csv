@@ -1,0 +1,10 @@
+﻿ID,ファイルパス
+Player,Data/Model/Player.mv1
+Mosquito,Data/Model/Mosquito.mv1
+Matrix,Data/Model/Matrix.mv1
+Earth,Data/Model/Earth.mv1
+Moon,Data/Model/Moon.mv1
+SkyDome,Data/Model/SkyDome.mv1
+Meteor,Data/Model/Meteor2.mv1
+Laser,Data/Model/Laser.mv1
+CubeLaser,Data/Model/CubeLaser.mv1
