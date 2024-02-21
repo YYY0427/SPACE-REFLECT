@@ -1,18 +1,22 @@
 #include "ReflectLaser.h"
-#include "../../Math/Matrix.h"
-#include "../../Effect/Effekseer3DEffectManager.h"
-#include "../../Model.h"
 #include "../Shield.h"
+#include "../../Math/Matrix.h"
+#include "../../Math/MathUtil.h"
+#include "../../Effect/Effekseer3DEffectManager.h"
+#include "../../Game/Enemy/EnemyManager.h"
+#include "../../Game/Enemy/EnemyBase.h"
+#include "../../Model.h"
+#include "../../MyDebug/DebugText.h"
 #include "../../ModelHandleManager.h"
 
 namespace
 {
 	// 初期方向
-	const Vector3 init_model_direction = { 1.0f, 0.0f, 0.0f };			// モデル
+	const Vector3 init_model_direction        = { 1.0f, 0.0f, 0.0f };	// モデル
 	const Vector3 init_laser_effect_direction = { 0.0f, 0.0f, -1.0f };	// エフェクト
 
 	// 拡大率
-	const Vector3 model_scale = { 1.0f, 0.1f, 0.1f };		// モデル
+	const Vector3 model_scale  = { 1.0f, 0.1f, 0.1f };		// モデル
 	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
 	// 移動速度
@@ -20,21 +24,25 @@ namespace
 }
 
 // コンストラクタ
-ReflectLaser::ReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
+ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager, 
+						   const std::shared_ptr<Shield>& pShield, 
+						   const std::shared_ptr<LaserBase>& pLaser, 
+						   const Vector3& firePos)
 {
 	// 初期化
 	m_pos = firePos;
 	m_pShield = pShield;
 	m_pLaser = pLaser;
+	m_pEnemyManager = pEnemyManager;
 	m_isReflect = true;
 	m_isEnabled = true;
 
 	// 反射ベクトルを作成
-	m_directionVec = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
+	m_directionPos = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
 
 	// 指定した位置方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionVec);
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionVec);
+	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);
 
 	// レーザーエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
@@ -75,15 +83,41 @@ void ReflectLaser::Update()
 		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
 
 	// ベクトルの取得
-	Vector3 moveVec = (goalPos - m_directionVec).Normalized() * move_speed;
+	Vector3 moveVec = (goalPos - m_directionPos).Normalized() * move_speed;
 
 	// 向く方向を更新
-	m_directionVec += moveVec;
+	m_directionPos += moveVec;
 #endif
 
 	// 指定したベクトル方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionVec);
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionVec);
+	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);
+
+	Vector3 enemyPos{};
+	for (auto& enemy : m_pEnemyManager->GetEnemyList())
+	{
+		if (enemy->IsEnabled())
+		{
+			if (enemyPos.Length() == 0)
+			{
+				enemyPos = enemy->GetPos();
+			}
+
+			// レーザーが向いている方向と近い敵を探す
+			Vector3 enemyToDirectionVec = m_directionPos - enemy->GetPos();
+			Vector3 enemyToDirectionVec2 = m_directionPos - enemyPos;
+			if (enemyToDirectionVec.Length() > enemyToDirectionVec2.Length())
+			{
+				enemyPos = enemy->GetPos();
+			}
+		}
+	}
+
+	Vector3 shieldToEnemyVec = m_pShield->GetPos() - enemyPos;
+	Vector3 shieldToDirectionVec = m_pShield->GetPos() - m_directionPos;
+
+	float angle = shieldToDirectionVec.Angle(shieldToEnemyVec);
+	DebugText::Log("angle ", { MathUtil::ToDegree(angle) });
 
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, rotEffectMtx.ToEulerAngle());

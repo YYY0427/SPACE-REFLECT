@@ -2,6 +2,9 @@
 #include "LaserBase.h"
 #include "../Shield.h"
 
+// プロトタイプ宣言
+class EnemyManager;
+
 /// <summary>
 /// 反射レーザー
 /// </summary>
@@ -9,7 +12,10 @@ class ReflectLaser : public LaserBase
 {
 public:
 	// コンストラクタ
-	ReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos);
+	ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager, 
+				 const std::shared_ptr<Shield>& pShield, 
+				 const std::shared_ptr<LaserBase>& pLaser, 
+				 const Vector3& firePos);
 
 	// デストラクタ
 	~ReflectLaser();
@@ -24,9 +30,10 @@ private:
 	// ポインタ
 	std::shared_ptr<Shield> m_pShield;		// シールドのポインタ
 	std::shared_ptr<LaserBase> m_pLaser;	// レーザーのポインタ
+	std::shared_ptr<EnemyManager> m_pEnemyManager;	// 敵のポインタ
 
 	// レーザーエフェクトのハンドル
 	int m_laserEffectHandle;	
 
-	Vector3 m_directionVec;
+	Vector3 m_directionPos;
 };

@@ -166,7 +166,7 @@ void StageBase::Collision()
 			if (!laser.pLaser->IsReflect())
 			{
 				// 反射レーザーを追加
-				int key = m_pLaserManager->AddReflectLaser(m_pPlayer->GetShield(), laser.pLaser, firePos);
+				int key = m_pLaserManager->AddReflectLaser(m_pEnemyManager, m_pPlayer->GetShield(), laser.pLaser, firePos);
 				laser.pLaser->SetReflectLaserKey(key);
 			}
 			// 既に反射レーザーがあれば反射レーザーの位置を設定

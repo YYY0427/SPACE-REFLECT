@@ -8,6 +8,7 @@
 class LaserBase;
 class Player;
 class EnemyBase;
+class EnemyManager;
 class Shield;
 
 // レーザーの種類
@@ -57,7 +58,10 @@ public:
 	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
 
 	// 反射レーザーの追加
-	int AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos);
+	int AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
+						const std::shared_ptr<Shield>&    pShield,
+						const std::shared_ptr<LaserBase>& pLaser, 
+					    const Vector3& firePos);
 
 	// キューブレーザーの追加
 	int AddCubeLaser(Vector3 firePos, float laserSpeed);

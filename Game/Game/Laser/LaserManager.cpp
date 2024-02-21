@@ -79,7 +79,10 @@ int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, in
 }
 
 // 反射レーザーの追加
-int LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_ptr<LaserBase> pLaser, Vector3 firePos)
+int LaserManager::AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager, 
+								  const std::shared_ptr<Shield>& pShield, 
+								  const std::shared_ptr<LaserBase>& pLaser, 
+								  const Vector3& firePos)
 {
 	// レーザーのデータを作成
 	LaserData laserData;
@@ -96,7 +99,7 @@ int LaserManager::AddReflectLaser(std::shared_ptr<Shield> pShield, std::shared_p
 	}
 
 	// レーザーのポインタを設定
-	laserData.pLaser = std::make_shared<ReflectLaser>(pShield, pLaser, firePos);
+	laserData.pLaser = std::make_shared<ReflectLaser>(pEnemyManager, pShield, pLaser, firePos);
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);
