@@ -8,13 +8,14 @@
 #include "../Util/InputState.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
+#include "../SoundManager.h"
 #include "../Transitor/WipeTransitor.h"
 #include "../Transitor/TileTransitor.h"
 #include "../Transitor/FadeTransitor.h"
 #include "../Transitor/IrisTransitor.h"
 #include "../Transitor/PushTransitor.h"
 #include "../Transitor/StripTransitor.h"
-#include "DxLib.h"
+#include <DxLib.h>
 
 namespace
 {
@@ -48,6 +49,10 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_pCamera = std::make_shared<Camera>(Vector3(0, 0, 0), Vector3(0, 0, 1));
 	m_pSkyDome = std::make_shared<SkyDome>(Vector3(0, 0, 0));
 
+	// タイトル画面のBGMを再生
+	SoundManager::GetInstance().PlayBGM("TitleBgm");
+	SoundManager::GetInstance().SetFadeSound("TitleBgm", 120, 0, 255);
+
 	// レーザーの配置
 	SetLaser({ 0, 210 }, { 1280, 210 }, 0xff0000);
 	SetLaser({ 0, 390 }, { 1280, 390 }, 0x0000ff);
@@ -73,6 +78,17 @@ void TitleScene::Update()
 
 		// PRESS ANY BUTTONの点滅を止める
 		m_alphaAdd = 0;
+		m_alpha = 255;
+
+		if (!m_isInput)
+		{
+			// タイトル画面のBGMをフェードアウト
+			auto& soundManager = SoundManager::GetInstance();
+			soundManager.SetFadeSound("TitleBgm", 40, soundManager.GetSoundVolume("TitleBgm"), 0);
+
+			// タイトル画面の決定音を再生
+			soundManager.Play("TitleEnter");
+		}
 
 		// フラグを立てる
 		m_isInput = true;

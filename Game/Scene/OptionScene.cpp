@@ -45,10 +45,6 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	m_lbButtonImgHandle(-1),
 	m_rbButtonImgHandle(-1)
 {
-	// ‰æ–ÊØ‚è‘Ö‚¦‰‰o‚Ì‰Šú‰»
-//	m_pTransitor = std::make_unique<FadeTransitor>(10);
-//	m_pTransitor->Start();
-
 	// ‰æ‘œ‚Ìƒ[ƒh
 	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
 	m_lbButtonImgHandle = my::MyLoadGraph(xbox_lb_file_path.c_str());

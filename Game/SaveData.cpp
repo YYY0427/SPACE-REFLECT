@@ -10,7 +10,7 @@
 namespace
 {
 	// ファイルのパス
-	const std::string sound_resourse_file_path = "Data/Save/SaveData.dat";
+	const std::string se_resourse_file_path = "Data/Save/SaveData.dat";
 
 	// セーブデータバージョン　
 	constexpr int current_save_version = 0;
@@ -45,7 +45,7 @@ void SaveData::Load()
 	InitData();
 
 	std::ifstream ifs;
-	ifs.open(sound_resourse_file_path, std::ios_base::binary);
+	ifs.open(se_resourse_file_path, std::ios_base::binary);
 
 	// ファイル読み込み失敗
 	if (ifs.fail())
@@ -78,7 +78,7 @@ void SaveData::Load()
 void SaveData::Write()
 {
 	assert(m_saveData.version == current_save_version);
-	std::ofstream ofs(sound_resourse_file_path, std::ios_base::binary);
+	std::ofstream ofs(se_resourse_file_path, std::ios_base::binary);
 	ofs.write(reinterpret_cast<char*>(&m_saveData), sizeof(Data));
 }
 
@@ -88,7 +88,7 @@ void SaveData::CreateNewData()
 	// セーブデータの初期化
 	InitData();
 
-	std::ofstream ofs(sound_resourse_file_path, std::ios_base::binary);
+	std::ofstream ofs(se_resourse_file_path, std::ios_base::binary);
 	ofs.write(reinterpret_cast<char*>(&m_saveData), sizeof(SaveData));
 }
 

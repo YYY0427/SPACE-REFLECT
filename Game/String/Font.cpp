@@ -30,7 +30,7 @@ namespace Font
 	}
 
 	// フォントのアンロード
-	void UnLoad()
+	void End()
 	{
 		// フォントのアンロード
 		for (auto& fontPath : font_data_path)

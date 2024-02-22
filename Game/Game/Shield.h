@@ -37,6 +37,8 @@ public:
 	// シールドを使用しているか
 	bool IsShield() const;
 
+	bool IsMoveInput() const;
+
 	// シールドの頂点情報の取得
 	std::array<VERTEX3D, 6> GetVertex() const;
 
@@ -74,4 +76,6 @@ private:
 
 	// アルファ値
 	int m_alpha;
+
+	bool m_isMoveInput = false;
 };

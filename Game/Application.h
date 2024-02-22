@@ -19,33 +19,56 @@ public:
 	/// <returns>Applicationクラスのインスタンス</returns>
 	static Application& GetInstance();
 
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <returns>true : 成功、false : 失敗</returns>
 	bool Init();
 
-	// 実行
+	/// <summary>
+	/// 実行
+	/// </summary>
 	void Run();
 	
-	// ウィンドウのサイズを取得
+	/// <summary>
+	/// ウィンドウのサイズを取得
+	/// </summary>
+	/// <returns>ウィンドウのサイズ</returns>
 	const Size& GetWindowSize() const;
 
-	// fpsを取得
+	/// <summary>
+	/// FPSを取得
+	/// </summary>
+	/// <returns>FPS</returns>
 	int GetFps() const;
 
-	// 終了
+	/// <summary>
+	/// アプリケーションを終了する
+	/// </summary>
 	void Exit();
 
 private:
-	// コンストラクタ
-	// シングルトンのためprivate
+	/// <summary>
+	/// コンストラクタ
+	/// シングルトンのためprivate
+	/// </summary>
 	Application();
 
-	// シングルトンのためコピー禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name="app">コピー元のApplicationクラスのインスタンス</param>
 	Application(const Application& app) = delete;
 
-	// シングルトンのため代入禁止
+	/// <summary>
+	/// 代入演算子禁止
+	/// </summary>
+	/// <param name="app">コピー元のApplicationクラスのインスタンス</param>
 	void operator=(const Application& app) = delete;
 
-	// 後処理
+	/// <summary>
+	/// 終了処理
+	/// </summary>
 	void End();
 
 private:

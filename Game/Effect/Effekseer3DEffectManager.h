@@ -9,6 +9,55 @@
 /// </summary>
 class Effekseer3DEffectManager
 {
+private:
+	// エフェクトの再生タイプ
+	enum class PlayType
+	{
+		NORMAL,
+		FOLLOW,
+		LOOP,
+		LOOP_AND_FOLLOW,
+	};
+
+	// エフェクトのファイルタイプ
+	enum class EffectFileType
+	{
+		ID,			// エフェクトのID
+		FILE_PATH,	// エフェクトのファイルパス
+	};
+
+private:
+	// エフェクトデータ
+	struct EffectData
+	{
+		std::string effectId;				// エフェクトのID
+		int* playingEffectHandle;	// エフェクトのハンドル
+		PlayType	type;					// 再生タイプ
+		Vector3		pos;					// 位置	
+		Vector3		rot;					// 回転
+		Vector3		scale;					// 拡大率
+		float		speed;					// 再生速度
+	};
+
+	// 追従エフェクトデータ
+	struct FollowEffectData
+	{
+		std::string effectId;				// エフェクトのID
+		int* playingEffectHandle;	// エフェクトのハンドル
+		PlayType    type;					// 再生タイプ
+		Vector3* pos;					// 追従したい位置情報変数のアドレス
+		Vector3     rot;					// 回転
+		Vector3		scale;					// 拡大率
+		float		speed;					// 再生速度
+	};
+
+	// エフェクトリソースデータ
+	struct EffectResourceData
+	{
+		std::string effectFilePath;		// エフェクトのファイルパス
+		int         effectHandle;		// エフェクトのハンドル
+	};
+
 public:
 	/// <summary>
 	/// デストラクタ
@@ -192,10 +241,10 @@ private:
 	void operator = (const Effekseer3DEffectManager&) = delete;			
 
 	/// <summary>
-	/// エフェクトのロード
+	/// エフェクトのCSVファイルの読み込み
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
-	void LoadEffectFile(const std::string& filePath);
+	void LoadCsvEffectFile(const std::string& filePath);
 
 	/// <summary>
 	/// ループエフェクトの再再生
@@ -204,55 +253,6 @@ private:
 	/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 	/// <param name="id">外部ファイルで設定したのID</param>
 	void PlayEffectLoop(int& playingEffectHandle, const std::string& id);
-
-private:
-	// エフェクトの再生タイプ
-	enum class PlayType
-	{
-		NORMAL,
-		FOLLOW,
-		LOOP,
-		LOOP_AND_FOLLOW,
-	};
-
-	// エフェクトのファイルタイプ
-	enum class EffectFileType
-	{
-		ID,			// エフェクトのID
-		FILE_PATH,	// エフェクトのファイルパス
-	};	
-
-private:
-	// エフェクトデータ
-	struct EffectData
-	{
-		std::string effectId;				// エフェクトのID
-		int*        playingEffectHandle;	// エフェクトのハンドル
-		PlayType	type;					// 再生タイプ
-		Vector3		pos;					// 位置	
-		Vector3		rot;					// 回転
-		Vector3		scale;					// 拡大率
-		float		speed;					// 再生速度
-	};
-
-	// 追従エフェクトデータ
-	struct FollowEffectData
-	{
-		std::string effectId;				// エフェクトのID
-		int*        playingEffectHandle;	// エフェクトのハンドル
-		PlayType    type;					// 再生タイプ
-		Vector3*    pos;					// 追従したい位置情報変数のアドレス
-		Vector3     rot;					// 回転
-		Vector3		scale;					// 拡大率
-		float		speed;					// 再生速度
-	};
-
-	// エフェクトリソースデータ
-	struct EffectResourceData
-	{
-		std::string effectFilePath;		// エフェクトのファイルパス
-		int         effectHandle;		// エフェクトのハンドル
-	};
 
 private:
 	// エフェクトのリソーステーブル

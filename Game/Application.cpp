@@ -20,8 +20,6 @@ namespace
     // 画面サイズ
     constexpr int window_width = 1280;	
     constexpr int window_height = 720;	
-	/*constexpr int window_width = 1600;
-	constexpr int window_height = 900;*/
 
     // ウィンドウタイトル
     const std::string window_title = "REFLECT";
@@ -103,7 +101,7 @@ bool Application::Init()
 //	SetUseASyncLoadFlag(TRUE);
 
 	// csvファイルに沿ってサウンドをロード
-	SoundManager::GetInstance().LoadAndStoreSoundFileData();
+	SoundManager::GetInstance().LoadCsvSoundFile();
 
 	// フォントのロード
 	Font::Load();
@@ -165,6 +163,7 @@ void Application::Run()
 	// ゲームループ
 	while (ProcessMessage() == 0)
 	{
+		// 時間の取得
 		LONGLONG time = GetNowHiPerformanceCount();
 
 		// Windowモード設定
@@ -179,6 +178,9 @@ void Application::Run()
 
 		// シーンの更新
 		sceneManager.Update();
+
+		// サウンドの更新
+		SoundManager::GetInstance().Update();
 
 		// シーンの描画
 		sceneManager.Draw();
@@ -213,11 +215,14 @@ void Application::End()
 	// サウンドをすべて止める
 	SoundManager::GetInstance().StopAllSound();
 
+	// サウンドの解放
+	SoundManager::GetInstance().End();
+
 	// Effekseerの終了処理
 	Effekseer3DEffectManager::GetInstance().End();
 
 	// フォントの終了処理
-	Font::UnLoad();
+	Font::End();
 
 	// スコアランキングのセーブ
 	ScoreRanking::GetInstance().SaveScore();
@@ -228,7 +233,7 @@ void Application::End()
 	// DebugTextの終了処理
 	DebugText::End();
 
-	// ＤＸライブラリ使用の終了処理
+	// DXライブラリ使用の終了処理
 	DxLib_End();
 }
 

@@ -257,11 +257,7 @@ void StageSelectScene::UpdateSelectStage()
 	if (InputState::IsTriggered(InputType::BACK))
 	{
 		// –ß‚é
-#ifdef _DEBUG
-		m_manager.ChangeScene(std::make_shared<DebugScene>(m_manager));
-#else
 		m_manager.ChangeScene(std::make_shared<TitleScene>(m_manager));
-#endif
 		return;
 	}
 }

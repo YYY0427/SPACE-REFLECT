@@ -47,7 +47,7 @@ namespace
 	const Vector2 energy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
-	constexpr int max_energy_gage = 300;
+	constexpr int max_energy_gage = 500;
 
 	// プレイヤーからのシールドの距離
 	constexpr float player_distance = 100.0f;
@@ -87,7 +87,7 @@ Shield::Shield(Player& player) :
 		energy_gage_ui_pos,
 		energy_gage_ui_size,
 		true,
-		3.0f,
+		5.0f,
 		false,
 		0.0f);
 
@@ -139,6 +139,13 @@ void Shield::Update()
 	int down = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::DOWN);
 	int right = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::RIGHT);
 	int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
+	if(up > 0 || down > 0 || right > 0 || left > 0)
+	{
+		if (m_isInput)
+		{
+			m_isMoveInput = true;
+		}
+	}
 
 	// シールドの位置の計算
 	Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
@@ -220,6 +227,11 @@ Vector3 Shield::GetPos() const
 bool Shield::IsShield() const
 {
 	return (m_enerugyGage > 0) && (m_isInput);
+}
+
+bool Shield::IsMoveInput() const
+{
+	return m_isMoveInput;
 }
 
 // シールドの頂点情報の取得

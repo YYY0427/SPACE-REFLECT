@@ -21,7 +21,6 @@ namespace
 Effekseer3DEffectManager::Effekseer3DEffectManager():
 	m_imgHandle(-1)
 {
-	
 }
 
 // デストラクタ
@@ -52,7 +51,7 @@ void Effekseer3DEffectManager::Init()
 	m_imgHandle = my::MyLoadGraph(img_file_path.c_str());
 
 	// エフェクトのロード
-	LoadEffectFile(effect_list_file_path);
+	LoadCsvEffectFile(effect_list_file_path);
 }
 
 // 更新
@@ -138,7 +137,7 @@ void Effekseer3DEffectManager::End()
 }
 
 // エフェクトのロード
-void Effekseer3DEffectManager::LoadEffectFile(const std::string& filePath)
+void Effekseer3DEffectManager::LoadCsvEffectFile(const std::string& filePath)
 {
 	// ファイルの読み込み
 	auto data = FileUtil::LoadCsvFile(filePath);

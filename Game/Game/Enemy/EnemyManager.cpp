@@ -262,10 +262,10 @@ void EnemyManager::AddEnemy(const EnemyData& data)
 void EnemyManager::AddBossEnemy(const BossEnemyType& type)
 {
 	// 既にボス敵が生成されていたら
-	if(m_pBossEnemy)
-	{
-		return;
-	}
+	if(m_pBossEnemy || m_isBoss) return;
+
+	// フラグを立てる
+	m_isBoss = true;
 
 	// 種類によってボス敵の生成
 	switch (type)
@@ -447,4 +447,10 @@ const std::list<std::shared_ptr<EnemyBase>>& EnemyManager::GetEnemyList() const
 const std::shared_ptr<EnemyBase>& EnemyManager::GetBossEnemy() const
 {
 	return m_pBossEnemy;
+}
+
+// ボス敵が生存しているかどうか
+bool EnemyManager::IsBossAlive() const
+{
+	return (m_pBossEnemy && m_isBoss);
 }

@@ -1,3 +1,5 @@
 ファイル名,ファイルの拡張子,"サウンドタイプ(0 : BGM, 1 : 2DSE, 2 : 3DSE)",音量の内部レート(0.0~1.0)
 bgmTest,.mp3,0,1
 cursorTest,.mp3,1,1
+TitleEnter,.mp3,1,1
+TitleBgm,.mp3,0,0.8

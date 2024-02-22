@@ -10,5 +10,5 @@ namespace Font
 	void Load();
 
 	// フォントのアンロード
-	void UnLoad();
+	void End();
 }

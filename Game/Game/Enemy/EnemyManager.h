@@ -159,6 +159,12 @@ public:
 	const std::shared_ptr<EnemyBase>& GetBossEnemy() const;				
 
 	/// <summary>
+	/// ボス敵が生存しているかどうかの取得
+	/// </summary>
+	/// <returns></returns>
+	bool IsBossAlive() const;
+
+	/// <summary>
 	/// ボスが倒されたかどうかの取得 
 	/// </summary>
 	/// <returns>true : 倒された、false : 倒されていない</returns>

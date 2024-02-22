@@ -20,7 +20,14 @@ namespace
 	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
 	// 移動速度
-	constexpr float move_speed = 50.0f;	
+	constexpr float move_speed = 50.0f;			// レーザーの移動速度
+	constexpr float aim_assist_speed = 25.0f;	// エイムアシストの速度
+
+	// レーザーエフェクトの再生速度
+	constexpr float effect_play_speed = 1.0f;
+
+	// エイムアシスト範囲
+	constexpr float aim_assist_range = 3000.0f;
 }
 
 // コンストラクタ
@@ -38,24 +45,24 @@ ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 	m_isEnabled = true;
 
 	// 反射ベクトルを作成
-	m_directionPos = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
+	m_directionPos = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
 
 	// 指定した位置方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);
+	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
+	Matrix rotModelMtx  = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);			// モデル
 
 	// レーザーエフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
-		m_laserEffectHandle, "ReflectLaser", &m_pos, effect_scale, 1.0f, rotEffectMtx.ToEulerAngle());
+		m_laserEffectHandle, "ReflectLaser", &m_pos, effect_scale, effect_play_speed, rotEffectMtx.ToEulerAngle());
 
 	// モデルの設定
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
-	m_pModel->SetUseCollision(true);					// 当たり判定設定
-	m_pModel->SetScale(model_scale);					// 拡大率
-	m_pModel->SetRotMtx(rotMtx);						// 回転行列
-	m_pModel->SetPos(m_pos);							// 位置
-	m_pModel->Update();									// 当たり判定の更新
-}
+	m_pModel->SetUseCollision(true);	// 当たり判定設定
+	m_pModel->SetScale(model_scale);	// 拡大率
+	m_pModel->SetRotMtx(rotModelMtx);	// 回転行列
+	m_pModel->SetPos(m_pos);			// 位置
+	m_pModel->Update();					// 当たり判定の更新
+}											
 
 // デストラクタ
 ReflectLaser::~ReflectLaser()
@@ -67,66 +74,85 @@ ReflectLaser::~ReflectLaser()
 // 更新
 void ReflectLaser::Update()
 {
-	// 発射元のレーザーがシールドに反射していなかったら消す
+	// 発射元のレーザーがシールドに反射していないまたは無効なら
 	if (!m_pLaser->IsReflect() || !m_pLaser->IsEnabled())
 	{
+		// 無効にする
 		m_isEnabled = false;
 		return;
 	}
 
-#if false
-	m_directionVec = Vector3::Reflect(
-		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
-#else
-	// 反射ベクトルを作成
-	Vector3 goalPos = Vector3::Reflect(
-		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex()[0].norm));
-
-	// ベクトルの取得
-	Vector3 moveVec = (goalPos - m_directionPos).Normalized() * move_speed;
-
-	// 向く方向を更新
-	m_directionPos += moveVec;
-#endif
-
-	// 指定したベクトル方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);
-
+	// レーザーが向いている方向と近い敵を探す
 	Vector3 enemyPos{};
 	for (auto& enemy : m_pEnemyManager->GetEnemyList())
 	{
+		// 敵が有効なら
 		if (enemy->IsEnabled())
 		{
+			// 最初の敵の座標を取得
 			if (enemyPos.Length() == 0)
 			{
 				enemyPos = enemy->GetPos();
 			}
 
-			// レーザーが向いている方向と近い敵を探す
-			Vector3 enemyToDirectionVec = m_directionPos - enemy->GetPos();
+			// 敵とレーザーの向いている方向との距離を比較
+			Vector3 enemyToDirectionVec  = m_directionPos - enemy->GetPos();
 			Vector3 enemyToDirectionVec2 = m_directionPos - enemyPos;
+
+			// より近い敵の座標を取得
 			if (enemyToDirectionVec.Length() > enemyToDirectionVec2.Length())
 			{
 				enemyPos = enemy->GetPos();
 			}
 		}
 	}
+	// ボスが生存しているなら
+	if (m_pEnemyManager->IsBossAlive())
+	{
+		// ボスの座標を取得
+		enemyPos = m_pEnemyManager->GetBossEnemy()->GetPos();
+	}
 
-	Vector3 shieldToEnemyVec = m_pShield->GetPos() - enemyPos;
-	Vector3 shieldToDirectionVec = m_pShield->GetPos() - m_directionPos;
+	// Z軸を無効にする
+	Vector3 directionPos = m_directionPos;
+	directionPos.z = 0;
+	enemyPos.z     = 0;
 
-	float angle = shieldToDirectionVec.Angle(shieldToEnemyVec);
-	DebugText::Log("angle ", { MathUtil::ToDegree(angle) });
+	// 敵とレーザーの向いている方向との距離が一定範囲内なら
+	Vector3 aimAssistVec{};
+	if (enemyPos.Distance(directionPos) < aim_assist_range)
+	{
+		// エイムアシストを有効にする
+		aimAssistVec = (enemyPos - directionPos).Normalized();
+	}
+
+	// 反射ベクトルを作成
+	Vector3 goalPos = Vector3::Reflect(
+		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
+
+	Vector3 reflectVec = (goalPos - m_directionPos).Normalized();
+	if (!m_pShield->IsMoveInput())
+	{
+		reflectVec = {0, 0, 0};
+	}
+	// ベクトルの取得
+	Vector3 moveVec = (reflectVec + (aimAssistVec * 1.0f)) * move_speed;
+
+	// 向く方向を更新
+	m_directionPos += moveVec;
+
+	// 指定したベクトル方向に向ける行列の作成
+	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
+	Matrix rotModelMtx  = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);			// モデル
 
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, rotEffectMtx.ToEulerAngle());
 
 	// モデルの設定
-	m_pModel->SetRotMtx(rotMtx);						// 回転行列
-	m_pModel->SetPos(m_pos);							// 位置
-	m_pModel->Update();									// 当たり判定の更新
-}
+	m_pModel->SetRotMtx(rotModelMtx);	// 回転行列
+	m_pModel->SetPos(m_pos);			// 位置
+	m_pModel->Update();					// 当たり判定の更新
+}													
 
 // 描画
 void ReflectLaser::Draw()
