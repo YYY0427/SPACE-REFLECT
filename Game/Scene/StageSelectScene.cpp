@@ -5,6 +5,7 @@
 #include "DebugScene.h"
 #include "TitleScene.h"
 #include "../Transitor/FadeTransitor.h"
+#include "../Transitor/Fade.h"
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
 #include "../Util/InputState.h"
@@ -17,7 +18,7 @@
 #include "../Math/Vector3.h"
 #include "../Application.h"
 #include "../ModelHandleManager.h"
-#include "../Transitor/Fade.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -32,7 +33,7 @@ namespace
 	const std::string xbox_a_file_path  = "Data/Image/xbox_button_a.png";
 
 	// カメラの移動にかかるフレーム
-	constexpr float camera_move_frame = 55.0f;
+	constexpr float camera_move_frame = 40.0f;
 
 	// スコアランキング
 	constexpr int score_ranking_alpha_add_speed = 15;	// アルファ値
@@ -40,7 +41,7 @@ namespace
 
 	// 説明ウィンドウ
 	const Vector2 explanation_window_size = { 400, 425 };	// ウィンドウのサイズ
-	const Vector2 window_scale_frame      = { 20, 50 };		// ウィンドウの拡大のフレーム
+	const Vector2 window_scale_frame      = { 15, 20 };		// ウィンドウの拡大のフレーム
 	constexpr int window_max_alpha        = 180;			// ウィンドウの最大アルファ値
 }
 
@@ -125,6 +126,10 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	{
 		m_rankingAlpha.push_back(0);
 	}
+
+	// BGMの再生
+	SoundManager::GetInstance().PlayBGM("StageSelectBgm");
+	SoundManager::GetInstance().SetFadeSound("StageSelectBgm", 60, 0, 255);
 }
 
 // デストラクタ
@@ -132,11 +137,21 @@ StageSelectScene::~StageSelectScene()
 {
 	// ライトのハンドルを削除
 	DeleteLightHandle(m_lightHandle);
+
+	// BGMの停止
+	SoundManager::GetInstance().StopSound("StageSelectBgm");
+
+	// 画像の削除
+	DeleteGraph(m_rbButtonImgHandle);
+	DeleteGraph(m_lbButtonImgHandle);
+	DeleteGraph(m_bButtonImgHandle);
+	DeleteGraph(m_aButtonImgHandle);
 }
 
 // ステージ選択時の初期化
 void StageSelectScene::SelectStageProcess()
 {
+	// 初期化
 	m_isInput = true;
 	m_line3DAlpha = 0;
 	m_textAlpha = 0;
@@ -195,12 +210,15 @@ void StageSelectScene::UpdateSelectStage()
 	// 更新
 	UpdateCamera();
 	m_pPlanetManager->UpdateStageSelect();
-	m_pSkyDome->Update(m_pCamera->GetPos());
+	m_pSkyDome      ->Update(m_pCamera->GetPos());
 
 	// 説明ウィンドウの幅を徐々に広げる
-	m_explanationWindowEasingTime.x++;
-	m_explanationWindowEasingTime.x = (std::min)(m_explanationWindowEasingTime.x, window_scale_frame.x);
+	m_explanationWindowEasingTime.x = (std::min)(++m_explanationWindowEasingTime.x, window_scale_frame.x);
 	m_explanationWindowSize.x = Easing::EaseOutCubic(m_explanationWindowEasingTime.x, window_scale_frame.x, explanation_window_size.x, 0);
+	if (m_explanationWindowSize.x < explanation_window_size.x)
+	{
+		SoundManager::GetInstance().PlaySE("StageSelectOpenMenu");
+	}
 
 	// 3Dの線のアルファ値の更新
 	m_line3DAlpha = (std::min)(m_line3DAlpha += 6, 255);
@@ -209,8 +227,7 @@ void StageSelectScene::UpdateSelectStage()
 	if (m_explanationWindowSize.x >= explanation_window_size.x)
 	{
 		// 説明ウィンドウの高さを徐々に広げる
-		m_explanationWindowEasingTime.y++;
-		m_explanationWindowEasingTime.y = (std::min)(m_explanationWindowEasingTime.y, window_scale_frame.y);
+		m_explanationWindowEasingTime.y = (std::min)(++m_explanationWindowEasingTime.y, window_scale_frame.y);
 		m_explanationWindowSize.y = Easing::EaseOutCubic(m_explanationWindowEasingTime.y, window_scale_frame.y, explanation_window_size.y, 0);
 
 		// 最大サイズに達したらアルファ値を上げる
@@ -220,27 +237,15 @@ void StageSelectScene::UpdateSelectStage()
 			m_textAlpha = (std::min)(m_textAlpha += 6, 255);
 
 			// スコアランキングのアルファ値の更新
-			// 一番下の順位が255になったら次の順位を更新
-			for (int i = m_rankingAlpha.size() - 1; i >= 0; i--)
-			{
-				if (i == m_rankingAlpha.size() - 1)
-				{
-					m_rankingAlpha[i] += score_ranking_alpha_add_speed;
-				}
-				else
-				{
-					if (m_rankingAlpha[i + 1] >= 255)
-					{
-						m_rankingAlpha[i] += score_ranking_alpha_add_speed;
-					}
-				}
-			}
+			UpdateRankingAlpha();
 		}
 	}
 
 	// オプション画面に遷移
 	if (InputState::IsTriggered(InputType::RIGHT_SHOULDER))
 	{
+		SoundManager::GetInstance().PlaySE("Select");
+
 		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::STAGE_SELECT));
 		return;
 	}
@@ -249,14 +254,28 @@ void StageSelectScene::UpdateSelectStage()
 	if (InputState::IsTriggered(InputType::DECISION))
 	{
 		m_stateMachine.SetState(State::START_ANIMATION);
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.PlaySE("Enter");
+		soundManager.SetFadeSound("StageSelectBgm", 60, soundManager.GetSoundVolume("StageSelectBgm"), 0);
 		m_easeTime = 0.0f;
 		return;
 	}
 
-	// キャンセルボタンが押されたらシーン遷移
+	// キャンセルボタンが押されたら
 	if (InputState::IsTriggered(InputType::BACK))
 	{
-		// 戻る
+		// フェードアウトの演出の開始
+		m_pFade->StartFadeOut(255, 10);
+
+		// BGMのフェードアウト
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.SetFadeSound("StageSelectBgm", 60, soundManager.GetSoundVolume("StageSelectBgm"), 0);
+	}
+
+	// フェードアウトが終了したらシーン遷移
+	if (m_pFade->IsFadeOutEnd())
+	{
+		// タイトル画面に戻る
 		m_manager.ChangeScene(std::make_shared<TitleScene>(m_manager));
 		return;
 	}
@@ -273,14 +292,23 @@ void StageSelectScene::UpdateStartAnimation()
 
 	// イージングでカメラの注視点を移動
 	m_easeTime++;
-	m_easeTime = (std::min)(m_easeTime, 100.0f);
+	m_easeTime = (std::min)(m_easeTime, 150.0f);
 	Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
-	float x = Easing::EaseOutCubic(m_easeTime, 100, goalPos.x, m_cameraStartTargetPos.x);
-	float y = Easing::EaseOutCubic(m_easeTime, 100, goalPos.y, m_cameraStartTargetPos.y);
+	float x = Easing::EaseOutCubic(m_easeTime, 150, goalPos.x, m_cameraStartTargetPos.x);
+	float y = Easing::EaseOutCubic(m_easeTime, 150, goalPos.y, m_cameraStartTargetPos.y);
 	m_pCamera->Update(m_pCamera->GetPos(), { x, y, goalPos.z });
 
-	if (m_easeTime >= 100.0f)
+	if (m_easeTime >= 150.0f)
 	{
+		auto& soundManager = SoundManager::GetInstance();
+		static bool isPlay = false;
+		if (!isPlay)
+		{
+			soundManager.PlaySE("StartAnimSe");
+			soundManager.SetFadeSound("StartAnimSe", 30, soundManager.GetSoundVolume("StartAnimSe"), 255);
+			isPlay = true;
+		}
+		
 		// イージングでカメラを移動
 		m_easeTime2++;
 		m_easeTime2 = (std::min)(m_easeTime2, 300.0f);
@@ -294,6 +322,7 @@ void StageSelectScene::UpdateStartAnimation()
 		{
 			// フェードアウトの演出の開始
 			m_pFade->StartFadeOut(255, 10);
+			soundManager.SetFadeSound("StartAnimSe", 60, soundManager.GetSoundVolume("StartAnimSe"), 0);
 		}
 	}
 
@@ -329,6 +358,27 @@ void StageSelectScene::UpdateCamera()
 	float y = Easing::EaseOutCubic(m_easeTime, camera_move_frame, m_cameraGoalPos.y, m_cameraStartPos.y);
 	float z = Easing::EaseOutCubic(m_easeTime, camera_move_frame, m_cameraGoalPos.z, m_cameraStartPos.z);
 	m_pCamera->Update({ x, y, z }, { x, y, z + 10.0f });
+}
+
+// ランキングのアルファ値の更新
+void StageSelectScene::UpdateRankingAlpha()
+{
+	// スコアランキングのアルファ値の更新
+	// 一番下の順位が255になったら次の順位を更新
+	for (int i = m_rankingAlpha.size() - 1; i >= 0; i--)
+	{
+		if (i == m_rankingAlpha.size() - 1)
+		{
+			m_rankingAlpha[i] += score_ranking_alpha_add_speed;
+		}
+		else
+		{
+			if (m_rankingAlpha[i + 1] >= 255)
+			{
+				m_rankingAlpha[i] += score_ranking_alpha_add_speed;
+			}
+		}
+	}
 }
 
 // 描画

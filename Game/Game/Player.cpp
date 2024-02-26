@@ -16,6 +16,7 @@
 #include "../Effect/Effekseer3DEffectManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
+#include "../SoundManager.h"
 #include <algorithm>
 
 namespace
@@ -151,6 +152,9 @@ void Player::Update(float cameraHorizon)
 {
 	if (!m_pBackUI)
 	{
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.PlaySE("GageRecovery");
+
 		// プレイヤーUIの背景画像のインスタンスの生成
 		m_pBackUI = std::make_shared<StatusBack>();
 

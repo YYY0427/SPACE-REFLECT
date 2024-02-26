@@ -87,7 +87,7 @@ void TitleScene::Update()
 			soundManager.SetFadeSound("TitleBgm", 40, soundManager.GetSoundVolume("TitleBgm"), 0);
 
 			// タイトル画面の決定音を再生
-			soundManager.Play("TitleEnter");
+			soundManager.PlaySE("Enter");
 		}
 
 		// フラグを立てる

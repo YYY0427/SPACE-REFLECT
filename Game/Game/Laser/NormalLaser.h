@@ -49,6 +49,8 @@ public:
 	Vector3 GetDirection() const override final;
 
 private:
+	void EnterCharge();					// チャージ開始
+
 	// 更新
 	void UpdateCharge();				// チャージ
 	void UpdateNormalFire();			// 通常発射

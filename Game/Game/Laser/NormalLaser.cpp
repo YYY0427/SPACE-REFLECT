@@ -7,6 +7,7 @@
 #include "../../Model.h"
 #include "../../MyDebug/DebugText.h"
 #include "../../ModelHandleManager.h"
+#include "../../SoundManager.h"
 #include <DxLib.h>
 #include <random>
 #include <algorithm>
@@ -107,7 +108,7 @@ NormalLaser::NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Play
 		effectRot);
 
 	// 状態の追加
-	m_stateMachine.AddState(State::CHARGE, {}, [this]() { UpdateCharge(); }, {});
+	m_stateMachine.AddState(State::CHARGE, [this]() { EnterCharge(); }, [this]() { UpdateCharge(); }, {});
 	m_stateMachine.AddState(State::FIRE_PLYER_FOLLOWING, {}, [this]() { UpdateFirePlayerFollowing(); }, {});
 	m_stateMachine.AddState(State::NORMAL_FIRE, {}, [this]() { UpdateNormalFire(); }, {});
 	m_stateMachine.SetState(State::CHARGE);
@@ -211,6 +212,13 @@ void NormalLaser::UpdateCharge()
 		// モデルの拡大率を設定
 		m_scale.x = -1.0f;
 
+		// レーザーのチャージサウンドのフェードアウト
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.SetFadeSound("LaserCharge", 30, soundManager.GetSoundVolume("LaserCharge"), 0);
+
+		// レーザーのサウンドの再生
+		soundManager.PlaySELoop("Laser");
+
 		// ステートの変更
 		if (m_isPlayerFollowing)
 		{
@@ -294,7 +302,7 @@ void NormalLaser::UpdateFirePlayerFollowing()
 
 	// 座標の更新
 	m_directionPos.z += m_pPlayer->GetMoveVec().z;
-	m_directionPos += m_directionVec;
+	m_directionPos   += m_directionVec;
 }
 
 // 描画
@@ -351,4 +359,10 @@ void NormalLaser::UndoReflect()
 Vector3 NormalLaser::GetDirection() const
 {
 	return (m_directionPos - m_pos);
+}
+
+// チャージ状態に入る
+void NormalLaser::EnterCharge()
+{
+	SoundManager::GetInstance().PlaySE("LaserCharge");
 }

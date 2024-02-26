@@ -77,6 +77,8 @@ void SoundManager::Update()
 		{
 			StopSound(sound.first);
 		}
+		// オプションなどで音量が変更される可能性があるので音量を再設定
+		SetVolume(sound.first, sound.second.volume);
 	}
 }
 
@@ -191,7 +193,7 @@ void SoundManager::LoadCsvSoundFile()
 }
 
 // 指定の2DSEを鳴らす
-void SoundManager::Play(const std::string& fileName)
+void SoundManager::PlaySE(const std::string& fileName)
 {
 	// ロードしていない場合は止める
 	assert(m_soundDataTable.find(fileName) != m_soundDataTable.end());			
@@ -201,6 +203,23 @@ void SoundManager::Play(const std::string& fileName)
 
 	// サウンドの再生
 	PlaySoundMem(m_soundDataTable[fileName].handle, DX_PLAYTYPE_BACK);
+
+	// 音量を最大に設定
+	m_soundDataTable[fileName].volume = max_volume;
+	SetVolume(fileName, m_soundDataTable[fileName].volume);
+}
+
+// 指定の2DSEをループ再生
+void SoundManager::PlaySELoop(const std::string& fileName)
+{
+	// ロードしていない場合は止める
+	assert(m_soundDataTable.find(fileName) != m_soundDataTable.end());			
+
+	// 2DSE以外の場合は止める
+	assert(m_soundDataTable[fileName].type == SoundType::SE2D);					
+
+	// サウンドの再生
+	PlaySoundMem(m_soundDataTable[fileName].handle, DX_PLAYTYPE_LOOP);
 
 	// 音量を最大に設定
 	m_soundDataTable[fileName].volume = max_volume;
@@ -330,6 +349,35 @@ void SoundManager::SetFadeSound(const std::string& fileName, const int fadeFrame
 void SoundManager::Set3DSoundListenerPosAndFrontPos_UpVecY(const Vector3& pos, const Vector3& angle)
 {
 	DxLib::Set3DSoundListenerPosAndFrontPos_UpVecY(pos.ToDxLibVector3(), (pos + angle).ToDxLibVector3());
+}
+
+// サウンドのループ範囲を設定
+void SoundManager::SetLoopAreaTimePos(const std::string& fileName, LONGLONG startTime, LONGLONG endTime)
+{
+	// ロードしていない場合は止める
+	assert(m_soundDataTable.find(fileName) != m_soundDataTable.end());
+
+	//// サウンドの総再生時間を取得
+	//LONGLONG time = GetSoundTotalTime(m_soundDataTable[fileName].handle);
+
+	//// 総再生時間からstarTime(0.0～1.0)とendTime(0.0～1.0)を設定
+	//startTime = time * startTime;
+	//endTime = time * endTime;
+
+	// ループ範囲を設定
+	int result = SetLoopAreaTimePosSoundMem(startTime, endTime, m_soundDataTable[fileName].handle);
+	assert(result != -1 && "サウンドのループ範囲の設定に失敗しました");
+}
+
+// サウンドの再生時間を取得
+LONGLONG SoundManager::GetSoundTotalTime(const std::string& fileName)
+{
+	// ロードしていない場合は止める
+	assert(m_soundDataTable.find(fileName) != m_soundDataTable.end());
+
+	// 再生時間を取得
+	LONGLONG time = DxLib::GetSoundTotalTime(m_soundDataTable[fileName].handle);
+	return time;
 }
 
 // サウンドの音量を取得

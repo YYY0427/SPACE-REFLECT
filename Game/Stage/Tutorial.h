@@ -21,6 +21,7 @@ public:
 	~Tutorial();
 
 	// 開始
+	void EnterStartAnimation();
 	void EnterResult();
 
 	// 更新

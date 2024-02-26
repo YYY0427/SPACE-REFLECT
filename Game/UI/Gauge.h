@@ -25,12 +25,12 @@ public:
 	/// <param name="isDelayedDamage">ゲージのディレイ演出を行うかどうか</param>
 	/// <param name="aimGaugeSpeed">ディレイ演出の減る速度</param>
 	Gauge(
-		const std::string gaugeImgFilePath, 
-		const std::string gaugeBackImgFilePath,
-		const std::string gaugeFrameImgFilePath,
+		const std::string& gaugeImgFilePath, 
+		const std::string& gaugeBackImgFilePath,
+		const std::string& gaugeFrameImgFilePath,
 		float maxValue,
-		Vector2 pos,
-		Vector2 dimensions,
+		const Vector2& pos,
+		const Vector2& dimensions,
 		bool isGaugeBurst,
 		float addGaugeSpeed,
 		bool isDelayed,

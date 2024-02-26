@@ -17,6 +17,7 @@
 #include "../Score/Score.h"
 #include "../Score/ScoreRanking.h"
 #include "../UI/ResultWindow.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 // コンストラクタ
@@ -54,6 +55,8 @@ StageBase::~StageBase()
 	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
+	// サウンドの停止
+	SoundManager::GetInstance().StopAllSound();
 }
 
 // リザルト画面の更新

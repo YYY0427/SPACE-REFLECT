@@ -24,6 +24,7 @@
 #include "../UI/TutorialUI.h"
 #include "../Util/InputState.h"
 #include "../Transitor/Fade.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -37,12 +38,15 @@ namespace
 	// ウェーブの待機フレーム数
 	constexpr int wave_wait_frame = 200;
 
+	// 移動チュートリアルに遷移するまでのフレーム数
+	constexpr int move_tutorial_frame = 200;
+
 	// ダメージ
 	constexpr int meteor_damage = 2;			 // 隕石に当たっている間にプレイヤーに与えるダメージ
 	constexpr int laser_damage = 1;				 // レーザーに当たっている間にプレイヤーに与えるダメージ
 	constexpr int enemy_damage = 1;				 // 敵に当たっている間にプレイヤーに与えるダメージ
 	constexpr int normal_enemy_reflect_laser_damage = 1000;  // 反射レーザーに当たっている間に通常の敵に与えるダメージ
-	constexpr int boss_reflect_laser_damage = 2;		  // 反射レーザーに当たっている間にボスに与えるダメージ
+	constexpr int boss_reflect_laser_damage = 2;			 // 反射レーザーに当たっている間にボスに与えるダメージ
 }
 
 // コンストラクタ
@@ -58,7 +62,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
-	m_stateMachine.AddState(State::MOVE_TUTORIAL, {}, [this]() { UpdateMoveTutorial(); }, {});
+	m_stateMachine.AddState(State::MOVE_TUTORIAL, [this]() { EnterStartAnimation(); }, [this]() { UpdateMoveTutorial(); }, {});
 	m_stateMachine.AddState(State::SHIELD_TUTORIAL, {}, [this]() { UpdateShieldTutorial(); }, {});
 	m_stateMachine.AddState(State::REFLECT_TUTORIAL, {}, [this]() { UpdateReflectTutorial(); }, {});
 	m_stateMachine.AddState(State::CUBE_TUTORIAL, {}, [this]() { UpdateCubeTutorial(); }, {});
@@ -150,7 +154,7 @@ void Tutorial::UpdateMoveTutorial()
 
 	// 特定のフレームたったら
 	m_currentFrame++;
-	if (m_currentFrame > wave_wait_frame)
+	if (m_currentFrame > wave_wait_frame + move_tutorial_frame)
 	{
 		// 移動チュートリアルUIの開始
 		m_pTutorialUI->StartState(TutorialState::MOVE);
@@ -365,6 +369,14 @@ void Tutorial::UpdateGameOver()
 
 	// デバッグテキストの追加
 	DebugText::Log("GameOver");
+}
+
+// スタートアニメーションの開始
+void Tutorial::EnterStartAnimation()
+{
+	// BGMの再生
+	SoundManager::GetInstance().PlayBGM("TutorialBgm");
+	SoundManager::GetInstance().SetFadeSound("TutorialBgm", 120, 0, 255);
 }
 
 // リザルトの開始

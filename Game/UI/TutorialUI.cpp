@@ -3,6 +3,7 @@
 #include "../Application.h"
 #include "../String/MessageManager.h"
 #include "../Util/Easing.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -323,6 +324,8 @@ void TutorialUI::StartState(TutorialState state)
 	// Œ»İ‚Ìó‘Ô‚ªI—¹‚µ‚Ä‚¢‚È‚¢ê‡‚Í‰½‚à‚µ‚È‚¢
 	if (m_tutorialDataMap[m_state].imgAlpha > 0) return;
 	if (m_tutorialDataMap[m_state].isStart && !m_tutorialDataMap[m_state].isEnd) return;
+
+	SoundManager::GetInstance().PlaySE("TutorialUI");
 
 	// ó‘Ô‚Ìİ’è
 	m_state = state;

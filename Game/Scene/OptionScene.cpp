@@ -8,6 +8,7 @@
 #include "../Application.h"
 #include "../Transitor/FadeTransitor.h"
 #include "../StateMachine.h"
+#include "../SoundManager.h"
 #include "DxLib.h"
 #include <cassert>
 #include <string>
@@ -86,10 +87,12 @@ void OptionScene::Update()
 	if (InputState::IsTriggered(InputType::UP))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
+		SoundManager::GetInstance().PlaySE("Select");
 	}
 	else if (InputState::IsTriggered(InputType::DOWN))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
+		SoundManager::GetInstance().PlaySE("Select");
 	}
 
 	// 選択されている項目の色を変える
@@ -122,9 +125,6 @@ void OptionScene::Update()
 		assert(false);
 	}
 
-	// 画面切り替え演出の更新
-//	m_pTransitor->Update();
-
 	// ステートマシンの更新
 	m_updateStateMachine.Update();
 }
@@ -136,7 +136,7 @@ void OptionScene::UpdateStageSelect()
 	if (InputState::IsTriggered(InputType::LEFT_SHOULDER))
 	{
 		// 終了
-	//	m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		SoundManager::GetInstance().PlaySE("Select");
 		m_manager.PopScene();
 		return;
 	}
@@ -227,24 +227,8 @@ void OptionScene::Draw()
 	// 描画輝度をもとに戻す
 	SetDrawBright(255, 255, 255);
 
-	// 三角形の描画
-	/*for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
-	{
-		DrawTriangleAA(620 - 75, draw_text_pos_y + (text_space_y * i + 10), 
-					   620 - 75 + 15, draw_text_pos_y + (text_space_y * i + 10) - 15,
-					   620 - 75 + 15, draw_text_pos_y + (text_space_y * i + 10) + 15, 
-					   m_itemColorTable[i], true);
-		DrawTriangleAA(900 + 75, draw_text_pos_y + (text_space_y * i + 10),
-			900 + 75 - 15, draw_text_pos_y + (text_space_y * i + 10) - 15,
-			900 + 75 - 15, draw_text_pos_y + (text_space_y * i + 10) + 15,
-			m_itemColorTable[i], true);
-	}*/
-	
 	// ステートマシンの更新
 	m_drawStateMachine.Update();
-
-	// 画面切り替え演出の描画
-//	m_pTransitor->Draw();
 }
 
 // ステージセレクトの描画

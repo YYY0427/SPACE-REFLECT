@@ -81,7 +81,13 @@ public:
 	/// サウンドをロードされていない場合、2DSE以外の場合は止まる
 	/// </summary>
 	/// <param name="name">ファイル名</param>
-	void Play(const std::string& fileName);
+	void PlaySE(const std::string& fileName);
+
+	/// <summary>
+	/// 指定の2DSEのループ再生
+	/// サウンドをロードされていない場合、2DSE以外の場合は止まる</summary>
+	/// <param name="fileName"></param>
+	void PlaySELoop(const std::string& fileName);
 
 	/// <summary>
 	/// 指定の3DSEを鳴らす
@@ -142,6 +148,21 @@ public:
 	/// <param name="pos">リスナーの座標</param>
 	/// <param name="angle">リスナーの向いている角度(ラジアン)</param>
 	void Set3DSoundListenerPosAndFrontPos_UpVecY(const Vector3& pos, const Vector3& angle);
+
+	/// <summary>
+	/// サウンドのループ範囲を設定
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="startTime">開始時間</param>
+	/// <param name="endTime">終了時間</param>
+	void SetLoopAreaTimePos(const std::string& fileName, LONGLONG startTime, LONGLONG endTime);
+		
+	/// <summary>
+	/// サウンドの再生時間を取得
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <returns>再生時間</returns>
+	LONGLONG GetSoundTotalTime(const std::string& fileName);
 
 	/// <summary>
 	/// サウンドの音量を取得

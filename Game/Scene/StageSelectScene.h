@@ -52,6 +52,7 @@ public:
 	void UpdateSelectStage();
 	void UpdateStartAnimation();
 	void UpdateCamera();
+	void UpdateRankingAlpha();
 
 	// 描画
 	void Draw() override final;
@@ -62,7 +63,7 @@ private:
 	struct StageData
 	{
 		Vector3					cameraPos;		// カメラの位置
-		std::string				stageNameId;		// ステージ名
+		std::string				stageNameId;	// ステージ名
 		std::string				missionNameId;	// ミッション名
 		std::string				difficultyId;	// 脅威度
 		std::string				conditionsId;	// 達成条件
@@ -75,6 +76,23 @@ private:
 	{
 		STAGE_SELECT,		// ステージ選択
 		START_ANIMATION,	// スタート演出
+	};
+
+	// UIの種類
+	enum class UI
+	{
+		EXPLANATION_WINDOW,	// 説明ウィンドウ
+
+		// 説明ウィンドウの枠
+		EXPLANATION_WINDOW_FRAME,
+
+
+
+		LINE_3D,			// 3Dライン
+		SCORE_RANKING,		// スコアランキング
+		BUTTON,				// ボタン
+
+		NUM
 	};
 
 private:

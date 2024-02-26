@@ -143,12 +143,6 @@ void SaveData::SetMasterVolume(int configNum)
 void SaveData::SetBgmVolume(int configNum)
 {
 	SetConfigValue(m_saveData.bgmVolume, configNum);
-
-	if (InputState::IsTriggered(InputType::RIGHT) ||
-		InputState::IsTriggered(InputType::LEFT))
-	{
-		m_soundManger.SetVolume("bgmTest", 255);
-	}
 }
 
 // SEÇÃâπó ÇÃê›íË
@@ -160,7 +154,7 @@ void SaveData::SetSeVolume(int configNum)
 	if (InputState::IsTriggered(InputType::RIGHT) ||
 		InputState::IsTriggered(InputType::LEFT))
 	{
-		m_soundManger.Play("cursorTest");
+		m_soundManger.PlaySE("Select");
 	}
 }
 

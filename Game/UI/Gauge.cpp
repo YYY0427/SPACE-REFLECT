@@ -1,5 +1,6 @@
 #include "Gauge.h"
 #include "../Util/DrawFunctions.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -10,15 +11,15 @@ namespace
 
 // コンストラクタ
 Gauge::Gauge(
-	const std::string gaugeImgFilePath, 
-	const std::string gaugeBackImgFilePath, 
-	const std::string gaugeFrameImgFilePath, 
+	const std::string& gaugeImgFilePath, 
+	const std::string& gaugeBackImgFilePath, 
+	const std::string& gaugeFrameImgFilePath, 
 	float maxValue, 
-	Vector2 pos, 
-	Vector2 dimensions, 
-	bool isGaugeBurst, 
+	const Vector2& pos, 
+	const Vector2& dimensions, 
+	bool  isGaugeBurst, 
 	float addGaugeSpeed, 
-	bool isDelayedDamage, 
+	bool  isDelayedDamage, 
 	float aimGaugeSpeed) :
 	m_maxValue(maxValue),
 	m_aimValue(maxValue),
@@ -35,23 +36,23 @@ Gauge::Gauge(
 	if (isGaugeBurst)
 	{
 		m_currentValue = 0.0f;
-		m_backValue = 0.0f;
-		m_updateFunc = &Gauge::BurstUpdate;
-		m_isEndBurst = false;
+		m_backValue    = 0.0f;
+		m_updateFunc   = &Gauge::BurstUpdate;
+		m_isEndBurst   = false;
 	}
 	else
 	{
 		m_currentValue = m_maxValue;
-		m_updateFunc = &Gauge::NormalUpdate;
-		m_isEndBurst = true;
+		m_updateFunc   = &Gauge::NormalUpdate;
+		m_isEndBurst   = true;
 	}
 
 	// 画像の読み込み
 	// 画像が指定されていない場合は-1を代入する
 	(gaugeImgFilePath == "") ? 
-		m_gaugeImgH = -1 : m_gaugeImgH = my::MyLoadGraph(gaugeImgFilePath.c_str());
+		m_gaugeImgH = -1      : m_gaugeImgH      = my::MyLoadGraph(gaugeImgFilePath.c_str());
 	(gaugeBackImgFilePath == "") ?
-		m_gaugeBackImgH = -1 : m_gaugeBackImgH = my::MyLoadGraph(gaugeBackImgFilePath.c_str());
+		m_gaugeBackImgH = -1  : m_gaugeBackImgH  = my::MyLoadGraph(gaugeBackImgFilePath.c_str());
 	(gaugeFrameImgFilePath == "") ?
 		m_gaugeFrameImgH = -1 : m_gaugeFrameImgH = my::MyLoadGraph(gaugeFrameImgFilePath.c_str());
 }
