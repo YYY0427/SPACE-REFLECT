@@ -216,9 +216,6 @@ void NormalLaser::UpdateCharge()
 		auto& soundManager = SoundManager::GetInstance();
 		soundManager.SetFadeSound("LaserCharge", 30, soundManager.GetSoundVolume("LaserCharge"), 0);
 
-		// レーザーのサウンドの再生
-		soundManager.PlaySELoop("Laser");
-
 		// ステートの変更
 		if (m_isPlayerFollowing)
 		{
@@ -290,6 +287,15 @@ void NormalLaser::UpdateNormalFire()
 // プレイヤーを追従して発射状態の更新
 void NormalLaser::UpdateFirePlayerFollowing()
 {
+	// レーザーのサウンドの再生
+	auto& soundManager = SoundManager::GetInstance();
+
+	if (m_laserFireFrame % 5 == 0)
+	{
+		// レーザーのサウンドの再生
+		soundManager.PlaySE("Laser");
+	}
+
 	// ベクトルを設定
 	m_directionVec = (m_pPlayer->GetPos() - m_directionPos).Normalized() * m_speed;
 
