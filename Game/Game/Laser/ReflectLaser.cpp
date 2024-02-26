@@ -19,15 +19,15 @@ namespace
 	const Vector3 model_scale  = { 1.0f, 0.1f, 0.1f };		// モデル
 	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
-	// 移動速度
-	constexpr float move_speed = 50.0f;			// レーザーの移動速度
-	constexpr float aim_assist_speed = 25.0f;	// エイムアシストの速度
+	// レーザーの移動速度
+	constexpr float move_speed = 35.0f;			
 
 	// レーザーエフェクトの再生速度
 	constexpr float effect_play_speed = 1.0f;
 
-	// エイムアシスト範囲
-	constexpr float aim_assist_range = 3000.0f;
+	// エイムアシスト
+	constexpr float aim_assist_range = 3000.0f;	// エイムアシストの範囲
+	constexpr float aim_assist_power = 0.25f;	// エイムアシストの強さ
 }
 
 // コンストラクタ
@@ -129,14 +129,11 @@ void ReflectLaser::Update()
 	// 反射ベクトルを作成
 	Vector3 goalPos = Vector3::Reflect(
 		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
-
 	Vector3 reflectVec = (goalPos - m_directionPos).Normalized();
-	if (!m_pShield->IsMoveInput())
-	{
-		reflectVec = {0, 0, 0};
-	}
+
 	// ベクトルの取得
-	Vector3 moveVec = (reflectVec + (aimAssistVec * 1.0f)) * move_speed;
+	float reflectVecPower = 1.0f - aim_assist_power;
+	Vector3 moveVec = ((reflectVec * reflectVecPower) + (aimAssistVec * aim_assist_power)) * move_speed;
 
 	// 向く方向を更新
 	m_directionPos += moveVec;

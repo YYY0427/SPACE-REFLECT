@@ -138,7 +138,7 @@ BossMatrix::BossMatrix(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserMan
 
 	// 攻撃ステートの追加
 	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
-	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
+//	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
 	ShuffleAttackState();
 
 	// HPゲージの設定
