@@ -15,18 +15,28 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="frame">何フレームで演出を行うか</param>
-	Triangle(int frame);
+	Triangle(const int frame);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Triangle();
 
-	// 更新
-	void Update(Vector3 bossEnemyPos);
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="bossEnemyPos">ボス敵の位置</param>
+	void Update(const Vector3& bossEnemyPos);
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 終了したかどうか
+	/// <summary>
+	/// 終了したか
+	/// </summary>
+	/// <returns>true : 終了、false : 途中</returns>
 	bool IsEnd() const;
 
 private:

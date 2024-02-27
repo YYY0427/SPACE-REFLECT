@@ -165,10 +165,18 @@ public:
 	bool IsBossAlive() const;
 
 	/// <summary>
-	/// ボスが倒されたかどうかの取得 
+	/// ボスが倒され、死亡演出中かどうかの取得
+	/// ボスが出現していない場合はfalseを返す
 	/// </summary>
-	/// <returns>true : 倒された、false : 倒されていない</returns>
-	bool IsDeadBoss() const;											
+	/// <returns>true : 死亡演出中、false : 死亡演出中でない</returns>
+	bool IsDeadBossAnim() const;
+
+	/// <summary>
+	/// ボスが倒されたか、死亡演出を終了したかの取得
+	/// 
+	/// </summary>
+	/// <returns>true : 倒された、false : まだ生存している</returns>
+	bool IsDeadBoosEndAnim() const;
 
 	/// <summary>
 	/// 現在のウェーブが終了したかどうかの取得
@@ -202,6 +210,7 @@ private:
 	bool m_isNextWave;	// 次のウェーブに移行するかどうか
 	bool m_isLoadWave;	// ウェーブデータを読み込んだかどうか
 	bool m_isStartWave;	// ウェーブを開始したかどうか
+	bool m_isDeadEffectSound;	// 死亡演出のサウンドを再生したかどうか
 
 	// ウェーブ
 	std::vector<WaveData> m_waveTable;	// ウェーブデータ

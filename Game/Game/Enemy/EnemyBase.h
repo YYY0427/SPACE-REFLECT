@@ -28,7 +28,7 @@ public:
 	virtual void Draw() = 0;
 
 	// ダメージ処理
-	virtual void OnDamage(int damage, Vector3 pos);
+	virtual void OnDamage(const int damage, const Vector3& pos);
 
 	// 死亡演出
 	virtual void PerformDeathEffect() {};
@@ -36,9 +36,9 @@ public:
 	// ゲッター
 	Vector3 GetPos() const;				// 位置情報
 	Vector3 GetLaserFirePos() const;	// レーザーの発射位置
-	bool IsEnabled() const;				// 存在フラグ
-	virtual bool IsDeadAnim();		// ボスの死亡演出中かどうか
-	float GetCollisionRadius() const;	// 当たり判定の半径
+	bool    IsEnabled() const;			// 存在フラグ
+	virtual bool IsDeadAnim();		    // ボスの死亡演出中かどうか
+	float   GetCollisionRadius() const;	// 当たり判定の半径
 
 protected:
 	// ポインタ

@@ -48,7 +48,7 @@ void DebugText::Draw()
 	{
 		// ”¼“§–¾‚Ì”wŒi‚ğ•`‰æ
 		int width, height, line = 0;
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 127);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, draw_back_alpha);
 		GetDrawStringSizeToHandle(&width, &height, &line, log.c_str(), log.size(), m_fontHandle);
 		DrawBox(draw_width, height * m_logCount + draw_start_height, draw_width + width, (height * m_logCount) + height + draw_start_height, draw_back_color, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -67,8 +67,8 @@ void DebugText::Draw()
 #endif
 }
 
-// ƒƒO‚Ì•`‰æ
-void DebugText::Log(std::string string)
+// ƒƒO‚Ì’Ç‰Á
+void DebugText::Log(const std::string& string)
 {
 #ifdef _DEBUG
 	// ƒƒO‚ÌƒŠƒXƒg‚É’Ç‰Á

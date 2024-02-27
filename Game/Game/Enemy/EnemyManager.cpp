@@ -8,9 +8,10 @@
 #include "../../UI/Warning.h"
 #include "../../UI/UIManager.h"
 #include "../../MyDebug/DebugText.h"
-#include "../Player.h"
 #include "../../Util/InputState.h"
 #include "../../Util/FileUtil.h"
+#include "../Player.h"
+#include "../../SoundManager.h"
 #include <fstream>
 #include <sstream>
 #include <cassert>
@@ -36,6 +37,7 @@ EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<Lase
 	m_isNextWave(false),
 	m_isLoadWave(false),
 	m_isDeadBoss(false),
+	m_isDeadEffectSound(false),
 	m_isBoss(false),
 	m_pPlayer(pPlayer),
 	m_pLaserManager(pLaserManager),
@@ -72,6 +74,19 @@ void EnemyManager::Update()
 		}
 	}
 #endif
+
+	// ボスの死亡演出中だったら
+	if (IsDeadBossAnim() && !m_isDeadEffectSound)
+	{
+		// ボス死亡エフェクト音の再生
+		SoundManager::GetInstance().PlaySE("BossDeathEffect");
+
+		// BGMの停止
+		SoundManager::GetInstance().StopBGM();
+
+		// フラグを立てる
+		m_isDeadEffectSound = true;
+	}
 
 	// ステートマシンの更新
 	m_stateMachine.Update();
@@ -115,6 +130,13 @@ void EnemyManager::UpdateWarning()
 
 		// ボス敵の生成
 		AddBossEnemy(m_bossType);
+
+		// ボス敵のBGMの再生
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.PlayBGM("BossBatleBgm");
+
+		// ボス敵のBGMのフェードインの設定
+		soundManager.SetFadeSound("BossBatleBgm", 120, 0, 255);
 
 		// ステートを通常に遷移
 		m_stateMachine.SetState(State::NORMAL);
@@ -168,6 +190,7 @@ void EnemyManager::StartWave()
 		if (m_bossType == BossEnemyType::NONE)
 		{
 			// ボス敵が倒されたことにしてなにもしない
+			m_isBoss = true;
 			m_isDeadBoss = true;
 			return;
 		}
@@ -211,6 +234,7 @@ void EnemyManager::NextWave()
 		if (m_bossType == BossEnemyType::NONE)
 		{
 			// ボス敵が倒されたことにする
+			m_isBoss = true;
 			m_isDeadBoss = true;
 		}
 		// まだ警告が出ていなかったら
@@ -409,10 +433,10 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(const std::st
 	return dataTable;
 }
 
-// ボス敵の死亡判定
-bool EnemyManager::IsDeadBoss() const
+// ボス敵が倒されて、死亡演出が終了したかどうか
+bool EnemyManager::IsDeadBoosEndAnim() const
 {
-	return m_isDeadBoss;
+	return m_isBoss && m_isDeadBoss;
 }
 
 // 現在のウェーブが終了したかどうか
@@ -453,4 +477,15 @@ const std::shared_ptr<EnemyBase>& EnemyManager::GetBossEnemy() const
 bool EnemyManager::IsBossAlive() const
 {
 	return (m_pBossEnemy && m_isBoss);
+}
+
+// ボスが倒され、死亡演出中かどうかの取得
+bool EnemyManager::IsDeadBossAnim() const
+{
+	// ボス敵がいたら
+	if (m_pBossEnemy)
+	{
+		return m_pBossEnemy->IsDeadAnim();
+	}
+	return false;
 }

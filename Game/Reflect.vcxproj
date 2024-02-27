@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Util\FlagManager.cpp" />
     <ClCompile Include="ModelHandleManager.cpp" />
     <ClCompile Include="Scene\PuseScene.cpp" />
     <ClCompile Include="UI\TutorialUI.cpp" />
@@ -220,6 +221,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Util\FlagManager.h" />
     <ClInclude Include="ModelHandleManager.h" />
     <ClInclude Include="Scene\PuseScene.h" />
     <ClInclude Include="UI\TutorialUI.h" />

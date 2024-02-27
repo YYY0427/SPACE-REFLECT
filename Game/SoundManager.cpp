@@ -85,6 +85,9 @@ void SoundManager::Update()
 // 終了処理
 void SoundManager::End()
 {
+	// 全てのサウンドを止める
+	StopAllSound();
+
 	// サウンドの解放
 	for (auto& sound : m_soundDataTable)
 	{
@@ -227,7 +230,7 @@ void SoundManager::PlaySELoop(const std::string& fileName)
 }
 
 // 指定の3DSEを鳴らす
-void SoundManager::Play3D(const std::string& fileName, const Vector3& soundPos, const float soundRadius)
+void SoundManager::PlaySE3D(const std::string& fileName, const Vector3& soundPos, const float soundRadius)
 {
 	// ロードしていない場合は止める
 	assert(m_soundDataTable.find(fileName) != m_soundDataTable.end());			
@@ -294,6 +297,19 @@ void SoundManager::StopAllSound()
 	for (auto& sound : m_soundDataTable)
 	{
 		StopSoundMem(sound.second.handle);
+	}
+}
+
+// BGMを止める
+void SoundManager::StopBGM()
+{
+	// BGMを止める
+	for (auto& sound : m_soundDataTable)
+	{
+		if (sound.second.type == SoundType::BGM)
+		{
+			StopSoundMem(sound.second.handle);
+		}
 	}
 }
 
@@ -388,4 +404,21 @@ int SoundManager::GetSoundVolume(const std::string& fileName)
 
 	// 音量を取得
 	return m_soundDataTable[fileName].volume;
+}
+
+// 再生中のBGMのファイル名の取得
+const std::string& SoundManager::GetPlayBGMFileName() const
+{
+	// 再生中のBGMのファイル名を取得
+	for (auto& sound : m_soundDataTable)
+	{
+		if (CheckSoundMem(sound.second.handle))
+		{
+			if (sound.second.type == SoundType::BGM)
+			{
+				return sound.first;
+			}
+		}
+	}
+	return "";
 }

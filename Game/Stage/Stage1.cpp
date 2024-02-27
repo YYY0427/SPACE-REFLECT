@@ -24,6 +24,7 @@
 #include "../UI/TutorialUI.h"
 #include "../Util/InputState.h"
 #include "../Transitor/Fade.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -110,14 +111,11 @@ void Stage1::Update()
 	// 小さい隕石の生成
 	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());
 
-	// ボスが死んだら隕石の削除
-	if (m_pEnemyManager->GetBossEnemy())
+	// ボスが死亡演出中なら隕石の削除
+	if (m_pEnemyManager->IsDeadBossAnim())
 	{
-		if (m_pEnemyManager->GetBossEnemy()->IsDeadAnim())
-		{
-			m_pMeteorManager->DeleteMeteor();
-		}	
-	}
+		m_pMeteorManager->DeleteMeteor();
+	}	
 
 	// 更新
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });	// スカイドーム
@@ -155,7 +153,7 @@ void Stage1::UpdateStartAnimation()
 void Stage1::UpdatePlay()
 {
 	// ボスが死んだらゲームクリアに遷移
-	if (m_pEnemyManager->IsDeadBoss())
+	if (m_pEnemyManager->IsDeadBoosEndAnim())
 	{
 		m_stateMachine.SetState(State::GAME_CLEAR);
 		return;

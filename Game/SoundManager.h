@@ -96,7 +96,7 @@ public:
 	/// <param name="fileName">ファイル名</param>
 	/// <param name="soundPos">再生位置</param>
 	/// <param name="soundRadius">聞こえる距離</param>
-	void Play3D(const std::string& fileName, const Vector3& soundPos, const float soundRadius);
+	void PlaySE3D(const std::string& fileName, const Vector3& soundPos, const float soundRadius);
 
 	/// <summary>
 	/// 指定のBGMを鳴らす
@@ -124,6 +124,11 @@ public:
 	/// すべてのサウンドを止める
 	/// </summary>
 	void StopAllSound();
+
+	/// <summary>
+	/// BGMを止める
+	/// </summary>
+	void StopBGM();
 
 	/// <summary>
 	/// 音量調節
@@ -170,6 +175,12 @@ public:
 	/// <param name="fileName">ファイル名</param>
 	/// <returns>サウンド音量</returns>
 	int GetSoundVolume(const std::string& fileName);
+
+	/// <summary>
+	/// 再生中のBGMのファイル名の取得
+	/// </summary>
+	/// <returns>再生中のBGMのファイル名</returns>
+	const std::string& GetPlayBGMFileName() const;
 
 private:
 	/// <summary>

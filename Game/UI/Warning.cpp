@@ -2,6 +2,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
+#include "../SoundManager.h"
 #include <string>
 #include <DxLib.h>
 
@@ -9,8 +10,8 @@ namespace
 {
 	// 画像ファイルパス
 	const std::string center_img_file_path = "Data/Image/Warning.png";
-	const std::string up_img_file_path = "Data/Image/WarningUp.png";
-	const std::string down_img_file_path = "Data/Image/WarningDown.png";
+	const std::string up_img_file_path =     "Data/Image/WarningUp.png";
+	const std::string down_img_file_path =   "Data/Image/WarningDown.png";
 
 	// 警告文字のフェードイン・アウトの速度
 	constexpr float string_fade_speed = 0.07f;
@@ -54,6 +55,23 @@ Warning::Warning(int drawFrame) :
 	m_uiDataTable[static_cast<int>(ID::UP)].scrollDirection = 1;
 	m_uiDataTable[static_cast<int>(ID::DOWN)].scrollDirection = -1;
 	m_uiDataTable[static_cast<int>(ID::CENTER)].scrollDirection = 0;
+
+	// 通常のBGMのファイル名の取得
+	auto& soundManager = SoundManager::GetInstance();
+	auto& fileName = soundManager.GetPlayBGMFileName();
+
+	// 再生中のBGMがあったら
+	if (fileName != "")
+	{
+		// 通常のBGMのフェードアウトの設定
+		soundManager.SetFadeSound(fileName, 120, soundManager.GetSoundVolume(fileName), 0);
+	}
+
+	// 警告のSEの再生
+	soundManager.PlaySE("Warning");
+
+	// 警告のSEのフェードインの設定
+	soundManager.SetFadeSound("Warning", 20, 0, 255);
 }
 
 // デストラクタ
@@ -74,6 +92,10 @@ void Warning::Update()
 	{
 		// 終了フラグを立てる
 		m_isEnd = true;
+
+		// 警告のSEのフェードアウトの設定
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.SetFadeSound("Warning", 30, soundManager.GetSoundVolume("Warning"), 0);
 
 		// 警告画像のアルファ値を減らす
 		m_addImgAlphaParam *= -1;

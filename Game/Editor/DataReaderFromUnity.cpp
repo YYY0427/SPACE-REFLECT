@@ -23,7 +23,7 @@ DataReaderFromUnity::~DataReaderFromUnity()
 }
 
 // Unityで配置したオブジェクトのデータを読み取る
-void DataReaderFromUnity::LoadUnityGameObjectData(std::string fileName)
+void DataReaderFromUnity::LoadUnityGameObjectData(const std::string& fileName)
 {
 	// ファイルパスの作成
 	std::string filePath = file_hierarchy + fileName + extension;
@@ -89,7 +89,7 @@ DataReaderFromUnity& DataReaderFromUnity::GetInstance()
 }
 
 // オブジェクトの名前からデータを取得
-const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(std::string fileName, std::string objectName) const
+const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(const std::string& fileName, const std::string& objectName) const
 {
 	// ファイル名からデータを取得
 	auto it = m_data.find(fileName);

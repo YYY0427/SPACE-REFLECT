@@ -10,3 +10,7 @@ GageRecovery,.mp3,1,1
 TutorialUI,.mp3,1,0.7
 LaserCharge,.mp3,1,0.7
 Laser,.mp3,1,1
+BossBatleBgm,.mp3,0,1
+Reflect,.wav,1,1
+Warning,.mp3,1,1
+BossDeathEffect,.mp3,1,1

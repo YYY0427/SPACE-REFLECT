@@ -19,28 +19,53 @@ struct UnityGameObject
 class DataReaderFromUnity
 {
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~DataReaderFromUnity();
 
-	// Unityで配置したオブジェクトのデータを読み取る
-	void LoadUnityGameObjectData(std::string fileName);
+	/// <summary>
+	/// Unityで配置したオブジェクトのデータを読み取る 
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	void LoadUnityGameObjectData(const std::string& fileName);
 
-	// インスタンスの取得
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns>インスタンス</returns>
 	static DataReaderFromUnity& GetInstance();
 
-	// 読み取ったデータの取得
-	const std::vector<UnityGameObject>& GetData(std::string fileName, std::string objectName) const;
+	/// <summary>
+	/// Unityで配置したオブジェクトのデータを取得
+	/// </summary>
+	/// <param name="fileName">ファイル名</param>
+	/// <param name="objectName">オブジェクト名</param>
+	/// <returns>データ</returns>
+	const std::vector<UnityGameObject>& GetData(const std::string& fileName, const std::string& objectName) const;
 
-	// すべてのデータの削除
+	/// <summary>
+	/// 全てのデータを削除
+	/// </summary>
 	void DeleteAllData();
 
 private:
-	// コンストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	DataReaderFromUnity();
 
-	// コピーも代入も禁止
-	DataReaderFromUnity(const DataReaderFromUnity&) = delete;	// コピーコンストラクタ禁止
-	void operator = (const DataReaderFromUnity&) = delete;		// 代入禁止
+	/// <summary>
+	/// コピーコンストラクタ禁止
+	/// </summary>
+	/// <param name=""></param>
+	DataReaderFromUnity(const DataReaderFromUnity&) = delete;	
+
+	/// <summary>
+	/// 代入演算子禁止
+	/// </summary>
+	/// <param name=""></param>
+	void operator = (const DataReaderFromUnity&) = delete;		
 
 private:
 	// 読み取ったデータ

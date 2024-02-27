@@ -206,15 +206,19 @@ void NormalLaser::Update()
 // チャージ状態の更新
 void NormalLaser::UpdateCharge()
 {
+	// チャージフレームの残りフレームが特定のフレーム数以下になったら
+	if (m_chargeEffectFrame <= 30)
+	{
+		// レーザーのチャージサウンドのフェードアウトの設定
+		auto& soundManager = SoundManager::GetInstance();
+		soundManager.SetFadeSound("LaserCharge", 20, soundManager.GetSoundVolume("LaserCharge"), 0);
+	}
+
 	// チャージ時間が終わったら
 	if(m_chargeEffectFrame-- <= 0)
 	{
 		// モデルの拡大率を設定
 		m_scale.x = -1.0f;
-
-		// レーザーのチャージサウンドのフェードアウト
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.SetFadeSound("LaserCharge", 30, soundManager.GetSoundVolume("LaserCharge"), 0);
 
 		// ステートの変更
 		if (m_isPlayerFollowing)
@@ -293,7 +297,7 @@ void NormalLaser::UpdateFirePlayerFollowing()
 	if (m_laserFireFrame % 5 == 0)
 	{
 		// レーザーのサウンドの再生
-		soundManager.PlaySE("Laser");
+	//	soundManager.PlaySE("Laser");
 	}
 
 	// ベクトルを設定

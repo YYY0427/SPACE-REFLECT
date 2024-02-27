@@ -12,8 +12,14 @@ namespace
 	// 三角形の初期角度
 	constexpr float triangle_init_angle = 135.0f;
 
+	// 三角形の初期色
+	const Vector3 triangle_init_color = { 255, 255, 255 };
+
 	// 三角形のなす角
 	constexpr float triangle_angle = 10.0f;
+
+	// 三角形どうしの間隔の角度
+	constexpr float triangle_interval_angle = 90.0f;
 
 	// 三角形の色を変化させる速度
 	constexpr float color_speed = 2.0f;
@@ -23,14 +29,17 @@ namespace
 
 	// 三角形の色を変化させる時間(1.0 = m_frame)
 	constexpr float change_color_time = 0.5f;
+
+	// 三角形の最大のアルファ値
+	constexpr int max_alpha = 255;
 }
 
 // コンストラクタ
-Triangle::Triangle(int frame) :
+Triangle::Triangle(const int frame) :
 	m_frame(frame),
 	m_intervalFrame(frame / (triangle_num + 1)),
 	m_angle(triangle_init_angle),
-	m_color(255, 255, 255)
+	m_color(triangle_init_color)
 {
 }
 
@@ -40,7 +49,7 @@ Triangle::~Triangle()
 }
 
 // 更新
-void Triangle::Update(Vector3 bossEnemyPos)
+void Triangle::Update(const Vector3& bossEnemyPos)
 {
 	// タイマーの更新
 	m_frame.Update(1);
@@ -57,10 +66,9 @@ void Triangle::Update(Vector3 bossEnemyPos)
 		TriangleData triangleData;
 
 		// 三角形の位置を設定
-		auto& screenSize = Application::GetInstance().GetWindowSize();
-		Vector3 screenPos = Vector3::FromDxLibVector3(ConvWorldPosToScreenPos(bossEnemyPos.ToDxLibVector3()));
+		auto& screenSize    = Application::GetInstance().GetWindowSize();
+		Vector3 screenPos   = Vector3::FromDxLibVector3(ConvWorldPosToScreenPos(bossEnemyPos.ToDxLibVector3()));
 		triangleData.pos[0] = Vector2(screenPos.x, screenPos.y);
-
 		triangleData.pos[1] = Vector2((0.5f * cosf(m_angle) + 0.5f) * screenSize.width, (0.5f * sinf(m_angle) + 0.5f) * screenSize.width);
 		triangleData.pos[2] = Vector2((0.5f * cosf(m_angle + triangle_angle) + 0.5f) * screenSize.width, (0.5f * sinf(m_angle + triangle_angle) + 0.5f) * screenSize.width);
 		/*triangleData.pos[1] = 
@@ -72,10 +80,10 @@ void Triangle::Update(Vector3 bossEnemyPos)
 					sinf(MathUtil::ToRadian(m_angle + triangle_angle)) * screenSize.height);*/
 
 		// 角度を加算
-		m_angle += 90.0f;
+		m_angle += triangle_interval_angle;
 
 		// アルファ値を設定
-		triangleData.alpha = 255;
+		triangleData.alpha = max_alpha;
 
 		// 三角形のデータを追加
 		m_triangleDataTable.push_back(triangleData);

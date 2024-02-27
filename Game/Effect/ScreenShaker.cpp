@@ -4,8 +4,14 @@
 #include <DxLib.h>
 #include <cassert>
 
+namespace
+{
+	// 揺れの減衰率
+	constexpr float quake_attenuation = -0.95f;
+}
+
 // コンストラクタ
-ScreenShaker::ScreenShaker(std::shared_ptr<Camera> pCamera) :
+ScreenShaker::ScreenShaker(const std::shared_ptr<Camera>& pCamera) :
 	m_pCamera(pCamera),
 	m_quakeSize(0, 0),
 	m_isPreDraw(false),
@@ -33,12 +39,15 @@ void ScreenShaker::Update()
 	if (m_quakeTimer.GetTime() > 0)
 	{
 		// 画面を揺らす
-		m_quakeSize.x *= -0.95f;
-		m_quakeSize.y *= -0.95f;
+		m_quakeSize.x *= quake_attenuation;
+		m_quakeSize.y *= quake_attenuation;
+
+		// タイマーを更新
 		m_quakeTimer.Update(-1);
 	}
 	else
 	{
+		// 揺れが終わったら揺れの大きさを0にする
 		m_quakeSize.x = 0.0f;
 		m_quakeSize.y = 0.0f;
 	}
@@ -83,7 +92,7 @@ void ScreenShaker::Draw()
 }
 
 // 画面を揺らす
-void ScreenShaker::StartShake(Vector2 quakeSize, int frame)
+void ScreenShaker::StartShake(const Vector2& quakeSize, const int frame)
 {
 	// すでに揺れていたら何もしない
 	if (m_quakeTimer.GetTime() > 0) return;

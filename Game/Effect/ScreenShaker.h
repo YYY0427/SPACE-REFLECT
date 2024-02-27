@@ -12,26 +12,42 @@ class Camera;
 class ScreenShaker
 {
 public:
-	// コンストラクタ
-	ScreenShaker(std::shared_ptr<Camera> pCamera);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="pCamera">カメラのポインタ</param>
+	ScreenShaker(const std::shared_ptr<Camera>& pCamera);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ScreenShaker();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画前に必ず呼ぶ
+	/// <summary>
+	/// 描画準備
+	/// 描画前に必ず呼ぶ 
+	/// </summary>
 	void PreDraw();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 画面揺れの開始
-	void StartShake(Vector2 quakeSize, int frame);
+	/// <summary>
+	/// 画面揺れの開始
+	/// </summary>
+	/// <param name="quakeSize">画面揺れの大きさ</param>
+	/// <param name="frame">画面揺れのフレーム</param>
+	void StartShake(const Vector2& quakeSize, const int frame);
 
 private:
-	// ポインタ
+	// カメラポインタ
 	std::shared_ptr<Camera> m_pCamera;
 
 	// 揺れる時間

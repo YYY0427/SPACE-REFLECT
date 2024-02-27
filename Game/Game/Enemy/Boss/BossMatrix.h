@@ -17,56 +17,140 @@ class ScreenShaker;
 class BossMatrix : public EnemyBase
 {
 public:
-	// コンストラクタ
-	BossMatrix(std::shared_ptr<Player> pPlayer, 
-			   std::shared_ptr<LaserManager> pLaserManager,
-			   std::shared_ptr<ScreenShaker> pScreenShaker);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	/// <param name="pLaserManager">レーザーマネージャーのポインタ</param>
+	/// <param name="pScreenShaker">画面揺れのポインタ</param>
+	BossMatrix(const std::shared_ptr<Player>& pPlayer, 
+			   const std::shared_ptr<LaserManager>& pLaserManager,
+			   const std::shared_ptr<ScreenShaker>& pScreenShaker);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~BossMatrix();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// ダメージ処理
-	void OnDamage(int damage, Vector3 pos) override final;
+	/// <summary>
+	/// ダメージ処理
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
+	/// <param name="pos">ダメージを受けた位置</param>
+	void OnDamage(const int damage, const Vector3& pos) override final;
 
 private:
-	// 開始
-	void EnterMoveHormingLaserAttack();	// 移動しながらホーミングレーザー攻撃
-	void EnterCubeLaserAttack();		// キューブレーザー攻撃
-	void EnterDie();					// 死亡
 
-	// 更新
-	void UpdateEntry();		// 登場時の更新
-	void UpdateIdle();		// 待機時の更新
-	void UpdateDie();		// 死亡時の更新
-	void UpdateGameOver();	// ゲームオーバー時の更新
-	void UpdateMoveHomingLaserAttack();	// 移動しながらホーミングレーザー攻撃
-	void UpdateCubeLaserAttack();		// キューブレーザー攻撃
+	//// ステートマシンの初期化 ////
 
-	// 移動
-	void InitMove();		// 移動の初期化
-	void SetGoalPos();		// 目標座標の設定
-	void MoveInitPos();		// 初期位置に移動
-	void Move();			// 移動
+	/// <summary>
+	/// 移動しながらホーミングレーザー攻撃の初期化
+	/// </summary>
+	void EnterMoveHormingLaserAttack(); 
 
-	// 攻撃ステートの順序をシャッフル
+	/// <summary>
+	/// キューブレーザー攻撃の初期化
+	/// </summary>
+	void EnterCubeLaserAttack();	
+
+	/// <summary>
+	/// 登場時の初期化
+	/// </summary>
+	void EnterDie();	
+
+
+	//// ステートの更新 ////
+
+	/// <summary>
+	/// 登場時の更新
+	/// </summary>
+	void UpdateEntry();
+
+	/// <summary>
+	/// 待機時の更新
+	/// </summary>
+	void UpdateIdle();
+
+	/// <summary>
+	/// 死亡時の更新
+	/// </summary>
+	void UpdateDie();		
+
+	/// <summary>
+	/// ゲームオーバー時の更新
+	/// </summary>
+	void UpdateGameOver();	
+
+	/// <summary>
+	/// 移動しながらホーミングレーザー攻撃の更新
+	/// </summary>
+	void UpdateMoveHomingLaserAttack();	
+
+	/// <summary>
+	/// キューブレーザー攻撃の更新
+	/// </summary>
+	void UpdateCubeLaserAttack();		
+
+
+	//// 移動 ////
+
+	/// <summary>
+	/// 移動の初期化
+	/// </summary>
+	void InitMove();		
+
+	/// <summary>
+	/// 目標座標の設定
+	/// </summary>
+	void SetGoalPos();
+
+	/// <summary>
+	/// 初期位置に移動
+	/// </summary>
+	void MoveInitPos();	
+
+	/// <summary>
+	/// 移動
+	/// </summary>
+	void Move();
+
+
+	//// 攻撃 ////
+
+	/// <summary>
+	/// 攻撃順序のシャッフル
+	/// </summary>
 	void ShuffleAttackState();
 
-	// 攻撃ステートの設定
+	/// <summary>
+	/// 攻撃ステートの設定
+	/// </summary>
 	void SetAttackState();
 
-	// ゲッター
-	bool IsDeadAnim() override;	// 死亡演出中か
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// 死亡時の演出中か
+	/// </summary>
+	/// <returns>true : 演出中、false : 演出中ではない</returns>
+	bool IsDeadAnim() override;	
 
 private:
 	// ステート
 	enum class State
 	{
+		// 基本
 		ENTRY,		// 登場
 		IDLE,		// 待機
 		BARIER,		// バリア
@@ -82,10 +166,10 @@ private:
 	// 死亡時のエフェクトのデータ
 	struct DieEffectData
 	{
-		int effectHandle;
-		Vector3 pos;
-		Vector3 vec;
-		float scale;
+		int effectHandle;	// エフェクトハンドル
+		Vector3 pos;		// エフェクトの座標
+		Vector3 vec;		// エフェクトの移動ベクトル
+		float scale;		// エフェクトの拡大率
 	};
 
 private:

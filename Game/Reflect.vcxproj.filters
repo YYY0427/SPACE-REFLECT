@@ -281,6 +281,9 @@
     <ClCompile Include="Scene\PuseScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Util\FlagManager.cpp">
+      <Filter>ソース ファイル\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -510,6 +513,9 @@
     </ClInclude>
     <ClInclude Include="Scene\PuseScene.h">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\FlagManager.h">
+      <Filter>ソース ファイル\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

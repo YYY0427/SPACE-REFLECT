@@ -31,7 +31,7 @@ private:
 	struct EffectData
 	{
 		std::string effectId;				// エフェクトのID
-		int* playingEffectHandle;	// エフェクトのハンドル
+		int* playingEffectHandle;			// エフェクトのハンドル
 		PlayType	type;					// 再生タイプ
 		Vector3		pos;					// 位置	
 		Vector3		rot;					// 回転

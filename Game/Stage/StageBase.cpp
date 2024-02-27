@@ -168,6 +168,9 @@ void StageBase::Collision()
 			// まだ反射レーザーがなければ反射レーザーを追加
 			if (!laser.pLaser->IsReflect())
 			{
+				// 反射音の再生
+				SoundManager::GetInstance().PlaySE("Reflect");
+
 				// 反射レーザーを追加
 				int key = m_pLaserManager->AddReflectLaser(m_pEnemyManager, m_pPlayer->GetShield(), laser.pLaser, firePos);
 				laser.pLaser->SetReflectLaserKey(key);
@@ -181,9 +184,6 @@ void StageBase::Collision()
 
 			// 敵のレーザーを止める
 			laser.pLaser->Reflect(m_pPlayer->GetShield()->GetPos());
-
-			// プレイヤーの反射処理
-		//	m_pPlayer->OnReflect();
 		}
 	}
 

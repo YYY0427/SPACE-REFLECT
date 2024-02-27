@@ -30,9 +30,9 @@ namespace
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 
 	// 位置
-	const Vector3 init_pos = { 0.0f, 300.0f, 5000.0f };				// 初期位置(ワールド座標)
-	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1800.0f };		// 登場時の位置(ワールド座標)
-	const Vector3 normal_pos = { 640, 360, 1800.0f };					// 通常時の位置(スクリーン座標)
+	const Vector3 init_pos      = { 0.0f, 300.0f, 5000.0f };	// 初期位置(ワールド座標)
+	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1800.0f };	// 登場時の位置(ワールド座標)
+	const Vector3 normal_pos    = { 640, 360, 1800.0f };		// 通常時の位置(スクリーン座標)
 
 	// モデル
 	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
@@ -98,7 +98,9 @@ namespace
 }
 
 // コンストラクタ
-BossMatrix::BossMatrix(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager, std::shared_ptr<ScreenShaker> pScreenShaker) :
+BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer, 
+					   const std::shared_ptr<LaserManager>& pLaserManager, 
+					   const std::shared_ptr<ScreenShaker>& pScreenShaker) :
 	m_attackStateIndex(0),
 	m_isMoveEnd(false),
 	m_idleFrame(0),
@@ -214,7 +216,7 @@ void BossMatrix::Draw()
 }
 
 // ダメージ処理
-void BossMatrix::OnDamage(int damage, Vector3 pos)
+void BossMatrix::OnDamage(const int damage, const Vector3& pos)
 {
 	// HPを減らす
 	m_hp -= damage;

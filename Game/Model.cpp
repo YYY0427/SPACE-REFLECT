@@ -128,7 +128,7 @@ void Model::Update()
 	// 当たり判定データの更新
 	if (m_isUseCollision && m_isUpdateColision)
 	{
-		int result = MV1RefreshCollInfo(m_modelHandle, m_colFrameIndex);
+		MV1RefreshCollInfo(m_modelHandle, m_colFrameIndex);
 	}
 }
 

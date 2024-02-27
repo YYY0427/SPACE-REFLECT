@@ -9,15 +9,21 @@ namespace
 
 	// 透明度の減速速度
 	constexpr int alpha_speed = 10;
+
+	// フラッシュの初期色
+	constexpr unsigned int default_color = 0xffffff;
+
+	//フラッシュの初期透明度(0～255)
+	constexpr int default_alpha = 255;
 }
 
 // コンストラクタ
-Flash::Flash(int enableFrame) :
+Flash::Flash(const int enableFrame) :
 	m_enableFrame(enableFrame),
 	m_pos({ 0, 0 }),
-	m_color(0xffffff),
+	m_color(default_color),
 	m_radius(0.0f),
-	m_alpha(255)
+	m_alpha(default_alpha)
 {
 }
 
@@ -27,7 +33,7 @@ Flash::~Flash()
 }
 
 // 更新
-void Flash::Update(Vector2 pos, unsigned int color)
+void Flash::Update(const Vector2& pos, const unsigned int color)
 {
 	// 座標を設定
 	m_pos = pos;

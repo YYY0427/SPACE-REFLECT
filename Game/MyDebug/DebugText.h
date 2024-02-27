@@ -26,8 +26,11 @@ namespace
 	// 文字の太さ
 	constexpr int font_thickness = 9;
 
-	// 半透明の背景の色
+	// 文字の背景の色
 	const unsigned int draw_back_color = 0xffffff;
+
+	// 文字の背景の透明度
+	constexpr int draw_back_alpha = 127;
 }
 
 /// <summary>
@@ -36,24 +39,40 @@ namespace
 class DebugText
 {
 public:
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	static void Init();
 
-	// 終了処理
+	/// <summary>
+	/// 終了処理
+	/// </summary>
 	static void End();
 
-	// ログのクリア
+	/// <summary>
+	/// ログのクリア
+	/// </summary>
 	static void Clear();
 
-	// ログの描画
+	/// <summary>
+	/// ログの描画
+	/// </summary>
 	static void Draw();
 
-	// ログを出力する
-	static void Log(std::string string);
+	/// <summary>
+	/// ログの追加(文字のみ)
+	/// </summary>
+	/// <param name="string">出力する文字列</param>
+	static void Log(const std::string& string);
 
-	// デバッグテキストを描画する
+	/// <summary>
+	/// ログの追加(文字と数字)
+	/// </summary>
+	/// <typeparam name="T">変数の型</typeparam>
+	/// <typeparam name="N">変数の数</typeparam>
+	/// <param name="string">文字列</param>
 	template <typename T, size_t N>
-	static void Log(std::string string, const T(&array)[N])
+	static void Log(const std::string& string, const T(&array)[N])
 	{
 #ifdef _DEBUG
 		// 文字列を作成

@@ -7,19 +7,33 @@
 class Flash
 {
 public:
-	// コンストラクタ
-	Flash(int enableFrame);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="enableFrame">消えるまでのフレーム数</param>
+	Flash(const int enableFrame);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Flash();
 
-	// 更新
-	void Update(Vector2 pos, unsigned int color);
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="pos">フラッシュが広がっていく中心地</param>
+	/// <param name="color">フラッシュの色</param>
+	void Update(const Vector2& pos, const unsigned int color);
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 終了したかどうか
+	/// <summary>
+	/// 終了したか
+	/// </summary>
+	///	<returns>true : 終了、false : 途中</returns>
 	bool IsEnd() const;
 
 private:

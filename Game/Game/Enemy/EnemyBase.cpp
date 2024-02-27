@@ -34,7 +34,7 @@ EnemyBase::~EnemyBase()
 }
 
 // ƒ_ƒ[ƒWˆ—
-void EnemyBase::OnDamage(int damage, Vector3 pos)
+void EnemyBase::OnDamage(const int damage, const Vector3& pos)
 {
 	// HP‚ğŒ¸‚ç‚·
 	m_hp -= damage;

@@ -212,10 +212,7 @@ void Application::Run()
 // 終了処理
 void Application::End()
 {
-	// サウンドをすべて止める
-	SoundManager::GetInstance().StopAllSound();
-
-	// サウンドの解放
+	// サウンドの終了処理
 	SoundManager::GetInstance().End();
 
 	// Effekseerの終了処理
