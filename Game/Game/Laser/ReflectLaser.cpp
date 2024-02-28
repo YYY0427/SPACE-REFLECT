@@ -8,6 +8,7 @@
 #include "../../Model.h"
 #include "../../MyDebug/DebugText.h"
 #include "../../ModelHandleManager.h"
+#include "../../SoundManager.h"
 
 namespace
 {
@@ -55,6 +56,13 @@ ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
 		m_laserEffectHandle, "ReflectLaser", &m_pos, effect_scale, effect_play_speed, rotEffectMtx.ToEulerAngle());
 
+	// 元々のレーザー音を停止
+	auto& soundManager = SoundManager::GetInstance();
+	soundManager.StopSound("Laser");
+	
+	// レーザーの音の再生
+	soundManager.PlaySE("ReflectLaser");
+
 	// モデルの設定
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
 	m_pModel->SetUseCollision(true);	// 当たり判定設定
@@ -69,6 +77,9 @@ ReflectLaser::~ReflectLaser()
 {
 	// エフェクトの削除
 	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_laserEffectHandle);
+
+	// レーザーの音の停止
+	SoundManager::GetInstance().StopSound("ReflectLaser");
 }
 
 // 更新

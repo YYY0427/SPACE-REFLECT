@@ -21,29 +21,41 @@ namespace
 
 	// 当たり判定の半径
 	constexpr float hit_radius = 70.0f;
+
+	// 不透明度の最大値
+	constexpr float max_opacity = 1.0f;
+
+	// アニメーションの変更フレーム
+	constexpr int change_anim_frame = 8;
+
+	// 輪郭線
+	constexpr float outline_width   = 1.08f;
 }
 
 // コンストラクタ
-Mosquito::Mosquito( EnemyData data, 
-					std::shared_ptr<Player> pPlayer, 
-					std::shared_ptr<LaserManager> pLaserManager) :
+Mosquito::Mosquito(const EnemyData& data, 
+				   const std::shared_ptr<Player>& pPlayer, 
+				   const std::shared_ptr<LaserManager>& pLaserManager) :
 	m_idleFrame(0),
 	m_laserKey(-1)
 {
 	// 初期化
-	m_pPlayer = pPlayer;
-	m_pLaserManager = pLaserManager;
-	m_actionDataList = data.actionDataList;
-	m_isEnabled = true;
-	m_hp = data.hp;
-	m_moveSpeed = data.speed;
-	m_attackPower = data.attack;
-	m_scale = { data.scale, data.scale, data.scale };
-	m_opacity = 1.0f;
+	m_pPlayer         = pPlayer;
+	m_pLaserManager   = pLaserManager;
+	m_actionDataList  = data.actionDataList;
+	m_isEnabled       = true;
+	m_hp              = data.hp;
+	m_moveSpeed       = data.speed;
+	m_attackPower     = data.attack;
+	m_scale           = { data.scale, data.scale, data.scale };
+	m_opacity         = max_opacity;
 	m_collisionRadius = hit_radius * m_scale.x;
 
-	// 座標の設定
+	
+	// 0.0(near)～1.0(far)の範囲でZ座標を設定
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + data.pos.z) / GetCameraFar();
+
+	// 座標の設定
 	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({data.pos.x, data.pos.y, z }));
 
 	// プレイヤーを向くように回転行列を設定
@@ -53,8 +65,6 @@ Mosquito::Mosquito( EnemyData data,
 	m_state.AddState(State::IDLE, {}, [this](){ UpdateIdle(); }, {});
 	m_state.AddState(State::MOVE, [this]() { EntarMove(); }, [this](){ UpdateMove(); }, {});
 	m_state.AddState(State::ATTACK, {}, [this](){ UpdateAttack(); }, {});
-	m_state.AddState(State::DEAD, {}, [this](){ UpdateDead(); }, {});
-	m_state.AddState(State::GAME_OVER, {}, [this](){ UpdateGameOver(); }, {});
 	m_state.SetState(State::MOVE);
 
 	// モデルのインスタンスの作成
@@ -65,7 +75,7 @@ Mosquito::Mosquito( EnemyData data,
 	m_pModel->SetRotMtx(rotMtx);
 	m_pModel->SetScale(m_scale);
 	m_pModel->SetPos(m_pos);
-	m_pModel->ChangeAnimation(idle_anim_num, true, false, 8);
+	m_pModel->ChangeAnimation(idle_anim_num, true, false, change_anim_frame);
 	m_pModel->Update();
 }
 
@@ -93,7 +103,7 @@ void Mosquito::EntarMove()
 	}
 
 	// 目的地の取得
-	GetGoalPos();
+	SetGoalPos();
 
 	// 初期化
 	m_isGoal = false;
@@ -105,13 +115,8 @@ void Mosquito::Update()
 	// ステートマシンの更新
 	m_state.Update();
 
-	// プレイヤーが死んでいたら
-	if (!m_pPlayer->IsLive())
-	{
-		// ゲームオーバー状態に遷移
-		m_state.SetState(State::GAME_OVER);
-	}
-	else
+	// プレイヤーが生きていたら
+	if (m_pPlayer->IsLive())
 	{
 		// レーザーの発射位置の更新
 		m_laserFirePos = Vector3::FromDxLibVector3(
@@ -179,7 +184,7 @@ void Mosquito::UpdateMove()
 	else
 	{
 		// 目的地の取得
-		GetGoalPos();
+		SetGoalPos();
 
 		// 座標の更新
 		m_pos += m_moveVec;
@@ -230,28 +235,17 @@ void Mosquito::UpdateAttack()
 	}
 }
 
-// 死亡状態の更新
-void Mosquito::UpdateDead()
-{
-}
-
-// ゲームオーバー状態の更新
-void Mosquito::UpdateGameOver()
-{
-}
-
 // 目的地の取得
-void Mosquito::GetGoalPos()
+void Mosquito::SetGoalPos()
 {
 	// 現在の移動ポイントのイテレーターの取得
 	auto itr = m_actionDataList.begin();
 	std::advance(itr, m_movePointIndex);
 
-	// 目的地の設定
-	/*m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos({ itr->goalPos.x, itr->goalPos.y, near_far_z_pos }));
-	m_goalPos.z = m_pPlayer->GetPos().z + itr->goalPos.z;*/
-
+	// 0.0(near)～1.0(far)の範囲でZ座標を設定
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->goalPos.z) / GetCameraFar();
+
+	// 目的地の設定
 	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
 
 	// 移動ベクトルの設定
@@ -261,13 +255,8 @@ void Mosquito::GetGoalPos()
 // 描画
 void Mosquito::Draw()
 {
-	// TODO : 輪郭線いつかやる
-	Vector3 scale = m_scale;
-	m_pModel->SetScale({ scale.x * 1.08f, scale.y * 1.08f, 0.0f });
-	m_pModel->SetAllMaterialDifColor(GetColorF(255.0f, 0.0f, 0.0f, 255.0f));
-	m_pModel->Draw();
-	m_pModel->RestoreAllMaterialDifColor();
-	m_pModel->SetScale(m_scale);
+	// 輪郭線の描画
+	DrawOutLine();		
 
 	// モデルの描画
 	m_pModel->Draw();
@@ -281,8 +270,32 @@ void Mosquito::Draw()
 #endif
 }
 
+// 輪郭線の描画
+void Mosquito::DrawOutLine()
+{
+	// TODO : shaderでやる
+
+	// 元々の拡大率を保存
+	Vector3 scale = m_scale;
+
+	// 輪郭線の為に拡大
+	m_pModel->SetScale({ scale.x * outline_width, scale.y * outline_width, 0.0f });
+
+	// マテリアルのディフューズカラーを設定
+	m_pModel->SetAllMaterialDifColor(GetColorF(255.0f, 0.0f, 0.0f, 255.0f));
+
+	// 描画
+	m_pModel->Draw();
+
+	// 元々のマテリアルのディフューズカラーを設定
+	m_pModel->RestoreAllMaterialDifColor();
+
+	// 元々の拡大率に戻す
+	m_pModel->SetScale(m_scale);
+}
+
 // 座標の取得
-Vector3 Mosquito::GetPos() const
+const Vector3& Mosquito::GetPos() const
 {
 	return m_pos;
 }

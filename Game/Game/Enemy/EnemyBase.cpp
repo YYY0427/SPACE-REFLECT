@@ -2,6 +2,7 @@
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Model.h"
 #include "../../Score/Score.h"
+#include "../../SoundManager.h"
 
 namespace
 {
@@ -44,6 +45,9 @@ void EnemyBase::OnDamage(const int damage, const Vector3& pos)
 	{
 		// スコアの加算
 		Score::GetInstance().AddScore(ScoreType::ENEMY);
+
+		// 死亡音の再生
+		SoundManager::GetInstance().PlaySE("NormalEnemyDie");
 
 		// 死亡エフェクトの再生
 		Effekseer3DEffectManager::GetInstance().PlayEffect(

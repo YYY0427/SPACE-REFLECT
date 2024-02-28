@@ -165,6 +165,10 @@ float Vector3::Angle(const Vector3& other) const
 void Vector3::Normalize()
 {
 	float length = Length();
+	if(length == 0.0f)
+	{
+		return;
+	}
 	x /= length;
 	y /= length;
 	z /= length;
@@ -174,6 +178,10 @@ void Vector3::Normalize()
 Vector3 Vector3::Normalized() const
 {
 	float length = Length();
+	if(length == 0.0f)
+	{
+		return { 0.0f, 0.0f, 0.0f };
+	}
 	return { x / length, y / length, z / length };
 }
 
@@ -248,4 +256,10 @@ Vector3 Vector3::Transform(const Vector3& vec, const Matrix& mat)
 
 	VECTOR result = VTransform(vec.ToDxLibVector3(), mat.ToDxLibMatrix());
 	return { result.x, result.y, result.z };
+}
+
+// ベクトルのNaNチェック
+bool Vector3::CheckNaN()
+{
+	return std::isnan(x) || std::isnan(y) || std::isnan(z);
 }

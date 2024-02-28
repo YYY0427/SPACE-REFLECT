@@ -56,7 +56,7 @@ namespace
 	// 移動
 	constexpr float entry_move_speed = 10.0f;	// 登場時の移動速度
 	constexpr float move_speed = 20.0f;			// 移動速度
-	constexpr float distance_threshold = 100.0f; // 目的地に到達したかどうか測る閾値
+	constexpr float distance_threshold = 100.0f;// 目的地に到達したかどうか測る閾値
 	const Vector3 move_pos[] =					// 移動先の座標
 	{
 		{ screenSize. width / 2.0f, screenSize.height / 2.0f, 1800 },
@@ -67,16 +67,23 @@ namespace
 	};
 
 	// HP
-	constexpr int max_hp = 1000;												// 最大HP
-	const Vector2 hp_gauge_pos = { screenSize.width / 2.0f, 0.0f + 100.0f};		// HPゲージの位置
+	constexpr int max_hp        = 1000;											// 最大HP
+	const Vector2 hp_gauge_pos  = { screenSize.width / 2.0f, 0.0f + 100.0f};	// HPゲージの位置
 	const Vector2 hp_gauge_size = { 500, 20 };									// HPゲージのサイズ
-	const std::string hp_gauge_img_file_path = "Data/Image/HP.png";				// HPゲージの画像ファイルパス
-	const std::string hp_gauge_back_img_file_path = "Data/Image/HPBack.png";	// HPゲージの背景画像ファイルパス
+	const std::string hp_gauge_img_file_path       = "Data/Image/HP.png";		// HPゲージの画像ファイルパス
+	const std::string hp_gauge_back_img_file_path  = "Data/Image/HPBack.png";	// HPゲージの背景画像ファイルパス
 	const std::string hp_gauge_frame_img_file_path = "Data/Image/HPFrame.png";	// HPゲージの枠画像ファイルパス
+	constexpr int hp_gauge_start_anim_frame = 300;  // HPゲージの開始アニメーションのフレーム
+	constexpr int hp_gauge_sub_frame		= 60;   // ダメージを受けた時のHPゲージの減るフレーム
+	constexpr int hp_gauge_delay_frame		= 60;   // ダメージを受けてからHPゲージが減るまでの遅延フレーム
+	constexpr int hp_gauge_draw_order		= 2;	// HPゲージUIの描画優先度
+	const Vector2 hp_gauge_store_vec        = { 0, -1 };  // HPゲージUIの格納ベクトル
 
 	// ボスの名前
-	const std::string boss_name_key = "BossMatrixName";	// ボスの名前キー
+	const std::string boss_name_key = "BossMatrixName";							// ボスの名前キー
 	const Vector2 boss_name_pos = { hp_gauge_pos.x, hp_gauge_pos.y - 50.0f };	// ボスの名前の位置
+	constexpr int boss_name_ui_draw_order = 2;									// ボスの名前UIの描画優先度
+	const Vector2 boss_name_ui_store_vec = { 0, -1 };							// ボスの名前UIの格納ベクトル
 
 	// 当たり判定の半径
 	constexpr float collision_radius = 250.0f;
@@ -84,17 +91,34 @@ namespace
 	// 登場時に不透明度を下げる速度
 	constexpr float entry_opacity_speed = 0.005f;
 
+	// 不透明度の最大値
+	constexpr float max_opacity = 1.0f;
+
 	// フレーム
-	constexpr int next_attack_state_frame = 60 * 5;			// 次の攻撃ステートに移るまでのフレーム
+	constexpr int change_anim_frame              = 8;		// アニメーションの変更フレーム
+	constexpr int next_attack_state_frame        = 60 * 5;	// 次の攻撃ステートに移るまでのフレーム
 	constexpr int stop_normal_laser_attack_frame = 60 * 20;	// 通常レーザー攻撃のフレーム
 	constexpr int move_normal_laser_attack_frame = 60 * 20;	// 移動しながら通常レーザー攻撃のフレーム
-	constexpr int cube_laser_attack_frame = 60 * 10;		// キューブレーザー攻撃のフレーム
-	constexpr int cube_laser_interval_frame = 60 * 2;		// キューブレーザー攻撃の間隔フレーム
-	constexpr int die_idle_frame = 60 * 3;					// 死亡時の待機フレーム
-	constexpr int die_draw_stop_frame = 60 * 7;				// 死亡時の描画停止フレーム
+	constexpr int cube_laser_attack_frame        = 60 * 10;	// キューブレーザー攻撃のフレーム
+	constexpr int cube_laser_interval_frame      = 60 * 2;  // キューブレーザー攻撃の間隔フレーム
+	constexpr int die_idle_frame                 = 60 * 3;	// 死亡時の待機フレーム
+	constexpr int die_draw_stop_frame            = 60 * 7;	// 死亡時の描画停止フレーム
 
 	// レーザー
 	constexpr float cube_laser_speed = 5.0f;	// キューブレーザーの速度
+	constexpr int laser_charge_frame = 140;		// レーザーのチャージフレーム
+	constexpr int laser_fire_frame   = 10000;	// レーザーの発射フレーム
+	constexpr float laser_move_speed = 5.0f;	// レーザーの移動速度
+	constexpr float laser_fire_pos_z_interval = 200.0f;	// レーザーの発射位置のボスとのZ座標の間隔
+
+	// エフェクト
+	const Vector3 damage_effect_scale = { 100.0f, 100.0f, 100.0f };	// ダメージエフェクトの拡大率
+	const Vector3 die_effect_scale    = { 100.0f, 100.0f, 100.0f };	// 死亡エフェクトの拡大率
+	constexpr float die_effect_z_interval = 300.0f;					// 死亡エフェクトとボスとのZ座標の間隔
+
+	// 画面揺れ
+	constexpr int shake_frame = 60;					// 画面揺れのフレーム
+	const Vector2 shake_size  = { 100.0f, 0.0f };	// 画面揺れの大きさ
 }
 
 // コンストラクタ
@@ -116,13 +140,13 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 	m_cubeLaserIntervalFrame(cube_laser_interval_frame)
 {
 	// 初期化
-	m_pPlayer = pPlayer;
-	m_pLaserManager = pLaserManager;
-	m_pos = m_pPlayer->GetPos() + init_pos;
-	m_rot = model_rot;
-	m_opacity = 0.0f;
-	m_hp = max_hp;
-	m_moveSpeed = move_speed;
+	m_pPlayer         = pPlayer;
+	m_pLaserManager   = pLaserManager;
+	m_pos			  = m_pPlayer->GetPos() + init_pos;
+	m_rot			  = model_rot;
+	m_opacity		  = 0.0f;
+	m_hp			  = max_hp;
+	m_moveSpeed		  = move_speed;
 	m_collisionRadius = collision_radius * model_scale.x;
 	for (auto& point : move_pos)
 	{
@@ -140,19 +164,23 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 
 	// 攻撃ステートの追加
 	m_attackStateTable.push_back(State::MOVE_HOMING_LASER_ATTACK);
-//	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
+	m_attackStateTable.push_back(State::CUBE_LASER_ATTACK);
 	ShuffleAttackState();
 
 	// HPゲージの設定
 	m_pHpGauge = std::make_shared<Gauge>(
 		hp_gauge_img_file_path, hp_gauge_back_img_file_path, hp_gauge_frame_img_file_path, max_hp, 
-		hp_gauge_pos, hp_gauge_size, true, 2, true, 3);
-	UIManager::GetInstance().AddUI("BossHPGauge", m_pHpGauge, 2, { 0, -1 });
+		hp_gauge_pos, hp_gauge_size, hp_gauge_start_anim_frame, hp_gauge_sub_frame, hp_gauge_delay_frame);
+
+	// HPゲージをUIに追加
+	UIManager::GetInstance().AddUI("BossHPGauge", m_pHpGauge, hp_gauge_draw_order, hp_gauge_store_vec);
 
 	// ボス名前の設定
 	m_pBossName = std::make_shared<StringUI>(boss_name_key);
 	m_pBossName->SetPos(boss_name_pos);
-	UIManager::GetInstance().AddUI("BossName", m_pBossName, 2, { 0, -1 });
+
+	// ボス名前をUIに追加
+	UIManager::GetInstance().AddUI("BossName", m_pBossName, boss_name_ui_draw_order, boss_name_ui_store_vec);
 
 	// モデル設定
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Matrix"));	// インスタンス生成
@@ -167,20 +195,23 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 // デストラクタ
 BossMatrix::~BossMatrix()
 {
+	// HPゲージの削除
+	UIManager::GetInstance().DeleteUI("BossHPGauge");
+
+	// ボス名前の削除
+	UIManager::GetInstance().DeleteUI("BossName");
 }
 
 // 更新
 void BossMatrix::Update()
 {
-	// HPゲージの更新
-	m_pHpGauge->Update();	
-
 	// ステートマシンの更新
 	m_stateMachine.Update();
 
 	// プレイヤーが死亡したら
 	if (!m_pPlayer->IsLive())
 	{
+		// ステートをゲームオーバーに変更
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 	else
@@ -203,6 +234,7 @@ void BossMatrix::Draw()
 	// 存在フラグが立っていなかったら描画しない
 	if (m_isEnabled)
 	{
+		// デバッグログの追加
 		DebugText::Log("BossMatrixPos", { m_pos.x, m_pos.y, m_pos.z});
 
 		// モデルの描画
@@ -227,7 +259,7 @@ void BossMatrix::OnDamage(const int damage, const Vector3& pos)
 		m_damageEffectHandle,
 		"PlayerAttackHitEffect",
 		pos,
-		{ 100.0f, 100.0f, 100.0f }
+		damage_effect_scale
 	);
 
 	// HPが0以下になったら死亡
@@ -250,7 +282,7 @@ void BossMatrix::EnterDie()
 	m_pModel->StopAnim();
 
 	// 画面揺れ開始
-	m_pScreenShaker->StartShake({ 100.0f, 0.0f }, 60);
+	m_pScreenShaker->StartShake(shake_size, shake_frame);
 }
 
 // 移動しながらホーミングレーザー攻撃の開始
@@ -260,10 +292,16 @@ void BossMatrix::EnterMoveHormingLaserAttack()
 	m_laserFrame = move_normal_laser_attack_frame;
 
 	// 通常レーザー発射用のアニメーションに変更
-	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, 8);
+	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, change_anim_frame);
 
 	// レーザーの生成
-	m_laserKey = m_pLaserManager->AddLaser(LaserType::NORMAL, shared_from_this(), 140, 10000, 5.0f, true);
+	m_laserKey = m_pLaserManager->AddLaser(
+		LaserType::NORMAL, 
+		shared_from_this(), 
+		laser_charge_frame, 
+		laser_fire_frame,
+		laser_move_speed,
+		true);
 
 	// 移動の初期化
 	InitMove();
@@ -276,7 +314,7 @@ void BossMatrix::EnterCubeLaserAttack()
 	m_laserFrame = cube_laser_attack_frame;
 
 	// キューブレーザー発射用のアニメーションに変更
-	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, 8);
+	m_pModel->ChangeAnimation(laser_fire_anim_no, true, false, change_anim_frame);
 }
 
 // 登場時の更新
@@ -284,10 +322,10 @@ void BossMatrix::UpdateEntry()
 {
 	// 不透明度を上げる
 	m_opacity += entry_opacity_speed;
-	m_opacity = (std::min)(m_opacity, 1.0f);
+	m_opacity = (std::min)(m_opacity, max_opacity);
 	m_pModel->SetOpacity(m_opacity);
 
-	// 移動
+	// 移動中なら
 	if (!m_isMoveEnd)
 	{
 		// ベクトルの取得
@@ -304,11 +342,11 @@ void BossMatrix::UpdateEntry()
 		}
 	}
 	
-	// 不透明度が1.0fを超えたら
+	// 不透明度が最大値を超えたら
 	// HPゲージの登場演出が終了したら
 	// 目的地に到着したら
 	if (m_opacity >= 1.0f && 
-		m_pHpGauge->IsEndBurst() &&
+		m_pHpGauge->IsEndEntranceAnim() &&
 		m_isMoveEnd)
 	{
 		// 初期化
@@ -324,11 +362,11 @@ void BossMatrix::UpdateIdle()
 {
 	// プレイヤーの方向を向く
 	Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	Matrix rotMtx        = Matrix::GetRotationMatrix(init_model_direction, directionVec);
 	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
 
 	// 待機アニメーションに変更
-	m_pModel->ChangeAnimation(idle_anim_no, true, false, 8);
+	m_pModel->ChangeAnimation(idle_anim_no, true, false, change_anim_frame);
 
 	// 待機
 	if (m_idleFrame++ > next_attack_state_frame)
@@ -364,7 +402,7 @@ void BossMatrix::UpdateDie()
 				m_dieEffectHandle,
 				"EnemyBossDie",
 				m_pos,
-				{ 100.0f, 100.0f, 100.0f });
+				die_effect_scale);
 		}
 		// エフェクトの再生を開始してから、一定フレーム経過したら
 		else if (m_dieDrawStopFrame-- <= 0)
@@ -380,7 +418,7 @@ void BossMatrix::UpdateDie()
 			}
 		}
 		// エフェクトの位置の更新
-		Effekseer3DEffectManager::GetInstance().SetEffectPos(m_dieEffectHandle, { m_pos.x, m_pos.y, m_pos.z - 300.0f });
+		Effekseer3DEffectManager::GetInstance().SetEffectPos(m_dieEffectHandle, { m_pos.x, m_pos.y, m_pos.z - die_effect_z_interval });
 	}
 }
 
@@ -395,11 +433,11 @@ void BossMatrix::UpdateMoveHomingLaserAttack()
 	// レーザーの発射位置の更新
 	Vector3 pos = Vector3::FromDxLibVector3(
 		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
-	m_laserFirePos = { pos.x, pos.y, pos.z - 200.0f };
+	m_laserFirePos = { pos.x, pos.y, pos.z - laser_fire_pos_z_interval };
 
 	// レーザーの方向に向けるようにする
 	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	Matrix rotMtx        = Matrix::GetRotationMatrix(init_model_direction, directionVec);
 	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
 
 	// フレームが経過したら

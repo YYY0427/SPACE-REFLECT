@@ -55,8 +55,6 @@ StageBase::~StageBase()
 	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
-	// サウンドの停止
-	SoundManager::GetInstance().StopAllSound();
 }
 
 // リザルト画面の更新

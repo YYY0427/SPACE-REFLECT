@@ -182,10 +182,7 @@ void Player::Update(float cameraHorizon)
 			m_maxHp,
 			hp_bar_pos,
 			hp_bar_size,
-			true,
-			3.0f,
-			false,
-			0.0f);
+			120);
 
 		// HP文字のインスタンスの生成
 		auto pHpString = std::make_shared<ImageUI>(hp_string_file_path);
@@ -522,6 +519,19 @@ void Player::OnDamage(int damage)
 
 	// HPバーの値の設定
 	m_pHPbar->SetValue(m_hp);
+
+	static unsigned int count = 0;
+	count++;
+	if (count % 3 == 0)
+	{
+		// ダメージ音の再生
+		auto& soundManager = SoundManager::GetInstance();
+	//	if (!soundManager.IsPlaySound("PlayerDamage"))
+		{
+			SoundManager::GetInstance().PlaySE("PlayerDamage");
+			count = 0;
+		}
+	}
 
 	// エフェクトの再生
 	Effekseer3DEffectManager::GetInstance().PlayEffect(

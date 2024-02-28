@@ -129,6 +129,9 @@ NormalLaser::~NormalLaser()
 {
 	// エフェクトの削除
 	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_laserEffectHandle);
+
+	// レーザーの音の停止
+	SoundManager::GetInstance().StopSound("Laser");
 }
 
 // 更新
@@ -147,6 +150,16 @@ void NormalLaser::Update()
 	{
 		// エフェクトの再生速度の設定
 		Effekseer3DEffectManager::GetInstance().SetEffectSpeed(m_laserEffectHandle, 1.0f);
+
+		auto& soundManager = SoundManager::GetInstance();
+		if (!soundManager.IsPlaySound("ReflectLaser"))
+		{
+			if (!soundManager.IsPlaySound("Laser"))
+			{
+				// レーザー音の再生
+				soundManager.PlaySE("Laser");
+			}
+		}
 
 		// レーザーの発射フレームが0以下になったら
 		if (m_laserFireFrame-- <= 0)
@@ -293,12 +306,6 @@ void NormalLaser::UpdateFirePlayerFollowing()
 {
 	// レーザーのサウンドの再生
 	auto& soundManager = SoundManager::GetInstance();
-
-	if (m_laserFireFrame % 5 == 0)
-	{
-		// レーザーのサウンドの再生
-	//	soundManager.PlaySE("Laser");
-	}
 
 	// ベクトルを設定
 	m_directionVec = (m_pPlayer->GetPos() - m_directionPos).Normalized() * m_speed;

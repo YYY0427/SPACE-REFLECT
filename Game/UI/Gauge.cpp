@@ -14,38 +14,25 @@ Gauge::Gauge(
 	const std::string& gaugeImgFilePath, 
 	const std::string& gaugeBackImgFilePath, 
 	const std::string& gaugeFrameImgFilePath, 
-	float maxValue, 
+	const float maxValue, 
 	const Vector2& pos, 
 	const Vector2& dimensions, 
-	bool  isGaugeBurst, 
-	float addGaugeSpeed, 
-	bool  isDelayedDamage, 
-	float aimGaugeSpeed) :
+	const int   addGaugeFrame, 
+	const int   subGaugeFrame,
+	const int   isDelayFrame) :
 	m_maxValue(maxValue),
 	m_aimValue(maxValue),
-	m_backValue(maxValue),
 	m_dimensions(dimensions),
-	m_isDelayed(isDelayedDamage),
-	m_aimGaugeSpeed(aimGaugeSpeed),
-	m_addGaugeSpeed(addGaugeSpeed)
+	m_isDelayFrame(isDelayFrame),
+	m_subGaugeFrame(subGaugeFrame),
+	m_addGaugeFrame  (addGaugeFrame),
+	m_currentValue(0.0f),
+	m_backValue(0.0f),
+	m_updateFunc(&Gauge::EntranceAnimUpdate),
+	m_isEndEntranceAnim(false)
 {
 	// 初期化
 	m_pos = pos;
-
-	// バースト演出を行うかどうか
-	if (isGaugeBurst)
-	{
-		m_currentValue = 0.0f;
-		m_backValue    = 0.0f;
-		m_updateFunc   = &Gauge::BurstUpdate;
-		m_isEndBurst   = false;
-	}
-	else
-	{
-		m_currentValue = m_maxValue;
-		m_updateFunc   = &Gauge::NormalUpdate;
-		m_isEndBurst   = true;
-	}
 
 	// 画像の読み込み
 	// 画像が指定されていない場合は-1を代入する
@@ -80,7 +67,7 @@ void Gauge::Draw()
 	if (m_backValue > 0.0f)
 	{
 		// 背景のゲージの描画
-		DrawExtendGraph(
+		DrawExtendGraphF(
 			m_pos.x - m_dimensions.x / 2,
 			m_pos.y - m_dimensions.y / 2,
 			m_pos.x - (m_dimensions.x / 2) + ((m_dimensions.x) * (static_cast<float>(m_backValue / m_maxValue))),
@@ -89,7 +76,7 @@ void Gauge::Draw()
 			true);
 
 		// ゲージの描画
-		DrawExtendGraph(
+		DrawExtendGraphF(
 			m_pos.x - m_dimensions.x / 2,
 			m_pos.y - m_dimensions.y / 2,
 			m_pos.x - (m_dimensions.x / 2) + ((m_dimensions.x) * (static_cast<float>(m_currentValue / m_maxValue))),
@@ -129,13 +116,10 @@ void Gauge::Draw()
 }
 
 // ゲージの値を設定
-void Gauge::SetValue(float afterValue)
+void Gauge::SetValue(const float afterValue)
 {
-	if (m_isDelayed)
-	{
-		// ディレイタイムの設定
-		m_damageFrameCount.SetTime(60);
-	}
+	// ディレイタイムの設定
+	m_damageFrameCount.SetTime(m_isDelayFrame);
 
 	// 目標値を設定
 	m_aimValue = afterValue;
@@ -143,9 +127,9 @@ void Gauge::SetValue(float afterValue)
 }
 
 // バースト演出が終了したか
-bool Gauge::IsEndBurst() const
+bool Gauge::IsEndEntranceAnim() const
 {
-	return m_isEndBurst;
+	return m_isEndEntranceAnim;
 }
 
 // 通常時の更新
@@ -155,15 +139,26 @@ void Gauge::NormalUpdate()
 	m_currentValue = m_aimValue;
 	m_currentValue = (std::max)(m_currentValue, 0.0f);
 
+	// ダメージ演出の更新
 	m_damageFrameCount.Update(-1);
 	if (m_damageFrameCount.GetTime() <= 0)
 	{
 		// 背景のゲージと目標値が一致していない場合
 		if (m_backValue != m_aimValue)
 		{
-			// 毎フレーム緩やかに目標に近づく
-			m_backValue -= m_aimGaugeSpeed;
-
+			// サブゲージフレームが設定されている場合
+			if (m_subGaugeFrame > 0)
+			{
+				// 目標値に向かって決められたフレーム数で減少する
+				m_backValue -= static_cast<float>(m_currentValue / m_subGaugeFrame);
+			}
+			// そうでない場合
+			else
+			{
+				// 目標値にする
+				m_backValue = m_aimValue;
+			}
+			
 			// 目標に合致したら止める
 			if (m_backValue < m_aimValue)
 			{
@@ -173,22 +168,34 @@ void Gauge::NormalUpdate()
 	}
 }
 
-// バースト演出の更新
-void Gauge::BurstUpdate()
+// 登場演出時の更新
+void Gauge::EntranceAnimUpdate()
 {
-	// 目標値に向かってゲージを増やす
-	m_currentValue += m_addGaugeSpeed;
-	m_backValue += m_addGaugeSpeed;
+	// ゲージの増加フレームが設定されている場合
+	if (m_addGaugeFrame > 0)
+	{
+		// 目標値に向かって決められたフレーム数で増加する
+		m_currentValue += static_cast<float>(m_maxValue / m_addGaugeFrame);
+		m_backValue    += static_cast<float>(m_maxValue / m_addGaugeFrame);
+	}
+	// そうでない場合
+	else
+	{
+		// 目標値にする
+		m_currentValue = m_maxValue;
+		m_backValue    = m_maxValue;
+	}
 
 	// 目標値を超えたら
-	if (m_currentValue >= m_maxValue && m_backValue >= m_maxValue)
+	if (m_currentValue >= m_maxValue && 
+		m_backValue >= m_maxValue)
 	{
-		// バースト演出が終了したことを示すフラグを立てる
-		m_isEndBurst = true;
+		// 演出終了
+		m_isEndEntranceAnim = true;
 
 		// 目標値にする
 		m_currentValue = m_maxValue;
-		m_backValue = m_maxValue;
+		m_backValue    = m_maxValue;
 
 		// 更新関数を通常時の更新に戻す
 		m_updateFunc = &Gauge::NormalUpdate;

@@ -102,9 +102,19 @@ void Stage1::EnterResult()
 // 更新
 void Stage1::Update()
 {
-	// プレイヤーが死んだらゲームオーバーに遷移
+	// プレイヤーが死んだら
 	if (!m_pPlayer->IsLive())
 	{
+		// BGMが再生中なら
+		auto& soundManager = SoundManager::GetInstance();
+		if (soundManager.IsPlayBGM())
+		{
+			// BGMのフェードアウト
+			auto& fileName = soundManager.GetPlayBGMFileName();
+			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+		}
+
+		// ゲームオーバーに遷移
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 

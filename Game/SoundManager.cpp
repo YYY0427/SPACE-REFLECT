@@ -422,3 +422,20 @@ const std::string& SoundManager::GetPlayBGMFileName() const
 	}
 	return "";
 }
+
+// BGM‚ªÄ¶’†‚©
+bool SoundManager::IsPlayBGM() const
+{
+	// BGM‚ªÄ¶’†‚©
+	for (auto& sound : m_soundDataTable)
+	{
+		if (CheckSoundMem(sound.second.handle))
+		{
+			if (sound.second.type == SoundType::BGM)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}

@@ -7,16 +7,27 @@
 class BossMosquito final : public EnemyBase
 {
 public:
-	// コンストラクタ
-	BossMosquito(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	/// <param name="pLaserManager">レーザーのマネージャーのポインタ</param>
+	BossMosquito(const std::shared_ptr<Player>& pPlayer, 
+				 const std::shared_ptr<LaserManager>& pLaserManager);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~BossMosquito();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
 private:

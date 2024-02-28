@@ -85,7 +85,15 @@ public:
 	// DXライブラリのベクトルに変換
 	VECTOR ToDxLibVector3() const;
 
-	/* 静的メンバー関数 */ 
+	/// <summary>
+	/// ベクトルのNaNチェック
+	/// </summary>
+	/// <returns>true : NaN、false : NaNではない</returns>
+	bool CheckNaN();
+
+
+	//// 静的メンバ関数 ////
+
 	// DXライブラリのベクトルからベクトルに変換
 	static Vector3 FromDxLibVector3(const VECTOR& vec);
 

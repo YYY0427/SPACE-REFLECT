@@ -10,34 +10,77 @@
 class Mosquito final : public EnemyBase
 {
 public:
-	// コンストラクタ
-	Mosquito(EnemyData data, std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="data">敵のデータ</param>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	/// <param name="pLaserManager">レーザーマネージャーのポインタ</param>
+	Mosquito(const EnemyData& data, 
+		     const std::shared_ptr<Player>& pPlayer, 
+		     const std::shared_ptr<LaserManager>& pLaserManager);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Mosquito();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// ゲッター
-	Vector3 GetPos() const;				// 座標
+	/// <summary>
+	/// 輪郭線の描画
+	/// </summary>
+	void DrawOutLine();
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// 座標を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const Vector3& GetPos() const;			
 
 private:
-	// 初期化
-	void EntarMove();	// 移動
 
-	// 更新
-	void UpdateIdle();	// 待機
-	void UpdateMove();	// 移動
-	void UpdateAttack();// 攻撃
-	void UpdateDead();	// 死亡
-	void UpdateGameOver();	// ゲームオーバー
+	//// 初期化 ////
 
-	// ゴールの座標
-	void GetGoalPos();	
+	/// <summary>
+	/// 移動の初期化
+	/// </summary>
+	void EntarMove();	
+
+
+	//// 更新 ////
+
+	/// <summary>
+	/// 待機状態の更新
+	/// </summary>
+	void UpdateIdle();
+
+	/// <summary>
+	/// 移動状態の更新
+	/// </summary>
+	void UpdateMove();
+
+	/// <summary>
+	/// 攻撃状態の更新
+	/// </summary>
+	void UpdateAttack();
+
+
+
+	/// <summary>
+	/// ゴール座標を設定
+	/// </summary>
+	void SetGoalPos();	
 
 private:
 	// 状態
@@ -46,21 +89,18 @@ private:
 		IDLE,		// 待機
 		MOVE,		// 移動
 		ATTACK,		// 攻撃
-		DEAD,		// 死亡
-		GAME_OVER,	// ゲームオーバー
 	};
 
 private:
 	// 状態マシン
-	StateMachine<State> m_state;
-
-	// 待機時間フレーム
-	int m_idleFrame;		
+	StateMachine<State> m_state;	
 
 	// 行動データ
 	EnemyActionData m_actionData;	
 
 	// レーザーのKey
 	int m_laserKey;
-};
 
+	// 待機時間フレーム
+	int m_idleFrame;
+};

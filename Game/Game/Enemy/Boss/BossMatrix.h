@@ -177,10 +177,10 @@ private:
 	StateMachine<State> m_stateMachine;
 
 	// ポインタ
-	std::shared_ptr<Gauge> m_pHpGauge;
-	std::shared_ptr<StringUI> m_pBossName;
-	std::shared_ptr<LaserManager> m_pLaserManager;
-	std::shared_ptr<ScreenShaker> m_pScreenShaker;
+	std::shared_ptr<Gauge>        m_pHpGauge;		// HPゲージ
+	std::shared_ptr<StringUI>     m_pBossName;		// ボスの名前
+	std::shared_ptr<LaserManager> m_pLaserManager;	// レーザーマネージャー
+	std::shared_ptr<ScreenShaker> m_pScreenShaker;	// 画面揺れ
 
 	// 移動
 	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル

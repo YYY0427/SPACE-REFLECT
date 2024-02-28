@@ -86,10 +86,7 @@ Shield::Shield(Player& player) :
 		max_energy_gage,
 		energy_gage_ui_pos,
 		energy_gage_ui_size,
-		true,
-		5.0f,
-		false,
-		0.0f);
+		120);
 
 	// エネルギーゲージUIの文字の作成
 	auto pEnergyString = std::make_shared<ImageUI>(energy_string_file_path);
@@ -115,7 +112,7 @@ Shield::~Shield()
 void Shield::Update()
 {
 	// HPが増えていく演出中ならなにもしない
-	if (!m_pEnergyGage->IsEndBurst()) return;
+	if (!m_pEnergyGage->IsEndEntranceAnim()) return;
 
 	// プレイヤーが生きていないならなにもしない
 	if (!m_player.IsLive()) return;
