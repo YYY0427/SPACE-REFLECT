@@ -15,30 +15,70 @@ class LaserManager;
 class EnemyBase : public std::enable_shared_from_this<EnemyBase>
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	EnemyBase();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~EnemyBase();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	virtual void Update() = 0;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	virtual void Draw() = 0;
 
-	// ダメージ処理
+	/// <summary>
+	/// ダメージ処理
+	/// </summary>
+	/// <param name="damage">ダメージ量</param>
+	/// <param name="pos">ダメージを受けた場所</param>
 	virtual void OnDamage(const int damage, const Vector3& pos);
 
-	// 死亡演出
+	/// <summary>
+	/// 死亡演出
+	/// </summary>
 	virtual void PerformDeathEffect() {};
 
-	// ゲッター
-	Vector3 GetPos() const;				// 位置情報
-	Vector3 GetLaserFirePos() const;	// レーザーの発射位置
-	bool    IsEnabled() const;			// 存在フラグ
-	virtual bool IsDeadAnim();		    // ボスの死亡演出中かどうか
-	float   GetCollisionRadius() const;	// 当たり判定の半径
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// 座標を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	const Vector3& GetPos() const;
+
+	/// <summary>
+	/// レーザーの発射位置を取得
+	/// </summary>
+	/// <returns>レーザーの発射位置</returns>
+	const Vector3& GetLaserFirePos() const;	
+
+	/// <summary>
+	/// 存在フラグを取得
+	/// </summary>
+	/// <returns>true : 存在、false : 存在していない</returns>
+	bool IsEnabled() const;			
+
+	/// <summary>
+	/// 当たり判定の半径を取得
+	/// </summary>
+	/// <returns>当たり判定の半径</returns>
+	float GetCollisionRadius() const;	
+
+	/// <summary>
+	/// ボスの死亡演出中かどうか
+	/// </summary>
+	/// <returns></returns>
+	virtual bool IsDeadAnim();
 
 protected:
 	// ポインタ

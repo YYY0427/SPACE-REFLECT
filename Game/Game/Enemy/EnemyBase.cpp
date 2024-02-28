@@ -68,13 +68,13 @@ void EnemyBase::OnDamage(const int damage, const Vector3& pos)
 }
 
 // 位置の取得
-Vector3 EnemyBase::GetPos() const
+const Vector3& EnemyBase::GetPos() const
 {
 	return m_pos;
 }
 
 // レーザーの発射位置の取得
-Vector3 EnemyBase::GetLaserFirePos() const
+const Vector3& EnemyBase::GetLaserFirePos() const
 {
 	return m_laserFirePos;
 }

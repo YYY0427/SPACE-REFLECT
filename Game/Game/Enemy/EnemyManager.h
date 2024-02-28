@@ -75,9 +75,9 @@ public:
 	/// <param name="pLaserManager">レーザー管理のポインタ</param>
 	/// <param name="pScreenShaker">画面揺れのポインタ</param>
 	EnemyManager(
-		std::shared_ptr<Player> pPlayer, 
-		std::shared_ptr<LaserManager> pLaserManager,
-		std::shared_ptr<ScreenShaker> pScreenShaker);
+		const std::shared_ptr<Player>& pPlayer, 
+		const std::shared_ptr<LaserManager>& pLaserManager,
+		const std::shared_ptr<ScreenShaker>& pScreenShaker);
 
 	/// <summary>
 	/// デストラクタ
@@ -130,21 +130,21 @@ public:
 	/// 敵のステージデータを読み込み
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
-	void LoadEnemyStageFileData(const std::string filePath);		
+	void LoadEnemyStageFileData(const std::string& filePath);		
 
 	/// <summary>
 	/// 敵のウェーブのデータを読み込み
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
 	/// <returns>読み込んだデータ</returns>
-	std::vector<EnemyData> LoadEnemyWaveFileData(const std::string filePath);	
+	std::vector<EnemyData> LoadEnemyWaveFileData(const std::string& filePath);	
 
 	/// <summary>
 	/// 敵の行動データを読み込み
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
 	/// <returns>読み込んだデータ</returns>
-	std::vector<EnemyActionData> LoadEnemyActionFileData(const std::string filePath);	
+	std::vector<EnemyActionData> LoadEnemyActionFileData(const std::string& filePath);	
 
 	/// <summary>
 	/// 雑魚敵リストの取得
@@ -190,6 +190,20 @@ private:
 	{
 		NORMAL,
 		WARNING,
+	};
+
+	// 
+	enum class EnemyWaveIndex
+	{
+		POS_X,
+		POS_Y,
+		POS_Z,
+		TYPE,
+		HP,
+		ATTACK,
+		SCALE,
+		SPEED,
+		ACTION,
 	};
 
 private:

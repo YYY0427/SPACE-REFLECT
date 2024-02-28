@@ -29,10 +29,24 @@ namespace
 
 	// ボス敵登場時の警告のフレーム
 	constexpr int warning_frame = 180;
+
+	// デバッグ用の敵に与えるダメージ
+	constexpr int debug_damage = 100000;
+
+	// ボス登場時のBGMのフェードインのフレーム
+	constexpr int boss_bgm_fade_frame = 120;
+
+	// 警告UIの描画優先度
+	constexpr int warning_draw_priority = 0;
+
+	// 警告UIの格納時のベクトル
+	const Vector2 warning_ui_store_vec = { 0, 0 };
 }
 
 // コンストラクタ
-EnemyManager::EnemyManager(std::shared_ptr<Player> pPlayer, std::shared_ptr<LaserManager> pLaserManager, std::shared_ptr<ScreenShaker> pScreenShaker) :
+EnemyManager::EnemyManager(const std::shared_ptr<Player>& pPlayer, 
+						   const std::shared_ptr<LaserManager>& pLaserManager, 
+						   const std::shared_ptr<ScreenShaker>& pScreenShaker) :
 	m_waveNow(0),
 	m_isNextWave(false),
 	m_isLoadWave(false),
@@ -66,11 +80,11 @@ void EnemyManager::Update()
 	{
 		for (auto& enemy : m_pEnemyList)
 		{
-			enemy->OnDamage(100000, Vector3());
+			enemy->OnDamage(debug_damage, Vector3());
 		}
 		if (m_pBossEnemy)
 		{
-			m_pBossEnemy->OnDamage(100000, Vector3());
+			m_pBossEnemy->OnDamage(debug_damage, Vector3());
 		}
 	}
 #endif
@@ -136,7 +150,7 @@ void EnemyManager::UpdateWarning()
 		soundManager.PlayBGM("BossBatleBgm");
 
 		// ボス敵のBGMのフェードインの設定
-		soundManager.SetFadeSound("BossBatleBgm", 120, 0, 255);
+		soundManager.SetFadeSound("BossBatleBgm", boss_bgm_fade_frame, 0, soundManager.GetMaxVolume());
 
 		// ステートを通常に遷移
 		m_stateMachine.SetState(State::NORMAL);
@@ -200,7 +214,7 @@ void EnemyManager::StartWave()
 
 		// 警告の生成
 		m_pWarning = std::make_shared<Warning>(warning_frame);
-		UIManager::GetInstance().AddUI("Warning", m_pWarning, 0, { 0, 0 });
+		UIManager::GetInstance().AddUI("Warning", m_pWarning, warning_draw_priority, warning_ui_store_vec);
 	}
 	else
 	{
@@ -316,7 +330,7 @@ void EnemyManager::AddBossEnemy(const BossEnemyType& type)
 }
 
 // ウェーブのデータの読み込み
-void EnemyManager::LoadEnemyStageFileData(const std::string filePath)
+void EnemyManager::LoadEnemyStageFileData(const std::string& filePath)
 {
 	// フラグを立てる
 	m_isLoadWave = true;
@@ -347,16 +361,15 @@ void EnemyManager::LoadEnemyStageFileData(const std::string filePath)
 }
 
 // 敵のデータの読み込み
-std::vector<EnemyData> EnemyManager::LoadEnemyWaveFileData(const std::string filePath)
+std::vector<EnemyData> EnemyManager::LoadEnemyWaveFileData(const std::string& filePath)
 {
 	// ファイル情報の読み込み(読み込みに失敗したら止める)
 	auto data = FileUtil::LoadCsvFile(enemy_file_hierarchy + filePath + file_extension);
 	std::vector<EnemyData> dataTable;
 	for (auto& line : data)
 	{
-		EnemyData enemyData{};
-
 		// 座標の読み込み
+		EnemyData enemyData{};
 		enemyData.pos.x = std::stof(line[0]);
 		enemyData.pos.y = std::stof(line[1]);
 		enemyData.pos.z = std::stof(line[2]);
@@ -386,7 +399,7 @@ std::vector<EnemyData> EnemyManager::LoadEnemyWaveFileData(const std::string fil
 }
 
 // 敵の行動のデータの読み込み
-std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(const std::string filePath)
+std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(const std::string& filePath)
 {
 	auto data = FileUtil::LoadCsvFile(enemy_action_file_hierarchy + filePath + file_extension);
 	std::vector<EnemyActionData> dataTable;

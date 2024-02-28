@@ -189,6 +189,12 @@ public:
 	/// <returns>true : 再生中、false : 再生していない</returns>
 	bool IsPlayBGM() const;
 
+	/// <summary>
+	/// 最大の音量を取得
+	/// </summary>
+	/// <returns>最大の音量</returns>
+	int GetMaxVolume() const;
+
 private:
 	/// <summary>
 	/// コンストラクタ

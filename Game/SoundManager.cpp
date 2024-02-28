@@ -439,3 +439,9 @@ bool SoundManager::IsPlayBGM() const
 	}
 	return false;
 }
+
+// Å‘å‚Ì‰¹—Ê‚ğæ“¾
+int SoundManager::GetMaxVolume() const
+{
+	return max_volume;
+}
