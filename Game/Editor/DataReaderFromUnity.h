@@ -42,7 +42,7 @@ public:
 	/// <param name="fileName">ファイル名</param>
 	/// <param name="objectName">オブジェクト名</param>
 	/// <returns>データ</returns>
-	const std::vector<UnityGameObject>& GetData(const std::string& fileName, const std::string& objectName) const;
+	std::vector<UnityGameObject> GetData(const std::string& fileName, const std::string& objectName) const;
 
 	/// <summary>
 	/// 全てのデータを削除

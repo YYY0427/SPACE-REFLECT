@@ -58,11 +58,17 @@ public:
 	// ベクトル代入
 	Vector3 operator=(const Vector3& vec);
 
-	// ベクトル同士の比較
+	// 等号演算子の比較
 	bool operator==(const Vector3& vec);
 
-	// ベクトル同士の比較
+	// 不等号演算子の比較
 	bool operator!=(const Vector3& vec);
+
+	// 小なりイコール演算子の比較
+	bool operator<=(const Vector3& vec);
+
+	// 大なりイコール演算子の比較
+	bool operator>=(const Vector3& vec);
 
 	/// ベクトルの大きさを返す
 	float Length() const;

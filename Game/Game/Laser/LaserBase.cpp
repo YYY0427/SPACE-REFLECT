@@ -48,13 +48,13 @@ int LaserBase::GetReflectLaserKey() const
 }
 
 // 位置情報の取得
-Vector3 LaserBase::GetPos() const
+const Vector3& LaserBase::GetPos() const
 {
 	return m_pos;
 }
 
 // モデルの先端の位置の取得
-Vector3 LaserBase::GetEndPos() const
+const Vector3& LaserBase::GetEndPos() const
 {
 	return m_endPos;
 }
@@ -62,7 +62,7 @@ Vector3 LaserBase::GetEndPos() const
 // 方向ベクトルの取得
 Vector3 LaserBase::GetDirection() const
 {
-	return Vector3();
+	return { 0, 0, 0 };
 }
 
 // 存在フラグの取得

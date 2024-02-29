@@ -407,7 +407,7 @@ int SoundManager::GetSoundVolume(const std::string& fileName)
 }
 
 // 再生中のBGMのファイル名の取得
-const std::string& SoundManager::GetPlayBGMFileName() const
+std::string SoundManager::GetPlayBGMFileName() const
 {
 	// 再生中のBGMのファイル名を取得
 	for (auto& sound : m_soundDataTable)

@@ -22,7 +22,7 @@ PlanetManager::PlanetManager(std::string objectDataFileName)
 	auto& dataReader = DataReaderFromUnity::GetInstance();
 
 	// 地球のインスタンスの作成
-	auto& earthData = dataReader.GetData(objectDataFileName, "Earth");
+	auto earthData = dataReader.GetData(objectDataFileName, "Earth");
 	for (auto& earth : earthData)
 	{
 		m_planetData[PlanetType::EARTH].modelHandle = ModelHandleManager::GetInstance().GetHandle("Earth");
@@ -30,7 +30,7 @@ PlanetManager::PlanetManager(std::string objectDataFileName)
 	}
 
 	// 月のインスタンスの作成
-	auto& moonData = dataReader.GetData(objectDataFileName, "Moon");
+	auto moonData = dataReader.GetData(objectDataFileName, "Moon");
 	for (auto& moon : moonData)
 	{
 		m_planetData[PlanetType::MOON].modelHandle = ModelHandleManager::GetInstance().GetHandle("Moon");

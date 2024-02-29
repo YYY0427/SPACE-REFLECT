@@ -204,7 +204,7 @@ void EnemyManager::StartWave()
 		if (m_bossType == BossEnemyType::NONE)
 		{
 			// ボス敵が倒されたことにしてなにもしない
-			m_isBoss = true;
+			m_isBoss     = true;
 			m_isDeadBoss = true;
 			return;
 		}
@@ -248,7 +248,7 @@ void EnemyManager::NextWave()
 		if (m_bossType == BossEnemyType::NONE)
 		{
 			// ボス敵が倒されたことにする
-			m_isBoss = true;
+			m_isBoss     = true;
 			m_isDeadBoss = true;
 		}
 		// まだ警告が出ていなかったら
@@ -259,7 +259,7 @@ void EnemyManager::NextWave()
 
 			// 警告の生成
 			m_pWarning = std::make_shared<Warning>(warning_frame);
-			UIManager::GetInstance().AddUI("Warning", m_pWarning, 0, { 0, 0 });
+			UIManager::GetInstance().AddUI("Warning", m_pWarning, warning_draw_priority, warning_ui_store_vec);
 		}
 	}
 	else
@@ -370,27 +370,27 @@ std::vector<EnemyData> EnemyManager::LoadEnemyWaveFileData(const std::string& fi
 	{
 		// 座標の読み込み
 		EnemyData enemyData{};
-		enemyData.pos.x = std::stof(line[0]);
-		enemyData.pos.y = std::stof(line[1]);
-		enemyData.pos.z = std::stof(line[2]);
+		enemyData.pos.x = std::stof(line[static_cast<int>(EnemyWaveIndex::POS_X)]);
+		enemyData.pos.y = std::stof(line[static_cast<int>(EnemyWaveIndex::POS_Y)]);
+		enemyData.pos.z = std::stof(line[static_cast<int>(EnemyWaveIndex::POS_Z)]);
 
 		// 種類の読み込み
-		enemyData.type = static_cast<EnemyType>(std::stoi(line[3]));
+		enemyData.type = static_cast<EnemyType>(std::stoi(line[static_cast<int>(EnemyWaveIndex::TYPE)]));
 
 		// HPの読み込み
-		enemyData.hp = std::stoi(line[4]);
+		enemyData.hp = std::stoi(line[static_cast<int>(EnemyWaveIndex::HP)]);
 
 		// 攻撃力の読み込み
-		enemyData.attack = std::stoi(line[5]);
+		enemyData.attack = std::stoi(line[static_cast<int>(EnemyWaveIndex::ATTACK)]);
 
 		// 大きさの読み込み
-		enemyData.scale = std::stof(line[6]);
+		enemyData.scale = std::stof(line[static_cast<int>(EnemyWaveIndex::SCALE)]);
 
 		// 移動速度の読み込み
-		enemyData.speed = std::stof(line[7]);
+		enemyData.speed = std::stof(line[static_cast<int>(EnemyWaveIndex::SPEED)]);
 
 		// 行動データの読み込み
-		enemyData.actionDataList = LoadEnemyActionFileData(line[8]);
+		enemyData.actionDataList = LoadEnemyActionFileData(line[static_cast<int>(EnemyWaveIndex::ACTION)]);
 
 		// データの追加
 		dataTable.push_back(enemyData);
@@ -408,36 +408,36 @@ std::vector<EnemyActionData> EnemyManager::LoadEnemyActionFileData(const std::st
 		EnemyActionData enemyActionData{};
 
 		// 目的地の読み込み
-		enemyActionData.goalPos.x = std::stof(line[0]);
-		enemyActionData.goalPos.y = std::stof(line[1]);
-		enemyActionData.goalPos.z = std::stof(line[2]);
+		enemyActionData.goalPos.x = std::stof(line[static_cast<int>(EnemyActionIndex::GOAL_POS_X)]);
+		enemyActionData.goalPos.y = std::stof(line[static_cast<int>(EnemyActionIndex::GOAL_POS_Y)]);
+		enemyActionData.goalPos.z = std::stof(line[static_cast<int>(EnemyActionIndex::GOAL_POS_Z)]);
 
 		// 目的地に到達してから次の目的地に向かうまでの待機フレームの読み込み
-		enemyActionData.idleFrame = std::stoi(line[3]);
+		enemyActionData.idleFrame = std::stoi(line[static_cast<int>(EnemyActionIndex::IDLE_FRAME)]);
 
 		// 目的地に到達したらレーザーを発射するかどうかのフラグの読み込み
-		enemyActionData.isLaser = std::stoi(line[4]);
+		enemyActionData.isLaser = std::stoi(line[static_cast<int>(EnemyActionIndex::IS_LASER)]);
 
 		// レーザーを発射する場合
 		if (enemyActionData.isLaser)
 		{
 			// レーザーの種類の読み込み
-			enemyActionData.laserType = static_cast<LaserType>(std::stoi(line[5]));
+			enemyActionData.laserType = static_cast<LaserType>(std::stoi(line[static_cast<int>(EnemyActionIndex::LASER_TYPE)]));
 
 			// レーザーを発射するまでのチャージフレームの読み込み
-			enemyActionData.laserChargeFrame = std::stoi(line[6]);
+			enemyActionData.laserChargeFrame = std::stoi(line[static_cast<int>(EnemyActionIndex::LASER_CHARGE_FRAME)]);
 
 			// レーザーを発射するまでの待機フレームの読み込み
-			enemyActionData.laserIdleFrame = std::stoi(line[7]);
+			enemyActionData.laserIdleFrame = std::stoi(line[static_cast<int>(EnemyActionIndex::LASER_IDLE_FRAME)]);
 
 			// レーザーの速度の読み込み
-			enemyActionData.laserSpeed = std::stof(line[8]);
+			enemyActionData.laserSpeed = std::stof(line[static_cast<int>(EnemyActionIndex::LASER_SPEED)]);
 
 			// レーザーを何フレームの間、発射するかの読み込み
-			enemyActionData.laserFireFrame = std::stoi(line[9]);
+			enemyActionData.laserFireFrame = std::stoi(line[static_cast<int>(EnemyActionIndex::LASER_FIRE_FRAME)]);
 
 			// レーザーがプレイヤーを追従するかどうかのフラグの読み込み
-			enemyActionData.isPlayerFollowing = std::stoi(line[10]);
+			enemyActionData.isPlayerFollowing = std::stoi(line[static_cast<int>(EnemyActionIndex::IS_PLAYER_FOLLOWING)]);
 
 		}
 		// データの追加

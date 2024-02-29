@@ -46,7 +46,7 @@ public:
 	// ゲッター
 	static ScoreRanking& GetInstance();					 // インスタンスの取得
 	const std::vector<StageScore>& GetScoreData() const; // スコアデータの取得
-	const std::vector<ScoreSaveData>& GetScoreData(const std::string& stageName) const;		 // スコアデータの取得
+	std::vector<ScoreSaveData> GetScoreData(const std::string& stageName) const;		 // スコアデータの取得
 
 private:
 	// コンストラクタ

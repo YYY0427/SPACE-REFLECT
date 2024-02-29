@@ -135,6 +135,18 @@ bool Vector3::operator!=(const Vector3& vec)
 	return (x != vec.x || y != vec.y || z != vec.z);
 }
 
+// Vec3 <= Vec3
+bool Vector3::operator<=(const Vector3& vec)
+{
+	return (x <= vec.x && y <= vec.y && z <= vec.z);
+}
+
+// Vec3 >= Vec3
+bool Vector3::operator>=(const Vector3& vec)
+{
+	return (x >= vec.x && y >= vec.y && z >= vec.z);
+}
+
 /// ƒxƒNƒgƒ‹‚Ì‘å‚«‚³‚ð•Ô‚·
 float Vector3::Length() const
 {

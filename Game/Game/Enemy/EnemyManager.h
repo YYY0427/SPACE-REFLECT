@@ -173,7 +173,6 @@ public:
 
 	/// <summary>
 	/// ボスが倒されたか、死亡演出を終了したかの取得
-	/// 
 	/// </summary>
 	/// <returns>true : 倒された、false : まだ生存している</returns>
 	bool IsDeadBoosEndAnim() const;
@@ -192,7 +191,7 @@ private:
 		WARNING,
 	};
 
-	// 
+	// ウェーブのインデックス
 	enum class EnemyWaveIndex
 	{
 		POS_X,
@@ -204,6 +203,22 @@ private:
 		SCALE,
 		SPEED,
 		ACTION,
+	};
+
+	// 敵の行動のインデックス
+	enum class EnemyActionIndex
+	{
+		GOAL_POS_X,
+		GOAL_POS_Y,
+		GOAL_POS_Z,
+		IDLE_FRAME,
+		IS_LASER,
+		LASER_TYPE,
+		LASER_CHARGE_FRAME,
+		LASER_IDLE_FRAME,
+		LASER_SPEED,
+		LASER_FIRE_FRAME,
+		IS_PLAYER_FOLLOWING,
 	};
 
 private:
@@ -219,11 +234,11 @@ private:
 	std::shared_ptr<ScreenShaker> m_pScreenShaker;			// 画面揺れ
 
 	// フラグ
-	bool m_isDeadBoss;	// ボスが倒されたかどうか
-	bool m_isBoss;		// ボスが出現したかどうか
-	bool m_isNextWave;	// 次のウェーブに移行するかどうか
-	bool m_isLoadWave;	// ウェーブデータを読み込んだかどうか
-	bool m_isStartWave;	// ウェーブを開始したかどうか
+	bool m_isDeadBoss;			// ボスが倒されたかどうか
+	bool m_isBoss;				// ボスが出現したかどうか
+	bool m_isNextWave;			// 次のウェーブに移行するかどうか
+	bool m_isLoadWave;			// ウェーブデータを読み込んだかどうか
+	bool m_isStartWave;			// ウェーブを開始したかどうか
 	bool m_isDeadEffectSound;	// 死亡演出のサウンドを再生したかどうか
 
 	// ウェーブ

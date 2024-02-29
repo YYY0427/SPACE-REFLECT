@@ -10,28 +10,44 @@ class Player;
 class CubeLaser : public LaserBase
 {
 public:
-	// コンストラクタ
-	CubeLaser(Vector3 firePos, float laserSpeed, std::shared_ptr<Player> pPlayer);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="firePos">発射位置</param>
+	/// <param name="laserSpeed">レーザーの速さ</param>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	CubeLaser(const Vector3& firePos, 
+			  const float laserSpeed, 
+			  const std::shared_ptr<Player>& pPlayer);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~CubeLaser();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
 private:
-	// ポインタ
-	std::shared_ptr<Player> m_pPlayer;	// プレイヤー
+	// プレイヤーのポインタ
+	std::shared_ptr<Player> m_pPlayer;
 
 	// 移動ベクトル
 	Vector3 m_moveVec;
+
+	// 最大スケール
+	Vector3 m_maxScale;
 
 	// 終了時のスケール
 	Vector3 m_endScale;
 
 	// 1フレームに回転する量
-	float m_deltaRot;	
+	Vector3 m_deltaRot;	
 };

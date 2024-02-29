@@ -111,7 +111,7 @@ void Tutorial::Update()
 		if (soundManager.IsPlayBGM())
 		{
 			// BGMのフェードアウト
-			auto& fileName = soundManager.GetPlayBGMFileName();
+			auto fileName = soundManager.GetPlayBGMFileName();
 			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
 		}
 

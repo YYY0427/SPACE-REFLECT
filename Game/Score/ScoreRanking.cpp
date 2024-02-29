@@ -204,7 +204,7 @@ const std::vector<StageScore>& ScoreRanking::GetScoreData() const
 }
 
 // スコアデータの取得
-const std::vector<ScoreSaveData>& ScoreRanking::GetScoreData(const std::string& stageName) const
+std::vector<ScoreSaveData> ScoreRanking::GetScoreData(const std::string& stageName) const
 {
 	// ステージ名が一致するものを返す
 	for (auto& stageScore : m_scoreSaveData)

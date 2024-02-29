@@ -15,7 +15,7 @@ MeteorManager::MeteorManager(std::string objectDataFileName) :
 	m_smallCreateIntervalFrame(0)
 {
 	// 配置データが存在する場合は配置データから隕石を生成
-	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Meteor2");
+	auto data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Meteor2");
 	for (auto& meteorData : data)
 	{
 		m_pMeteorList.push_back(std::make_shared<Meteor>(meteorData));

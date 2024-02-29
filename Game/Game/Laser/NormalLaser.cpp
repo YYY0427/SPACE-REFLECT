@@ -336,7 +336,7 @@ void NormalLaser::Draw()
 }
 
 // レーザーを止める
-void NormalLaser::Stop(Vector3 pos)
+void NormalLaser::Stop(const Vector3& pos)
 {
 	// レーザーの発射地点からシールドまでの距離を算出
 	Vector3 vec = pos - m_pos;
@@ -352,7 +352,7 @@ void NormalLaser::Stop(Vector3 pos)
 }
 
 // 反射
-void NormalLaser::Reflect(Vector3 pos)
+void NormalLaser::Reflect(const Vector3& pos)
 {
 	// レーザーの反射フラグを立てる
 	m_isReflect = true;

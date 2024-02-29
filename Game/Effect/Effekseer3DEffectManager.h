@@ -43,9 +43,9 @@ private:
 	struct FollowEffectData
 	{
 		std::string effectId;				// エフェクトのID
-		int* playingEffectHandle;	// エフェクトのハンドル
+		int*        playingEffectHandle;	// エフェクトのハンドル
 		PlayType    type;					// 再生タイプ
-		Vector3* pos;					// 追従したい位置情報変数のアドレス
+		Vector3*    pos;					// 追従したい位置情報変数のアドレス
 		Vector3     rot;					// 回転
 		Vector3		scale;					// 拡大率
 		float		speed;					// 再生速度

@@ -11,36 +11,81 @@ class Model;
 class LaserBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	LaserBase();
 	
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~LaserBase();
 	
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	virtual void Update() = 0;
 	
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	virtual void Draw() = 0;
 
-	// レーザーを止める
-	virtual void Stop(Vector3 pos) {};
+	/// <summary>
+	/// レーザーを止める
+	/// </summary>
+	/// <param name="pos">レーザーを止める位置</param>
+	virtual void Stop(const Vector3& pos) {};
 
-	// 反射
-	virtual void Reflect(Vector3 pos) {};
+	/// <summary>
+	/// 反射
+	/// </summary>
+	/// <param name="pos">反射する位置</param>
+	virtual void Reflect(const Vector3& pos) {};
 
-	// 反射された状態から元に戻す
+	/// <summary>
+	/// 反射を元に戻す
+	/// </summary>
 	virtual void UndoReflect() {};
 
-	// レーザーを消す
+	/// <summary>
+	/// レーザーを消す
+	/// </summary>
 	void Delete();
 
-	// ゲッター
-	int GetModelHandle() const;				// モデルハンドル
-	int GetReflectLaserKey() const;			// 反射レーザーのキー
-	Vector3 GetPos() const;					// 位置情報
-	Vector3 GetEndPos() const;				// 終了位置
-	virtual Vector3 GetDirection() const;	// 方向ベクトル
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// モデルハンドルを取得
+	/// </summary>
+	/// <returns>モデルハンドル</returns>
+	int GetModelHandle() const;			
+
+	/// <summary>
+	/// 反射レーザーのキーを取得
+	/// </summary>
+	/// <returns>反射レーザーのキー</returns>
+	int GetReflectLaserKey() const;			
+
+	/// <summary>
+	/// 位置情報を取得
+	/// </summary>
+	/// <returns>位置情報</returns>
+	const Vector3& GetPos() const;	
+
+	/// <summary>
+	/// レーザーの終端位置を取得
+	/// </summary>
+	/// <returns>レーザーの終端位置</returns>
+	const Vector3& GetEndPos() const;		
+
+	/// <summary>
+	/// 方向ベクトルを取得
+	/// </summary>
+	/// <returns>方向ベクトル</returns>
+	virtual Vector3 GetDirection() const;
+
 	bool IsEnabled() const;					// 存在フラグ
 	bool IsReflect() const;					// 反射フラグ
 

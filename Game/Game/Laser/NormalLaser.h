@@ -37,10 +37,10 @@ public:
 	void Draw() override final;
 
 	// ƒŒ[ƒU[‚ğ~‚ß‚é
-	void Stop(Vector3 pos) override final;
+	void Stop(const Vector3& pos) override final;
 
 	// ”½Ë
-	void Reflect(Vector3 pos) override final;
+	void Reflect(const Vector3& pos) override final;
 
 	// ”½Ë‚³‚ê‚½ó‘Ô‚©‚çŒ³‚É–ß‚·
 	void UndoReflect() override final;

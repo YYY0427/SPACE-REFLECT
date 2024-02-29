@@ -181,7 +181,7 @@ public:
 	/// 再生中のBGMがない場合は空文字を返す
 	/// </summary>
 	/// <returns>再生中のBGMのファイル名</returns>
-	const std::string& GetPlayBGMFileName() const;
+	std::string GetPlayBGMFileName() const;
 
 	/// <summary>
 	/// BGMが再生中かチェック

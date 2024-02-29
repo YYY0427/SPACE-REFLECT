@@ -9,6 +9,8 @@
 #include "../UI/Warning.h"
 #include "../Util/FileUtil.h"
 #include "../UI/ResultWindow.h"
+#include "../Math/MathUtil.h"
+#include "../MyDebug/DebugText.h"
 #include "DxLib.h"
 
 namespace
@@ -23,8 +25,6 @@ TestScene::TestScene(SceneManager& manager) :
 	// 画面切り替え演出の設定
 	m_pTransitor = std::make_unique<StripTransitor>();
 	m_pTransitor->Start();
-
-	m_fileNames = FileUtil::LoadCsvFile("Data/Csv/Test.csv");
 }
 
 // デストラクタ
@@ -49,14 +49,21 @@ void TestScene::Draw()
 	const auto& size = Application::GetInstance().GetWindowSize();
 	DrawBox(0, 0, size.width, size.height, 0x000000, true);
 	
-	// 読み込んだファイルの描画
-	for (int i = 0; i < m_fileNames.size(); i++)
+	static int count = 0;
+	count++;
+	if (count % 10 == 0)
 	{
-		for (int j = 0; j < m_fileNames[i].size(); j++)
-		{
-			DrawString(20 * j, 50 + (i * 20), m_fileNames[i][j].c_str(), 0xffffff);
-		}
+		DebugText::Log("TEST", { MathUtil::GetRandFloat(0.1f, 1.0) });
 	}
+
+	//// 読み込んだファイルの描画
+	//for (int i = 0; i < m_fileNames.size(); i++)
+	//{
+	//	for (int j = 0; j < m_fileNames[i].size(); j++)
+	//	{
+	//		DrawString(20 * j, 50 + (i * 20), m_fileNames[i][j].c_str(), 0xffffff);
+	//	}
+	//}
 
 	//int i = 0;
 	//for (int i = 0; i < m_fileNames.size(); i++)

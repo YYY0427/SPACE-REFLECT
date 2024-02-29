@@ -105,7 +105,7 @@ namespace
 	constexpr int die_draw_stop_frame            = 60 * 7;	// 死亡時の描画停止フレーム
 
 	// レーザー
-	constexpr float cube_laser_speed = 5.0f;	// キューブレーザーの速度
+	constexpr float cube_laser_speed = 8.0f;	// キューブレーザーの速度
 	constexpr int laser_charge_frame = 140;		// レーザーのチャージフレーム
 	constexpr int laser_fire_frame   = 10000;	// レーザーの発射フレーム
 	constexpr float laser_move_speed = 5.0f;	// レーザーの移動速度

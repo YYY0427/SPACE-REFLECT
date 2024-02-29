@@ -74,7 +74,7 @@ Player::Player(const std::string& objectDataFileName) :
 	m_waitFrame(60 * 5)
 {
 	// ÉfÅ[É^ÇÃì«Ç›çûÇ›
-	auto& data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
+	auto data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
 	m_pos   = data.front().pos;
 	m_rot   = data.front().rot;
 	m_scale = data.front().scale;

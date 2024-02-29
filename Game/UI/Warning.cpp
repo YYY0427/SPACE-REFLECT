@@ -58,7 +58,7 @@ Warning::Warning(int drawFrame) :
 
 	// ’Êí‚ÌBGM‚Ìƒtƒ@ƒCƒ‹–¼‚Ìæ“¾
 	auto& soundManager = SoundManager::GetInstance();
-	auto& fileName = soundManager.GetPlayBGMFileName();
+	auto fileName = soundManager.GetPlayBGMFileName();
 
 	// Ä¶’†‚ÌBGM‚ª‚ ‚Á‚½‚ç
 	if (fileName != "")

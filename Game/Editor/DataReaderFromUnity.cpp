@@ -89,7 +89,7 @@ DataReaderFromUnity& DataReaderFromUnity::GetInstance()
 }
 
 // オブジェクトの名前からデータを取得
-const std::vector<UnityGameObject>& DataReaderFromUnity::GetData(const std::string& fileName, const std::string& objectName) const
+std::vector<UnityGameObject> DataReaderFromUnity::GetData(const std::string& fileName, const std::string& objectName) const
 {
 	// ファイル名からデータを取得
 	auto it = m_data.find(fileName);

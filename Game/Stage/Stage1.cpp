@@ -110,7 +110,7 @@ void Stage1::Update()
 		if (soundManager.IsPlayBGM())
 		{
 			// BGMのフェードアウト
-			auto& fileName = soundManager.GetPlayBGMFileName();
+			auto fileName = soundManager.GetPlayBGMFileName();
 			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
 		}
 
@@ -169,20 +169,16 @@ void Stage1::UpdatePlay()
 		return;
 	}
 
-	// フレームカウント
-	m_currentFrame++;
-
-	// ウェーブの待機フレーム数を過ぎたら
-	if (m_currentFrame > wave_wait_frame)
+	// 現在の敵のウェーブが終了したら
+	if (m_pEnemyManager->IsEndWave())
 	{
-		// ウェーブ開始
-		m_pEnemyManager->StartWave();
-
-		// 現在の敵のウェーブが終了したら
-		if (m_pEnemyManager->IsEndWave())
+		if (m_currentFrame++ > wave_wait_frame)
 		{
+			// ウェーブ開始
+	    	m_pEnemyManager->StartWave();
+
 			// 次のウェーブに進む
-			m_pEnemyManager->NextWave();		
+			m_pEnemyManager->NextWave();
 
 			// ウェーブの待機フレーム数をリセット
 			m_currentFrame = 0;
