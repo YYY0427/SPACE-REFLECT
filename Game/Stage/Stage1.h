@@ -17,6 +17,7 @@ public:
 
 	// 開始
 	void EnterResult();
+	void EnterGameOver();
 
 	// 更新
 	void Update() override final;

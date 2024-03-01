@@ -56,6 +56,9 @@ namespace
 
 	// プレイヤーのHP文字のファイルパス
 	const std::string hp_string_file_path = "Data/Image/Life.png";
+
+	// ゲームオーバー演出のフレーム数
+	const int game_over_frame = 60 * 6;
 }
 
 //  コンストラクタ
@@ -71,7 +74,7 @@ Player::Player(const std::string& objectDataFileName) :
 	m_damageEffectHandle(-1),
 	m_opacity(1.0f),
 	m_dieEffectIntervalTimer(20),
-	m_waitFrame(60 * 5)
+	m_waitFrame(game_over_frame)
 {
 	// データの読み込み
 	auto data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
@@ -373,6 +376,29 @@ bool Player::UpdateGameOver()
 	// エフェクトの停止
 	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_boostEffectHandle);
 
+	// 移動ベクトル作成
+	m_moveVec = { 0.0f, -0.5f, 1.0f };
+	m_moveVec = m_moveVec.Normalized();
+	m_moveVec *= 2.0f;
+
+	// プレイヤーを回転
+	m_rot += { 0, 0, MathUtil::ToRadian(5) };
+
+	// 作成した移動ベクトルで座標の移動
+	m_pos = m_pos + m_moveVec;
+
+
+	if (m_waitFrame <= game_over_frame * 0.9)
+	{
+		static bool isPlay = false;
+		if (!isPlay)
+		{
+			// プレイヤーが死んだ音の再生
+			SoundManager::GetInstance().PlaySE("GameOver");
+			isPlay = true;
+		}
+	}
+
 	if (m_waitFrame-- >= 0)
 	{
 		// タイマーの更新
@@ -403,17 +429,6 @@ bool Player::UpdateGameOver()
 			// タイマーのリセット
 			m_dieEffectIntervalTimer.Reset();
 		}
-
-		// 移動ベクトル作成
-		m_moveVec = { 0.0f, -0.5f, 1.0f };
-		m_moveVec = m_moveVec.Normalized();
-		m_moveVec *= 2.0f;
-
-		// プレイヤーを回転
-		m_rot += { 0, 0, MathUtil::ToRadian(5) };
-
-		// 作成した移動ベクトルで座標の移動
-		m_pos = m_pos + m_moveVec;
 	}
 	else
 	{
@@ -430,6 +445,9 @@ bool Player::UpdateGameOver()
 				m_pos,
 				{ 50.0f, 50.0f, 50.0f },
 				0.5f);
+
+			// 大きい爆発音の再生
+			SoundManager::GetInstance().PlaySE("NormalEnemyDie");
 		}
 		else
 		{

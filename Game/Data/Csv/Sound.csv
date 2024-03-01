@@ -9,11 +9,13 @@ TutorialBgm,.mp3,0,0.6
 GageRecovery,.mp3,1,1
 TutorialUI,.mp3,1,0.7
 LaserCharge,.mp3,1,0.7
-Laser,.mp3,1,0.7
-ReflectLaser,.mp3,1,0.7
+Laser,.mp3,1,0.85
+ReflectLaser,.mp3,1,0.85
 BossBatleBgm,.mp3,0,1
 Reflect,.wav,1,1
 Warning,.mp3,1,1
 BossDeathEffect,.mp3,1,1
 PlayerDamage,.wav,1,0.5
-NormalEnemyDie,.mp3,1,0.6
+PlayerDiedSmallExplosion,.mp3,1,0.8
+NormalEnemyDie,.mp3,1,0.7
+GameOver,.mp3,1,0.8

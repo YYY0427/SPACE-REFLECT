@@ -61,7 +61,7 @@ Stage1::Stage1(SceneManager& manager) :
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
-	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
+	m_stateMachine.AddState(State::GAME_OVER, [this]() {EnterGameOver(); }, [this]() { UpdateGameOver(); }, {});
 	m_stateMachine.AddState(State::RESULT, [this]() { EnterResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
 
@@ -99,21 +99,25 @@ void Stage1::EnterResult()
 	m_pResultWindow = std::make_shared<ResultWindow>();
 }
 
+// 初期化
+void Stage1::EnterGameOver()
+{
+	// BGMが再生中なら
+	auto& soundManager = SoundManager::GetInstance();
+	if (soundManager.IsPlayBGM())
+	{
+		// BGMのフェードアウト
+		auto fileName = soundManager.GetPlayBGMFileName();
+		soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+	}
+}
+
 // 更新
 void Stage1::Update()
 {
 	// プレイヤーが死んだら
 	if (!m_pPlayer->IsLive())
 	{
-		// BGMが再生中なら
-		auto& soundManager = SoundManager::GetInstance();
-		if (soundManager.IsPlayBGM())
-		{
-			// BGMのフェードアウト
-			auto fileName = soundManager.GetPlayBGMFileName();
-			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
-		}
-
 		// ゲームオーバーに遷移
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
