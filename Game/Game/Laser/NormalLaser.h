@@ -1,7 +1,6 @@
 #pragma once
 #include "LaserBase.h"
 #include "../../StateMachine.h"
-#include "../../Util/Timer.h"
 #include "../../Math/Matrix.h"
 #include "../../Math/Vector2.h"
 #include <vector>
@@ -25,36 +24,79 @@ public:
 	/// <param name="laserFireFrame">レーザーの発射時間フレーム</param>
 	/// <param name="laserSpeed">レーザーの移動速度</param>
 	/// <param name="isPlayerFollowing">プレイヤーを追従するか</param>
-	NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
+	NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy, 
+				const std::shared_ptr<Player>& pPlayer, 
+				const int laserChargeFrame, 
+				const int laserFireFrame, 
+				const float laserSpeed, 
+				const bool isPlayerFollowing);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~NormalLaser();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// レーザーを止める
+	/// <summary>
+	/// レーザーを止める
+	/// </summary>
+	/// <param name="pos">止める座標</param>
 	void Stop(const Vector3& pos) override final;
 
-	// 反射
+	/// <summary>
+	/// レーザーの反射
+	/// </summary>
+	/// <param name="pos">反射する座標</param>
 	void Reflect(const Vector3& pos) override final;
 
-	// 反射された状態から元に戻す
+	/// <summary>
+	/// 反射を元に戻す
+	/// </summary>
 	void UndoReflect() override final;
 
-	// 方向ベクトルのゲッター
+
+	//// ゲッター ///////////////////////////////////////
+
+	/// <summary>
+	/// レーザーの向きを取得
+	/// </summary>
+	/// <returns>レーザーの向き</returns>
 	Vector3 GetDirection() const override final;
 
 private:
-	void EnterCharge();					// チャージ開始
+	//// 初期化 ///////////////////////////////////////
 
-	// 更新
-	void UpdateCharge();				// チャージ
-	void UpdateNormalFire();			// 通常発射
-	void UpdateFirePlayerFollowing();	// プレイヤーを追従して発射
+	/// <summary>
+	/// レーザーのチャージの初期化
+	/// </summary>
+	void EnterCharge();					
+
+
+	//// 更新 //////////////////////////////////////////
+
+	/// <summary>
+	/// レーザーのチャージの更新
+	/// </summary>
+	void UpdateCharge();		
+
+	/// <summary>
+	/// レーザーの通常発射の更新
+	/// </summary>
+	void UpdateNormalFire();	
+
+	/// <summary>
+	/// レーザーのプレイヤー追従発射の更新
+	/// </summary>
+	void UpdateFirePlayerFollowing();	
 
 private:
 	// 状態
@@ -69,7 +111,7 @@ private:
 private:
 	// ポインタ
 	std::shared_ptr<EnemyBase> m_pEnemy;	// 発射元のポインタ
-	std::shared_ptr<Player> m_pPlayer;		// プレイヤーのポインタ
+	std::shared_ptr<Player>    m_pPlayer;	// プレイヤーのポインタ
 
 	// 向く方向
 	Vector3 m_directionPos;	// 向く座標
@@ -87,14 +129,13 @@ private:
 	// フレーム
 	int m_laserFireFrame;		// レーザーの発射フレーム
 	int m_chargeEffectFrame;	// エフェクトチャージフレーム
-	int m_reflectFrame = 0;
-
+	int m_reflectFrame;			// 反射フレーム	
 
 	// プレイヤーを追従するか
 	bool m_isPlayerFollowing;
 
 	// 通常発射時
-	int m_normalFireMovePointIndex;		// 移動ポイントインデックス
-	Vector3 m_normalFireGoalPos;		// 移動ポイントの座標
+	int     m_normalFireMovePointIndex;				// 移動ポイントインデックス
+	Vector3 m_normalFireGoalPos;					// 移動ポイントの座標
 	std::vector<Vector2> m_normalFireMovePointList;	// 移動ポイントの座標のリスト
 };

@@ -16,14 +16,18 @@ namespace
 {
 	// モデル
 	const Vector3 init_model_direction = { 1.0f, 0.0f, 0.0f };	// 初期方向
-	const Vector3 laser_model_scale = { 0.1f, 0.1f, 0.1f };		// 拡大率
+	const Vector3 laser_model_scale    = { 0.1f, 0.1f, 0.1f };	// 拡大率
 
 	// エフェクト
-	const Vector3 init_laser_effect_direction = { 0.0f, 0.0f, -1.0f };	// 初期方向
-	const Vector3 laser_effect_scale = { 20.0f, 20.0f, 24.0f };			// 拡大率
-	constexpr float laser_effect_play_speed = 1.0f;						// 再生速度
-	constexpr int init_laser_effect_charge_frame = 140;					// 元々のチャージフレーム
-	constexpr float laser_effect_z_length = 300.0f;						// Z軸の長さ
+	const Vector3 init_laser_effect_direction    = { 0.0f, 0.0f, -1.0f };	// 初期方向
+	const Vector3 laser_effect_scale             = { 20.0f, 20.0f, 24.0f };	// 拡大率
+	constexpr float laser_effect_play_speed      = 1.0f;					// 再生速度
+	constexpr int init_laser_effect_charge_frame = 140;						// 元々のチャージフレーム
+	constexpr float laser_effect_z_length        = 300.0f;					// Z軸の長さ
+
+	// サウンド
+	constexpr int laser_charge_sound_start_fade_out_frame = 30;	// レーザーのチャージサウンドのフェードアウトの開始フレーム数
+	constexpr int laser_charge_sound_fade_out_frame       = 20;	// レーザーのチャージサウンドのフェードアウトのフレーム数
 
 	// フレーム(ボーン)
 	constexpr int laser_end_frame_no = 0;	// レーザーの端のフレーム番号
@@ -38,7 +42,7 @@ namespace
 	// プレイヤーを追従しない場合の向かう位置
 	const Vector2 window_size = 
 		{ static_cast<float>(Application::GetInstance().GetWindowSize().width), 
-		static_cast<float>(Application::GetInstance().GetWindowSize().height )};
+		  static_cast<float>(Application::GetInstance().GetWindowSize().height )};
 	const Vector2 goal_pos[] = 
 	{
 		{ 0 + 200, 0 + 200 },
@@ -50,12 +54,18 @@ namespace
 }
 
 // コンストラクタ
-NormalLaser::NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Player> pPlayer, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing) :
+NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy, 
+						 const std::shared_ptr<Player>& pPlayer, 
+						 const int laserChargeFrame, 
+						 const int laserFireFrame, 
+						 const float laserSpeed, 
+						 const bool isPlayerFollowing) :
 	m_pEnemy(pEnemy),
 	m_pPlayer(pPlayer),
 	m_laserFireFrame(laserFireFrame),
 	m_isPlayerFollowing(isPlayerFollowing),
-	m_normalFireMovePointIndex(0)
+	m_normalFireMovePointIndex(0),
+	m_reflectFrame(0)
 {
 	// 初期化
 	m_pos = m_pEnemy->GetLaserFirePos();
@@ -115,7 +125,7 @@ NormalLaser::NormalLaser(std::shared_ptr<EnemyBase> pEnemy, std::shared_ptr<Play
 
 	// 当たり判定に使用するモデルの設定
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
-	m_pModel->SetUseCollision(true);					// 当たり判定設定
+	m_pModel->SetUseCollision(true);// 当たり判定設定
 	m_pModel->SetScale(m_scale);	// 拡大率
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列
 	m_pModel->SetPos(m_pos);		// 位置
@@ -149,11 +159,13 @@ void NormalLaser::Update()
 	if(m_stateMachine.GetCurrentState() != State::CHARGE)
 	{
 		// エフェクトの再生速度の設定
-		Effekseer3DEffectManager::GetInstance().SetEffectSpeed(m_laserEffectHandle, 1.0f);
+		Effekseer3DEffectManager::GetInstance().SetEffectSpeed(m_laserEffectHandle, laser_effect_play_speed);
 
+		// 反射レーザーの音が再生されていない場合
 		auto& soundManager = SoundManager::GetInstance();
 		if (!soundManager.IsPlaySound("ReflectLaser"))
 		{
+			// 通常レーザーの音が再生されていない場合
 			if (!soundManager.IsPlaySound("Laser"))
 			{
 				// レーザー音の再生
@@ -195,8 +207,8 @@ void NormalLaser::Update()
 	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
 
 	// ベクトル方向の回転行列からオイラー角を出力
-	Matrix effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
-	Vector3 effectRot = effectRotMtx.ToEulerAngle();
+	Matrix  effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
+	Vector3 effectRot    = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの回転率を設定
 	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
@@ -220,11 +232,11 @@ void NormalLaser::Update()
 void NormalLaser::UpdateCharge()
 {
 	// チャージフレームの残りフレームが特定のフレーム数以下になったら
-	if (m_chargeEffectFrame <= 30)
+	if (m_chargeEffectFrame <= laser_charge_sound_start_fade_out_frame)
 	{
 		// レーザーのチャージサウンドのフェードアウトの設定
 		auto& soundManager = SoundManager::GetInstance();
-		soundManager.SetFadeSound("LaserCharge", 20, soundManager.GetSoundVolume("LaserCharge"), 0);
+		soundManager.SetFadeSound("LaserCharge", laser_charge_sound_fade_out_frame, soundManager.GetSoundVolume("LaserCharge"), 0);
 	}
 
 	// チャージ時間が終わったら
@@ -289,13 +301,6 @@ void NormalLaser::UpdateNormalFire()
 		// ベクトルを設定
 		m_directionVec = (m_normalFireGoalPos - m_directionPos).Normalized() * m_speed;
 
-		// ベクトルがNaNだったら
-		if (std::isnan(m_directionVec.x) || std::isnan(m_directionVec.y) || std::isnan(m_directionVec.z))
-		{
-			// 0に設定
-			m_directionVec = { 0.0f, 0.0f, 0.0f };
-		}
-
 		// 座標を更新
 		m_directionPos += m_directionVec;
 	}
@@ -304,18 +309,8 @@ void NormalLaser::UpdateNormalFire()
 // プレイヤーを追従して発射状態の更新
 void NormalLaser::UpdateFirePlayerFollowing()
 {
-	// レーザーのサウンドの再生
-	auto& soundManager = SoundManager::GetInstance();
-
 	// ベクトルを設定
 	m_directionVec = (m_pPlayer->GetPos() - m_directionPos).Normalized() * m_speed;
-
-	// ベクトルがNaNだったら
-	if (std::isnan(m_directionVec.x) || std::isnan(m_directionVec.y) || std::isnan(m_directionVec.z))
-	{
-		// 0に設定
-		m_directionVec = { 0.0f, 0.0f, 0.0f };
-	}
 
 	// 座標の更新
 	m_directionPos.z += m_pPlayer->GetMoveVec().z;

@@ -86,12 +86,32 @@ public:
 	/// <returns>方向ベクトル</returns>
 	virtual Vector3 GetDirection() const;
 
-	bool IsEnabled() const;					// 存在フラグ
-	bool IsReflect() const;					// 反射フラグ
+	/// <summary>
+	/// 存在フラグの取得
+	/// </summary>
+	/// <returns>true : 存在、false : 存在していない</returns>
+	bool IsEnabled() const;
 
-	// セッター
-	void SetPos(Vector3 pos);			// 位置情報
-	void SetReflectLaserKey(int key);	// 反射レーザーのキー
+	/// <summary>
+	/// 反射フラグの取得
+	/// </summary>
+	/// <returns>true : 反射、false : 反射していない</returns>
+	bool IsReflect() const;	
+
+
+	//// セッター ////
+
+	/// <summary>
+	/// 位置情報を設定
+	/// </summary>
+	/// <param name="pos">位置情報</param>
+	void SetPos(const Vector3& pos);
+
+	/// <summary>
+	/// 反射レーザーのキーを設定
+	/// </summary>
+	/// <param name="key">反射レーザーのキー</param>
+	void SetReflectLaserKey(const int key);
 
 protected:
 	// ポインタ

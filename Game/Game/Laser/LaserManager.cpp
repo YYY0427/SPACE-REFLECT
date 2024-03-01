@@ -11,7 +11,7 @@
 #include <string>
 
 // コンストラクタ
-LaserManager::LaserManager(std::shared_ptr<Player> pPlayer) :
+LaserManager::LaserManager(const std::shared_ptr<Player>& pPlayer) :
 	m_pPlayer(pPlayer)
 {
 }
@@ -44,32 +44,25 @@ void LaserManager::Draw()
 }
 
 // レーザーの追加
-int LaserManager::AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing)
+int LaserManager::AddLaser(LaserType type, 
+						   const std::shared_ptr<EnemyBase>& pEnemy, 
+						   const int laserChargeFrame, 
+						   const int laserFireFrame, 
+						   const float laserSpeed, 
+						   const bool isPlayerFollowing)
 {
+	// レーザーのデータを作成
 	LaserData laserData;
-	laserData.type = type;
 
-	// レーザーの種類によって処理を分岐
-	switch (laserData.type)
-	{
-	case LaserType::NORMAL:
-		laserData.pLaser = std::make_shared<NormalLaser>(
-			pEnemy, m_pPlayer, laserChargeFrame, laserFireFrame, laserSpeed, isPlayerFollowing);
-		break;
+	// レーザーの種類を設定
+	laserData.type = LaserType::NORMAL;
 
-	default:
-		assert(!"レーザーの種類がありません");
-	}
+	// レーザーのインスタンスを作成
+	laserData.pLaser = std::make_shared<NormalLaser>(
+		pEnemy, m_pPlayer, laserChargeFrame, laserFireFrame, laserSpeed, isPlayerFollowing);
 
 	// Keyの設定
-	laserData.key = 0;
-	for (auto& laser : m_pLaserList)
-	{
-		if (laserData.key <= laser.key)
-		{
-			laserData.key = laser.key + 1;
-		}
-	}
+	laserData.key = CreateLaserKey();
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);
@@ -89,14 +82,7 @@ int LaserManager::AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyMan
 	laserData.type = LaserType::REFLECT;
 
 	// Keyの設定
-	laserData.key = 0;
-	for (auto& laser : m_pLaserList)
-	{
-		if (laserData.key <= laser.key)
-		{
-			laserData.key = laser.key + 1;
-		}
-	}
+	laserData.key = CreateLaserKey();
 
 	// レーザーのポインタを設定
 	laserData.pLaser = std::make_shared<ReflectLaser>(pEnemyManager, pShield, pLaser, firePos);
@@ -108,21 +94,14 @@ int LaserManager::AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyMan
 }
 
 // キューブレーザーの追加
-int LaserManager::AddCubeLaser(Vector3 firePos, float laserSpeed)
+int LaserManager::AddCubeLaser(const Vector3& firePos, const float laserSpeed)
 {
 	// レーザーのデータを作成
 	LaserData laserData;
 	laserData.type = LaserType::CUBE;
 
 	// Keyの設定
-	laserData.key = 0;
-	for (auto& laser : m_pLaserList)
-	{
-		if (laserData.key <= laser.key)
-		{
-			laserData.key = laser.key + 1;
-		}
-	}
+	laserData.key = CreateLaserKey();
 
 	// レーザーのポインタを設定
 	laserData.pLaser = std::make_shared<CubeLaser>(firePos, laserSpeed, m_pPlayer);
@@ -135,9 +114,9 @@ int LaserManager::AddCubeLaser(Vector3 firePos, float laserSpeed)
 }
 
 // レーザーの削除
-void LaserManager::DeleteLaser(int key)
+void LaserManager::DeleteLaser(const int key)
 {
-	// レーザーの削除
+	// キーと一致するレーザーを削除
 	for (auto& laser : m_pLaserList)
 	{
 		if (laser.key == key)
@@ -165,8 +144,9 @@ const std::list<LaserData>& LaserManager::GetLaserList() const
 }
 
 // レーザーの取得
-const LaserData& LaserManager::GetLaserData(int key) const
+LaserData LaserManager::GetLaserData(const int key) const
 {
+	// キーと一致するレーザーを取得
 	for (auto& laser : m_pLaserList)
 	{
 		if (laser.key == key)
@@ -175,13 +155,15 @@ const LaserData& LaserManager::GetLaserData(int key) const
 		}
 	}
 
+	// エラー
 	assert(!"レーザーが見つかりませんでした");
 	return m_pLaserList.front();
 }
 
 // レーザーの位置の設定
-void LaserManager::SetLaserPosition(int key, Vector3 pos)
+void LaserManager::SetLaserPos(const int key, const Vector3& pos)
 {
+	// キーと一致するレーザーに位置を設定
 	for (auto& laser : m_pLaserList)
 	{
 		if (laser.key == key)
@@ -189,4 +171,19 @@ void LaserManager::SetLaserPosition(int key, Vector3 pos)
 			laser.pLaser->SetPos(pos);
 		}
 	}
+}
+
+// レーザーのキーの作成
+int LaserManager::CreateLaserKey()
+{
+	// キーの重複を避けるために、最大のキーに+1をする
+	int key = 0;
+	for (auto& laser : m_pLaserList)
+	{
+		if (key <= laser.key)
+		{
+			key = laser.key + 1;
+		}
+	}
+	return key;
 }

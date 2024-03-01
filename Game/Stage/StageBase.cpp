@@ -177,7 +177,7 @@ void StageBase::Collision()
 			else
 			{
 				// 反射レーザーの位置を設定
-				m_pLaserManager->SetLaserPosition(laser.pLaser->GetReflectLaserKey(), firePos);
+				m_pLaserManager->SetLaserPos(laser.pLaser->GetReflectLaserKey(), firePos);
 			}
 
 			// 敵のレーザーを止める

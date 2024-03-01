@@ -17,20 +17,20 @@ LaserBase::~LaserBase()
 {
 }
 
-// 消す
+// レーザーの削除
 void LaserBase::Delete()
 {
 	m_isEnabled = false;
 }
 
 // 位置の設定
-void LaserBase::SetPos(Vector3 pos)
+void LaserBase::SetPos(const Vector3& pos)
 {
 	m_pos = pos;
 }
 
 // 反射レーザーのキーの設定
-void LaserBase::SetReflectLaserKey(int key)
+void LaserBase::SetReflectLaserKey(const int key)
 {
 	m_reflectLaserKey = key;
 }

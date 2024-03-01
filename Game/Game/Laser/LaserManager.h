@@ -34,16 +34,25 @@ struct LaserData
 class LaserManager
 {
 public:
-	// コンストラクタ
-	LaserManager(std::shared_ptr<Player> pPlayer);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	LaserManager(const std::shared_ptr<Player>& pPlayer);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~LaserManager();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 	/// <summary>
@@ -55,33 +64,80 @@ public:
 	/// <param name="laserFireFrame">レーザーの発射時間フレーム</param>
 	/// <param name="laserSpeed">レーザーの移動速度</param>
 	/// <param name="isPlayerFollowing">プレイヤーを追従するか</param>
-	int AddLaser(LaserType type, std::shared_ptr<EnemyBase> pEnemy, int laserChargeFrame, int laserFireFrame, float laserSpeed, bool isPlayerFollowing);
+	int AddLaser(LaserType type, 
+				 const std::shared_ptr<EnemyBase>& pEnemy, 
+				 const int laserChargeFrame, 
+				 const int laserFireFrame, 
+				 const float laserSpeed, 
+				 const bool isPlayerFollowing);
 
-	// 反射レーザーの追加
+	/// <summary>
+	/// 反射レーザーの追加
+	/// </summary>
+	/// <param name="pEnemyManager">エネミー管理クラスのポインタ</param>
+	/// <param name="pShield">シールドのポインタ</param>
+	/// <param name="pLaser">レーザーのポインタ</param>
+	/// <param name="firePos">発射位置</param>
+	/// <returns>レーザーのキー</returns>
 	int AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
-						const std::shared_ptr<Shield>&    pShield,
+						const std::shared_ptr<Shield>& pShield,
 						const std::shared_ptr<LaserBase>& pLaser, 
 					    const Vector3& firePos);
 
-	// キューブレーザーの追加
-	int AddCubeLaser(Vector3 firePos, float laserSpeed);
+	/// <summary>
+	/// キューブレーザーの追加
+	/// </summary>
+	/// <param name="firePos">発射位置</param>
+	/// <param name="laserSpeed">レーザーの移動速度</param>
+	/// <returns>レーザーのキー</returns>
+	int AddCubeLaser(const Vector3& firePos, const float laserSpeed);
 
-	// レーザーの削除
-	void DeleteLaser(int key);
+	/// <summary>
+	/// レーザーの削除
+	/// </summary>
+	/// <param name="key">削除するレーザーのキー</param>
+	void DeleteLaser(const int key);
 
-	// レーザーの全削除
+	/// <summary>
+	/// 全てのレーザーの削除
+	/// </summary>
 	void DeleteAllLaser();
 
-	// ゲッター
-	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
-	const LaserData& GetLaserData(int key) const;		// レーザーデータ
 
-	// セッター
-	void SetLaserPosition(int key, Vector3 pos);		// レーザーの位置を設定
+	//// ゲッター /////
+
+	/// <summary>
+	/// レーザーリストの取得
+	/// </summary>
+	/// <returns></returns>
+	const std::list<LaserData>& GetLaserList() const;	// レーザーリスト
+
+	/// <summary>
+	/// レーザーデータの取得
+	/// </summary>
+	/// <param name="key">レーザーのキー</param>
+	/// <returns>レーザーデータ</returns>
+	LaserData GetLaserData(const int key) const;
+
+	///// セッター /////
+
+	/// <summary>
+	/// レーザーの位置を設定
+	/// </summary>
+	/// <param name="key">レーザーのキー</param>
+	/// <param name="pos">位置情報</param>
+	void SetLaserPos(const int key, const Vector3& pos);
+
+private:
+	/// <summary>
+	/// レーザーキーの作成
+	/// </summary>
+	/// <returns>レーザーキー</returns>
+	int CreateLaserKey();	
 
 private:
 	// ポインタ
-	std::list<LaserData> m_pLaserList;	// レーザーリスト
-	std::shared_ptr<Player> m_pPlayer;	// プレイヤーのポインタ
+	std::list<LaserData>    m_pLaserList;	// レーザーリスト
+	std::shared_ptr<Player> m_pPlayer;   	// プレイヤーのポインタ
 };
 
