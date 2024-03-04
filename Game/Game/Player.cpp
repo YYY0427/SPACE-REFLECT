@@ -495,7 +495,9 @@ void Player::DrawShield()
 	if (m_pShield && !m_isPlayerDeadEffect)
 	{
 		// ƒV[ƒ‹ƒh‚Ì•`‰æ
+		SetWriteZBuffer3D(false);
 		m_pShield->Draw();
+		SetWriteZBuffer3D(true);
 	}
 }
 

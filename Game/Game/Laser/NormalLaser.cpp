@@ -68,7 +68,7 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 	m_reflectFrame(0)
 {
 	// ‰Šú‰»
-	m_pos = m_pEnemy->GetLaserFirePos();
+	m_pos   = m_pEnemy->GetLaserFirePos();
 	m_scale = laser_model_scale;
 	m_speed = laserSpeed;
 

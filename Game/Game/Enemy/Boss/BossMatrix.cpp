@@ -117,8 +117,8 @@ namespace
 	constexpr float die_effect_z_interval = 300.0f;					// 死亡エフェクトとボスとのZ座標の間隔
 
 	// 画面揺れ
-	constexpr int shake_frame = 60;					// 画面揺れのフレーム
-	const Vector2 shake_size  = { 100.0f, 0.0f };	// 画面揺れの大きさ
+	constexpr int shake_frame = 70;					// 画面揺れのフレーム
+	const Vector2 shake_size  = { 0.0f, 100.0f };	// 画面揺れの大きさ
 }
 
 // コンストラクタ
@@ -240,6 +240,12 @@ void BossMatrix::Draw()
 		// モデルの描画
 		m_pModel->Draw();
 
+		// フラッシュの描画
+		if (m_pFlash)
+		{
+			m_pFlash->Draw();
+		}
+
 #ifdef _DEBUG
 		// 当たり判定の描画
 		DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 16, 0xff0000, 0xff0000, false);
@@ -283,6 +289,9 @@ void BossMatrix::EnterDie()
 
 	// 画面揺れ開始
 	m_pScreenShaker->StartShake(shake_size, shake_frame);
+
+	// フラッシュの開始
+	m_pFlash = std::make_shared<Flash>(10);
 }
 
 // 移動しながらホーミングレーザー攻撃の開始
@@ -385,6 +394,9 @@ void BossMatrix::UpdateDie()
 	// レーザーを削除
 	m_pLaserManager->DeleteAllLaser();
 
+	// フラッシュの更新
+	m_pFlash->Update(0xffffff);
+
 	// 特定のフレームが経過したら演出開始
 	if (m_dieIdleFrame-- <= 0)
 	{
@@ -418,7 +430,9 @@ void BossMatrix::UpdateDie()
 			}
 		}
 		// エフェクトの位置の更新
-		Effekseer3DEffectManager::GetInstance().SetEffectPos(m_dieEffectHandle, { m_pos.x, m_pos.y, m_pos.z - die_effect_z_interval });
+		Effekseer3DEffectManager::GetInstance().SetEffectPos(
+			m_dieEffectHandle, 
+			{ m_pos.x, m_pos.y, m_pos.z - die_effect_z_interval });
 	}
 }
 

@@ -5,7 +5,8 @@
 // コンストラクタ
 SceneManager::SceneManager() :
 	m_updateTime(0),
-	m_drawTime(0)
+	m_drawTime(0),
+	m_prevFps(0.0f)
 {
 }
 
@@ -48,28 +49,33 @@ void SceneManager::Draw()
 	m_drawTime = GetNowHiPerformanceCount() - start;
 
 	// fpsの取得
-	float fps = GetFPS();
+	float nowFps = GetFPS();
 
 	// 画面サイズの取得
 	Size size = Application::GetInstance().GetWindowSize();
 
 #ifdef _DEBUG
 	// 1フレームにかかった描画時間を表示
-	float rate = static_cast<float>(m_updateTime + m_drawTime) / static_cast<long long>(1000000 / fps);
+	float rate = static_cast<float>(m_updateTime + m_drawTime) / static_cast<long long>(1000000 / nowFps);
 	int width = static_cast<int>(size.width * rate);
 	DrawBox(16, size.height - 40, 32, size.height - 24, 0xff0000, true);
 	DrawString(40, size.height - 40, "DrawTime", 0xffffff);
 	DrawBox(0, size.height - 16, width, size.height, 0xff0000, true);
 
 	// 1フレームにかかった更新時間を表示
-	rate = static_cast<float>(m_updateTime) / static_cast<long long>(1000000 / fps);
+	rate = static_cast<float>(m_updateTime) / static_cast<long long>(1000000 / nowFps);
 	width = static_cast<int>(size.width * rate);
 	DrawBox(150, size.height - 40, 166, size.height - 24, 0x0000ff, true);
 	DrawString(174, size.height - 40, "UpdateTime", 0xffffff);
 	DrawBox(0, size.height - 16, width, size.height, 0x0000ff, true);
 
 	// fpsを描画
-	DrawFormatString(300, size.height - 40, 0xffffff, "FPS : %f", fps);
+	static int count = 0;
+	if (count++ % 5 == 0)
+	{
+		m_prevFps = nowFps;
+	}
+	DrawFormatString(300, size.height - 40, 0xffffff, "FPS : %f", m_prevFps);
 #endif
 }
 

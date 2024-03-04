@@ -1,4 +1,5 @@
 #include "Flash.h"
+#include "../Application.h"
 #include <DxLib.h>
 #include <algorithm>
 
@@ -20,9 +21,7 @@ namespace
 // コンストラクタ
 Flash::Flash(const int enableFrame) :
 	m_enableFrame(enableFrame),
-	m_pos({ 0, 0 }),
 	m_color(default_color),
-	m_radius(0.0f),
 	m_alpha(default_alpha)
 {
 }
@@ -33,16 +32,10 @@ Flash::~Flash()
 }
 
 // 更新
-void Flash::Update(const Vector2& pos, const unsigned int color)
+void Flash::Update(const unsigned int color)
 {
-	// 座標を設定
-	m_pos = pos;
-
 	// 色を設定
 	m_color = color;
-
-	// 丸を拡大
-	m_radius += scale_speed;
 
 	// 一定フレーム経過したら透明度を下げる
 	if (m_enableFrame-- <= 0)
@@ -58,7 +51,8 @@ void Flash::Draw()
 {
 	// 透明度を適用して丸を描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);
-	DrawCircle(m_pos.x, m_pos.y, m_radius, m_color, TRUE);
+	auto& screenSize = Application::GetInstance().GetWindowSize();
+	DrawBox(0, 0, screenSize.width, screenSize.height, m_color,true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

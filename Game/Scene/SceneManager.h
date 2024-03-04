@@ -61,4 +61,7 @@ private:
 
 	// ƒV[ƒ“‚Ì•`‰æŠÔ
 	LONGLONG m_drawTime;
+
+	// fps
+	float m_prevFps;
 };

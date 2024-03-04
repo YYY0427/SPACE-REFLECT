@@ -28,9 +28,9 @@ Warning::Warning(int drawFrame) :
 	m_isEnd(false),
 	m_scroll(0),
 	m_drawFrame(drawFrame),
-	m_imgAlphaParam(0.0f),
+	m_imgAlphaParam(0),
 	m_addImgAlphaParam(all_fade_speed),
-	m_stringAlphaParam(255),
+	m_stringAlphaParam(0),
 	m_ImgAlphaParamRange(0, 255)
 {
 	// ‰æ‘œ‚Ìƒ[ƒh

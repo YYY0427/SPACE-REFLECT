@@ -21,8 +21,8 @@ namespace
 	const float min_delta_rot = 0.1f;  // 最小
 
 	// レーザーの拡大率
-	constexpr float max_scale = 5.0f;	// 最大
-	constexpr float min_scale = 1.0f;	// 最小
+	constexpr float max_scale = 20.0f;	// 最大
+	constexpr float min_scale = 10.0f;	// 最小
 }
 
 // コンストラクタ

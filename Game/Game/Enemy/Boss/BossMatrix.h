@@ -163,16 +163,6 @@ private:
 	};
 
 private:
-	// 死亡時のエフェクトのデータ
-	struct DieEffectData
-	{
-		int effectHandle;	// エフェクトハンドル
-		Vector3 pos;		// エフェクトの座標
-		Vector3 vec;		// エフェクトの移動ベクトル
-		float scale;		// エフェクトの拡大率
-	};
-
-private:
 	// ステートマシン
 	StateMachine<State> m_stateMachine;
 
@@ -181,6 +171,7 @@ private:
 	std::shared_ptr<StringUI>     m_pBossName;		// ボスの名前
 	std::shared_ptr<LaserManager> m_pLaserManager;	// レーザーマネージャー
 	std::shared_ptr<ScreenShaker> m_pScreenShaker;	// 画面揺れ
+	std::shared_ptr<Flash>        m_pFlash;			// フラッシュ
 
 	// 移動
 	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル

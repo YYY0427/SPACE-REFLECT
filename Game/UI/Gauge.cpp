@@ -150,7 +150,7 @@ void Gauge::NormalUpdate()
 			if (m_subGaugeFrame > 0)
 			{
 				// 目標値に向かって決められたフレーム数で減少する
-				m_backValue -= static_cast<float>(m_currentValue / m_subGaugeFrame);
+				m_backValue -= static_cast<float>(m_maxValue / m_subGaugeFrame);
 			}
 			// そうでない場合
 			else
