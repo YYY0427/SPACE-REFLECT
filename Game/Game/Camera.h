@@ -7,28 +7,89 @@
 class Camera
 {
 public:
-	// コンストラクタ
-	Camera(Vector3 pos, Vector3 target);
-	Camera(Vector3 playerPos);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	Camera();
 
-	// デストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="playerPos">プレイヤーの座標</param>
+	Camera(const Vector3& playerPos);
+
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Camera();
 
-	// 更新
-	void Update(Vector3 pos, Vector3 target);	// 通常時の更新
-	void UpdatePlay(Vector3 playerPos, Vector3 playerVec);			// プレイ時の更新
-	void UpdateStart(Vector3 playerPos);		// スタート演出時の更新
-	bool UpdateGameClear(Vector3 playerPos);	// ゲームクリア時の更新
-	void UpdateGameOver(Vector3 playerPos);		// ゲームオーバー時の更新
+	/// <summary>
+	/// スタート演出時の更新
+	/// </summary>
+	/// <param name="playerPos">プレイヤーの座標</param>
+	void UpdateStart(const Vector3& playerPos);		
 
-	// カメラの設定	
+	/// <summary>
+	/// プレイ時の更新
+	/// </summary>
+	/// <param name="playerPos">プレイヤーの座標</param>
+	/// <param name="playerVec">プレイヤーのベクトル</param>
+	void UpdatePlay(const Vector3& playerPos, const Vector3& playerVec);
+
+	/// <summary>
+	/// ゲームクリア時の更新
+	/// </summary>
+	/// <param name="playerPos">プレイヤーの座標</param>
+	/// <returns>カメラ演出が終了したか</returns>
+	bool UpdateGameClear(const Vector3& playerPos);	
+
+	/// <summary>
+	/// ゲームオーバー時の更新
+	/// </summary>
+	/// <param name="playerPos">プレイヤーの座標</param>
+	void UpdateGameOver(const Vector3& playerPos);
+
+
+	//// セッター ////
+
+	/// <summary>
+	/// カメラの設定
+	/// </summary>
 	void SetCamera();		
 
-	// ゲッター
-	Vector3 GetPos() const;			// カメラの座標の取得
-	Vector3 GetTarget() const;		// カメラの注視点の取得
-	float GetCameraHorizon() const;	// カメラの水平方向の取得
-	bool IsStartAnimation() const;	// スタート演出をしたかフラグの取得
+	/// <summary>
+	/// カメラの設定
+	/// </summary>
+	/// <param name="pos">カメラの位置</param>
+	/// <param name="target">カメラの注視点</param>
+	void SetCamera(const Vector3& pos, const Vector3& target);
+
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// カメラの座標の取得
+	/// </summary>
+	/// <returns>カメラの座標</returns>
+	const Vector3& GetPos() const;			
+
+	/// <summary>
+	/// カメラの注視点の取得
+	/// </summary>
+	/// <returns>カメラの注視点</returns>
+	const Vector3& GetTarget() const;	
+
+	/// <summary>
+	/// カメラの水平方向の取得
+	/// </summary>
+	/// <returns>カメラの水平方向</returns>
+	float GetCameraHorizon() const;	
+
+	/// <summary>
+	/// スタート演出をしたかフラグの取得
+	/// </summary>
+	/// <returns>スタート演出をしたかフラグ</returns>
+	bool  IsStartAnimation() const;	
 
 private:
 	// カメラの座標
@@ -46,12 +107,10 @@ private:
 	// カメラの水平方向
 	float m_cameraHorizon;	
 
-	// エルミート曲線の値
-	float m_hermiteValue;		
+	// フレーム
+	int m_hermiteFrame;	// エリミネート補完のフレーム
+	int m_lerpFrame;	// ラープ演出のフレーム
 
-	// ラープの値
-	float m_lerpValue;
-
-	// フラグ
-	bool m_isStartAnimation;	// スタート演出をしたか
+	// スタート演出をしたかフラグ
+	bool m_isStartAnimation;	
 };

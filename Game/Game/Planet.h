@@ -12,22 +12,41 @@ class Model;
 class Planet
 {
 public:
-	// コンストラクタ
-	Planet(int modelHandle, UnityGameObject data);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="modelHandle">モデルハンドル</param>
+	/// <param name="data">配置データ</param>
+	Planet(const int modelHandle, const UnityGameObject& data);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Planet();
 
-	// 更新
-	void UpdateStart(Vector3 playerVec, Vector3 rotVec);
-	void UpdatePlay(Vector3 playerVec, Vector3 rotVec);
-	void Update(Vector3 rotVec);
+	/// <summary>
+	/// ゲームプレイ時の更新
+	/// </summary>
+	/// <param name="playerVec">プレイヤーの移動ベクトル</param>
+	/// <param name="rotVec">モデルの回転ベクトル</param>
+	void Update(const Vector3& playerVec, const Vector3& rotVec);
 
-	// 描画
+	/// <summary>
+	/// ステージ選択時の更新
+	/// </summary>
+	/// <param name="rotVec">モデルの回転ベクトル</param>
+	void UpdateStageSelect(const Vector3& rotVec);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// ゲッター
-	Vector3 GetPos() const;
+	/// <summary>
+	/// 位置情報の取得
+	/// </summary>
+	/// <returns>位置情報</returns>
+	const Vector3& GetPos() const;
 
 private:
 	// ポインタ

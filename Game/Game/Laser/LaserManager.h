@@ -10,6 +10,7 @@ class Player;
 class EnemyBase;
 class EnemyManager;
 class Shield;
+class Camera;
 
 // レーザーの種類
 enum class LaserType
@@ -38,7 +39,8 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
-	LaserManager(const std::shared_ptr<Player>& pPlayer);
+	/// <param name="pCamera">カメラのポインタ</param>
+	LaserManager(const std::shared_ptr<Player>& pPlayer, const std::shared_ptr<Camera>& pCamera);
 
 	/// <summary>
 	/// デストラクタ
@@ -137,7 +139,10 @@ private:
 
 private:
 	// ポインタ
-	std::list<LaserData>    m_pLaserList;	// レーザーリスト
 	std::shared_ptr<Player> m_pPlayer;   	// プレイヤーのポインタ
+	std::shared_ptr<Camera> m_pCamera;		// カメラのポインタ
+
+	// レーザーリスト
+	std::list<LaserData>    m_pLaserList;	
 };
 

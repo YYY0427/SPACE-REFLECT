@@ -27,22 +27,39 @@
 class PlanetManager
 {
 public:
-	// コンストラクタ
-	PlanetManager(std::string objectDataFileName);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objectDataFileName">オブジェクトデータのファイル名</param>
+	PlanetManager(const std::string& objectDataFileName);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~PlanetManager();
 
-	// 更新
-	void UpdateStart(Vector3 playerVec);
-	void UpdatePlay(Vector3 playerVec);
+	/// <summary>
+	/// ゲームプレイ時の更新
+	/// </summary>
+	/// <param name="playerVec">プレイヤーのベクトル</param>
+	void UpdatePlay(const Vector3& playerVec);
+
+	/// <summary>
+	/// ステージセレクト時の更新
+	/// </summary>
 	void UpdateStageSelect();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// ゲッター
-	std::shared_ptr<Planet> GetPlanet(PlanetType type) const;
+	/// <summary>
+	/// 惑星の取得
+	/// </summary>
+	/// <param name="type">惑星の種類</param>
+	/// <returns>惑星のポインタ</returns>
+	const std::shared_ptr<Planet>& GetPlanet(PlanetType type) const;
 
 private:
 	// 惑星のデータ

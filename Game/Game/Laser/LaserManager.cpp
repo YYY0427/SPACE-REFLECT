@@ -7,12 +7,14 @@
 #include "CubeLaser.h"
 #include "../Player.h"
 #include "../Shield.h"
+#include "../../Application.h"
 #include <cassert>
 #include <string>
 
 // コンストラクタ
-LaserManager::LaserManager(const std::shared_ptr<Player>& pPlayer) :
-	m_pPlayer(pPlayer)
+LaserManager::LaserManager(const std::shared_ptr<Player>& pPlayer, const std::shared_ptr<Camera>& pCamera) :
+	m_pPlayer(pPlayer),
+	m_pCamera(pCamera)
 {
 }
 
@@ -104,7 +106,7 @@ int LaserManager::AddCubeLaser(const Vector3& firePos, const float laserSpeed)
 	laserData.key = CreateLaserKey();
 
 	// レーザーのポインタを設定
-	laserData.pLaser = std::make_shared<CubeLaser>(firePos, laserSpeed, m_pPlayer);
+	laserData.pLaser = std::make_shared<CubeLaser>(firePos, laserSpeed, m_pPlayer, m_pCamera);
 
 	// レーザーリストに追加
 	m_pLaserList.push_back(laserData);

@@ -78,10 +78,10 @@ Tutorial::Tutorial(SceneManager& manager) :
 
 	// インスタンスの作成
 	m_pPlayer = std::make_shared<Player>(object_data_file_name);
-	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
-	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
-	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name);
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
+	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer, m_pCamera);
+	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
+	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name, m_pPlayer);
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
 	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
@@ -120,7 +120,7 @@ void Tutorial::Update()
 	}
 
 	// 小さい隕石の生成
-	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());					
+	m_pMeteorManager->CreateSmallMeteor();					
 
 	// 更新
 	m_pTutorialUI->Update();								// チュートリアルUI
@@ -143,9 +143,9 @@ void Tutorial::Update()
 void Tutorial::UpdateStartAnimation()
 {
 	// 更新
-	m_pPlayer->UpdateStart(m_pCamera->GetPos());						// プレイヤー
-	m_pCamera->UpdateStart(m_pPlayer->GetPos());						// カメラ
-	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveSpeedZ() });	// 隕石
+	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
+	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
+	m_pMeteorManager->UpdateStart();				// 隕石
 
 	// スタート演出が終わったら移動チュートリアルに遷移
 	if (m_pPlayer->IsStartAnimation() &&

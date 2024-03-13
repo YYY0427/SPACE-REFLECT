@@ -16,7 +16,7 @@ namespace
 }
 
 // コンストラクタ
-PlanetManager::PlanetManager(std::string objectDataFileName)
+PlanetManager::PlanetManager(const std::string& objectDataFileName)
 {
 	// インスタンスの取得
 	auto& dataReader = DataReaderFromUnity::GetInstance();
@@ -44,21 +44,12 @@ PlanetManager::~PlanetManager()
 	m_planetData.clear();
 }
 
-// スタート演出の更新
-void PlanetManager::UpdateStart(Vector3 playerVec)
-{
-	for (auto& planet : m_planetData)
-	{
-		planet.second.pPlanet->UpdateStart(playerVec, play_rotate_speed);
-	}
-}
-
 // プレイ時の更新
-void PlanetManager::UpdatePlay(Vector3 playerVec)
+void PlanetManager::UpdatePlay(const Vector3& playerVec)
 {
 	for (auto& planet : m_planetData)
 	{
-		planet.second.pPlanet->UpdatePlay(playerVec, play_rotate_speed);
+		planet.second.pPlanet->Update(playerVec, play_rotate_speed);
 	}
 }
 
@@ -67,7 +58,7 @@ void PlanetManager::UpdateStageSelect()
 {
 	for (auto& planet : m_planetData)
 	{
-		planet.second.pPlanet->Update(stage_select_rotate_speed);
+		planet.second.pPlanet->UpdateStageSelect(stage_select_rotate_speed);
 	}
 }
 
@@ -81,7 +72,7 @@ void PlanetManager::Draw()
 }
 
 // タイプから惑星のポインタを取得
-std::shared_ptr<Planet> PlanetManager::GetPlanet(PlanetType type) const
+const std::shared_ptr<Planet>& PlanetManager::GetPlanet(PlanetType type) const
 {
 	return m_planetData.at(type).pPlanet;
 }

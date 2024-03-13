@@ -5,12 +5,13 @@
 
 // プロトタイプ宣言
 class Model;
+class Player;
 
 // 隕石の種類
 enum class MeteorType
 {
-	SMALL,
-	NORMAL
+	SMALL,	// 小さい隕石
+	NORMAL	// 通常の隕石
 };
 
 /// <summary>
@@ -19,31 +20,67 @@ enum class MeteorType
 class Meteor
 {
 public:
-	// コンストラクタ
-	Meteor(MeteorType type,Vector3 playerPos);
+	/// <summary>
+	/// コンストラクタ
+	/// ランダム生成
+	/// </summary>
+	/// <param name="type">隕石の種類</param>
+	/// <param name="playerPos">プレイヤーの座標</param>
+	Meteor(MeteorType type, const std::shared_ptr<Player>& pPlayer);
 
-	// コンストラクタ
-	// このコンストラクタはUnityからのデータを受け取る
-	Meteor(UnityGameObject data);
+	/// <summary>
+	/// コンストラクタ
+	/// 配置データで生成
+	/// </summary>
+	/// <param name="data">配置データ</param>
+	Meteor(const UnityGameObject& data, const std::shared_ptr<Player>& pPlayer);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Meteor();
 
-	// 更新
-	void Update(Vector3 cameraPos);
-	void UpdateStart(Vector3 playerPos);
+	/// <summary>
+	/// ゲームスタート時の更新
+	/// </summary>
+	void UpdateStart();
 
-	// 描画
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="cameraPos">カメラの座標</param>
+	void Update(const Vector3& cameraPos);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// ゲッター
-	bool IsEnabled() const;		// 存在フラグの取得
-	int GetModelHandle() const;	// モデルのハンドルの取得
-	MeteorType GetType() const;	// 隕石の種類の取得
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// 存在フラグの取得
+	/// </summary>
+	/// <returns>存在フラグ</returns>
+	bool IsEnabled() const;		
+
+	/// <summary>
+	/// モデルのハンドルの取得
+	/// </summary>
+	/// <returns>モデルのハンドル</returns>
+	int GetModelHandle() const;
+
+	/// <summary>
+	/// 隕石の種類の取得
+	/// </summary>
+	/// <returns>隕石の種類</returns>
+	MeteorType GetType() const;	
 
 private:
 	// ポインタ
 	std::unique_ptr<Model> m_pModel;
+	std::shared_ptr<Player> m_pPlayer;
 
 	// 隕石の種類
 	MeteorType m_type;

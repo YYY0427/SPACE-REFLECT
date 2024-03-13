@@ -23,6 +23,6 @@ int MathUtil::GetRandInt(const int min, const int max)
 float MathUtil::GetRandFloat(const float min, const float max)
 {
 	int   randInt  = GetRand(static_cast<int>(max * 1000) - static_cast<int>(min * 1000));
-	float randFlot = static_cast<float>(randInt + static_cast<int>(min * 1000)) / 1000.0f;
-	return randFlot;
+	float randFloat = static_cast<float>(randInt + static_cast<int>(min * 1000)) / 1000.0f;
+	return randFloat;
 }

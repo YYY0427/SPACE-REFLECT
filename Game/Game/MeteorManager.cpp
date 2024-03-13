@@ -10,35 +10,37 @@ namespace
 }
 
 // コンストラクタ
-MeteorManager::MeteorManager(std::string objectDataFileName) :
-	m_createIntervalFrame(0),
-	m_smallCreateIntervalFrame(0)
+MeteorManager::MeteorManager(const std::string& objectDataFileName, const std::shared_ptr<Player>& pPlayer) :
+	m_smallCreateIntervalFrame(0),
+	m_pPlayer(pPlayer)
 {
 	// 配置データが存在する場合は配置データから隕石を生成
 	auto data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Meteor2");
 	for (auto& meteorData : data)
 	{
-		m_pMeteorList.push_back(std::make_shared<Meteor>(meteorData));
+		m_pMeteorList.push_back(std::make_shared<Meteor>(meteorData, m_pPlayer));
 	}
 }
 
 // デストラクタ
 MeteorManager::~MeteorManager()
 {
+	// 隕石の削除
+	m_pMeteorList.clear();
 }
 
 // スタート演出時の更新
-void MeteorManager::UpdateStart(Vector3 playerVec)
+void MeteorManager::UpdateStart()
 {
 	// 隕石の更新
 	for (auto& meteor : m_pMeteorList)
 	{
-		meteor->UpdateStart(playerVec);
+		meteor->UpdateStart();
 	}
 }
 
 // 更新
-void MeteorManager::Update(Vector3 cameraPos)
+void MeteorManager::Update(const Vector3& cameraPos)
 {
 	// 存在しない隕石を削除
 	m_pMeteorList.remove_if([](std::shared_ptr<Meteor> meteor) { return !meteor->IsEnabled(); });
@@ -60,36 +62,19 @@ void MeteorManager::Draw()
 }
 
 // 小さい隕石の生成
-void MeteorManager::SmallMeteorCreate(Vector3 playerPos)
+void MeteorManager::CreateSmallMeteor()
 {
 	m_smallCreateIntervalFrame++;
 	if (small_create_interval_frame < m_smallCreateIntervalFrame)
 	{
 		// 小さい隕石の生成
-		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::SMALL, playerPos));
+		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::SMALL, m_pPlayer));
 		m_smallCreateIntervalFrame = 0;
 	}
 }
 
-// 隕石の生成
-void MeteorManager::CreateMeteor(int createIntervalFrame, Vector3 playerPos)
-{
-	// タイマーの更新
-	m_createIntervalFrame++;
-
-	// タイマーが指定フレームを超えたら
-	if (m_createIntervalFrame > createIntervalFrame)
-	{
-		// 隕石の生成
-		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::NORMAL, playerPos));
-
-		// タイマーのリセット
-		m_createIntervalFrame = 0;
-	}
-}
-
 // 隕石の削除
-void MeteorManager::DeleteMeteor()
+void MeteorManager::DeleteAllMeteor()
 {
 	m_pMeteorList.clear();
 }

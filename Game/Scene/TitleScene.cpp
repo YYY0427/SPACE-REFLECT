@@ -46,7 +46,8 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_pFade->StartFadeIn(0);
 
 	// インスタンスの作成
-	m_pCamera = std::make_shared<Camera>(Vector3(0, 0, 0), Vector3(0, 0, 1));
+	m_pCamera = std::make_shared<Camera>();
+	m_pCamera->SetCamera(Vector3(0, 0, 0), Vector3(0, 0, 1));
 	m_pSkyDome = std::make_shared<SkyDome>(Vector3(0, 0, 0));
 
 	// タイトル画面のBGMを再生

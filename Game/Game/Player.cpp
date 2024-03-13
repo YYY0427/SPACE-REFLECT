@@ -58,7 +58,7 @@ namespace
 	const std::string hp_string_file_path = "Data/Image/Life.png";
 
 	// ゲームオーバー演出のフレーム数
-	const int game_over_frame = 60 * 6;
+	const int game_over_frame = 60 * 5;
 }
 
 //  コンストラクタ
@@ -93,8 +93,8 @@ Player::Player(const std::string& objectDataFileName) :
 	m_playerSize.x		 = GetParameter("playerWidth");	
 	m_playerSize.y       = GetParameter("playerHeight");
 	m_collisionRadius	 = GetParameter("collisionRadius");
-	m_moveSpeedZ		 = GetParameter("moveSpeedZ");
 	m_moveSpeedXY		 = GetParameter("moveSpeedXY");
+	m_moveSpeedZ		 = GetParameter("moveSpeedZ");
 
 	// プレイヤーモデルのインスタンスの生成
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Player"));
@@ -629,10 +629,4 @@ float Player::GetParameter(const std::string& key) const
 	// エラーメッセージを出力
 	assert(!"Playerクラスのパラメータにkeyが存在しません");
 	return -1;
-}
-
-// Z軸の移動ベクトル
-float Player::GetMoveSpeedZ() const
-{
-	return m_moveSpeedZ;
 }

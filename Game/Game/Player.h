@@ -55,7 +55,6 @@ public:
 	// ゲッター
 	int     GetModelHandle() const;			// モデルハンドル
 	float   GetCollisionRadius() const;		// 当たり判定の半径
-	float   GetMoveSpeedZ() const;			// Z軸の移動ベクトル
 	bool    IsStartAnimation() const;		// スタート演出をしたかフラグ
 	bool    IsLive() const;					// 生存フラグ
 	const Vector3& GetPos() const;			// 位置
@@ -63,7 +62,6 @@ public:
 	const std::shared_ptr<Shield>& GetShield() const;		// シールドのポインタ
 	const std::deque<Vector3>&     GetPosLogTable() const;	// 位置情報のテーブル
 
-private:
 	/// <summary>
 	/// パラメータの取得
 	/// </summary>
@@ -84,9 +82,10 @@ private:
 	Vector3 m_scale;			// 拡大率
 	Vector3 m_moveVec;			// 移動ベクトル
 	Vector2 m_playerSize;		// プレイヤーのサイズ
-	float   m_opacity;			// 透明度
 	float   m_moveSpeedXY;		// 移動速度
-	float	m_moveSpeedZ;		// Z軸の移動速度
+	float   m_startMoveSpeedZ;	// スタート時の速度
+	float   m_moveSpeedZ;		// Z軸方向の移動速度
+	float   m_opacity;			// 透明度
 	float   m_collisionRadius;	// 当たり判定の半径
 
 	// HP

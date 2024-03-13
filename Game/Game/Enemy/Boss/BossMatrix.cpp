@@ -73,10 +73,10 @@ namespace
 	const std::string hp_gauge_img_file_path       = "Data/Image/HP.png";		// HPゲージの画像ファイルパス
 	const std::string hp_gauge_back_img_file_path  = "Data/Image/HPBack.png";	// HPゲージの背景画像ファイルパス
 	const std::string hp_gauge_frame_img_file_path = "Data/Image/HPFrame.png";	// HPゲージの枠画像ファイルパス
-	constexpr int hp_gauge_start_anim_frame = 300;  // HPゲージの開始アニメーションのフレーム
-	constexpr int hp_gauge_sub_frame		= 60;   // ダメージを受けた時のHPゲージの減るフレーム
-	constexpr int hp_gauge_delay_frame		= 60;   // ダメージを受けてからHPゲージが減るまでの遅延フレーム
-	constexpr int hp_gauge_draw_order		= 2;	// HPゲージUIの描画優先度
+	constexpr int hp_gauge_start_anim_frame = 300;		  // HPゲージの開始アニメーションのフレーム
+	constexpr int hp_gauge_sub_frame		= 120;		  // ダメージを受けた時のHPゲージの減るフレーム
+	constexpr int hp_gauge_delay_frame		= 60;		  // ダメージを受けてからHPゲージが減るまでの遅延フレーム
+	constexpr int hp_gauge_draw_order		= 2;		  // HPゲージUIの描画優先度
 	const Vector2 hp_gauge_store_vec        = { 0, -1 };  // HPゲージUIの格納ベクトル
 
 	// ボスの名前

@@ -4,7 +4,7 @@
 #include <DxLib.h>
 
 // コンストラクタ
-Planet::Planet(int modelHandle, UnityGameObject data) :
+Planet::Planet(const int modelHandle, const UnityGameObject& data) :
 	m_pos(data.pos),
 	m_rot(data.rot),
 	m_scale(data.scale)
@@ -24,23 +24,8 @@ Planet::~Planet()
 {
 }
 
-// スタート時の更新
-void Planet::UpdateStart(Vector3 playerVec, Vector3 rotVec)
-{
-	// プレイヤーと同じベクトル移動
-	m_pos += playerVec;
-
-	// 回転
-	m_rot += rotVec;
-
-	// モデルの設定
-	m_pModel->SetPos(m_pos);	// 位置
-	m_pModel->SetRot(m_rot);	// 回転
-	m_pModel->Update();			// 更新
-}
-
 // プレイ時の更新
-void Planet::UpdatePlay(Vector3 playerVec, Vector3 rotVec)
+void Planet::Update(const Vector3& playerVec, const Vector3& rotVec)
 {
 	// プレイヤーと同じZベクトル移動
 	m_pos.z += playerVec.z;
@@ -55,7 +40,7 @@ void Planet::UpdatePlay(Vector3 playerVec, Vector3 rotVec)
 }
 
 // 更新
-void Planet::Update(Vector3 rotVec)
+void Planet::UpdateStageSelect(const Vector3& rotVec)
 {
 	// 回転
 	m_rot += rotVec;
@@ -72,7 +57,7 @@ void Planet::Draw()
 }
 
 // ゲッター
-Vector3 Planet::GetPos() const
+const Vector3& Planet::GetPos() const
 {
 	return m_pos;
 }

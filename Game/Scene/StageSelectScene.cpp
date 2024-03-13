@@ -98,7 +98,8 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 
 	// インスタンス作成
 	Vector3 pos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
-	m_pCamera = std::make_unique<Camera>(pos, Vector3{ pos.x, pos.y, pos.z + 10.0f });
+	m_pCamera = std::make_unique<Camera>();
+	m_pCamera->SetCamera(pos, Vector3{ pos.x, pos.y, pos.z + 10.0f });
 	m_pSkyDome = std::make_unique<SkyDome>(m_pCamera->GetPos());
 
 	// スクリーンの作成
@@ -296,7 +297,7 @@ void StageSelectScene::UpdateStartAnimation()
 	Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
 	float x = Easing::EaseOutCubic(m_easeTime, 150, goalPos.x, m_cameraStartTargetPos.x);
 	float y = Easing::EaseOutCubic(m_easeTime, 150, goalPos.y, m_cameraStartTargetPos.y);
-	m_pCamera->Update(m_pCamera->GetPos(), { x, y, goalPos.z });
+	m_pCamera->SetCamera(m_pCamera->GetPos(), { x, y, goalPos.z });
 
 	if (m_easeTime >= 150.0f)
 	{
@@ -316,7 +317,7 @@ void StageSelectScene::UpdateStartAnimation()
 		float posX = Easing::EaseOutCubic(m_easeTime2, 300.0f, goalPos.x, m_cameraStartPos.x);
 		float posY = Easing::EaseOutCubic(m_easeTime2, 300.0f, goalPos.y, m_cameraStartPos.y);
 		float posZ = Easing::EaseOutCubic(m_easeTime2, 300.0f, goalPos.z, m_cameraStartPos.z);
-		m_pCamera->Update({ posX, posY, posZ }, { m_pCamera->GetTarget().x, m_pCamera->GetTarget().y, goalPos.z });
+		m_pCamera->SetCamera({ posX, posY, posZ }, { m_pCamera->GetTarget().x, m_pCamera->GetTarget().y, goalPos.z });
 
 		if (m_easeTime2 >= 60)
 		{
@@ -357,7 +358,7 @@ void StageSelectScene::UpdateCamera()
 	float x = Easing::EaseOutCubic(m_easeTime, camera_move_frame, m_cameraGoalPos.x, m_cameraStartPos.x);
 	float y = Easing::EaseOutCubic(m_easeTime, camera_move_frame, m_cameraGoalPos.y, m_cameraStartPos.y);
 	float z = Easing::EaseOutCubic(m_easeTime, camera_move_frame, m_cameraGoalPos.z, m_cameraStartPos.z);
-	m_pCamera->Update({ x, y, z }, { x, y, z + 10.0f });
+	m_pCamera->SetCamera({ x, y, z }, { x, y, z + 10.0f });
 }
 
 // ランキングのアルファ値の更新

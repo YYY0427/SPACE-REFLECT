@@ -71,10 +71,10 @@ Stage1::Stage1(SceneManager& manager) :
 
 	// インスタンスの作成
 	m_pPlayer = std::make_shared<Player>(object_data_file_name);
-	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer);
-	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
-	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name);
 	m_pCamera = std::make_shared<Camera>(m_pPlayer->GetPos());
+	m_pLaserManager = std::make_shared<LaserManager>(m_pPlayer, m_pCamera);
+	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
+	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name, m_pPlayer);
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
 	m_pScreenShaker = std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
@@ -123,18 +123,17 @@ void Stage1::Update()
 	}
 
 	// 小さい隕石の生成
-	m_pMeteorManager->SmallMeteorCreate(m_pPlayer->GetPos());
+	m_pMeteorManager->CreateSmallMeteor();
 
 	// ボスが死亡演出中なら隕石の削除
 	if (m_pEnemyManager->IsDeadBossAnim())
 	{
-		m_pMeteorManager->DeleteMeteor();
+		m_pMeteorManager->DeleteAllMeteor();
 	}	
 
 	// 更新
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });	// スカイドーム
 	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());	// 惑星
-	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
 	m_pLaserManager->Update();								// レーザー
 	m_pEnemyManager->Update();								// レーザー
 	m_pDamageFlash->Update();								// ダメージフラッシュ
@@ -151,9 +150,9 @@ void Stage1::Update()
 void Stage1::UpdateStartAnimation()
 {
 	// 更新
-	m_pPlayer->UpdateStart(m_pCamera->GetPos());				// プレイヤー
-	m_pCamera->UpdateStart(m_pPlayer->GetPos());				// カメラ
-	m_pMeteorManager->UpdateStart({ 0, 0, m_pPlayer->GetMoveSpeedZ() });	// 隕石
+	m_pPlayer->UpdateStart(m_pCamera->GetPos());	// プレイヤー
+	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
+	m_pMeteorManager->UpdateStart();				// 隕石
 
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
@@ -189,10 +188,10 @@ void Stage1::UpdatePlay()
 		}
 	}
 
-	// プレイヤーの更新
+	// 更新
 	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
-	// カメラの更新
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
+	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
 }
 
 // ゲームクリアの更新
@@ -203,6 +202,7 @@ void Stage1::UpdateGameClear()
 
 	// ゲームクリア時の更新
 	m_pPlayer->UpdateGameClear();
+	m_pMeteorManager->Update(m_pCamera->GetPos());
 
 	// カメラの更新が終了したら
 	if (m_pCamera->UpdateGameClear(m_pPlayer->GetPos()))
@@ -223,6 +223,7 @@ void Stage1::UpdateGameOver()
 
 	// ゲームオーバー時の更新
 	m_pCamera->UpdateGameOver(m_pPlayer->GetPos());
+	m_pMeteorManager->Update(m_pCamera->GetPos());
 	if (m_pPlayer->UpdateGameOver())
 	{
 		// フェードアウトの演出の開始
@@ -243,6 +244,8 @@ void Stage1::UpdateGameOver()
 void Stage1::UpdateResult()
 {
 	StageBase::UpdateResult("Stage1");
+
+	m_pMeteorManager->Update(m_pCamera->GetPos());
 }
 
 // 描画
@@ -250,6 +253,8 @@ void Stage1::Draw()
 {
 	// 画面揺れの前処理
 	m_pScreenShaker->PreDraw();
+
+//	ClearDrawScreen();
 
 	// 描画
 	m_pSkyDome->Draw();			// スカイドーム
@@ -272,6 +277,7 @@ void Stage1::Draw()
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();
+
 	// フェードの描画
 	m_pFade->DrawFade(true);
 }

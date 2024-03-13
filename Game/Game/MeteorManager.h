@@ -4,40 +4,66 @@
 #include "Meteor.h"
 #include "../Math/Vector3.h"
 
+// プロトタイプ宣言
+class Player;
+
 /// <summary>
 /// 隕石の管理クラス
 /// </summary>
 class MeteorManager
 {
 public:
-	// コンストラクタ
-	MeteorManager(std::string objectDataFileName);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objectDataFileName">オブジェクトデータのファイル名</param>
+	/// <param name="pPlayer">プレイヤーのポインタ</param>
+	MeteorManager(const std::string& objectDataFileName, const std::shared_ptr<Player>& pPlayer);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~MeteorManager();
 
-	// 更新
-	void UpdateStart(Vector3 playerVec);
-	void Update(Vector3 cameraPos);
+	/// <summary>
+	/// ゲームスタート時の更新
+	/// </summary>
+	void UpdateStart();
 
-	// 描画
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="cameraPos">カメラの座標</param>
+	void Update(const Vector3& cameraPos);
+
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 隕石の生成
-	void SmallMeteorCreate(Vector3 playerPos);
-	void CreateMeteor(int createIntervalFrame, Vector3 playerPos);
+	/// <summary>
+	/// 小さい隕石の生成
+	/// </summary>
+	void CreateSmallMeteor();
 
-	// 隕石の削除
-	void DeleteMeteor();
+	/// <summary>
+	/// 全ての隕石の削除
+	/// </summary>
+	void DeleteAllMeteor();
 
-	// 隕石の取得
+	/// <summary>
+	/// 隕石リストの取得
+	/// </summary>
+	/// <returns>隕石リスト</returns>
 	const std::list<std::shared_ptr<Meteor>>& GetMeteor() const;
 
 private:
-	// 隕石
+	// 隕石リスト
 	std::list<std::shared_ptr<Meteor>> m_pMeteorList;
 
-	// 生成間隔
-	int m_createIntervalFrame;
+	// ポインタ
+	std::shared_ptr<Player> m_pPlayer;
+
+	// 生成間隔フレーム
 	int m_smallCreateIntervalFrame;
 };
