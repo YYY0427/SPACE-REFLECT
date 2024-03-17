@@ -25,10 +25,10 @@ namespace
 	const std::string player_param_file_path = "Data/Csv/PlayerParam.csv";
 
 	// プレイヤーの移動量
-	const Vector3 player_vec_up = { 0, 1, 0 };
-	const Vector3 player_vec_down = { 0, -1, 0 };
+	const Vector3 player_vec_up    = { 0, 1, 0 };
+	const Vector3 player_vec_down  = { 0, -1, 0 };
 	const Vector3 player_vec_right = { -1, 0, 0 };
-	const Vector3 player_vec_left = { 1, 0, 0 };
+	const Vector3 player_vec_left  = { 1, 0, 0 };
 
 	// プレイヤーの初期の向いている方向
 	const Vector3 init_model_direction = { 0, 0, 1 };
@@ -36,17 +36,13 @@ namespace
 	// 何フレーム前まで位置情報を保存するか
 	constexpr int log_frame = 10;
 
-	// プレイヤーのHP文字の位置
-	const Vector2 hp_string_pos = { 70, 560 };
+	// プレイヤーのHP文字
+	const Vector2 hp_string_pos   = { 70, 560 };	// 位置
+	const Vector2 hp_string_scale = { 0.8f, 0.8f };	// 拡大率
 
-	// プレイヤーのHP文字の拡大率
-	const Vector2 hp_string_scale = { 0.8f, 0.8f };
-
-	// プレイヤーのHPバーの位置
-	const Vector2 hp_bar_pos = { 215, 600 };
-
-	// プレイヤーのHPバーのサイズ
-	const Vector2 hp_bar_size = { 300, 13 };
+	// プレイヤーのHPバー
+	const Vector2 hp_bar_pos  = { 215, 600 };		// 位置
+	const Vector2 hp_bar_size = { 300, 13 };		// サイズ
 
 	// プレイヤーのHPバーのファイルパス
 	const std::string hp_bar_file_path = "Data/Image/HPBar.png";
@@ -59,6 +55,12 @@ namespace
 
 	// ゲームオーバー演出のフレーム数
 	const int game_over_frame = 60 * 5;
+
+	// ブーストエフェクトのプレイヤーとの相対位置
+	const Vector3 boost_effect_relative_pos = { 0, -30.0f, -30.0f };
+
+	// プレイヤーを進んでいるように見せるために傾ける角度
+	constexpr float tilt_angle = 25.0f;
 }
 
 //  コンストラクタ
@@ -73,28 +75,27 @@ Player::Player(const std::string& objectDataFileName) :
 	m_boostEffectHandle(-1),
 	m_damageEffectHandle(-1),
 	m_opacity(1.0f),
-	m_dieEffectIntervalTimer(20),
-	m_waitFrame(game_over_frame)
+	m_gameOverWaitFrame(game_over_frame)
 {
 	// データの読み込み
 	auto data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
-	m_pos   = data.front().pos;
-	m_rot   = data.front().rot;
-	m_scale = data.front().scale;
+	m_pos     = data.front().pos;
+	m_rot     = data.front().rot;
+	m_scale   = data.front().scale;
 
 	// 外部ファイルからパラメータを読み込み
 	LoadParameter(player_param_file_path);
-	m_maxHp = m_parameterTable["maxHp"];
+	m_maxHp = GetParameter(DataType::PlayerParamType::MAX_HP);
 	m_hp    = m_maxHp;
-	m_boostEffectScale.x = GetParameter("boostEffectScaleX");
-	m_boostEffectScale.y = GetParameter("boostEffectScaleY");
-	m_boostEffectScale.z = GetParameter("boostEffectScaleZ");
-	m_boostEffectSpeed   = GetParameter("boostEffectSpeed");
-	m_playerSize.x		 = GetParameter("playerWidth");	
-	m_playerSize.y       = GetParameter("playerHeight");
-	m_collisionRadius	 = GetParameter("collisionRadius");
-	m_moveSpeedXY		 = GetParameter("moveSpeedXY");
-	m_moveSpeedZ		 = GetParameter("moveSpeedZ");
+	m_boostEffectScale.x = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SCALE_X);
+	m_boostEffectScale.y = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SCALE_Y);
+	m_boostEffectScale.z = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SCALE_Z);
+	m_boostEffectSpeed   = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SPEED);
+	m_playerSize.x		 = GetParameter(DataType::PlayerParamType::PlAYER_WIDTH);	
+	m_playerSize.y       = GetParameter(DataType::PlayerParamType::PlAYER_HEIGHT);
+	m_collisionRadius	 = GetParameter(DataType::PlayerParamType::COLLISION_RADIUS);
+	m_moveSpeedXY		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
+	m_moveSpeedZ		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
 
 	// プレイヤーモデルのインスタンスの生成
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Player"));
@@ -110,7 +111,7 @@ Player::Player(const std::string& objectDataFileName) :
 	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
 		m_boostEffectHandle, 
 		"PlayerBoost",
-		{ m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f },
+		m_pos + boost_effect_relative_pos,
 		m_boostEffectScale,
 		m_boostEffectSpeed,
 		{ m_rot.x, 0.0f, 0.0f });
@@ -125,7 +126,7 @@ Player::~Player()
 void Player::UpdateStart(const Vector3& cameraPos)
 {
 	// Z軸方向に移動
-	m_moveVec.z = GetParameter("startMoveSpeed");
+	m_moveVec.z = GetParameter(DataType::PlayerParamType::START_MOVE_SPEED_Z);
 	m_pos.z += m_moveVec.z;
 
 	if (m_pos.z > cameraPos.z + 200)
@@ -135,11 +136,11 @@ void Player::UpdateStart(const Vector3& cameraPos)
 	}
 
 	// プレイヤーを傾ける
-	m_rot.x = -MathUtil::ToRadian(25.0f);
+	m_rot.x = -MathUtil::ToRadian(tilt_angle);
 
 	// エフェクトの設定
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
+	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
@@ -151,7 +152,7 @@ void Player::UpdateStart(const Vector3& cameraPos)
 }
 
 // 更新
-void Player::Update(float cameraHorizon)
+void Player::UpdatePlay(const float cameraHorizon)
 {
 	if (!m_pBackUI)
 	{
@@ -206,17 +207,17 @@ void Player::Update(float cameraHorizon)
 	int right = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::RIGHT);
 
 	// カメラの回転に合わせて移動ベクトルを作成
-	Vector3 moveUp = Vector3::Transform(player_vec_up, Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveDown = Vector3::Transform(player_vec_down, Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveUp    = Vector3::Transform(player_vec_up, Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveDown  = Vector3::Transform(player_vec_down, Matrix::GetRotationY(cameraHorizon));
 	Vector3 moveRight = Vector3::Transform(player_vec_right, Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveLeft = Vector3::Transform(player_vec_left, Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveLeft  = Vector3::Transform(player_vec_left, Matrix::GetRotationY(cameraHorizon));
 
 	// 移動情報の初期化
 	m_isInputLeftStick = false;
 	m_moveVec.z = 0;
-	m_moveVec *= 0.98f;
+	m_moveVec *= 0.9f;
 	Vector3 moveVecX = { 0, 0, 0 };
-	Vector3 moveVecY{ 0, 0, 0 };
+	Vector3 moveVecY = { 0, 0, 0 };
 
 	// スティックが入力されていたら移動ベクトルにスティックが傾いている方向のベクトルを代入
 	// スティックの傾きぐわいによってベクトルが大きくなる
@@ -245,60 +246,60 @@ void Player::Update(float cameraHorizon)
 	if (m_isInputLeftStick)
 	{
 		// プレイヤーから見てx方向とz方向のベクトルを足して移動ベクトルを作成する
-		m_moveVec = moveVecY + moveVecX; 
+		m_moveVec = moveVecY + moveVecX;
 
 		// プレイヤーのスピードを掛ける
 		m_moveVec *= m_moveSpeedXY;
+	}
 
-		// 作成した移動ベクトルで座標の移動
-		Vector3 tempPos = m_pos + m_moveVec;
+	// 作成した移動ベクトルで座標の移動
+	Vector3 tempPos = m_pos + m_moveVec;
 
-		// ワールド座標をスクリーン座標に変換
-		Vector3 screenPos = Vector3::FromDxLibVector3(
-			ConvWorldPosToScreenPos(tempPos.ToDxLibVector3()));
+	// ワールド座標をスクリーン座標に変換
+	Vector3 screenPos = Vector3::FromDxLibVector3(
+		ConvWorldPosToScreenPos(tempPos.ToDxLibVector3()));
 
-		// 画面外に出ないようにする
-		Size size = Application::GetInstance().GetWindowSize();
-		if (screenPos.x > size.width - m_playerSize.x)
-		{
-			screenPos.x = size.width - m_playerSize.x;
+	// 画面外に出ないようにする
+	Size size = Application::GetInstance().GetWindowSize();
+	if (screenPos.x > size.width - m_playerSize.x)
+	{
+		screenPos.x = size.width - m_playerSize.x;
 
-			Vector3 worldPos = Vector3::FromDxLibVector3(
-				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
-			m_pos.x = worldPos.x;
-			m_pos.y = worldPos.y;
-		}
-		else if (screenPos.x < 0 + m_playerSize.x)
-		{
-			screenPos.x = 0 + m_playerSize.x;
+		Vector3 worldPos = Vector3::FromDxLibVector3(
+			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
+		m_pos.x = worldPos.x;
+		m_pos.y = worldPos.y;
+	}
+	else if (screenPos.x < 0 + m_playerSize.x)
+	{
+		screenPos.x = 0 + m_playerSize.x;
 
-			Vector3 worldPos = Vector3::FromDxLibVector3(
-				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
-			m_pos.x = worldPos.x;
-			m_pos.y = worldPos.y;
-		}
-		else if (screenPos.y > size.height - m_playerSize.y)
-		{
-			screenPos.y = size.height - m_playerSize.y;
+		Vector3 worldPos = Vector3::FromDxLibVector3(
+			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
+		m_pos.x = worldPos.x;
+		m_pos.y = worldPos.y;
+	}
+	else if (screenPos.y > size.height - m_playerSize.y)
+	{
+		screenPos.y = size.height - m_playerSize.y;
 
-			Vector3 worldPos = Vector3::FromDxLibVector3(
-				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
-			m_pos.x = worldPos.x;
-			m_pos.y = worldPos.y;
-		}
-		else if (screenPos.y < 0 + m_playerSize.y)
-		{
-			screenPos.y = 0 + m_playerSize.y;
+		Vector3 worldPos = Vector3::FromDxLibVector3(
+			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
+		m_pos.x = worldPos.x;
+		m_pos.y = worldPos.y;
+	}
+	else if (screenPos.y < 0 + m_playerSize.y)
+	{
+		screenPos.y = 0 + m_playerSize.y;
 
-			Vector3 worldPos = Vector3::FromDxLibVector3(
-				ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
-			m_pos.x = worldPos.x;
-			m_pos.y = worldPos.y;
-		}
-		else
-		{
-			m_pos = tempPos;
-		}
+		Vector3 worldPos = Vector3::FromDxLibVector3(
+			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
+		m_pos.x = worldPos.x;
+		m_pos.y = worldPos.y;
+	}
+	else
+	{
+		m_pos = tempPos;
 	}
 
 	// 常にZ軸方向に移動
@@ -320,14 +321,13 @@ void Player::Update(float cameraHorizon)
 
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
 	// X軸回転は進んでいるように見せるよう傾ける
-	float rotX = MathUtil::ToRadian(15.0f);
-	m_rot = { rotX + (m_moveVec.z * 0.01f) + (-m_moveVec.y * 0.05f), 0.0f, -m_moveVec.x * 0.05f };
+	m_rot = { MathUtil::ToRadian(tilt_angle) + (-m_moveVec.y * 0.05f), 0.0f, -m_moveVec.x * 0.05f };
 
 	// 不透明度を元に戻す
 	m_opacity = 1.0f;
 
 	// エフェクトの設定
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
+	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, 0.0f, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
@@ -364,7 +364,7 @@ void Player::UpdateGameClear()
 
 	// エフェクトの設定
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.SetEffectPos(m_boostEffectHandle, { m_pos.x, m_pos.y - 30.0f, m_pos.z - 30.0f });
+	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
 	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
 	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
 	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
@@ -388,7 +388,7 @@ bool Player::UpdateGameOver()
 	m_pos = m_pos + m_moveVec;
 
 
-	if (m_waitFrame <= game_over_frame * 0.9)
+	if (m_gameOverWaitFrame <= game_over_frame * 0.9)
 	{
 		static bool isPlay = false;
 		if (!isPlay)
@@ -399,38 +399,7 @@ bool Player::UpdateGameOver()
 		}
 	}
 
-	if (m_waitFrame-- >= 0)
-	{
-		// タイマーの更新
-		m_dieEffectIntervalTimer.Update(1);
-
-		// タイマーの制限時間を超えたら 
-		if (m_dieEffectIntervalTimer.IsTimeOut())
-		{
-			// エフェクトの再生位置をプレイヤーの周りにランダムで設定
-			Vector3 pos =
-			{
-				m_pos.x + (GetRand(150) - 50),
-				m_pos.y + (GetRand(150) - 50),
-				m_pos.z + (GetRand(150) - 50)
-			};
-
-			// エフェクトの拡大率をランダムで設定
-			float scale = GetRand(5) + 3;
-
-			// エフェクトを再生
-			Effekseer3DEffectManager::GetInstance().PlayEffect(
-				m_playerDeadEffectHandle,
-				"PlayerDied",
-				pos,
-				{ scale, scale, scale },
-				1.0f);
-
-			// タイマーのリセット
-			m_dieEffectIntervalTimer.Reset();
-		}
-	}
-	else
+	if(m_gameOverWaitFrame-- <= 0)
 	{
 		// まだ再生していない場合
 		if (!m_isPlayerDeadEffect)
@@ -531,7 +500,7 @@ void Player::LoadParameter(const std::string& fileName)
 }
 
 // ダメージ処理
-void Player::OnDamage(int damage)
+void Player::OnDamage(const int damage)
 {
 	// HPを減らす
 	// 0以下にはならない
@@ -571,7 +540,7 @@ void Player::OnReflect()
 }
 
 // プレイヤーが生きているか
-bool Player::IsLive() const
+bool Player::IsEnabled() const
 {
 	return (m_hp > 0) ? true : false;
 }
@@ -618,13 +587,19 @@ const std::deque<Vector3>& Player::GetPosLogTable() const
 	return m_posLogTable;
 }
 
-// パラメータの取得
-float Player::GetParameter(const std::string& key) const
+// パラメーターの取得
+float Player::GetParameter(const DataType::PlayerParamType type)
 {
+	// データからキーを取得
+	auto& key = DataType::PlayerParamKey[static_cast<int>(type)];
+
+	// キーが存在するか確認
 	if (m_parameterTable.find(key) != m_parameterTable.end())
 	{
+		// 存在する場合は値を返す
 		return m_parameterTable.at(key);
 	}
+
 	// キーが存在しない場合
 	// エラーメッセージを出力
 	assert(!"Playerクラスのパラメータにkeyが存在しません");

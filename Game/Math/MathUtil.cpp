@@ -26,3 +26,9 @@ float MathUtil::GetRandFloat(const float min, const float max)
 	float randFloat = static_cast<float>(randInt + static_cast<int>(min * 1000)) / 1000.0f;
 	return randFloat;
 }
+
+// üŒ`•âŠÔ
+float MathUtil::Lerp(const float start, const float end, const float value)
+{
+	return start + (end - start) * value;
+}

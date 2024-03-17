@@ -115,7 +115,7 @@ void Shield::Update()
 	if (!m_pEnergyGage->IsEndEntranceAnim()) return;
 
 	// プレイヤーが生きていないならなにもしない
-	if (!m_player.IsLive()) return;
+	if (!m_player.IsEnabled()) return;
 
 	// 初期化
 	auto& effectManager = Effekseer3DEffectManager::GetInstance();
@@ -208,7 +208,7 @@ void Shield::Draw()
 {
 	// プレイヤーが生きていたら
 	// シールドを出していたら
-	if (IsShield() && m_player.IsLive())
+	if (IsShield() && m_player.IsEnabled())
 	{
 		m_pImage->Draw();
 	}

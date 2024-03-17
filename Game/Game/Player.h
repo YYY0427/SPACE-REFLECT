@@ -1,4 +1,5 @@
 #pragma once
+#include "../DataType/PlayerParamDataType.h"
 #include "../Math/Vector3.h"
 #include "../Math/Vector2.h"
 #include "../Util/Timer.h"
@@ -22,17 +23,42 @@ public:
 	// コンストラクタ
 	Player(const std::string& objectDataFileName);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Player();
 
-	// 更新
+	/// <summary>
+	/// ゲーム開始時の更新
+	/// </summary>
+	/// <param name="cameraPos">カメラの位置</param>
 	void UpdateStart(const Vector3& cameraPos);
-	void Update(float cameraHorizon);
+
+	/// <summary>
+	/// ゲーム中の更新
+	/// </summary>
+	/// <param name="cameraHorizon">カメラの水平角度</param>
+	void UpdatePlay(const float cameraHorizon);
+
+	/// <summary>
+	/// ゲームクリア時の更新
+	/// </summary>
 	void UpdateGameClear();
+
+	/// <summary>
+	/// ゲームオーバー時の更新
+	/// </summary>
+	/// <returns>ゲームオーバーが終了したか</returns>
 	bool UpdateGameOver();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
+
+	/// <summary>
+	/// シールドの描画
+	/// </summary>
 	void DrawShield();
 
 	/// <summary>
@@ -45,29 +71,70 @@ public:
 	/// ダメージを受けた時の処理
 	/// </summary>
 	/// <param name="damage">ダメージ量</param>
-	void OnDamage(int damage);
+	void OnDamage(const int damage);
 
 	/// <summary>
 	/// シールドが反射した時の処理
 	/// </summary>
 	void OnReflect();
 
-	// ゲッター
-	int     GetModelHandle() const;			// モデルハンドル
-	float   GetCollisionRadius() const;		// 当たり判定の半径
-	bool    IsStartAnimation() const;		// スタート演出をしたかフラグ
-	bool    IsLive() const;					// 生存フラグ
-	const Vector3& GetPos() const;			// 位置
-	const Vector3& GetMoveVec() const;		// 移動ベクトル
-	const std::shared_ptr<Shield>& GetShield() const;		// シールドのポインタ
-	const std::deque<Vector3>&     GetPosLogTable() const;	// 位置情報のテーブル
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// モデルハンドルの取得
+	/// </summary>
+	/// <returns>モデルハンドル</returns>
+	int GetModelHandle() const;		
+
+	/// <summary>
+	/// 当たり判定の半径の取得
+	/// </summary>
+	/// <returns>当たり半径</returns>
+	float GetCollisionRadius() const;	
+
+	/// <summary>
+	/// スタート演出をしたかフラグの取得
+	/// </summary>
+	/// <returns></returns>
+	bool IsStartAnimation() const;
+
+	/// <summary>
+	/// プレイヤーが存在しているかの取得
+	/// </summary>
+	/// <returns>プレイヤーが存在しているか</returns>
+	bool IsEnabled() const;					
+
+	/// <summary>
+	/// 位置情報の取得
+	/// </summary>
+	/// <returns>位置情報</returns>
+	const Vector3& GetPos() const;	
+
+	/// <summary>
+	/// 移動ベクトルの取得
+	/// </summary>
+	/// <returns>移動ベクトル</returns>
+	const Vector3& GetMoveVec() const;		
+
+	/// <summary>
+	/// シールドのポインタの取得
+	/// </summary>
+	/// <returns>シールドのポインタ</returns>
+	const std::shared_ptr<Shield>& GetShield() const;
+
+	/// <summary>
+	/// プレイヤーの位置情報を保存しているテーブルの取得
+	/// </summary>
+	/// <returns>位置情報を保存しているテーブル</returns>
+	const std::deque<Vector3>& GetPosLogTable() const;
 
 	/// <summary>
 	/// パラメータの取得
 	/// </summary>
-	/// <param name="key">キー</param>
+	/// <param name="type">パラメータの種類</param>
 	/// <returns>パラメータ</returns>
-	float GetParameter(const std::string& key) const;	
+	float GetParameter(const DataType::PlayerParamType type);
 
 private:
 	// ポインタ
@@ -106,9 +173,8 @@ private:
 	bool	m_isPlayerDeadEffect;		// プレイヤー死亡エフェクトの再生フラグ
 
 	// タイマー
-	int		   m_waitFrame;					// 待機フレーム
+	int		   m_gameOverWaitFrame;					// 待機フレーム
 	int		   m_ultimateTimer;				// 無敵時間のタイマー
-	Timer<int> m_dieEffectIntervalTimer;	// 死亡エフェクトのインターバルタイマー
 	Timer<int> m_waitTimer;					// 待機時間のタイマー
 
 	// 外部ファイルから読み込んだパラメータ

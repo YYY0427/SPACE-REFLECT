@@ -1,6 +1,6 @@
 ﻿説明,キー,数値
 ,startMoveSpeed,25
-,moveSpeedXY,1
+,moveSpeedXY,2
 ,moveSpeedZ,7.5
 ,maxHp,300
 ,collisionRadius,50

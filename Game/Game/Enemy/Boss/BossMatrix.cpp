@@ -209,7 +209,7 @@ void BossMatrix::Update()
 	m_stateMachine.Update();
 
 	// プレイヤーが死亡したら
-	if (!m_pPlayer->IsLive())
+	if (!m_pPlayer->IsEnabled())
 	{
 		// ステートをゲームオーバーに変更
 		m_stateMachine.SetState(State::GAME_OVER);

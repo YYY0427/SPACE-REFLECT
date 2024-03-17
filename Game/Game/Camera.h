@@ -108,8 +108,9 @@ private:
 	float m_cameraHorizon;	
 
 	// フレーム
-	int m_hermiteFrame;	// エリミネート補完のフレーム
-	int m_lerpFrame;	// ラープ演出のフレーム
+	int m_hermiteFrame;			// エリミネート補完のフレーム
+	int m_gameClearLerpFrame;	// ラープ演出のフレーム
+	int m_gameOverLerpFrame;	// ラープ演出のフレーム
 
 	// スタート演出をしたかフラグ
 	bool m_isStartAnimation;	

@@ -6,7 +6,7 @@
 namespace
 {
 	// 小さい隕石の生成間隔
-	const int small_create_interval_frame = 10;
+	const int small_create_interval_frame = 5;
 }
 
 // コンストラクタ

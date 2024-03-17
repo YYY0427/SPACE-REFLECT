@@ -221,6 +221,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="DataType\PlayerParamDataType.h" />
+    <ClInclude Include="DataType\EffectDataType.h" />
     <ClInclude Include="Util\FlagManager.h" />
     <ClInclude Include="ModelHandleManager.h" />
     <ClInclude Include="Scene\PuseScene.h" />

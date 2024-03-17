@@ -37,4 +37,13 @@ namespace MathUtil
 	/// <param name="max">最大値</param>
 	/// <returns>少数のランダムな値</returns>
 	float GetRandFloat(const float min, const float max);
+
+	/// <summary>
+	/// 線形補間
+	/// </summary>
+	/// <param name="start">開始値</param>
+	/// <param name="end">終了値</param>
+	/// <param name="value">補間値</param>
+	/// <returns>補間結果</returns>
+	float Lerp(const float start, const float end, const float value);
 }

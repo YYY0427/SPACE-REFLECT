@@ -5,6 +5,7 @@
 #include "../Math/Vector2.h"
 #include "../Math/MathUtil.h"
 #include "../ModelHandleManager.h"
+#include "../DataType/PlayerParamDataType.h"
 #include <DxLib.h>
 
 namespace
@@ -12,7 +13,7 @@ namespace
 	// モデルの拡大率
 	constexpr float normal_meteor_max_scale = 5.0f;	// 最大拡大率
 	constexpr float normal_meteor_min_scale = 1.0f;	// 最小拡大率
-	constexpr float small_meteor_max_scale = 5.0f;	// 最大拡大率
+	constexpr float small_meteor_max_scale = 10.0f;	// 最大拡大率
 	constexpr float small_meteor_min_scale = 5.0f;	// 最小拡大率
 
 	// モデルの回転速度
@@ -23,15 +24,15 @@ namespace
 	constexpr float meteor_move_speed = -10.0f;
 
 	// スクリーン座標からワールド座標に変換に使用するZ座標の線形
-	constexpr float z_linear = 0.01f;
+	constexpr float z_linear = 1.0f;
 
 	// プレイヤーの座標を0としたときの隕石のZ座標
-	constexpr float meteor_z = 1000.0f;
+	constexpr float meteor_z = 5000.0f;
 }
 
 // コンストラクタ
 // ランダムに生成、プレイヤーの方向に移動
-Meteor::Meteor(MeteorType type, const std::shared_ptr<Player>& pPlayer) :
+Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer) :
 	m_rot({ 0, 0, 0 }),
 	m_isEnabled(true),
 	m_moveVec({ 0, 0, 0 }),
@@ -70,13 +71,17 @@ Meteor::Meteor(MeteorType type, const std::shared_ptr<Player>& pPlayer) :
 		m_moveVec = distance;
 	}
 
+	m_pos.x = m_pos.y = 0.0f;
+	m_pos.z = m_pPlayer->GetPos().z + meteor_z;
+
 	// 画面内にランダムに生成
 	Vector3 screenPos{};
 	screenPos.x = MathUtil::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().width);
 	screenPos.y = MathUtil::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().height);
 	screenPos.z = z_linear;
-	m_pos   = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
-	m_pos.z = m_pPlayer->GetPos().z + meteor_z;
+	Vector3 targetPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
+
+	m_moveVec = (targetPos - m_pos).Normalized() * 2.0f;
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);	// 透明度
@@ -138,16 +143,17 @@ void Meteor::Update(const Vector3& cameraPos)
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);	// 透明度
-	m_pModel->SetPos(m_pos);	// 位置
-	m_pModel->SetRot(m_rot);	// 回転
-	m_pModel->Update();			// 更新
+	m_pModel->SetPos(m_pos);			// 位置
+	m_pModel->SetRot(m_rot);			// 回転
+	m_pModel->Update();					// 更新
 }
 
 // スタート演出時の更新
 void Meteor::UpdateStart()
 {
 	// 移動
-	m_pos.z += (m_pPlayer->GetMoveVec().z - m_pPlayer->GetParameter("moveSpeedZ"));
+	m_pos.z += (m_pPlayer->GetMoveVec().z - 
+				m_pPlayer->GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z));
 
 	// 回転
 	m_rot += m_rotVec;

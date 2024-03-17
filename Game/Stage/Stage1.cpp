@@ -116,7 +116,7 @@ void Stage1::EnterGameOver()
 void Stage1::Update()
 {
 	// プレイヤーが死んだら
-	if (!m_pPlayer->IsLive())
+	if (!m_pPlayer->IsEnabled())
 	{
 		// ゲームオーバーに遷移
 		m_stateMachine.SetState(State::GAME_OVER);
@@ -189,7 +189,7 @@ void Stage1::UpdatePlay()
 	}
 
 	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
 }
@@ -244,8 +244,6 @@ void Stage1::UpdateGameOver()
 void Stage1::UpdateResult()
 {
 	StageBase::UpdateResult("Stage1");
-
-	m_pMeteorManager->Update(m_pCamera->GetPos());
 }
 
 // 描画
@@ -253,8 +251,6 @@ void Stage1::Draw()
 {
 	// 画面揺れの前処理
 	m_pScreenShaker->PreDraw();
-
-//	ClearDrawScreen();
 
 	// 描画
 	m_pSkyDome->Draw();			// スカイドーム

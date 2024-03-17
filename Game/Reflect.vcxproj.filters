@@ -57,6 +57,9 @@
     <Filter Include="ソース ファイル\String">
       <UniqueIdentifier>{6f9ef78c-7211-4ca9-9e9a-6e38f1e1ee57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\DataType">
+      <UniqueIdentifier>{ea788350-b728-447b-8c3f-6721625f17d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -516,6 +519,12 @@
     </ClInclude>
     <ClInclude Include="Util\FlagManager.h">
       <Filter>ソース ファイル\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="DataType\PlayerParamDataType.h">
+      <Filter>ソース ファイル\DataType</Filter>
+    </ClInclude>
+    <ClInclude Include="DataType\EffectDataType.h">
+      <Filter>ソース ファイル\DataType</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

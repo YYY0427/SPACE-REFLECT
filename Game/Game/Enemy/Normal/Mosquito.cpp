@@ -116,7 +116,7 @@ void Mosquito::Update()
 	m_state.Update();
 
 	// プレイヤーが生きていたら
-	if (m_pPlayer->IsLive())
+	if (m_pPlayer->IsEnabled())
 	{
 		// レーザーの発射位置の更新
 		m_laserFirePos = Vector3::FromDxLibVector3(

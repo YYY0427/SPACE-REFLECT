@@ -104,7 +104,7 @@ Tutorial::~Tutorial()
 void Tutorial::Update()
 {
 	// プレイヤーが死んだら
-	if (!m_pPlayer->IsLive())
+	if (!m_pPlayer->IsEnabled())
 	{
 		// BGMが再生中なら
 		auto& soundManager = SoundManager::GetInstance();
@@ -159,7 +159,7 @@ void Tutorial::UpdateStartAnimation()
 void Tutorial::UpdateMoveTutorial()
 {
 	// 更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					// プレイヤー
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
 
 	// 特定のフレームたったら
@@ -183,7 +183,7 @@ void Tutorial::UpdateMoveTutorial()
 void Tutorial::UpdateShieldTutorial()
 {
 	// プレイヤーの更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					
 	// カメラの更新
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 
@@ -211,7 +211,7 @@ void Tutorial::UpdateShieldTutorial()
 void Tutorial::UpdateReflectTutorial()
 {
 	// プレイヤーの更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());
 	// カメラの更新
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 
@@ -252,7 +252,7 @@ void Tutorial::UpdateReflectTutorial()
 void Tutorial::UpdateCubeTutorial()
 {
 	// プレイヤーの更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());					
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					
 	// カメラの更新
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
 
@@ -329,7 +329,7 @@ void Tutorial::UpdatePlay()
 	}
 
 	// プレイヤーの更新
-	m_pPlayer->Update(m_pCamera->GetCameraHorizon());
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());
 	// カメラの更新
 	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		
 }
