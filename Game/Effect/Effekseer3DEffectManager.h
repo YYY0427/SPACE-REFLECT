@@ -37,6 +37,7 @@ private:
 		Vector3		rot;					// 回転
 		Vector3		scale;					// 拡大率
 		float		speed;					// 再生速度
+		bool		isZBuffer;				// Zバッファを使うか
 	};
 
 	// 追従エフェクトデータ
@@ -49,6 +50,7 @@ private:
 		Vector3     rot;					// 回転
 		Vector3		scale;					// 拡大率
 		float		speed;					// 再生速度
+		bool		isZBuffer;				// Zバッファを使うか
 	};
 
 	// エフェクトリソースデータ
@@ -102,8 +104,9 @@ public:
 					const std::string& id, 
 					const Vector3& pos, 
 					const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
-					float speed = 1.0f, 
-					const Vector3& rot = { 0.0f, 0.0f, 0.0f });
+					const float speed = 1.0f, 
+					const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+					const bool isZbuffer = true);
 
 	/// <summary>
 	/// 指定のエフェクトのループ再生
@@ -118,8 +121,9 @@ public:
 						const std::string& id, 
 						const Vector3& pos,
 						const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
-						float speed = 1.0f, 
-						const Vector3& rot = { 0.0f, 0.0f, 0.0f });
+						const float speed = 1.0f, 
+						const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+						const bool isZbuffer = true);
 
 	/// <summary>
 	/// 指定のエフェクトの追従再生
@@ -135,7 +139,8 @@ public:
 						  Vector3* pos, 
 						  const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
 						  const float speed = 1.0f, 
-						  const Vector3& rot = { 0.0f, 0.0f, 0.0f });
+						  const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+						  const bool isZbuffer = true);
 
 	/// <summary>
 	/// 指定のエフェクトの追従とループ再生
@@ -151,7 +156,8 @@ public:
 								 Vector3* pos, 
 								 const Vector3& scale = { 1.0f, 1.0f, 1.0f }, 
 								 const float speed = 1.0f, 
-								 const Vector3& rot = { 0.0f, 0.0f, 0.0f });
+								 const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+								 const bool isZbuffer = true);
 
 	/// <summary>
 	/// エフェクトの全ての値の変更

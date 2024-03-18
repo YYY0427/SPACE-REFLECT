@@ -23,7 +23,7 @@ namespace
 	constexpr float camera_move_speed = 7.5f;
 
 	// カメラの移動制限範囲
-	const Vector2 camera_move_limit = { 150.0f * 4.0f, 100.0f * 4.0f };
+	const Vector2 camera_move_limit = { 150.0f * 3.0f, 100.0f * 3.0f };
 
 	// カメラをプレイヤーのベクトルに合わせて少し移動する割合
 	constexpr float camera_move_ratio = 0.7f;

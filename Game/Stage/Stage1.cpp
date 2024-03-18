@@ -122,9 +122,6 @@ void Stage1::Update()
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 
-	// 小さい隕石の生成
-	m_pMeteorManager->CreateSmallMeteor();
-
 	// ボスが死亡演出中なら隕石の削除
 	if (m_pEnemyManager->IsDeadBossAnim())
 	{
@@ -154,6 +151,9 @@ void Stage1::UpdateStartAnimation()
 	m_pCamera->UpdateStart(m_pPlayer->GetPos());	// カメラ
 	m_pMeteorManager->UpdateStart();				// 隕石
 
+	// 小さい隕石の生成
+	m_pMeteorManager->CreateSmallMeteor(5000.0f);	
+
 	// スタート演出が終わったらプレイ中に遷移
 	if (m_pPlayer->IsStartAnimation() &&
 		m_pCamera->IsStartAnimation())
@@ -171,6 +171,9 @@ void Stage1::UpdatePlay()
 		m_stateMachine.SetState(State::GAME_CLEAR);
 		return;
 	}
+
+	// 小さい隕石の生成
+	m_pMeteorManager->CreateSmallMeteor(5000.0f);
 
 	// 現在の敵のウェーブが終了したら
 	if (m_pEnemyManager->IsEndWave())

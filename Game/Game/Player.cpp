@@ -321,7 +321,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
 	// X軸回転は進んでいるように見せるよう傾ける
-	m_rot = { MathUtil::ToRadian(tilt_angle) + (-m_moveVec.y * 0.05f), 0.0f, -m_moveVec.x * 0.05f };
+	m_rot = { MathUtil::ToRadian(tilt_angle) + (-m_moveVec.y * 0.02f), 0.0f, -m_moveVec.x * 0.02f};
 
 	// 不透明度を元に戻す
 	m_opacity = 1.0f;

@@ -14,7 +14,7 @@ namespace
 
 	// 目的地に到達したかどうかの判定
 	// 判定の閾値（適切な値に調整する必要）
-	constexpr float distance_threshold = 5.0f;  
+	constexpr float distance_threshold = 50.0f;  
 
 	// モデルの初期の向いている方向
 	const Vector3 init_model_direction = { 0, 0, -1 };
@@ -56,7 +56,7 @@ Mosquito::Mosquito(const EnemyData& data,
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + data.pos.z) / GetCameraFar();
 
 	// 座標の設定
-	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({data.pos.x, data.pos.y, z }));
+	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ data.pos.x, data.pos.y, z }));
 
 	// プレイヤーを向くように回転行列を設定
 	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
@@ -183,8 +183,21 @@ void Mosquito::UpdateMove()
 	}
 	else
 	{
-		// 目的地の取得
-		SetGoalPos();
+		// 目的地のZ座標の更新
+
+		// 現在の移動ポイントのイテレーターの取得
+		auto itr = m_actionDataList.begin();
+		std::advance(itr, m_movePointIndex);
+
+		// 0.0(near)～1.0(far)の範囲でZ座標を設定
+		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->goalPos.z) / GetCameraFar();
+
+		// 目的地の設定
+		Vector3 goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
+		m_goalPos.z = goalPos.z;
+
+		// 移動ベクトルの設定
+		m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
 
 		// 座標の更新
 		m_pos += m_moveVec;
@@ -229,6 +242,7 @@ void Mosquito::UpdateAttack()
 		{
 			// 待機状態に遷移
 			m_state.SetState(State::IDLE);
+
 			// レーザーの削除
 			m_pLaserManager->DeleteLaser(m_laserKey);
 		}

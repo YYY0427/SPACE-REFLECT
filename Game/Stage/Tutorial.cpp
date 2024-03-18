@@ -106,29 +106,19 @@ void Tutorial::Update()
 	// プレイヤーが死んだら
 	if (!m_pPlayer->IsEnabled())
 	{
-		// BGMが再生中なら
-		auto& soundManager = SoundManager::GetInstance();
-		if (soundManager.IsPlayBGM())
-		{
-			// BGMのフェードアウト
-			auto fileName = soundManager.GetPlayBGMFileName();
-			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
-		}
-
 		// ゲームオーバーに遷移
 		m_stateMachine.SetState(State::GAME_OVER);
 	}
 
 	// 小さい隕石の生成
-	m_pMeteorManager->CreateSmallMeteor();					
+	m_pMeteorManager->CreateSmallMeteor(5000.0f);
 
 	// 更新
 	m_pTutorialUI->Update();								// チュートリアルUI
 	m_pSkyDome->Update({ 0, 0, m_pCamera->GetPos().z });	// スカイドーム
 	m_pPlanetManager->UpdatePlay(m_pPlayer->GetMoveVec());	// 惑星
-	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
 	m_pLaserManager->Update();								// レーザー
-	m_pEnemyManager->Update();								// レーザー
+	m_pEnemyManager->Update();								// 敵
 	m_pDamageFlash->Update();								// ダメージフラッシュ
 	m_pScreenShaker->Update();								// 画面揺れ
 	Effekseer3DEffectManager::GetInstance().Update();		// エフェクト
@@ -160,7 +150,8 @@ void Tutorial::UpdateMoveTutorial()
 {
 	// 更新
 	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					// プレイヤー
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());// カメラ
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());	// カメラ
+	m_pMeteorManager->Update(m_pCamera->GetPos());							// 隕石
 
 	// 特定のフレームたったら
 	m_currentFrame++;
@@ -182,10 +173,10 @@ void Tutorial::UpdateMoveTutorial()
 // シールドチュートリアルの更新
 void Tutorial::UpdateShieldTutorial()
 {
-	// プレイヤーの更新
-	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					
-	// カメラの更新
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
+	// 更新
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					// プレイヤー	
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());	// カメラ
+	m_pMeteorManager->Update(m_pCamera->GetPos());							// 隕石
 
 	// 特定のフレームたったら
 	m_currentFrame++;
@@ -210,10 +201,10 @@ void Tutorial::UpdateShieldTutorial()
 // 反射チュートリアルの更新
 void Tutorial::UpdateReflectTutorial()
 {
-	// プレイヤーの更新
-	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());
-	// カメラの更新
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
+	// 更新
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					// プレイヤー	
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());	// カメラ
+	m_pMeteorManager->Update(m_pCamera->GetPos());							// 隕石
 
 	// 特定のフレームたったら
 	m_currentFrame++;
@@ -251,10 +242,10 @@ void Tutorial::UpdateReflectTutorial()
 // キューブチュートリアルの更新
 void Tutorial::UpdateCubeTutorial()
 {
-	// プレイヤーの更新
-	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					
-	// カメラの更新
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());
+	// 更新
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());	// カメラ
+	m_pMeteorManager->Update(m_pCamera->GetPos());							// 隕石
 
 	// 特定のフレームたったら
 	m_currentFrame++;
@@ -295,10 +286,13 @@ void Tutorial::UpdateCubeTutorial()
 // プレイ中の更新
 void Tutorial::UpdatePlay()
 {
-	// フレームカウント
-	m_currentFrame++;
+	// 更新
+	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());					// プレイヤー
+	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());	// カメラ
+	m_pMeteorManager->Update(m_pCamera->GetPos());							// 隕石
 
 	// ウェーブの待機フレーム数を過ぎたら
+	m_currentFrame++;
 	if (m_currentFrame > wave_wait_frame)
 	{
 		// 実践チュートリアルUIの開始
@@ -323,15 +317,15 @@ void Tutorial::UpdatePlay()
 		// 実践チュートリアルUIが終了したら
 		if (m_pTutorialUI->IsEndState(TutorialState::PLAY))
 		{
+			// 現在流れているBGMのフェードアウト
+			auto& soundManager = SoundManager::GetInstance();
+			auto fileName = soundManager.GetPlayBGMFileName();
+			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+
 			// シールドチュートリアルに遷移
 			m_stateMachine.SetState(State::GAME_CLEAR);
 		}
 	}
-
-	// プレイヤーの更新
-	m_pPlayer->UpdatePlay(m_pCamera->GetCameraHorizon());
-	// カメラの更新
-	m_pCamera->UpdatePlay(m_pPlayer->GetPos(), m_pPlayer->GetMoveVec());		
 }
 
 // ゲームクリアの更新
@@ -343,8 +337,9 @@ void Tutorial::UpdateGameClear()
 	// 全てのレーザーの削除
 	m_pLaserManager->DeleteAllLaser();
 
-	// ゲームクリア時の更新
+	// 更新
 	m_pPlayer->UpdateGameClear();
+	m_pMeteorManager->Update(m_pCamera->GetPos());
 
 	// カメラの更新が終了したら
 	if (m_pCamera->UpdateGameClear(m_pPlayer->GetPos()))
@@ -390,6 +385,19 @@ void Tutorial::EnterStartAnimation()
 	SoundManager::GetInstance().SetFadeSound("TutorialBgm", 120, 0, 255);
 }
 
+// ゲームオーバーの開始
+void Tutorial::EnterGameOver()
+{
+	// BGMが再生中なら
+	auto& soundManager = SoundManager::GetInstance();
+	if (soundManager.IsPlayBGM())
+	{
+		// BGMのフェードアウト
+		auto fileName = soundManager.GetPlayBGMFileName();
+		soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+	}
+}
+
 // リザルトの開始
 void Tutorial::EnterResult()
 {
@@ -416,9 +424,10 @@ void Tutorial::Draw()
 	m_pEnemyManager->Draw();	// 敵
 	m_pLaserManager->Draw();	// レーザー
 	m_pPlayer->Draw();								// プレイヤー
-	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	m_pPlayer->DrawShield();						// シールド
+	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
 	UIManager::GetInstance().Draw();				// UI
+	m_pTutorialUI->Draw();							// チュートリアルUI
 	Score::GetInstance().DrawScore();				// スコア
 
 	// リザルト画面が開始されていたら
@@ -430,8 +439,7 @@ void Tutorial::Draw()
 
 	// 画面揺れ描画
 	m_pScreenShaker->Draw();					
-	// チュートリアルUIの描画
-	m_pTutorialUI->Draw();
+
 	// フェードの描画
 	m_pFade->DrawFade(true);
 }

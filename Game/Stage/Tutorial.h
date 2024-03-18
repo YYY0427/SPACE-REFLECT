@@ -22,6 +22,7 @@ public:
 
 	// 開始
 	void EnterStartAnimation();
+	void EnterGameOver();
 	void EnterResult();
 
 	// 更新

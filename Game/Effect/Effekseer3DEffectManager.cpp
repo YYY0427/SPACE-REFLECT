@@ -113,6 +113,38 @@ void Effekseer3DEffectManager::Draw()
 
 	// Effekseerにより再生中のエフェクトを描画する 
 	DrawEffekseer3D();
+
+#if true
+	// エフェクトの描画開始
+	DrawEffekseer3D_Begin();
+
+	for(auto& effect : m_effectDataTable)
+	{
+		// Zバッファを使うかどうか
+		SetUseZBufferFlag(effect.isZBuffer);
+
+		// Effekseerにより再生中のエフェクトを描画
+		int result = DrawEffekseer3D_Draw(*effect.playingEffectHandle);
+		assert(result != -1);
+
+		// Zバッファ設定を元に戻す
+		SetUseZBufferFlag(true);
+	}
+	for(auto& effect : m_followEffectDataTable)
+	{
+		// Zバッファを使うかどうか
+		SetUseZBufferFlag(effect.isZBuffer);
+
+		// Effekseerにより再生中のエフェクトを描画
+		int result = DrawEffekseer3D_Draw(*effect.playingEffectHandle);
+		assert(result != -1);
+
+		// Zバッファ設定を元に戻す
+		SetUseZBufferFlag(true);
+	}
+	// エフェクトの描画終了
+	DrawEffekseer3D_End();
+#endif
 }
 
 // 終了処理
@@ -176,7 +208,7 @@ void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, const st
 }
 
 // 指定のエフェクトの再生
-void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, float speed, const Vector3& rot)
+void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -191,11 +223,12 @@ void Effekseer3DEffectManager::PlayEffect(int& playingEffectHandle, const std::s
 	EffectData effect{};
 	effect.playingEffectHandle = &playingEffectHandle;
 	effect.type = PlayType::NORMAL;
+	effect.isZBuffer = isZbuffer;
 	m_effectDataTable.push_back(effect);
 }
 
 // 指定のエフェクトのループ再生
-void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, float speed, const Vector3& rot)
+void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -215,11 +248,12 @@ void Effekseer3DEffectManager::PlayEffectLoop(int& playingEffectHandle, const st
 	effect.speed = speed;
 	effect.rot = rot;
 	effect.type = PlayType::LOOP;
+	effect.isZBuffer = isZbuffer;
 	m_effectDataTable.push_back(effect);
 }
 
 // 指定のエフェクトの追従再生
-void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot)
+void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -239,11 +273,12 @@ void Effekseer3DEffectManager::PlayEffectFollow(int& playingEffectHandle, const 
 	effect.speed = speed;
 	effect.rot = rot;
 	effect.type = PlayType::FOLLOW;
+	effect.isZBuffer = isZbuffer;
 	m_followEffectDataTable.push_back(effect);
 }
 
 // 指定のエフェクトの追従とループ再生
-void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot)
+void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
 {
 	// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 	assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -263,6 +298,7 @@ void Effekseer3DEffectManager::PlayEffectLoopAndFollow(int& playingEffectHandle,
 	effect.speed = speed;
 	effect.rot = rot;
 	effect.type = PlayType::LOOP_AND_FOLLOW;
+	effect.isZBuffer = isZbuffer;
 	m_followEffectDataTable.push_back(effect);
 }
 

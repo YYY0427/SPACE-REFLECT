@@ -26,7 +26,7 @@ public:
 	/// </summary>
 	/// <param name="type">隕石の種類</param>
 	/// <param name="playerPos">プレイヤーの座標</param>
-	Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer);
+	Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, const float playerRelativePos);
 
 	/// <summary>
 	/// コンストラクタ

@@ -414,7 +414,8 @@ void BossMatrix::UpdateDie()
 				m_dieEffectHandle,
 				"EnemyBossDie",
 				m_pos,
-				die_effect_scale);
+				die_effect_scale,
+				false);
 		}
 		// エフェクトの再生を開始してから、一定フレーム経過したら
 		else if (m_dieDrawStopFrame-- <= 0)

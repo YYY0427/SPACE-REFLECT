@@ -21,7 +21,8 @@ namespace
 	constexpr float min_delta_rot = 0.0f;  // 最小
 
 	// 移動速度
-	constexpr float meteor_move_speed = -10.0f;
+	constexpr float meteor_move_speed = 10.0f;
+	constexpr float small_meteor_move_speed = 2.7f;
 
 	// スクリーン座標からワールド座標に変換に使用するZ座標の線形
 	constexpr float z_linear = 1.0f;
@@ -32,7 +33,7 @@ namespace
 
 // コンストラクタ
 // ランダムに生成、プレイヤーの方向に移動
-Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer) :
+Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, const float playerRelativePos) :
 	m_rot({ 0, 0, 0 }),
 	m_isEnabled(true),
 	m_moveVec({ 0, 0, 0 }),
@@ -72,7 +73,7 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer) :
 	}
 
 	m_pos.x = m_pos.y = 0.0f;
-	m_pos.z = m_pPlayer->GetPos().z + meteor_z;
+	m_pos.z = m_pPlayer->GetPos().z + playerRelativePos;
 
 	// 画面内にランダムに生成
 	Vector3 screenPos{};
@@ -81,7 +82,8 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer) :
 	screenPos.z = z_linear;
 	Vector3 targetPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
 
-	m_moveVec = (targetPos - m_pos).Normalized() * 2.0f;
+	// ベクトルの作成
+	m_moveVec = (targetPos - m_pos).Normalized() * small_meteor_move_speed;
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);	// 透明度

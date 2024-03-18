@@ -62,13 +62,13 @@ void MeteorManager::Draw()
 }
 
 // è¨Ç≥Ç¢Ë¶êŒÇÃê∂ê¨
-void MeteorManager::CreateSmallMeteor()
+void MeteorManager::CreateSmallMeteor(const float playerRelativePos)
 {
 	m_smallCreateIntervalFrame++;
 	if (small_create_interval_frame < m_smallCreateIntervalFrame)
 	{
 		// è¨Ç≥Ç¢Ë¶êŒÇÃê∂ê¨
-		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::SMALL, m_pPlayer));
+		m_pMeteorList.push_back(std::make_shared<Meteor>(MeteorType::SMALL, m_pPlayer, playerRelativePos));
 		m_smallCreateIntervalFrame = 0;
 	}
 }

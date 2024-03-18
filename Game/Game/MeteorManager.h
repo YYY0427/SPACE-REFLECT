@@ -44,7 +44,7 @@ public:
 	/// <summary>
 	/// ¬‚³‚¢è¦Î‚Ì¶¬
 	/// </summary>
-	void CreateSmallMeteor();
+	void CreateSmallMeteor(const float playerRelativePos);
 
 	/// <summary>
 	/// ‘S‚Ä‚Ìè¦Î‚Ìíœ
