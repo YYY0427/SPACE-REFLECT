@@ -114,33 +114,33 @@ void Effekseer3DEffectManager::Draw()
 	// Effekseerにより再生中のエフェクトを描画する 
 	DrawEffekseer3D();
 
-#if true
+#if false
 	// エフェクトの描画開始
 	DrawEffekseer3D_Begin();
 
 	for(auto& effect : m_effectDataTable)
 	{
 		// Zバッファを使うかどうか
-		SetUseZBufferFlag(effect.isZBuffer);
+		SetUseZBuffer3D(effect.isZBuffer);
 
 		// Effekseerにより再生中のエフェクトを描画
 		int result = DrawEffekseer3D_Draw(*effect.playingEffectHandle);
 		assert(result != -1);
 
 		// Zバッファ設定を元に戻す
-		SetUseZBufferFlag(true);
+		SetUseZBuffer3D(true);
 	}
 	for(auto& effect : m_followEffectDataTable)
 	{
 		// Zバッファを使うかどうか
-		SetUseZBufferFlag(effect.isZBuffer);
+		SetUseZBuffer3D(effect.isZBuffer);
 
 		// Effekseerにより再生中のエフェクトを描画
 		int result = DrawEffekseer3D_Draw(*effect.playingEffectHandle);
 		assert(result != -1);
 
 		// Zバッファ設定を元に戻す
-		SetUseZBufferFlag(true);
+		SetUseZBuffer3D(true);
 	}
 	// エフェクトの描画終了
 	DrawEffekseer3D_End();

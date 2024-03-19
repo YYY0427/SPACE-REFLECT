@@ -17,6 +17,7 @@
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
 #include "../SoundManager.h"
+#include "Camera.h"
 #include <algorithm>
 
 namespace
@@ -94,8 +95,11 @@ Player::Player(const std::string& objectDataFileName) :
 	m_playerSize.x		 = GetParameter(DataType::PlayerParamType::PlAYER_WIDTH);	
 	m_playerSize.y       = GetParameter(DataType::PlayerParamType::PlAYER_HEIGHT);
 	m_collisionRadius	 = GetParameter(DataType::PlayerParamType::COLLISION_RADIUS);
-	m_moveSpeedXY		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
-	m_moveSpeedZ		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
+	m_moveSpeed.x		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
+	m_moveSpeed.y		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
+	m_moveSpeed.z		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
+//	m_moveSpeedXY		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
+//	m_moveSpeedZ		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
 
 	// プレイヤーモデルのインスタンスの生成
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Player"));
@@ -248,8 +252,22 @@ void Player::UpdatePlay(const float cameraHorizon)
 		// プレイヤーから見てx方向とz方向のベクトルを足して移動ベクトルを作成する
 		m_moveVec = moveVecY + moveVecX;
 
+		Vector3 moveSpeed;
+		moveSpeed = m_moveSpeed;
+
+		if (m_pCamera->IsOverMoveRangeX())
+		{
+			moveSpeed.x = m_moveSpeed.x * 0.5f;
+		}
+		if (m_pCamera->IsOverMoveRangeY())
+		{
+			moveSpeed.y = m_moveSpeed.y * 0.5f;
+		}
+
 		// プレイヤーのスピードを掛ける
-		m_moveVec *= m_moveSpeedXY;
+		m_moveVec = m_moveVec * moveSpeed;
+
+		DebugText::Log("PlayerMoveSpeed", { moveSpeed.x, moveSpeed.y, moveSpeed.z });
 	}
 
 	// 作成した移動ベクトルで座標の移動
@@ -303,7 +321,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 	}
 
 	// 常にZ軸方向に移動
-	m_moveVec.z = m_moveSpeedZ;
+	m_moveVec.z = m_moveSpeed.z;
 	m_pos.z += m_moveVec.z;
 
 	// ログに追加
@@ -353,7 +371,7 @@ void Player::UpdateGameClear()
 	m_pShield.reset();
 
 	// 常にZ軸方向に移動
-	m_moveVec.z = m_moveSpeedZ;
+	m_moveVec.z = m_moveSpeed.z;
 	m_pos.z += m_moveVec.z;
 
 	// モデルの設定
@@ -604,4 +622,10 @@ float Player::GetParameter(const DataType::PlayerParamType type)
 	// エラーメッセージを出力
 	assert(!"Playerクラスのパラメータにkeyが存在しません");
 	return -1;
+}
+
+// カメラのポインタの設定
+void Player::SetCameraPointer(const std::shared_ptr<Camera>& pCamera)
+{
+	m_pCamera = pCamera;
 }

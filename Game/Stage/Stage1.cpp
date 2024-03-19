@@ -79,6 +79,9 @@ Stage1::Stage1(SceneManager& manager) :
 	m_pScreenShaker = std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 
+	// ポインタの設定
+	m_pPlayer->SetCameraPointer(m_pCamera);
+
 	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
 	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });

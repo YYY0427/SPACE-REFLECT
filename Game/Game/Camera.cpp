@@ -96,18 +96,18 @@ void Camera::UpdatePlay(const Vector3& playerPos, const Vector3& playerVec)
 {
 #if true
 	// カメラをプレイヤーのベクトルに合わせて少し移動
-	if (std::fabs(m_pos.x) <= camera_move_limit.x) 
-	{
-		m_pos.x += playerVec.x * camera_move_ratio;
-	}
-	if (std::fabs(m_pos.y) <= camera_move_limit.y) 
-	{
-		m_pos.y += playerVec.y * camera_move_ratio;
-	}
+	m_pos.x += playerVec.x * camera_move_ratio;
+	m_pos.y += playerVec.y * camera_move_ratio;
 
 	// カメラのターゲットを常に正面に向ける
 	m_target.x = m_pos.x;
 	m_target.y = m_pos.y - camera_start_animation_end_pos.y;
+
+	// カメラのターゲットの制限
+	m_target.x = std::clamp(m_target.x, -camera_move_limit.x, camera_move_limit.x);
+	m_target.y = std::clamp(m_target.y, 
+							-camera_move_limit.y - camera_start_animation_end_pos.y, 
+							 camera_move_limit.y - camera_start_animation_end_pos.y);
 
 	// カメラの移動制限
 	m_pos.x = std::clamp(m_pos.x, -camera_move_limit.x, camera_move_limit.x);
@@ -279,4 +279,38 @@ float Camera::GetCameraHorizon() const
 bool Camera::IsStartAnimation() const
 {
 	return m_isStartAnimation;
+}
+
+// カメラがX軸の移動範囲制限を超えたか
+bool Camera::IsOverMoveRangeX() const
+{
+	// 移動範囲を超えたか
+	if (m_pos.x >= camera_move_limit.x || m_pos.x <= -camera_move_limit.x)
+	{
+		// 移動範囲を超えている
+		return true;
+	}
+
+	// 移動範囲を超えていない
+	return false;
+}
+
+// カメラがY軸の移動範囲制限を超えたか
+bool Camera::IsOverMoveRangeY() const
+{
+	// 移動範囲を超えたか
+	if (m_pos.y >= camera_move_limit.y || m_pos.y <= -camera_move_limit.y)
+	{
+		// 移動範囲を超えている
+		return true;
+	}
+
+	// 移動範囲を超えていない
+	return false;
+}
+
+// カメラの移動速度の取得
+float Camera::GetCameraMoveSpeed() const
+{
+	return camera_move_speed;
 }

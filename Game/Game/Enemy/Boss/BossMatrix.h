@@ -89,7 +89,7 @@ private:
 	/// <summary>
 	/// ゲームオーバー時の更新
 	/// </summary>
-	void UpdateGameOver();	
+	void UpdateGameOver();
 
 	/// <summary>
 	/// 移動しながらホーミングレーザー攻撃の更新
@@ -147,6 +147,12 @@ private:
 	bool IsDeadAnim() override;	
 
 private:
+	/// <summary>
+	/// プレイヤーの方向を見る
+	/// </summary>
+	void LookPlayerDir();
+
+private:
 	// ステート
 	enum class State
 	{
@@ -197,4 +203,7 @@ private:
 	// エフェクトハンドル
 	int m_damageEffectHandle;
 	int m_dieEffectHandle;
+
+	// 徐々にプレイヤーの方向に向ける時に使用するラープの値
+	int m_playerDirLerp;
 };

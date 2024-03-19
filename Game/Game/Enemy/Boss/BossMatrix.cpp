@@ -103,6 +103,7 @@ namespace
 	constexpr int cube_laser_interval_frame      = 60 * 2;  // キューブレーザー攻撃の間隔フレーム
 	constexpr int die_idle_frame                 = 60 * 3;	// 死亡時の待機フレーム
 	constexpr int die_draw_stop_frame            = 60 * 7;	// 死亡時の描画停止フレーム
+	constexpr int look_player_frame				 = 20;		// プレイヤーの方向に向けるフレーム
 
 	// レーザー
 	constexpr float cube_laser_speed = 8.0f;	// キューブレーザーの速度
@@ -137,7 +138,8 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 	m_dieDrawStopFrame(die_draw_stop_frame),
 	m_movePointIndex(0),
 	m_isGoal(false),
-	m_cubeLaserIntervalFrame(cube_laser_interval_frame)
+	m_cubeLaserIntervalFrame(cube_laser_interval_frame),
+	m_playerDirLerp(0)
 {
 	// 初期化
 	m_pPlayer         = pPlayer;
@@ -208,16 +210,16 @@ void BossMatrix::Update()
 	// ステートマシンの更新
 	m_stateMachine.Update();
 
-	// プレイヤーが死亡したら
-	if (!m_pPlayer->IsEnabled())
-	{
-		// ステートをゲームオーバーに変更
-		m_stateMachine.SetState(State::GAME_OVER);
-	}
-	else
+	// プレイヤーが存在していたら
+	if (m_pPlayer->IsEnabled())
 	{
 		// Z座標の更新
 		m_pos.z += m_pPlayer->GetMoveVec().z;
+	}
+	else
+	{
+		// ゲームオーバーに遷移
+		m_stateMachine.SetState(State::GAME_OVER);
 	}
 
 	// モデル設定
@@ -265,8 +267,7 @@ void BossMatrix::OnDamage(const int damage, const Vector3& pos)
 		m_damageEffectHandle,
 		"PlayerAttackHitEffect",
 		pos,
-		damage_effect_scale
-	);
+		damage_effect_scale);
 
 	// HPが0以下になったら死亡
 	if (m_hp <= 0)
@@ -369,10 +370,8 @@ void BossMatrix::UpdateEntry()
 // 待機時の更新
 void BossMatrix::UpdateIdle()
 {
-	// プレイヤーの方向を向く
-	Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
-	Matrix rotMtx        = Matrix::GetRotationMatrix(init_model_direction, directionVec);
-	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
+	// プレイヤーの方向を見る
+	LookPlayerDir();
 
 	// 待機アニメーションに変更
 	m_pModel->ChangeAnimation(idle_anim_no, true, false, change_anim_frame);
@@ -414,8 +413,7 @@ void BossMatrix::UpdateDie()
 				m_dieEffectHandle,
 				"EnemyBossDie",
 				m_pos,
-				die_effect_scale,
-				false);
+				die_effect_scale);
 		}
 		// エフェクトの再生を開始してから、一定フレーム経過したら
 		else if (m_dieDrawStopFrame-- <= 0)
@@ -440,6 +438,8 @@ void BossMatrix::UpdateDie()
 // ゲームオーバー時の更新
 void BossMatrix::UpdateGameOver()
 {
+	// プレイヤーの方向を見る
+	LookPlayerDir();
 }
 
 // 移動しながらホーミングレーザー攻撃
@@ -481,6 +481,9 @@ void BossMatrix::UpdateMoveHomingLaserAttack()
 // キューブレーザー攻撃
 void BossMatrix::UpdateCubeLaserAttack()
 {
+	// プレイヤーの方向を見る
+	LookPlayerDir();
+
 	// フレーム内なら
 	if (m_laserFrame-- >= 0)
 	{
@@ -582,6 +585,23 @@ void BossMatrix::SetGoalPos()
 bool BossMatrix::IsDeadAnim()
 {
 	return m_stateMachine.GetCurrentState() == State::DIE;
+}
+
+// プレイヤーの方向を見る
+void BossMatrix::LookPlayerDir()
+{
+	// ラープの値の取得
+	if (m_playerDirLerp++ >= look_player_frame) m_playerDirLerp = 0;
+	float lerpValue = static_cast<float>(m_playerDirLerp) / static_cast<float>(look_player_frame);
+
+	// プレイヤーの方向の行列を取得
+	Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
+	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+
+	// 徐々にプレイヤーの方向を向く
+	m_rot = m_rot.Lerp(m_rot,
+		{ rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 },
+		lerpValue);
 }
 
 // 攻撃ステートの設定

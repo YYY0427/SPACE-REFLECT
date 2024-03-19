@@ -13,6 +13,7 @@ class Model;
 class Shield;
 class Gauge;
 class StatusBack;
+class Camera;
 
 /// <summary>
 /// プレイヤークラス
@@ -136,22 +137,34 @@ public:
 	/// <returns>パラメータ</returns>
 	float GetParameter(const DataType::PlayerParamType type);
 
+
+	//// セッター ////
+
+	/// <summary>
+	/// カメラのポインターの設定
+	/// </summary>
+	/// <param name="pCamera">カメラのポインタ</param>
+	void SetCameraPointer(const std::shared_ptr<Camera>& pCamera);
+
 private:
 	// ポインタ
 	std::shared_ptr<Model> m_pModel;		// モデル
 	std::shared_ptr<Shield> m_pShield;		// シールド
 	std::shared_ptr<Gauge> m_pHPbar;		// HPバー
 	std::shared_ptr<StatusBack> m_pBackUI;	// ステータスバックUI
+	std::shared_ptr<Camera> m_pCamera;		// カメラ
 
 	// パラメーター
 	Vector3 m_pos;				// 位置
 	Vector3 m_rot;				// 回転
 	Vector3 m_scale;			// 拡大率
 	Vector3 m_moveVec;			// 移動ベクトル
+	Vector3 m_moveSpeed;		// 移動速度
+//	float   m_moveSpeedXY;		// 移動速度
 	Vector2 m_playerSize;		// プレイヤーのサイズ
-	float   m_moveSpeedXY;		// 移動速度
+
 	float   m_startMoveSpeedZ;	// スタート時の速度
-	float   m_moveSpeedZ;		// Z軸方向の移動速度
+//	float   m_moveSpeedZ;		// Z軸方向の移動速度
 	float   m_opacity;			// 透明度
 	float   m_collisionRadius;	// 当たり判定の半径
 

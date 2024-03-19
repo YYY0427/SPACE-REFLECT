@@ -91,6 +91,24 @@ public:
 	/// <returns>スタート演出をしたかフラグ</returns>
 	bool  IsStartAnimation() const;	
 
+	/// <summary>
+	/// カメラがX軸の移動範囲制限を超えたか
+	/// </summary>
+	/// <returns>超えたか</returns>
+	bool IsOverMoveRangeX() const;
+
+	/// <summary>
+	/// カメラがY軸の移動範囲制限を超えたか
+	/// </summary>
+	/// <returns>超えたか</returns>
+	bool IsOverMoveRangeY() const;
+
+	/// <summary>
+	/// カメラの移動速度の取得
+	/// </summary>
+	/// <returns>カメラの移動速度</returns>
+	float GetCameraMoveSpeed() const;
+
 private:
 	// カメラの座標
 	Vector3 m_pos;
