@@ -60,7 +60,7 @@ Stage1::Stage1(SceneManager& manager) :
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
-	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
+	m_stateMachine.AddState(State::GAME_CLEAR, [this]() {EnterGameClear(); }, [this]() { UpdateGameClear(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, [this]() {EnterGameOver(); }, [this]() { UpdateGameOver(); }, {});
 	m_stateMachine.AddState(State::RESULT, [this]() { EnterResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
@@ -100,6 +100,12 @@ void Stage1::EnterResult()
 {
 	// リザルト画面のインスタンス生成
 	m_pResultWindow = std::make_shared<ResultWindow>();
+}
+
+// ゲームクリアの開始
+void Stage1::EnterGameClear()
+{
+	SoundManager::GetInstance().PlaySE("GameClear");
 }
 
 // 初期化

@@ -109,6 +109,12 @@ public:
 	/// <returns>カメラの移動速度</returns>
 	float GetCameraMoveSpeed() const;
 
+	/// <summary>
+	/// カメラをプレイヤーのベクトルに合わせて少し移動する割合 
+	/// </summary>
+	/// <returns></returns>
+	float GetCameraMoveRate() const;
+
 private:
 	// カメラの座標
 	Vector3 m_pos;

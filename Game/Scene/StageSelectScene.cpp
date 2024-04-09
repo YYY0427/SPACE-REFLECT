@@ -60,7 +60,8 @@ StageSelectScene::StageSelectScene(SceneManager& manager) :
 	m_uiAlpha(255),
 	m_easeTime2(0.0f),
 	m_explanationWindowSize(0, 0),
-	m_windowAlpha(window_max_alpha)
+	m_windowAlpha(window_max_alpha),
+	m_isStartAnimSE(false)
 {
 	// ステートマシンの設定
 	m_stateMachine.AddState(State::STAGE_SELECT, {}, [this]() {UpdateSelectStage(); }, {});
@@ -302,12 +303,11 @@ void StageSelectScene::UpdateStartAnimation()
 	if (m_easeTime >= 150.0f)
 	{
 		auto& soundManager = SoundManager::GetInstance();
-		static bool isPlay = false;
-		if (!isPlay)
+		if (!m_isStartAnimSE)
 		{
 			soundManager.PlaySE("StartAnimSe");
 			soundManager.SetFadeSound("StartAnimSe", 30, soundManager.GetSoundVolume("StartAnimSe"), 255);
-			isPlay = true;
+			m_isStartAnimSE = true;
 		}
 		
 		// イージングでカメラを移動

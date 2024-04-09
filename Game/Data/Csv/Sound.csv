@@ -19,3 +19,6 @@ PlayerDamage,.wav,1,0.5
 PlayerDiedSmallExplosion,.mp3,1,0.8
 NormalEnemyDie,.mp3,1,0.7
 GameOver,.mp3,1,0.8
+BossExplosion,.mp3,1,0.8
+ResultOpenMenu,.mp3,1,1
+GameClear,.mp3,1,1

@@ -314,3 +314,9 @@ float Camera::GetCameraMoveSpeed() const
 {
 	return camera_move_speed;
 }
+
+// カメラをプレイヤーのベクトルに合わせて少し移動する割合 
+float Camera::GetCameraMoveRate() const
+{
+	return camera_move_ratio;
+}

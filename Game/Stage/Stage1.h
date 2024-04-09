@@ -17,6 +17,7 @@ public:
 
 	// 開始
 	void EnterResult();
+	void EnterGameClear();
 	void EnterGameOver();
 
 	// 更新

@@ -22,6 +22,7 @@ public:
 
 	// ŠJŽn
 	void EnterStartAnimation();
+	void EnterGameClear();
 	void EnterGameOver();
 	void EnterResult();
 

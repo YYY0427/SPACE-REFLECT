@@ -160,11 +160,9 @@ private:
 	Vector3 m_scale;			// 拡大率
 	Vector3 m_moveVec;			// 移動ベクトル
 	Vector3 m_moveSpeed;		// 移動速度
-//	float   m_moveSpeedXY;		// 移動速度
 	Vector2 m_playerSize;		// プレイヤーのサイズ
 
 	float   m_startMoveSpeedZ;	// スタート時の速度
-//	float   m_moveSpeedZ;		// Z軸方向の移動速度
 	float   m_opacity;			// 透明度
 	float   m_collisionRadius;	// 当たり判定の半径
 
@@ -176,6 +174,7 @@ private:
 	bool m_isInputLeftStick;	// 左スティックの入力フラグ
 	bool m_isReflect;			// 反射中か
 	bool m_isStartAnimation;	// スタート演出をしたかフラグ
+	bool m_isGameOverSE;		// ゲームオーバーSEを再生したかフラグ
 
 	// エフェクト
 	int		m_boostEffectHandle;		// ブーストエフェクトハンドル
@@ -186,7 +185,8 @@ private:
 	bool	m_isPlayerDeadEffect;		// プレイヤー死亡エフェクトの再生フラグ
 
 	// タイマー
-	int		   m_gameOverWaitFrame;					// 待機フレーム
+	int		   m_gameOverWaitFrame;			// 待機フレーム
+	int		   m_onDamageSEWaitFrame;		// ダメージSEの再生待ちフレーム
 	int		   m_ultimateTimer;				// 無敵時間のタイマー
 	Timer<int> m_waitTimer;					// 待機時間のタイマー
 

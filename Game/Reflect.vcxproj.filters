@@ -457,9 +457,6 @@
     <ClInclude Include="Game\Enemy\Normal\Mosquito.h">
       <Filter>ソース ファイル\Game\Enemy\Normal</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Laser\ReflectLaser.h">
-      <Filter>ソース ファイル\Game\Laser</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Enemy\Boss\BossMatrix.h">
       <Filter>ソース ファイル\Game\Enemy\Boss</Filter>
     </ClInclude>
@@ -525,6 +522,9 @@
     </ClInclude>
     <ClInclude Include="DataType\EffectDataType.h">
       <Filter>ソース ファイル\DataType</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Laser\ReflectLaser.h">
+      <Filter>ソース ファイル\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

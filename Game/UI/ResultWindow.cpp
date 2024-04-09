@@ -4,6 +4,7 @@
 #include "../Util/Easing.h"
 #include "../String/MessageManager.h"
 #include "../Score/Score.h"
+#include "../SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -37,7 +38,8 @@ ResultWindow::ResultWindow() :
 	m_completePos(init_complete_pos),
 	m_isTitleEnd(false),
 	m_scorePos(init_score_pos),
-	m_yourScorePos(init_your_score_pos)
+	m_yourScorePos(init_your_score_pos),
+	m_isOpenMenuSound(false)
 {
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	m_windowPos = { screenSize.width / 2.0f, screenSize.height / 2.0f };
@@ -59,6 +61,12 @@ void ResultWindow::Update()
 		m_windowSize.x = Easing::EaseOutCubic(m_easing.x, 100, window_size.x, m_windowSize.x);
 		if (m_windowSize.x >= window_size.x)
 		{
+			if (!m_isOpenMenuSound)
+			{
+				SoundManager::GetInstance().PlaySE("ResultOpenMenu");
+				m_isOpenMenuSound = true;
+			}
+
 			m_easing.y++;
 			m_windowSize.y = Easing::EaseOutCubic(m_easing.y, 100, window_size.y, m_windowSize.y);
 			if (m_windowSize.y >= window_size.y)

@@ -206,4 +206,7 @@ private:
 
 	// 徐々にプレイヤーの方向に向ける時に使用するラープの値
 	int m_playerDirLerp;
+
+	int  m_timer;
+	bool m_isExplosionSound;
 };

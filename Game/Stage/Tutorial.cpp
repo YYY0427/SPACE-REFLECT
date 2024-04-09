@@ -67,7 +67,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_stateMachine.AddState(State::REFLECT_TUTORIAL, {}, [this]() { UpdateReflectTutorial(); }, {});
 	m_stateMachine.AddState(State::CUBE_TUTORIAL, {}, [this]() { UpdateCubeTutorial(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
-	m_stateMachine.AddState(State::GAME_CLEAR, {}, [this]() { UpdateGameClear(); }, {});
+	m_stateMachine.AddState(State::GAME_CLEAR, [this]() {EnterGameClear(); }, [this]() { UpdateGameClear(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, {}, [this]() { UpdateGameOver(); }, {});
 	m_stateMachine.AddState(State::RESULT, [this]() { EnterResult(); }, [this]() { UpdateResult(); }, {});
 	m_stateMachine.SetState(State::START_ANIMATION);
@@ -86,6 +86,9 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 	m_pTutorialUI = std::make_shared<TutorialUI>();
+
+	// ポインタの設定
+	m_pPlayer->SetCameraPointer(m_pCamera);
 
 	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
@@ -383,6 +386,11 @@ void Tutorial::EnterStartAnimation()
 	// BGMの再生
 	SoundManager::GetInstance().PlayBGM("TutorialBgm");
 	SoundManager::GetInstance().SetFadeSound("TutorialBgm", 120, 0, 255);
+}
+
+void Tutorial::EnterGameClear()
+{
+	SoundManager::GetInstance().PlaySE("GameClear");
 }
 
 // ゲームオーバーの開始

@@ -62,6 +62,24 @@ namespace
 
 	// プレイヤーを進んでいるように見せるために傾ける角度
 	constexpr float tilt_angle = 25.0f;
+
+	// カメラがプレイヤーを追い越しているかどうかの範囲
+	constexpr float camera_over_range = 200.0f;
+
+	// プレイヤーの移動ベクトルの減少率
+	constexpr float move_vec_decrease_rate = 0.9f;
+
+	// 透明度の最大値
+	constexpr float max_opacity = 1.0f;
+
+	// プレイヤーを傾ける大きさ
+	constexpr float tilt_size = 0.02f;
+
+	// ゲームオーバー時のプレイヤーを1フレームごとに回転させる角度
+	constexpr float game_over_rotate_angle = 5.0f;
+
+	// ゲームオーバー時のプレイヤーの移動ベクトル
+	const Vector3 game_over_move_vec = { 0.0f, -0.5f, 1.0f };
 }
 
 //  コンストラクタ
@@ -76,7 +94,8 @@ Player::Player(const std::string& objectDataFileName) :
 	m_boostEffectHandle(-1),
 	m_damageEffectHandle(-1),
 	m_opacity(1.0f),
-	m_gameOverWaitFrame(game_over_frame)
+	m_gameOverWaitFrame(game_over_frame),
+	m_isGameOverSE(false)
 {
 	// データの読み込み
 	auto data = DataReaderFromUnity::GetInstance().GetData(objectDataFileName, "Player");
@@ -98,8 +117,6 @@ Player::Player(const std::string& objectDataFileName) :
 	m_moveSpeed.x		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
 	m_moveSpeed.y		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
 	m_moveSpeed.z		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
-//	m_moveSpeedXY		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
-//	m_moveSpeedZ		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
 
 	// プレイヤーモデルのインスタンスの生成
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Player"));
@@ -133,7 +150,7 @@ void Player::UpdateStart(const Vector3& cameraPos)
 	m_moveVec.z = GetParameter(DataType::PlayerParamType::START_MOVE_SPEED_Z);
 	m_pos.z += m_moveVec.z;
 
-	if (m_pos.z > cameraPos.z + 200)
+	if (m_pos.z > cameraPos.z + camera_over_range)
 	{
 		// スタート演出をしたかフラグを立てる
 		m_isStartAnimation = true;
@@ -219,9 +236,11 @@ void Player::UpdatePlay(const float cameraHorizon)
 	// 移動情報の初期化
 	m_isInputLeftStick = false;
 	m_moveVec.z = 0;
-	m_moveVec *= 0.9f;
 	Vector3 moveVecX = { 0, 0, 0 };
 	Vector3 moveVecY = { 0, 0, 0 };
+
+	// 移動ベクトルの減少
+	m_moveVec *= move_vec_decrease_rate;
 
 	// スティックが入力されていたら移動ベクトルにスティックが傾いている方向のベクトルを代入
 	// スティックの傾きぐわいによってベクトルが大きくなる
@@ -255,13 +274,16 @@ void Player::UpdatePlay(const float cameraHorizon)
 		Vector3 moveSpeed;
 		moveSpeed = m_moveSpeed;
 
+		// カメラの移動範囲を超えている場合
+		// 移動スピードを減らす
+		// (カメラが動かないため、カメラが動いているときと違う挙動に見えるため)
 		if (m_pCamera->IsOverMoveRangeX())
 		{
-			moveSpeed.x = m_moveSpeed.x * 0.5f;
+			moveSpeed.x = m_moveSpeed.x * (1.0f - m_pCamera->GetCameraMoveRate());
 		}
 		if (m_pCamera->IsOverMoveRangeY())
 		{
-			moveSpeed.y = m_moveSpeed.y * 0.5f;
+			moveSpeed.y = m_moveSpeed.y * (1.0f - m_pCamera->GetCameraMoveRate());
 		}
 
 		// プレイヤーのスピードを掛ける
@@ -337,12 +359,27 @@ void Player::UpdatePlay(const float cameraHorizon)
 	// 0以下にはならない
 	m_ultimateTimer = (std::max)(--m_ultimateTimer, 0);
 
+	Vector3 moveVec = m_moveVec;
+	Vector3 moveSpeed = m_moveSpeed;
+	if (m_pCamera->IsOverMoveRangeX())
+	{
+		moveSpeed.x = m_moveSpeed.x * (1.0f - m_pCamera->GetCameraMoveRate());
+		moveVec.x /= moveSpeed.x;
+		moveVec.x *= m_moveSpeed.x;
+	}
+	if (m_pCamera->IsOverMoveRangeY())
+	{
+		moveSpeed.y = m_moveSpeed.y * (1.0f - m_pCamera->GetCameraMoveRate());
+		moveVec.y /= moveSpeed.y;
+		moveVec.y *= m_moveSpeed.y;
+	}
+
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
 	// X軸回転は進んでいるように見せるよう傾ける
-	m_rot = { MathUtil::ToRadian(tilt_angle) + (-m_moveVec.y * 0.02f), 0.0f, -m_moveVec.x * 0.02f};
+	m_rot = { MathUtil::ToRadian(tilt_angle) + (-moveVec.y * tilt_size), 0.0f, -moveVec.x * tilt_size };
 
 	// 不透明度を元に戻す
-	m_opacity = 1.0f;
+	m_opacity = max_opacity;
 
 	// エフェクトの設定
 	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
@@ -395,12 +432,12 @@ bool Player::UpdateGameOver()
 	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_boostEffectHandle);
 
 	// 移動ベクトル作成
-	m_moveVec = { 0.0f, -0.5f, 1.0f };
+	m_moveVec = game_over_move_vec;
 	m_moveVec = m_moveVec.Normalized();
 	m_moveVec *= 2.0f;
 
 	// プレイヤーを回転
-	m_rot += { 0, 0, MathUtil::ToRadian(5) };
+	m_rot += { 0, 0, MathUtil::ToRadian(game_over_rotate_angle) };
 
 	// 作成した移動ベクトルで座標の移動
 	m_pos = m_pos + m_moveVec;
@@ -408,12 +445,11 @@ bool Player::UpdateGameOver()
 
 	if (m_gameOverWaitFrame <= game_over_frame * 0.9)
 	{
-		static bool isPlay = false;
-		if (!isPlay)
+		if (!m_isGameOverSE)
 		{
 			// プレイヤーが死んだ音の再生
 			SoundManager::GetInstance().PlaySE("GameOver");
-			isPlay = true;
+			m_isGameOverSE = true;
 		}
 	}
 
@@ -527,17 +563,13 @@ void Player::OnDamage(const int damage)
 	// HPバーの値の設定
 	m_pHPbar->SetValue(m_hp);
 
-	static unsigned int count = 0;
-	count++;
-	if (count % 3 == 0)
+	if (m_onDamageSEWaitFrame++ % 3 == 0)
 	{
 		// ダメージ音の再生
 		auto& soundManager = SoundManager::GetInstance();
-	//	if (!soundManager.IsPlaySound("PlayerDamage"))
-		{
-			SoundManager::GetInstance().PlaySE("PlayerDamage");
-			count = 0;
-		}
+		SoundManager::GetInstance().PlaySE("PlayerDamage");
+
+		m_onDamageSEWaitFrame = 0;
 	}
 
 	// エフェクトの再生

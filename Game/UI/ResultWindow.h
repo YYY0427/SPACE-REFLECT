@@ -43,4 +43,6 @@ private:
 
 	// I—¹ƒtƒ‰ƒO
 	bool m_isEnd;
+
+	bool m_isOpenMenuSound;
 };

@@ -148,5 +148,7 @@ private:
 	// 説明ウィンドウ
 	Vector2 m_explanationWindowEasingTime;
 	Vector2 m_explanationWindowSize;	// ウィンドウのサイズ
+
+	bool m_isStartAnimSE;	
 };
 

@@ -16,6 +16,7 @@
 #include "../../../MyDebug/DebugText.h"
 #include "../../../Score/Score.h"
 #include "../../../ModelHandleManager.h"
+#include "../../../SoundManager.h"
 #include <random>
 #include <algorithm>
 #include <cmath>
@@ -139,7 +140,9 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 	m_movePointIndex(0),
 	m_isGoal(false),
 	m_cubeLaserIntervalFrame(cube_laser_interval_frame),
-	m_playerDirLerp(0)
+	m_playerDirLerp(0),
+	m_timer(0),
+	m_isExplosionSound(false)
 {
 	// 初期化
 	m_pPlayer         = pPlayer;
@@ -428,6 +431,12 @@ void BossMatrix::UpdateDie()
 				m_isEnabled = false;
 			}
 		}
+		if (m_timer++ >= 300 && !m_isExplosionSound)
+		{
+			SoundManager::GetInstance().PlaySE("BossExplosion");
+			m_isExplosionSound = true;
+		}
+
 		// エフェクトの位置の更新
 		Effekseer3DEffectManager::GetInstance().SetEffectPos(
 			m_dieEffectHandle, 
