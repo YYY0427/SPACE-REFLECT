@@ -74,11 +74,6 @@ public:
 	/// <param name="damage">ダメージ量</param>
 	void OnDamage(const int damage);
 
-	/// <summary>
-	/// シールドが反射した時の処理
-	/// </summary>
-	void OnReflect();
-
 
 	//// ゲッター ////
 

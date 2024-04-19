@@ -136,13 +136,6 @@ void Shield::Update()
 	int down = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::DOWN);
 	int right = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::RIGHT);
 	int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
-	if(up > 0 || down > 0 || right > 0 || left > 0)
-	{
-		if (m_isInput)
-		{
-			m_isMoveInput = true;
-		}
-	}
 
 	// シールドの位置の計算
 	Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
@@ -215,7 +208,7 @@ void Shield::Draw()
 }
 
 // 位置の取得
-Vector3 Shield::GetPos() const
+const Vector3& Shield::GetPos() const
 {
 	return m_pos;
 }
@@ -226,13 +219,8 @@ bool Shield::IsShield() const
 	return (m_enerugyGage > 0) && (m_isInput);
 }
 
-bool Shield::IsMoveInput() const
-{
-	return m_isMoveInput;
-}
-
 // シールドの頂点情報の取得
-std::array<VERTEX3D, 6> Shield::GetVertex() const
+const std::array<VERTEX3D, 6>& Shield::GetVertex() const
 {
 	return m_pImage->GetVertex();
 }

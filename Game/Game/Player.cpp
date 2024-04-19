@@ -80,6 +80,27 @@ namespace
 
 	// ゲームオーバー時のプレイヤーの移動ベクトル
 	const Vector3 game_over_move_vec = { 0.0f, -0.5f, 1.0f };
+
+	// ゲームオーバー時の移動速度
+	constexpr float game_over_move_speed = 2.0f;
+
+	// ゲームオーバー時にジングルを再生するまでのフレーム数
+	constexpr int game_over_jingle_frame = game_over_frame * 0.9;
+
+	// ゲームオーバー時の爆発エフェクトの拡大率
+	const Vector3 game_over_effect_scale = { 50.0f, 50.0f, 50.0f };
+
+	// ゲームオーバー時の爆発エフェクトの再生速度
+	constexpr float game_over_effect_speed = 0.5f;
+
+	// プレイヤーがダメージを受けたときに鳴らすSEのフレームの間隔
+	constexpr int on_damage_se_interval = 3;
+
+	// ダメージを受けたときのエフェクトの拡大率
+	const Vector3 damage_effect_scale = { 25.0f, 25.0f, 25.0f };
+
+	// ダメージを受けたときのエフェクトの再生速度	
+	constexpr float damage_effect_speed = 1.0f;
 }
 
 //  コンストラクタ
@@ -359,16 +380,20 @@ void Player::UpdatePlay(const float cameraHorizon)
 	// 0以下にはならない
 	m_ultimateTimer = (std::max)(--m_ultimateTimer, 0);
 
-	Vector3 moveVec = m_moveVec;
+	// カメラの移動範囲を超えている場合
+	Vector3 moveVec   = m_moveVec;
 	Vector3 moveSpeed = m_moveSpeed;
 	if (m_pCamera->IsOverMoveRangeX())
 	{
+		// 移動スピードを減らす
 		moveSpeed.x = m_moveSpeed.x * (1.0f - m_pCamera->GetCameraMoveRate());
 		moveVec.x /= moveSpeed.x;
 		moveVec.x *= m_moveSpeed.x;
 	}
+	// カメラの移動範囲を超えている場合
 	if (m_pCamera->IsOverMoveRangeY())
 	{
+		// 移動スピードを減らす
 		moveSpeed.y = m_moveSpeed.y * (1.0f - m_pCamera->GetCameraMoveRate());
 		moveVec.y /= moveSpeed.y;
 		moveVec.y *= m_moveSpeed.y;
@@ -434,7 +459,7 @@ bool Player::UpdateGameOver()
 	// 移動ベクトル作成
 	m_moveVec = game_over_move_vec;
 	m_moveVec = m_moveVec.Normalized();
-	m_moveVec *= 2.0f;
+	m_moveVec *= game_over_move_speed;
 
 	// プレイヤーを回転
 	m_rot += { 0, 0, MathUtil::ToRadian(game_over_rotate_angle) };
@@ -442,9 +467,10 @@ bool Player::UpdateGameOver()
 	// 作成した移動ベクトルで座標の移動
 	m_pos = m_pos + m_moveVec;
 
-
-	if (m_gameOverWaitFrame <= game_over_frame * 0.9)
+	// ゲームオーバー演出のフレーム数が一定数経過したら
+	if (m_gameOverWaitFrame <= game_over_jingle_frame)
 	{
+		// まだ再生していない場合
 		if (!m_isGameOverSE)
 		{
 			// プレイヤーが死んだ音の再生
@@ -453,6 +479,7 @@ bool Player::UpdateGameOver()
 		}
 	}
 
+	// 一定フレーム経過したら
 	if(m_gameOverWaitFrame-- <= 0)
 	{
 		// まだ再生していない場合
@@ -466,8 +493,8 @@ bool Player::UpdateGameOver()
 				m_playerDeadEffectHandle,
 				"PlayerDied",
 				m_pos,
-				{ 50.0f, 50.0f, 50.0f },
-				0.5f);
+				game_over_effect_scale,
+				game_over_effect_speed);
 
 			// 大きい爆発音の再生
 			SoundManager::GetInstance().PlaySE("NormalEnemyDie");
@@ -563,7 +590,7 @@ void Player::OnDamage(const int damage)
 	// HPバーの値の設定
 	m_pHPbar->SetValue(m_hp);
 
-	if (m_onDamageSEWaitFrame++ % 3 == 0)
+	if (m_onDamageSEWaitFrame++ % on_damage_se_interval == 0)
 	{
 		// ダメージ音の再生
 		auto& soundManager = SoundManager::GetInstance();
@@ -577,16 +604,8 @@ void Player::OnDamage(const int damage)
 		m_damageEffectHandle,
 		"EnemyAttackHitEffect",
 		{ m_pos.x, m_pos.y, m_pos.z },
-		{ 25.0f, 25.0f, 25.0f },
-		1.0f);
-}
-
-// シールドが反射した時の処理
-void Player::OnReflect()
-{
-	// レーザーが見えやすいように不透明度を下げる
-	m_opacity = 0.1f;
-	m_pModel->SetOpacity(m_opacity);	
+		damage_effect_scale,
+		damage_effect_speed);
 }
 
 // プレイヤーが生きているか

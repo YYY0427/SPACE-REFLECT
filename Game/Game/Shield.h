@@ -22,25 +22,41 @@ public:
 	/// <param name="player">プレイヤーの参照</param>
 	Shield(Player& player);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Shield();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 位置の取得
-	Vector3 GetPos() const;
 
-	// シールドを使用しているか
+	//// ゲッター ////
+
+	/// <summary>
+	/// シールドの位置の取得
+	/// </summary>
+	/// <returns>シールドの位置</returns>
+	const Vector3& GetPos() const;
+
+	/// <summary>
+	/// シールドを使用中かの取得
+	/// </summary>
+	/// <returns>シールドを使用中か</returns>
 	bool IsShield() const;
 
-	bool IsMoveInput() const;
-
-	// シールドの頂点情報の取得
-	std::array<VERTEX3D, 6> GetVertex() const;
+	/// <summary>
+	/// シールドの頂点情報の取得
+	/// </summary>
+	/// <returns>シールドの頂点情報</returns>
+	const std::array<VERTEX3D, 6>& GetVertex() const;
 
 private:
 	// ポインタ
@@ -76,6 +92,4 @@ private:
 
 	// アルファ値
 	int m_alpha;
-
-	bool m_isMoveInput = false;
 };
