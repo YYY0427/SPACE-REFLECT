@@ -72,7 +72,7 @@ void PlanetManager::Draw()
 }
 
 // タイプから惑星のポインタを取得
-const std::shared_ptr<Planet>& PlanetManager::GetPlanet(const PlanetType type) const
+const std::shared_ptr<Planet>& PlanetManager::GetPlanet(PlanetType type) const
 {
 	return m_planetData.at(type).pPlanet;
 }

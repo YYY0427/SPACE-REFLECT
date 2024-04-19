@@ -59,7 +59,7 @@ public:
 	/// </summary>
 	/// <param name="type">惑星の種類</param>
 	/// <returns>惑星のポインタ</returns>
-	const std::shared_ptr<Planet>& GetPlanet(const PlanetType type) const;
+	const std::shared_ptr<Planet>& GetPlanet(PlanetType type) const;
 
 private:
 	// 惑星のデータ
