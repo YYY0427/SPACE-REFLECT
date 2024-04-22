@@ -524,7 +524,7 @@
       <Filter>ソース ファイル\DataType</Filter>
     </ClInclude>
     <ClInclude Include="Game\Laser\ReflectLaser.h">
-      <Filter>ソース ファイル\Game</Filter>
+      <Filter>ソース ファイル\Game\Laser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

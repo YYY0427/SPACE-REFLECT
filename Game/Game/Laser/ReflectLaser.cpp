@@ -17,8 +17,10 @@ namespace
 	const Vector3 init_laser_effect_direction = { 0.0f, 0.0f, -1.0f };	// エフェクト
 
 	// 拡大率
-	const Vector3 model_scale  = { 1.0f, 0.1f, 0.1f };		// モデル
-	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
+	const Vector3 model_scale  = { 1.0f, 0.2f, 0.2f };		// モデル
+//	const Vector3 model_scale  = { 1.0f, 0.1f, 0.1f };		// モデル
+	const Vector3 effect_scale = { 70.0f, 70.0f, 40.0f };	// エフェクト
+//	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
 	// レーザーの移動速度
 	constexpr float move_speed = 35.0f;			
@@ -28,7 +30,7 @@ namespace
 
 	// エイムアシスト
 	constexpr float aim_assist_range = 3000.0f;	// エイムアシストの範囲
-	constexpr float aim_assist_power = 0.45f;	// エイムアシストの強さ(0.0～1.0)
+	constexpr float aim_assist_power = 1.0f;	// エイムアシストの強さ(0.0～1.0)
 }
 
 // コンストラクタ
@@ -94,29 +96,30 @@ void ReflectLaser::Update()
 	}
 
 	// レーザーが向いている方向と近い敵を探す
-	Vector3 enemyPos{};
-	for (auto& enemy : m_pEnemyManager->GetEnemyList())
+	Vector3 enemyPos{};	
+	if (!m_pEnemyManager->GetEnemyList().empty())
 	{
-		// 敵が有効なら
-		if (enemy->IsEnabled())
+		enemyPos = m_pEnemyManager->GetEnemyList().front()->GetPos();
+		float minDistance = enemyPos.Distance(m_directionPos);
+
+		for (auto& enemy : m_pEnemyManager->GetEnemyList())
 		{
-			// 最初の敵の座標を取得
-			if (enemyPos.Length() == 0)
+			// 敵が有効なら
+			if (enemy->IsEnabled())
 			{
-				enemyPos = enemy->GetPos();
-			}
+				// 敵とレーザーの向いている方向との距離を比較
+				float distance = enemy->GetPos().Distance(m_directionPos);
 
-			// 敵とレーザーの向いている方向との距離を比較
-			Vector3 enemyToDirectionVec  = m_directionPos - enemy->GetPos();
-			Vector3 enemyToDirectionVec2 = m_directionPos - enemyPos;
-
-			// より近い敵の座標を取得
-			if (enemyToDirectionVec.Length() > enemyToDirectionVec2.Length())
-			{
-				enemyPos = enemy->GetPos();
+				// より近い敵の座標を取得
+				if (distance < minDistance)
+				{
+					enemyPos = enemy->GetPos();
+					minDistance = distance;
+				}
 			}
 		}
 	}
+
 	// ボスが生存しているなら
 	if (m_pEnemyManager->IsBossAlive())
 	{
