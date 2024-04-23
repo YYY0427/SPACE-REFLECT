@@ -379,7 +379,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 	m_rot = { MathUtil::ToRadian(tilt_angle) + (-moveVec.y * tilt_size), 0.0f, -moveVec.x * tilt_size };
 
 	// 不透明度を元に戻す
-	m_opacity = max_opacity;
+//	m_opacity = max_opacity;
 
 	// エフェクトの設定
 	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
@@ -587,6 +587,18 @@ void Player::OnReflect()
 	// レーザーが見えやすいように不透明度を下げる
 	m_opacity = 0.1f;
 	m_pModel->SetOpacity(m_opacity);	
+}
+
+// プレイヤーを徐々に透明にする
+void Player::FadeOut()
+{
+	// 不透明度を下げる
+	m_opacity -= 0.01f;
+	m_opacity = (std::max)(m_opacity, 0.0f);
+
+	// モデルの設定
+	m_pModel->SetOpacity(m_opacity);	// 不透明度
+	m_pModel->Update();					// 更新
 }
 
 // プレイヤーが生きているか

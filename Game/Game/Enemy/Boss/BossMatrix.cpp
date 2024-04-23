@@ -399,6 +399,9 @@ void BossMatrix::UpdateDie()
 	// フラッシュの更新
 	m_pFlash->Update(0xffffff);
 
+	// 徐々にプレイヤーを透明にする
+//	m_pPlayer->FadeOut();
+
 	// 特定のフレームが経過したら演出開始
 	if (m_dieIdleFrame-- <= 0)
 	{

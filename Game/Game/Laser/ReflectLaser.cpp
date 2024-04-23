@@ -30,7 +30,7 @@ namespace
 
 	// エイムアシスト
 	constexpr float aim_assist_range = 3000.0f;	// エイムアシストの範囲
-	constexpr float aim_assist_power = 1.0f;	// エイムアシストの強さ(0.0～1.0)
+	constexpr float aim_assist_power = 0.45;	// エイムアシストの強さ(0.0～1.0)
 }
 
 // コンストラクタ

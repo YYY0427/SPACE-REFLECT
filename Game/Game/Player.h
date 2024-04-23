@@ -21,7 +21,10 @@ class Camera;
 class Player
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="objectDataFileName">オブジェクトデータのファイル名</param>
 	Player(const std::string& objectDataFileName);
 
 	/// <summary>
@@ -78,6 +81,11 @@ public:
 	/// シールドが反射した時の処理
 	/// </summary>
 	void OnReflect();
+
+	/// <summary>
+	/// プレイヤーを徐々に透明にする
+	/// </summary>
+	void FadeOut();
 
 
 	//// ゲッター ////
