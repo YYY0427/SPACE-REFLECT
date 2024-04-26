@@ -53,10 +53,10 @@ namespace
 	constexpr float player_distance = 100.0f;
 
 	// エネルギーの回復速度
-	constexpr int energy_recovery_speed = 2;
+	constexpr int energy_recovery_speed = 3;
 
 	// エネルギーの減る速度
-	constexpr int energy_decrease_speed = 1;
+	constexpr int energy_decrease_speed = 2;
 
 	// シールドの拡縮の速度
 	constexpr float scale_speed = 0.1f;

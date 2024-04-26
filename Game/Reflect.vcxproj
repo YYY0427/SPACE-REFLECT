@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Scene\ConfirmScene.cpp" />
     <ClCompile Include="Util\FlagManager.cpp" />
     <ClCompile Include="ModelHandleManager.cpp" />
     <ClCompile Include="Scene\PuseScene.cpp" />
@@ -221,6 +222,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Scene\ConfirmScene.h" />
     <ClInclude Include="DataType\PlayerParamDataType.h" />
     <ClInclude Include="DataType\EffectDataType.h" />
     <ClInclude Include="Util\FlagManager.h" />

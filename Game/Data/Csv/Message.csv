@@ -56,3 +56,12 @@ TutorialConditions,達成条件：生き残る,マキナス 4 Square,20,9
 EarthMissionName,地球奪還作戦,マキナス 4 Square,25,9
 EarthDifficulty,敵脅威度：中度,マキナス 4 Square,20,9
 EarthConditions,達成条件：ボスの撃破,マキナス 4 Square,20,9
+PauseMenu,PAUSE,マキナス 4 Square,50,5
+PauseContinue,つづける,マキナス 4 Square,20,9
+PauseTitle,タイトルに戻る,マキナス 4 Square,20,9
+PauseStageSelect,ステージ選択に戻る,マキナス 4 Square,20,9
+PauseOption,オプション,マキナス 4 Square,20,9
+PauseOptionTitle,OPTION,マキナス 4 Square,50,9
+ConfirmBack,本当に戻りますか?,マキナス 4 Square,30,9
+ConfirmYes,はい,マキナス 4 Square,20,9
+ConfirmNo,いいえ,マキナス 4 Square,20,9

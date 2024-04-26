@@ -249,7 +249,7 @@ void Stage1::UpdateGameOver()
 	}
 
 	// デバッグテキストの追加
-	DebugText::Log("GameOver");
+	DebugText::AddLog("GameOver");
 }
 
 // リザルトの更新

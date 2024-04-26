@@ -2,6 +2,12 @@
 #include "SceneBase.h"
 #include "../Application.h"
 
+namespace
+{
+	// FPSの表示を更新する間隔(フレーム数)
+	constexpr int fps_update_interval = 10;
+}
+
 // コンストラクタ
 SceneManager::SceneManager() :
 	m_updateTime(0),
@@ -71,7 +77,7 @@ void SceneManager::Draw()
 
 	// fpsを描画
 	static int count = 0;
-	if (count++ % 5 == 0)
+	if (count++ % fps_update_interval == 0)
 	{
 		m_prevFps = nowFps;
 	}

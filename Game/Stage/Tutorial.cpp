@@ -198,7 +198,7 @@ void Tutorial::UpdateShieldTutorial()
 	}
 
 	// デバッグテキストの追加
-	DebugText::Log("ShieldTutorial");
+	DebugText::AddLog("ShieldTutorial");
 }
 
 // 反射チュートリアルの更新
@@ -239,7 +239,7 @@ void Tutorial::UpdateReflectTutorial()
 		}
 	}
 	// デバッグテキストの描画
-	DebugText::Log("ReflectTutorial");
+	DebugText::AddLog("ReflectTutorial");
 }
 
 // キューブチュートリアルの更新
@@ -283,7 +283,7 @@ void Tutorial::UpdateCubeTutorial()
 	}
 
 	// デバッグテキストの追加
-	DebugText::Log("CubeTutorial");
+	DebugText::AddLog("CubeTutorial");
 }
 
 // プレイ中の更新
@@ -377,7 +377,7 @@ void Tutorial::UpdateGameOver()
 	}
 
 	// デバッグテキストの追加
-	DebugText::Log("GameOver");
+	DebugText::AddLog("GameOver");
 }
 
 // スタートアニメーションの開始

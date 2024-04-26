@@ -178,7 +178,7 @@ void EnemyManager::Draw()
 		auto itr = m_pEnemyList.begin();
 		std::advance(itr, i);
 
-		DebugText::Log("NormalEnemyPos", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
+		DebugText::AddLog("NormalEnemyPos", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
 	}
 }
 

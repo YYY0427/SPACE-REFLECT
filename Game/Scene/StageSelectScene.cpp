@@ -176,8 +176,8 @@ void StageSelectScene::EnterStartAnimation()
 void StageSelectScene::Update()
 {
 	// デバッグテキスト
-	DebugText::Log("easeTime", { m_easeTime });
-	DebugText::Log("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
+	DebugText::AddLog("easeTime", { m_easeTime });
+	DebugText::AddLog("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
 
 	// フェードの更新
 	m_pFade->Update();

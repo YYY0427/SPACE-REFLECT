@@ -63,7 +63,7 @@ public:
 	/// ƒƒO‚Ì’Ç‰Á(•¶š‚Ì‚İ)
 	/// </summary>
 	/// <param name="string">o—Í‚·‚é•¶š—ñ</param>
-	static void Log(const std::string& string);
+	static void AddLog(const std::string& string);
 
 	/// <summary>
 	/// ƒƒO‚Ì’Ç‰Á(•¶š‚Æ”š)
@@ -72,7 +72,7 @@ public:
 	/// <typeparam name="N">•Ï”‚Ì”</typeparam>
 	/// <param name="string">•¶š—ñ</param>
 	template <typename T, size_t N>
-	static void Log(const std::string& string, const T(&array)[N])
+	static void AddLog(const std::string& string, const T(&array)[N])
 	{
 #ifdef _DEBUG
 		// •¶š—ñ‚ğì¬

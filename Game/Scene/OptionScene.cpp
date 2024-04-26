@@ -44,7 +44,8 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	m_currentSelectItem(0),
 	m_soundIconHandle(-1),
 	m_lbButtonImgHandle(-1),
-	m_rbButtonImgHandle(-1)
+	m_rbButtonImgHandle(-1),
+	m_gaussScreen(-1)
 {
 	// 画像のロード
 	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
@@ -58,6 +59,10 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	m_drawStateMachine.AddState(State::PAUSE, {}, [this] { DrawPause(); }, {});
 	m_updateStateMachine.SetState(state);
 	m_drawStateMachine.SetState(state);
+
+	// モザイク処理用のグラフィックの作成
+	const auto& size = Application::GetInstance().GetWindowSize();
+	m_gaussScreen = MakeScreen(size.width, size.height);
 
 	// 項目の描画色を選択されていないときの色に初期化
 	for (int i = 0; i < static_cast<int>(OptionItem::NUM); i++)
@@ -157,14 +162,14 @@ void OptionScene::UpdatePause()
 // 描画
 void OptionScene::Draw()
 {
+	// ステートマシンの更新
+	m_drawStateMachine.Update();
+
 	// ウィンドウサイズの取得
 	const auto& size = Application::GetInstance().GetWindowSize();
 
 	// インスタンスの取得
 	auto& messageManager = MessageManager::GetInstance();
-
-	// 背景色の描画
-	DrawBox(0, 0, size.width, size.height, 0x222222, true);
 
 	// 項目の描画
 	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
@@ -226,17 +231,17 @@ void OptionScene::Draw()
 	}
 	// 描画輝度をもとに戻す
 	SetDrawBright(255, 255, 255);
-
-	// ステートマシンの更新
-	m_drawStateMachine.Update();
 }
 
 // ステージセレクトの描画
 void OptionScene::DrawStageSelect()
 {
+	// 背景の描画
+	auto& screenSize = Application::GetInstance().GetWindowSize();
+	DrawBox(0, 0, screenSize.width, screenSize.height, 0x222222, true);
+
 	// ステージセレクトタイトルの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
-	auto& screenSize = Application::GetInstance().GetWindowSize();
 	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
 	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
 
@@ -259,10 +264,18 @@ void OptionScene::DrawStageSelect()
 // ポーズの描画
 void OptionScene::DrawPause()
 {
-	// ウィンドウサイズの取得
+	// モザイク処理
 	const auto& size = Application::GetInstance().GetWindowSize();
+	GetDrawScreenGraph(0, 0, size.width, size.height, m_gaussScreen);
+	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, 8, 600);
+	DrawGraph(0, 0, m_gaussScreen, true);
+
+	// 画面を暗くする
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+	DrawBox(0, 0, size.width, size.height, 0x000000, true);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// シーンタイトルの描画
 	auto& messageManager = MessageManager::GetInstance();
-	messageManager.DrawStringCenter("OptionTitle", size.width / 2, 100, 0xffffff);
+	messageManager.DrawStringCenter("PauseOptionTitle", size.width / 2, 100, 0xffffff);
 }

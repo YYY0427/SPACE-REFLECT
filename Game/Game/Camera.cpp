@@ -134,8 +134,8 @@ void Camera::UpdatePlay(const Vector3& playerPos, const Vector3& playerVec)
 	SetCamera();
 
 	// デバッグログの追加
-	DebugText::Log("CameraPos",    { m_pos.x, m_pos.y, m_pos.z });
-	DebugText::Log("CameraTarget", { m_target.x, m_target.y, m_target.z });
+	DebugText::AddLog("CameraPos",    { m_pos.x, m_pos.y, m_pos.z });
+	DebugText::AddLog("CameraTarget", { m_target.x, m_target.y, m_target.z });
 }
 
 // スタート演出時の更新

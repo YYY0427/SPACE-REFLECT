@@ -7,6 +7,7 @@
 #include "../Transitor/FadeTransitor.h"
 #include "../Transitor/TileTransitor.h"
 #include "../Scene/SceneManager.h"
+#include "../Scene/PuseScene.h"
 
 // コンストラクタ
 GameScene::GameScene(SceneManager& manager, Stage stage) :
@@ -39,7 +40,8 @@ void GameScene::Update()
 	// ポーズ
 	if (InputState::IsTriggered(InputType::PAUSE))
 	{
-		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::PAUSE));
+	//	m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::PAUSE));
+		m_manager.PushScene(std::make_shared<PuseScene>(m_manager, m_stage));
 		return;
 	}
 }

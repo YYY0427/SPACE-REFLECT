@@ -289,7 +289,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 		// プレイヤーのスピードを掛ける
 		m_moveVec = m_moveVec * moveSpeed;
 
-		DebugText::Log("PlayerMoveSpeed", { moveSpeed.x, moveSpeed.y, moveSpeed.z });
+		DebugText::AddLog("PlayerMoveSpeed", { moveSpeed.x, moveSpeed.y, moveSpeed.z });
 	}
 
 	// 作成した移動ベクトルで座標の移動
@@ -505,7 +505,7 @@ void Player::Draw()
 		DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 8, 0xff0000, 0xff0000, false);
 
 		// プレイヤーの位置情報の描画
-		DebugText::Log("PlayerPos", { m_pos.x, m_pos.y, m_pos.z});
+		DebugText::AddLog("PlayerPos", { m_pos.x, m_pos.y, m_pos.z});
 #endif 
 	}
 }

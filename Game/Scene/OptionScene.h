@@ -55,6 +55,9 @@ private:
 	// 選択中の項目
 	int m_currentSelectItem;
 
+	// モザイク処理用スクリーン
+	int m_gaussScreen;
+
 	// 画像ハンドル
 	int m_soundIconHandle;
 	int m_rbButtonImgHandle;

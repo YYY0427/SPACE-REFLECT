@@ -287,6 +287,9 @@
     <ClCompile Include="Util\FlagManager.cpp">
       <Filter>ソース ファイル\Util</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\ConfirmScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -525,6 +528,9 @@
     </ClInclude>
     <ClInclude Include="Game\Laser\ReflectLaser.h">
       <Filter>ソース ファイル\Game\Laser</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ConfirmScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

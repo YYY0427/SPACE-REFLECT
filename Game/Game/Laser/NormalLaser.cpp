@@ -326,7 +326,7 @@ void NormalLaser::Draw()
 //	m_pModel->Draw();
 	SetUseLighting(true);
 
-	DebugText::Log("LaserDirectionPos", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
+	DebugText::AddLog("LaserDirectionPos", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
 #endif 
 }
 

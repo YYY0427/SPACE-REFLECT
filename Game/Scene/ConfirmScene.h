@@ -1,53 +1,53 @@
 #pragma once
 #include "SceneBase.h"
-#include "StageSelectScene.h"
+#include "PuseScene.h"
 
 /// <summary>
-/// ポーズシーン
+/// 確認画面
 /// </summary>
-class PuseScene final :  public SceneBase
+class ConfirmScene : public SceneBase
 {
 public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャ</param>
-	PuseScene(SceneManager& manager, Stage stage);
-
+	/// <param name="state">ポーズシーンの状態</param>
+	ConfirmScene(SceneManager& manager, PuseScene::State state);
+	
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
-	~PuseScene();
-
+	~ConfirmScene();
+	
 	/// <summary>
 	/// 更新
 	/// </summary>
 	void Update() override final;
-
+	
 	/// <summary>
 	/// 描画
 	/// </summary>
 	void Draw() override final;
 
-	// ポーズの状態
+private:
+	// 確認の状態
 	enum class State
 	{
-		CONTINUE,		// 続ける
-		OPTION,			// オプション
-		STAGE_SELECT,	// ステージセレクト
-		TITLE,			// タイトル
-		NUM				// 状態数
+		YES,	// はい
+		NO,		// いいえ
+		NUM		// 状態数
 	};
 
 private:
-	// 現在の状態
-	int m_currentSelectItem;
-
 	// 項目の描画色データ
-	std::vector<int> m_itemColorTable;
+	std::vector<unsigned int> m_itemColorTable;	
 
-	// 現在のステージ
-	Stage m_stage;
+	// 現在の選択項目
+	int m_currentSelectItem;	
+
+	// どこに戻るのかを確認するポーズシーンの状態
+	PuseScene::State m_state;
 
 	// モザイク処理用スクリーン
 	int m_gaussScreen;

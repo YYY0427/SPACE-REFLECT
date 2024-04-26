@@ -68,7 +68,7 @@ void DebugText::Draw()
 }
 
 // ログの追加
-void DebugText::Log(const std::string& string)
+void DebugText::AddLog(const std::string& string)
 {
 #ifdef _DEBUG
 	// ログのリストに追加

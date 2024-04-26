@@ -240,7 +240,7 @@ void BossMatrix::Draw()
 	if (m_isEnabled)
 	{
 		// デバッグログの追加
-		DebugText::Log("BossMatrixPos", { m_pos.x, m_pos.y, m_pos.z});
+		DebugText::AddLog("BossMatrixPos", { m_pos.x, m_pos.y, m_pos.z});
 
 		// モデルの描画
 		m_pModel->Draw();
