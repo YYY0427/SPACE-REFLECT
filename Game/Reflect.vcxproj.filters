@@ -60,9 +60,6 @@
     <Filter Include="ソース ファイル\DataType">
       <UniqueIdentifier>{ea788350-b728-447b-8c3f-6721625f17d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Stage\StageData">
-      <UniqueIdentifier>{db218240-f0f1-4101-a425-69c8b4109e87}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -534,9 +531,6 @@
     </ClInclude>
     <ClInclude Include="Scene\ConfirmScene.h">
       <Filter>ソース ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="TutorialData.h">
-      <Filter>ソース ファイル\Stage\StageData</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

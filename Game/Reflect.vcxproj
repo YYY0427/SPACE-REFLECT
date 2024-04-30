@@ -225,7 +225,6 @@
     <ClInclude Include="Scene\ConfirmScene.h" />
     <ClInclude Include="DataType\PlayerParamDataType.h" />
     <ClInclude Include="DataType\EffectDataType.h" />
-    <ClInclude Include="TutorialData.h" />
     <ClInclude Include="Util\FlagManager.h" />
     <ClInclude Include="ModelHandleManager.h" />
     <ClInclude Include="Scene\PuseScene.h" />

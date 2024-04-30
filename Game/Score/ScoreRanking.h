@@ -28,28 +28,60 @@ struct StageScore
 class ScoreRanking
 {
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ScoreRanking();
 
-	// ファイルからスコアの読み込み
+	/// <summary>
+	/// ファイルからスコアの読み込み 
+	/// </summary>
 	void LoadScore();
 
-	// スコアのデータをバイナリファイルに保存する
+	/// <summary>
+	/// スコアのデータをバイナリファイルに保存する 
+	/// </summary>
 	void SaveScore();
 
-	// 新規作成
-	void CreateNewScoreData(const std::string& stageName, std::string playerName = "", int score = 0);
+	/// <summary>
+	/// スコアデータを新規作成
+	/// </summary>
+	/// <param name="stageName">ステージ名</param>
+	/// <param name="playerName">プレイヤー名</param>
+	/// <param name="score">スコア</param>
+	void CreateNewScoreData(const std::string& stageName, const std::string& playerName = "", const int score = 0);
 
-	// スコアのデータを追加
-	void AddScore(const std::string& stageName, const char* playerName, int score);
+	/// <summary>
+	/// スコアデータの追加
+	/// </summary>
+	/// <param name="stageName">ステージ名</param>
+	/// <param name="playerName">プレイヤー名</param>
+	/// <param name="score">スコア</param>
+	void AddScore(const std::string& stageName, const char* playerName, const int score);
 
-	// ゲッター
-	static ScoreRanking& GetInstance();					 // インスタンスの取得
-	const std::vector<StageScore>& GetScoreData() const; // スコアデータの取得
-	std::vector<ScoreSaveData> GetScoreData(const std::string& stageName) const;		 // スコアデータの取得
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns>ScoreRankingのインスタンス</returns>
+	static ScoreRanking& GetInstance();					 
+
+	/// <summary>
+	/// スコアデータテーブルの取得
+	/// </summary>
+	/// <returns>スコアデータテーブル</returns>
+	const std::vector<StageScore>& GetScoreData() const; 
+
+	/// <summary>
+	/// ステージ名からスコアデータを取得
+	/// </summary>
+	/// <param name="stageName">ステージ名</param>
+	/// <returns>スコアデータ</returns>
+	std::vector<ScoreSaveData> GetScoreData(const std::string& stageName) const;		 
 
 private:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	ScoreRanking();
 
 	// コピー、代入禁止

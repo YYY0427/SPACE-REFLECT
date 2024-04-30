@@ -9,7 +9,7 @@ Vector2::Vector2() :
 }
 
 // コンストラクタ
-Vector2::Vector2(float x, float y):
+Vector2::Vector2(const float x, const float y):
 	x(x),
 	y(y)
 {
@@ -30,26 +30,26 @@ void Vector2::operator-=(const Vector2& rval)
 }
 
 // Vec2 = Vec2 * float
-Vector2 Vector2::operator*(float scale) const
+Vector2 Vector2::operator*(const float scale) const
 {
 	return { x * scale, y * scale };
 }
 
 // Vec2 = Vec2 / float
-Vector2 Vector2::operator/(float div) const
+Vector2 Vector2::operator/(const float div) const
 {
 	return { x / div, y / div };
 }
 
 // Vec2 = (Vec2 *= float)
-void Vector2::operator*=(float scale)
+void Vector2::operator*=(const float scale)
 {
 	x *= scale;
 	y *= scale;
 }
 
 // Vec2 = (Vec2 /= float)
-void Vector2::operator/=(float div)
+void Vector2::operator/=(const float div)
 {
 	x /= div;
 	y /= div;

@@ -112,8 +112,8 @@ void ScoreRanking::SaveScore()
 	}
 }
 
-// 新規作成
-void ScoreRanking::CreateNewScoreData(const std::string& stageName, std::string playerName, int score)
+// スコアデータの新規作成
+void ScoreRanking::CreateNewScoreData(const std::string& stageName, const std::string& playerName, const int score)
 {
 	// ステージのスコアがない場合は追加
 	for (auto& stageScore : m_scoreSaveData)
@@ -158,7 +158,7 @@ void ScoreRanking::CreateNewScoreData(const std::string& stageName, std::string 
 }
 
 // スコアのデータを追加
-void ScoreRanking::AddScore(const std::string& stageName, const char* playerName, int score)
+void ScoreRanking::AddScore(const std::string& stageName, const char* playerName, const int score)
 {
 	// ステージのスコアがない場合は追加
 	for (auto& stageScore : m_scoreSaveData)
@@ -197,13 +197,13 @@ ScoreRanking& ScoreRanking::GetInstance()
 	return instance;
 }
 
-// スコアデータの取得
+// スコアデータテーブルの取得
 const std::vector<StageScore>& ScoreRanking::GetScoreData() const
 {
 	return m_scoreSaveData;
 }
 
-// スコアデータの取得
+// ステージ名からスコアデータを取得
 std::vector<ScoreSaveData> ScoreRanking::GetScoreData(const std::string& stageName) const
 {
 	// ステージ名が一致するものを返す

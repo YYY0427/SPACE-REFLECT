@@ -26,7 +26,7 @@ Score::~Score()
 }
 
 // スコアの加算
-void Score::AddScore(ScoreType type)
+void Score::AddScore(const ScoreType type)
 {
 	switch (type)
 	{
@@ -76,7 +76,7 @@ Score& Score::GetInstance()
 }
 
 // スコアの取得
-int Score::GetScore(ScoreType type) const
+int Score::GetScore(const ScoreType type) const
 {
 	return m_score[static_cast<int>(type)];
 }

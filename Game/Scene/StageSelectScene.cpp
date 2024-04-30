@@ -311,7 +311,7 @@ void StageSelectScene::UpdateSelectStage()
 void StageSelectScene::UpdateStartAnimation()
 {
 	// UI全体のアルファ値を下げる
-	m_uiAlpha -= 10.0f;
+	m_uiAlpha -= 10;
 
 	// 惑星の更新
 	m_pPlanetManager->UpdateStageSelect();

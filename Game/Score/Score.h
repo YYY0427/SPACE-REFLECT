@@ -17,30 +17,55 @@ enum class ScoreType
 };
 
 /// <summary>
-/// スコアクラス
+/// スコアを管理するシングルトンクラス
 /// </summary>
 class Score
 {
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Score();
 
-	// スコアの加算
-	void AddScore(ScoreType type);
+	/// <summary>
+	/// スコアの追加
+	/// </summary>
+	/// <param name="type">スコアの種類</param>
+	void AddScore(const ScoreType type);
 
-	// スコアの描画
+	/// <summary>
+	/// スコアの描画
+	/// </summary>
 	void DrawScore();
 
-	// ゲッター
-	static Score& GetInstance();		// インスタンスの取得
-	int GetScore(ScoreType type) const;	// スコアの取得
-	int GetTotalScore() const;			// 合計スコアの取得
+	/// <summary>
+	/// インスタンスの取得
+	/// </summary>
+	/// <returns>Scoreクラスのインスタンス</returns>
+	static Score& GetInstance(); 
 
-	// リセット
+	/// <summary>
+	/// スコアの取得
+	/// </summary>
+	/// <param name="type">スコアの種類</param>
+	/// <returns>スコア</returns>
+	int GetScore(const ScoreType type) const;	
+
+	/// <summary>
+	/// 合計スコアの取得
+	/// </summary>
+	/// <returns>合計スコア</returns>
+	int GetTotalScore() const;			
+
+	/// <summary>
+	/// スコアのリセット
+	/// </summary>
 	void Reset();
 
 private:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Score();
 
 	// コピー、代入禁止
