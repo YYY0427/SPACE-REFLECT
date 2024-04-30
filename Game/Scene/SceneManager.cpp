@@ -101,7 +101,7 @@ void SceneManager::ChangeScene(std::shared_ptr<SceneBase> nextScene)
 	}
 }
 
-// 
+// シーンの切り替えと前のシーンを削除
 void SceneManager::ChangeAndClearScene(std::shared_ptr<SceneBase> nextScene)
 {
 	// シーンの全削除

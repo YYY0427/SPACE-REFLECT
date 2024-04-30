@@ -34,8 +34,8 @@ private:
 	// Šm”F‚Ìó‘Ô
 	enum class State
 	{
-		YES,	// ‚Í‚¢
 		NO,		// ‚¢‚¢‚¦
+		YES,	// ‚Í‚¢
 		NUM		// ó‘Ô”
 	};
 

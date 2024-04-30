@@ -49,10 +49,13 @@ StageBase::~StageBase()
 {
 	// ライトの削除
 	DeleteLightHandle(m_directionalLightHandle);
+
 	// すべてのUIを削除
 	UIManager::GetInstance().DeleteAllUI();
+
 	// エフェクトの全削除
 	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
+
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
 }
