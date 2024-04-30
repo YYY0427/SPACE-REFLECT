@@ -12,12 +12,22 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャ</param>
-	PuseScene(SceneManager& manager, Stage stage);
+	PuseScene(SceneManager& manager, const Stage stage);
 
 	/// <summary>
 	/// デストラクタ
 	/// </summary>
 	~PuseScene();
+
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init() override final;
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void End() override final;
 
 	/// <summary>
 	/// 更新

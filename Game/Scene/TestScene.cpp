@@ -22,13 +22,23 @@ namespace
 TestScene::TestScene(SceneManager& manager) :
 	SceneBase(manager)
 {
+}
+
+// デストラクタ
+TestScene::~TestScene()
+{
+}
+
+// 初期化
+void TestScene::Init()
+{
 	// 画面切り替え演出の設定
 	m_pTransitor = std::make_unique<StripTransitor>();
 	m_pTransitor->Start();
 }
 
-// デストラクタ
-TestScene::~TestScene()
+// 終了処理
+void TestScene::End()
 {
 }
 

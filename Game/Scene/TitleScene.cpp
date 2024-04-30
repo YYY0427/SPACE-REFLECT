@@ -39,7 +39,18 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_alpha(200),
 	m_frame(0),
 	m_isInput(false),
-	m_alphaAdd(string_alpha_add)
+	m_alphaAdd(string_alpha_add),
+	m_gaussHandle(-1)
+{
+}
+
+// デストラクタ
+TitleScene::~TitleScene()
+{
+}
+
+// 初期化
+void TitleScene::Init()
 {
 	// フェードインの演出
 	m_pFade = std::make_unique<Fade>();
@@ -63,8 +74,8 @@ TitleScene::TitleScene(SceneManager& manager) :
 	m_gaussHandle = MakeScreen(size.width, size.height);
 }
 
-// デストラクタ
-TitleScene::~TitleScene()
+// 終了処理
+void TitleScene::End()
 {
 }
 
@@ -197,7 +208,7 @@ void TitleScene::Draw()
 }
 
 // レーザーの描画
-void TitleScene::SetLaser(Vector2 pos1, Vector2 pos2, unsigned int color)
+void TitleScene::SetLaser(const Vector2& pos1, const Vector2& pos2, const unsigned int color)
 {
 	for (int i = 0; i < 10; i++)
 	{

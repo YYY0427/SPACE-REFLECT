@@ -13,7 +13,9 @@ Matrix::Matrix()
 }
 
 // コンストラクタ
-Matrix::Matrix(float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33)
+Matrix::Matrix(const float m00, const float m01, const float m02, const float m03, const float m10, 
+			   const float m11, const float m12, const float m13, const float m20, const float m21, 
+			   const float m22, const float m23, const float m30, const float m31, const float m32, const float m33)
 {
 	// 行列の初期化
 	m[0][0] = m00; m[0][1] = m01; m[0][2] = m02; m[0][3] = m03;
@@ -47,7 +49,7 @@ Matrix Matrix::operator*=(const Matrix& rval)
 }
 
 // 行列のスカラー倍
-Matrix Matrix::operator*(float scale) const
+Matrix Matrix::operator*(const float scale) const
 {
 	Matrix result;
 
@@ -61,14 +63,14 @@ Matrix Matrix::operator*(float scale) const
 }
 
 // 行列のスカラー倍
-Matrix Matrix::operator*=(float scale)
+Matrix Matrix::operator*=(const float scale)
 {
 	Matrix result;
 	return result = *this * scale;
 }
 
 // 行列のスカラー除算
-Matrix Matrix::operator/(float div) const
+Matrix Matrix::operator/(const float div) const
 {
 	Matrix result;
 
@@ -82,7 +84,7 @@ Matrix Matrix::operator/(float div) const
 }
 
 // 行列のスカラー除算
-Matrix Matrix::operator/=(float div)
+Matrix Matrix::operator/=(const float div)
 {
 	Matrix result;
 	return result = *this / div;
@@ -191,7 +193,7 @@ Matrix Matrix::GetScale(const Vector3& v)
 }
 
 // X軸回転行列の取得
-Matrix Matrix::GetRotationX(float angle)
+Matrix Matrix::GetRotationX(const float angle)
 {
 	//// x軸回転行列を取得する
 	//Matrix result;
@@ -212,7 +214,7 @@ Matrix Matrix::GetRotationX(float angle)
 }
 
 // Y軸回転行列の取得
-Matrix Matrix::GetRotationY(float angle)
+Matrix Matrix::GetRotationY(const float angle)
 {
 	//// y軸回転行列を取得する
 	//Matrix result;
@@ -233,7 +235,7 @@ Matrix Matrix::GetRotationY(float angle)
 }
 
 // Z軸回転行列の取得
-Matrix Matrix::GetRotationZ(float angle)
+Matrix Matrix::GetRotationZ(const float angle)
 {
 	//// z軸回転行列を取得する
 	//Matrix result;

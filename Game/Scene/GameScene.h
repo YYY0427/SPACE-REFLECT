@@ -17,15 +17,31 @@ public:
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
 	/// <param name="fileName">どのステージか</param>
-	GameScene(SceneManager& manager, Stage stage);
+	GameScene(SceneManager& manager, const Stage stage);
 	
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~GameScene();
 	
-	// 更新
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init() override final;
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void End() override final;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 	
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
 private:

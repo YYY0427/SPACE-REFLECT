@@ -21,19 +21,51 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
-	OptionScene(SceneManager& manager, State state);
+	OptionScene(SceneManager& manager, const State state);
 	
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~OptionScene();
 	
-	// 更新
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init() override final;
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void End() override final;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
+
+	/// <summary>
+	/// ステージセレクト時のオプションの更新
+	/// </summary>
 	void UpdateStageSelect();
+
+	/// <summary>
+	/// ポーズ時のオプションの更新
+	/// </summary>
 	void UpdatePause();
 	
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
+
+	/// <summary>
+	/// ステージセレクト時のオプションの描画
+	/// </summary>
 	void DrawStageSelect();
+
+	/// <summary>
+	/// ポーズ時のオプションの描画
+	/// </summary>
 	void DrawPause();
 
 private:
@@ -51,6 +83,9 @@ private:
 	// ステートマシン
 	StateMachine<State> m_updateStateMachine;
 	StateMachine<State> m_drawStateMachine;
+
+	// どのシーンから遷移してきたか
+	State m_state;
 
 	// 選択中の項目
 	int m_currentSelectItem;

@@ -14,13 +14,29 @@ public:
 	 /// <param name="manager">シーンマネージャーの参照</param>
 	 DebugScene(SceneManager& manager);
 	 
-	 // デストラクタ
+	 /// <summary>
+	 /// デストラクタ
+	 /// </summary>
 	 ~DebugScene();
 	 
-	 // 更新
+	 /// <summary>
+	 /// 初期化
+	 /// </summary>
+	 void Init()  override final;
+
+	 /// <summary>
+	 /// 終了処理
+	 /// </summary>
+	 void End() override final;
+
+	 /// <summary>
+	 /// 更新
+	 /// </summary>
 	 void Update() override final;
 	 
-	 // 描画
+	 /// <summary>
+	 /// 描画
+	 /// </summary>
 	 void Draw() override final;
 
 private:
@@ -31,7 +47,6 @@ private:
 		STAGE_SELECT,	// ステージセレクト
 		PAUSE,			// ポーズ
 		OPTION,			// オプション
-		RESULT,			// リザルト
 		TEST,			// テスト
 		EXIT,			// 終了
 		NUM				// 項目数

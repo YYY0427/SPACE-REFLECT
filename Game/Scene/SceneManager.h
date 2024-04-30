@@ -12,45 +12,69 @@ class SceneBase;
 class SceneManager
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	SceneManager();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~SceneManager();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 	/// <summary>
 	/// シーンの切り替え
 	/// </summary>
 	/// <param name="scene">切り替えたいシーンのアドレス</param>
-	void ChangeScene(std::shared_ptr<SceneBase> nextScene);
+	void ChangeScene(const std::shared_ptr<SceneBase>& nextScene);
 
 	/// <summary>
 	/// シーンを全て削除してから新しいシーンを追加
 	/// </summary>
 	/// <param name="nextScene"></param>
-	void ChangeAndClearScene(std::shared_ptr<SceneBase> nextScene);
+	void ChangeAndClearScene(const std::shared_ptr<SceneBase>& nextScene);
 
 	/// <summary>
 	/// 現在のシーンの上にシーンを積む(ポーズ)
 	/// Updateで実行されるのは上につまれたシーン
 	/// </summary>
 	/// <param name="scene">上に積みたいシーンのアドレス</param>
-	void PushScene(std::shared_ptr<SceneBase> scene);
+	void PushScene(const std::shared_ptr<SceneBase>& scene);
 
-	// 一番上のシーンを削除
-	// ポーズ画面を消すときに使う
+	/// <summary>
+	/// 一番上のシーンを削除 
+	/// </summary>
 	void PopScene();
 
 	/// <summary>
 	/// シーンを全て削除
 	/// </summary>
 	void ClearScene();
+
+	/// <summary>
+	/// FPSを描画
+	/// </summary>
+	void DrawFps();
+
+	/// <summary>
+	/// 更新時間を描画
+	/// </summary>
+	void DrawUpdateTime();
+
+	/// <summary>
+	/// 描画時間を描画
+	/// </summary>
+	void DrwaDrawTime();
 
 private:
 	// シーン

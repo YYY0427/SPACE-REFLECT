@@ -12,7 +12,10 @@
 
 namespace
 { 
-	// モザイクの強さ(最大1400)
+	// モザイクの使用ピクセル幅(8, 16, 32 の何れか)
+	constexpr int gauss_param_pixel = 8;
+
+	// モザイクの強さ(100で約1ピクセル分の幅)
 	constexpr int gauss_param_power = 600;
 
 	// 画面を暗くする強さ(最大255)
@@ -33,11 +36,21 @@ namespace
 }
 
 // コンストラクタ	
-PuseScene::PuseScene(SceneManager& manager, Stage stage) :
+PuseScene::PuseScene(SceneManager& manager, const Stage stage) :
 	SceneBase(manager),
 	m_currentSelectItem(0),
 	m_stage(stage),
 	m_gaussScreen(-1)
+{
+}
+
+// デストラクタ
+PuseScene::~PuseScene()
+{
+}
+
+// 初期化
+void PuseScene::Init()
 {
 	// モザイク処理用のグラフィックの作成
 	auto& screenSize = Application::GetInstance().GetWindowSize();
@@ -50,8 +63,8 @@ PuseScene::PuseScene(SceneManager& manager, Stage stage) :
 	}
 }
 
-// デストラクタ
-PuseScene::~PuseScene()
+// 終了処理
+void PuseScene::End()
 {
 	// モザイク処理用のグラフィックの削除
 	DeleteGraph(m_gaussScreen);
@@ -130,7 +143,7 @@ void PuseScene::Draw()
 
 	// モザイク処理
 	GetDrawScreenGraph(0, 0, screenSize.width, screenSize.height, m_gaussScreen);
-	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, 8, gauss_param_power);
+	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, gauss_param_pixel, gauss_param_power);
 	DrawGraph(0, 0, m_gaussScreen, true);
 
 	// 画面を暗くする

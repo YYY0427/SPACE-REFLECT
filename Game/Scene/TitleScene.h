@@ -19,15 +19,38 @@ public:
 	/// <param name="manager">シーンマネージャーの参照</param>
 	TitleScene(SceneManager& manager);
 	
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~TitleScene();
 	
-	// 更新
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init() override final;
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void End() override final;
+
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 	
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
-	void SetLaser(Vector2 pos1, Vector2 pos2, unsigned int color);
+
+	/// <summary>
+	/// レーザーの設定
+	/// </summary>
+	/// <param name="pos1">左上の位置</param>
+	/// <param name="pos2">右下の位置</param>
+	/// <param name="color">レーザーの色</param>
+	void SetLaser(const Vector2& pos1, const Vector2& pos2, const unsigned int color);
 
 private:
 	// ここから飛べるシーン項目

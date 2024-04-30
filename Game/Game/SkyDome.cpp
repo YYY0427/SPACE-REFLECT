@@ -10,7 +10,7 @@ namespace
 }
 
 // コンストラクタ
-SkyDome::SkyDome(Vector3 pos) :
+SkyDome::SkyDome(const Vector3& pos) :
 	m_pos(pos)
 {
 	// モデルのインスタンスの作成
@@ -32,7 +32,7 @@ SkyDome::~SkyDome()
 }
 
 // 更新
-void SkyDome::Update(Vector3 pos)
+void SkyDome::Update(const Vector3& pos)
 {
 	m_pos = pos;
 	m_pModel->SetPos(m_pos);

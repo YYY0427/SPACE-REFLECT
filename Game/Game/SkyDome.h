@@ -11,16 +11,26 @@ class Model;
 class SkyDome
 {
 public:
-	// コンストラクタ
-	SkyDome(Vector3 pos);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="pos">位置情報</param>
+	SkyDome(const Vector3& pos);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~SkyDome();
 
-	// 更新
-	void Update(Vector3 pos);
+	/// <summary>
+	/// 更新
+	/// </summary>
+	/// <param name="pos">位置情報</param>
+	void Update(const Vector3& pos);
 
-	// 描画
+	/// <summary>
+	/// 描画s
+	/// </summary>
 	void Draw();
 
 private:

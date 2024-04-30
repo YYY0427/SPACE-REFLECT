@@ -41,21 +41,59 @@ public:
 	/// </summary>
 	~StageSelectScene();
 
-	// ステージを切り替え時の処理
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init() override final;
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void End() override final;
+
+	/// <summary>
+	/// ステージを切り替え時の処理 
+	/// </summary>
 	void SelectStageProcess();
 
-	// 開始
+	/// <summary>
+	/// スタート演出の開始
+	/// </summary>
 	void EnterStartAnimation();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
+
+	/// <summary>
+	/// ステージ選択の更新
+	/// </summary>
 	void UpdateSelectStage();
+
+	/// <summary>
+	/// スタート演出の更新
+	/// </summary>
 	void UpdateStartAnimation();
+
+	/// <summary>
+	/// カメラの更新
+	/// </summary>
 	void UpdateCamera();
+
+	/// <summary>
+	/// ランキングのアルファ値の更新
+	/// </summary>
 	void UpdateRankingAlpha();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
+
+	/// <summary>
+	/// スコアランキングの描画
+	/// </summary>
 	void DrawScoreRanking();
 
 private:
@@ -81,18 +119,12 @@ private:
 	// UIの種類
 	enum class UI
 	{
-		EXPLANATION_WINDOW,	// 説明ウィンドウ
-
-		// 説明ウィンドウの枠
-		EXPLANATION_WINDOW_FRAME,
-
-
-
-		LINE_3D,			// 3Dライン
-		SCORE_RANKING,		// スコアランキング
-		BUTTON,				// ボタン
-
-		NUM
+		EXPLANATION_WINDOW,			// 説明ウィンドウ
+		EXPLANATION_WINDOW_FRAME,	// 説明ウィンドウの枠
+		LINE_3D,					// 3Dライン
+		SCORE_RANKING,				// スコアランキング
+		BUTTON,						// ボタン
+		NUM							// 項目数
 	};
 
 private:
@@ -117,8 +149,8 @@ private:
 	Vector3 m_cameraGoalTargetPos;	// カメラの目標注視点
 
 	// イージングの時間
-	float m_easeTime;
-	float m_easeTime2;
+	int m_easeTime;
+	int m_easeTime2;
 
 	// 入力があるかフラグ
 	bool m_isInput;
@@ -146,9 +178,18 @@ private:
 	int m_currentSelectItem;
 
 	// 説明ウィンドウ
-	Vector2 m_explanationWindowEasingTime;
-	Vector2 m_explanationWindowSize;	// ウィンドウのサイズ
+	Vector2 m_explanationWindowEasingTime;	// ウィンドウのイージング時間
+	Vector2 m_explanationWindowSize;		// ウィンドウのサイズ
 
+	// スタート演出のSEの再生フラグ
 	bool m_isStartAnimSE;	
-};
 
+	// ステージ選択時にカメラを移動するイージング時間
+	int m_selectStageCameraEasingTime;
+
+	// ステージ決定時のカメラの注視点のイージング時間
+	int m_decisionStageTargetEasingTime;
+
+	// ステージ決定時にカメラを移動するイージング時間
+	int m_decisionStageCameraEasingTime;
+};

@@ -5,7 +5,7 @@
 /// <summary>
 /// 確認画面
 /// </summary>
-class ConfirmScene : public SceneBase
+class ConfirmScene final : public SceneBase
 {
 public:
 	/// <summary>
@@ -20,6 +20,16 @@ public:
 	/// </summary>
 	~ConfirmScene();
 	
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	void Init() override final;
+
+	/// <summary>
+	/// 終了処理
+	/// </summary>
+	void End() override final;
+
 	/// <summary>
 	/// 更新
 	/// </summary>

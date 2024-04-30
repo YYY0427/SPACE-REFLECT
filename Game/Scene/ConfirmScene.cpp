@@ -24,6 +24,16 @@ ConfirmScene::ConfirmScene(SceneManager& manager, PuseScene::State state) :
 	m_gaussScreen(-1),
 	m_state(state)
 {
+}
+
+// デストラクタ
+ConfirmScene::~ConfirmScene()
+{
+}
+
+// 初期化
+void ConfirmScene::Init()
+{
 	// モザイク処理用のグラフィックの作成
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
@@ -35,8 +45,8 @@ ConfirmScene::ConfirmScene(SceneManager& manager, PuseScene::State state) :
 	}
 }
 
-// デストラクタ
-ConfirmScene::~ConfirmScene()
+// 終了処理
+void ConfirmScene::End()
 {
 	// モザイク処理用のグラフィックの削除
 	DeleteGraph(m_gaussScreen);

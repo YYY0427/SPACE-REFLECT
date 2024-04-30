@@ -58,6 +58,9 @@ StageBase::~StageBase()
 
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
+
+	// 全ての音楽を停止
+	SoundManager::GetInstance().StopAllSound();
 }
 
 // リザルト画面の更新

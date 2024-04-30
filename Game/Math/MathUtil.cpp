@@ -2,13 +2,13 @@
 #include <DxLib.h>
 
 // ラジアンから度に変換
-float MathUtil::ToDegree(float radian)
+float MathUtil::ToDegree(const float radian)
 {
 	return radian * 180.0f / DX_PI_F;
 }
 
 // 度からラジアンに変換
-float MathUtil::ToRadian(float degree)
+float MathUtil::ToRadian(const float degree)
 {
 	return degree * DX_PI_F / 180.0f;
 }

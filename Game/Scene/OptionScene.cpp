@@ -21,6 +21,12 @@ namespace
 	const std::string xbox_rb_file_path = "Data/Image/xbox_rb.png";
 	const std::string xbox_lb_file_path = "Data/Image/xbox_lb.png";
 
+	// モザイクの使用ピクセル幅(8, 16, 32 の何れか)
+	constexpr int gauss_param_pixel = 8;
+
+	// モザイクの強さ(100で約1ピクセル分の幅)
+	constexpr int gauss_param_power = 600;
+
 	// 選択されていないときの描画色
 	constexpr unsigned int normal_color = 0x444444;
 
@@ -36,16 +42,33 @@ namespace
 
 	// 音量を何段階に分けるか
 	constexpr int volume_division = 5;
+
+	// 音量アイコンの選択されていないときの描画輝度(0 暗い ～ 255 明るい)
+	constexpr int normal_draw_bright = 70;
+
+	// 音量アイコンどうしの間隔
+	constexpr int volume_icon_space = 70;
 }
 
 // コンストラクタ
-OptionScene::OptionScene(SceneManager& manager, State state) :
+OptionScene::OptionScene(SceneManager& manager, const State state) :
 	SceneBase(manager),
 	m_currentSelectItem(0),
 	m_soundIconHandle(-1),
 	m_lbButtonImgHandle(-1),
 	m_rbButtonImgHandle(-1),
-	m_gaussScreen(-1)
+	m_gaussScreen(-1),
+	m_state(state)
+{
+}
+
+// デストラクタ
+OptionScene::~OptionScene()
+{
+}
+
+// 初期化
+void OptionScene::Init()
 {
 	// 画像のロード
 	m_soundIconHandle = my::MyLoadGraph(sound_icon_img_file_path.c_str());
@@ -57,8 +80,8 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	m_updateStateMachine.AddState(State::PAUSE, {}, [this] { UpdatePause(); }, {});
 	m_drawStateMachine.AddState(State::STAGE_SELECT, {}, [this] { DrawStageSelect(); }, {});
 	m_drawStateMachine.AddState(State::PAUSE, {}, [this] { DrawPause(); }, {});
-	m_updateStateMachine.SetState(state);
-	m_drawStateMachine.SetState(state);
+	m_updateStateMachine.SetState(m_state);
+	m_drawStateMachine.SetState(m_state);
 
 	// モザイク処理用のグラフィックの作成
 	const auto& size = Application::GetInstance().GetWindowSize();
@@ -71,11 +94,16 @@ OptionScene::OptionScene(SceneManager& manager, State state) :
 	}
 }
 
-// デストラクタ
-OptionScene::~OptionScene()
+// 終了処理
+void OptionScene::End()
 {
 	// 画像のアンロード
 	DeleteGraph(m_soundIconHandle);
+	DeleteGraph(m_lbButtonImgHandle);
+	DeleteGraph(m_rbButtonImgHandle);
+
+	// モザイク処理用のグラフィックの削除
+	DeleteGraph(m_gaussScreen);
 }
 
 // 更新
@@ -208,20 +236,20 @@ void OptionScene::Draw()
 	// 音量の項目
 	int volumeItem = static_cast<int>(OptionItem::MASTER_VOLUME);
 
-	// BGM音量の描画
+	// 音量の描画
 	for (int i = 0; i < volumeValue.size(); i++)
 	{
 		for (int j = 0; j < volumeValue[i]; j++)
 		{
 			// 描画輝度を設定
 			// 暗く描画
-			SetDrawBright(70, 70, 70);
+			SetDrawBright(normal_draw_bright, normal_draw_bright, normal_draw_bright);
 
 			// 選択されている項目の場合は描画輝度を戻す
 			if (m_currentSelectItem == volumeItem) SetDrawBright(255, 255, 255);
 
 			// 音量の間隔を計算
-			int textSpaceX = j * 70;
+			int textSpaceX = j * volume_icon_space;
 
 			// 音量のアイコンを描画
 			DrawRotaGraph(620 + textSpaceX,
@@ -267,7 +295,7 @@ void OptionScene::DrawPause()
 	// モザイク処理
 	const auto& size = Application::GetInstance().GetWindowSize();
 	GetDrawScreenGraph(0, 0, size.width, size.height, m_gaussScreen);
-	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, 8, 600);
+	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, gauss_param_pixel, gauss_param_power);
 	DrawGraph(0, 0, m_gaussScreen, true);
 
 	// 画面を暗くする

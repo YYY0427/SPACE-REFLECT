@@ -13,14 +13,14 @@ namespace MathUtil
 	/// </summary>
 	/// <param name="radian">ラジアン</param>
 	/// <returns>度</returns>
-	float ToDegree(float radian);
+	float ToDegree(const float radian);
 
 	/// <summary>
 	/// 度からラジアンに変換
 	/// </summary>
 	/// <param name="degree">度</param>
 	/// <returns>ラジアン</returns>
-	float ToRadian(float degree);
+	float ToRadian(const float degree);
 
 	/// <summary>
 	/// 整数のランダムな値を取得

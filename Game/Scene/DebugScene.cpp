@@ -30,6 +30,16 @@ DebugScene::~DebugScene()
 {
 }
 
+// èâä˙âª
+void DebugScene::Init()
+{
+}
+
+// èIóπèàóù
+void DebugScene::End()
+{
+}
+
 // çXêV
 void DebugScene::Update()
 {
@@ -60,8 +70,6 @@ void DebugScene::Update()
 		case SceneItem::OPTION:
 			m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::PAUSE));
 			return;
-		case SceneItem::RESULT:
-			return;
 		case SceneItem::TEST:
 			m_manager.ChangeScene(std::make_shared<TestScene>(m_manager));
 			return;
@@ -86,7 +94,6 @@ void DebugScene::Draw()
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::STAGE_SELECT), "STAGE_SELECT", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::PAUSE), "PAUSE", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::OPTION), "OPTION", 0xffffff, true);
-	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::RESULT), "RESULT", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::TEST), "TEST", 0xffffff, true);
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::EXIT), "EXIT", 0xffffff, true);
 
