@@ -15,6 +15,7 @@ namespace my
 		return handle;
 	}
 
+	// ƒ‚ƒfƒ‹‚ğƒ[ƒh‚·‚é
 	int MyLoadModel(const TCHAR* path)
 	{
 		int handle = MV1LoadModel(path);

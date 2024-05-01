@@ -9,21 +9,36 @@
 class StatusBack : public UIBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	StatusBack();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~StatusBack();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
+
+	/// <summary>
+	/// スタート演出の更新
+	/// </summary>
 	void UpdateStartAnimation();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// ゲッター
-	bool GetIsStartAnimation() const;
+	/// <summary>
+	/// スタート演出をしたかフラグを取得
+	/// </summary>
+	/// <returns>スタート演出をしたか</returns>
+	bool IsStartAnimation() const;
 
 private:
 	// ポインタ

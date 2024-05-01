@@ -14,45 +14,74 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="filePath">画像のファイルパス</param>
-	Image3D(std::string filePath);
+	Image3D(const std::string& filePath);
 
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="imgHandle">画像ハンドル</param>
-	Image3D(int imgHandle);
+	Image3D(const int imgHandle);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Image3D();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 画像ハンドルの取得
+	/// <summary>
+	/// 画像ハンドルの取得 
+	/// </summary>
+	/// <returns>画像ハンドル</returns>
 	int GetImageHandle() const;
 
-	// 画像の頂点情報の取得
-	std::array<VERTEX3D, 6> GetVertex() const;
+	/// <summary>
+	/// 画像の頂点情報の取得 
+	/// </summary>
+	/// <returns>画像の頂点情報</returns>
+	const std::array<VERTEX3D, 6>& GetVertex() const;
 
-	// 位置の設定
-	void SetPos(Vector3 pos);
+	/// <summary>
+	/// 位置の設定 
+	/// </summary>
+	/// <param name="pos">位置</param>
+	void SetPos(const Vector3& pos);
 
-	// 回転の設定
-	void SetRot(Vector3 rot);
+	/// <summary>
+	/// 回転の設定
+	/// </summary>
+	/// <param name="rot">回転</param>
+	void SetRot(const Vector3& rot);
 
-	// 画像の横幅の設定
-	void SetImgWidth(float width);
+	/// <summary>
+	/// 画像の横幅の設定 
+	/// </summary>
+	/// <param name="width">横幅</param>
+	void SetImgWidth(const float width);
 
-	// 画像の縦幅の設定
-	void SetImgHeight(float height);
+	/// <summary>
+	/// 画像の縦幅の設定 
+	/// </summary>
+	///	<param name="height">縦幅</param>
+	void SetImgHeight(const float height);
 
-	// 画像の透明度の設定
-	void SetAlpha(int alpha);
+	/// <summary>
+	/// 画像の透明度の設定 
+	/// </summary>
+	/// <param name="alpha">透明度</param>
+	void SetAlpha(const int alpha);
 
-	// 画像の横幅と立幅の拡大率を元の画像のサイズに戻す
+	/// <summary>
+	/// 画像の横幅と立幅の拡大率を元の画像のサイズに戻す 
+	/// </summary>
 	void SetImgDafualtScale();
 
 private:

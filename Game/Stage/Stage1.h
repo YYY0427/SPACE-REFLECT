@@ -9,26 +9,65 @@
 class Stage1 final : public StageBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="manager">シーンマネージャーの参照</param>
 	Stage1(SceneManager& manager);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Stage1();
 
-	// 開始
+	/// <summary>
+	/// リザルトステートの開始
+	/// </summary>
 	void EnterResult();
+
+	/// <summary>
+	/// ゲームクリアステートの開始
+	/// </summary>
 	void EnterGameClear();
+
+	/// <summary>
+	/// ゲームオーバーステートの開始
+	/// </summary>
 	void EnterGameOver();
 
-	// 更新
+	/// <summary>
+	/// 通常の更新
+	/// </summary>
 	void Update() override final;
+
+	/// <summary>
+	/// スタート演出ステートの更新
+	/// </summary>
 	void UpdateStartAnimation();
+
+	/// <summary>
+	/// プレイステートの更新
+	/// </summary>
 	void UpdatePlay();
+
+	/// <summary>
+	/// ゲームクリアステートの更新
+	/// </summary>
 	void UpdateGameClear();
+
+	/// <summary>
+	/// ゲームオーバーステートの更新
+	/// </summary>
 	void UpdateGameOver();
+
+	/// <summary>
+	/// リザルトステートの更新
+	/// </summary>
 	void UpdateResult();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
 private:

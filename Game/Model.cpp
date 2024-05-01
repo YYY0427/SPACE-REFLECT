@@ -8,7 +8,7 @@ namespace
 }
 
 // ファイル名を指定してロードを行う
-Model::Model(std::string fileName) :
+Model::Model(const std::string& fileName) :
 	m_isUseCollision(false),
 	m_isUpdateColision(false),
 	m_colFrameIndex(-1),
@@ -34,7 +34,7 @@ Model::Model(std::string fileName) :
 }
 
 // 指定されたハンドルのモデルをコピーして生成する
-Model::Model(int modelHandle) :
+Model::Model(const int modelHandle) :
 	m_isUseCollision(false),
 	m_isUpdateColision(false),
 	m_colFrameIndex(-1),
@@ -74,7 +74,7 @@ Model::~Model()
 }
 
 // 当たり判定の設定
-void Model::SetUseCollision(bool isUse, bool isNeedUpdate)
+void Model::SetUseCollision(const bool isUse, const bool isNeedUpdate)
 {
 	// 当たり判定を使わないのに当たり判定の更新を毎フレームおこないたい場合をはじく
 	assert(isUse || !isNeedUpdate);
@@ -140,49 +140,49 @@ void Model::Draw()
 }
 
 // モデルの表示位置の設定
-void Model::SetPos(Vector3 pos)
+void Model::SetPos(const Vector3& pos)
 {
 	int result = MV1SetPosition(m_modelHandle, pos.ToDxLibVector3());
 	assert(result != -1);
 }
 
 // モデルの回転状態の設定
-void Model::SetRot(Vector3 rot)
+void Model::SetRot(const Vector3& rot)
 {
 	int result = MV1SetRotationXYZ(m_modelHandle, rot.ToDxLibVector3());
 	assert(result != -1);
 }
 
 // モデルの回転行列の設定
-void Model::SetRotMtx(Matrix mtx)
+void Model::SetRotMtx(const Matrix& mtx)
 {
 	int result = MV1SetRotationMatrix(m_modelHandle, mtx.ToDxLibMatrix());
 	assert(result != -1);
 }
 
 // モデルの拡大率の設定
-void Model::SetScale(Vector3 scale)
+void Model::SetScale(const Vector3& scale)
 {
 	int result = MV1SetScale(m_modelHandle, scale.ToDxLibVector3());
 	assert(result != -1);
 }
 
 // モデルの不透明度の設定
-void Model::SetOpacity(float opacity)
+void Model::SetOpacity(const float opacity)
 {
 	int result = MV1SetOpacityRate(m_modelHandle, opacity);
 	assert(result != -1);
 }
 
 // モデルの指定のマテリアルの描画ブレンドモードを設定
-void Model::SetMaterialDrawBlendMode(int materialIndex, int blendMode)
+void Model::SetMaterialDrawBlendMode(const int materialIndex, const int blendMode)
 {
 	int result = MV1SetMaterialDrawBlendMode(m_modelHandle, materialIndex, blendMode);
 	assert(result != -1);
 }
 
 // モデルの全てのマテリアルの描画モードの設定
-void Model::SetAllMaterialDrawBlendMode(int blendMode)
+void Model::SetAllMaterialDrawBlendMode(const int blendMode)
 {
 	// マテリアルの数の取得
 	int materialNum = GetMaterialNum();
@@ -195,14 +195,14 @@ void Model::SetAllMaterialDrawBlendMode(int blendMode)
 }
 
 // 指定のマテリアルの描画ブレンドパラメータの設定
-void Model::SetMaterialDrawBlendParam(int materialIndex, int blendParam)
+void Model::SetMaterialDrawBlendParam(const int materialIndex, const int blendParam)
 {
 	int result = MV1SetMaterialDrawBlendParam(m_modelHandle, materialIndex, blendParam);
 	assert(result != -1);
 }
 
 // 全てのマテリアルの描画ブレンドパラメータの設定
-void Model::SetAllMaterialDrawBlendParam(int blendParam)
+void Model::SetAllMaterialDrawBlendParam(const int blendParam)
 {
 	// マテリアルの数の取得
 	int materialNum = GetMaterialNum();
@@ -215,14 +215,14 @@ void Model::SetAllMaterialDrawBlendParam(int blendParam)
 }
 
 // 指定のマテリアルのディフューズカラーの設定
-void Model::SetMaterialDifColor(int materialIndex, COLOR_F color)
+void Model::SetMaterialDifColor(const int materialIndex, const COLOR_F color)
 {
 	int result = MV1SetMaterialDifColor(m_modelHandle, materialIndex, color);
 	assert(result != -1);
 }
 
 // 全てのマテリアルのディフューズカラーの設定
-void Model::SetAllMaterialDifColor(COLOR_F color)
+void Model::SetAllMaterialDifColor(const COLOR_F color)
 {
 	// マテリアルの数の取得
 	int materialNum = GetMaterialNum();
@@ -268,7 +268,7 @@ void Model::RestoreAllMaterialDifColor()
 }
 
 // 全てのマテリアルのアウトラインを設定する
-void Model::SetAllMaterialOutLine(COLOR_F color, float size)
+void Model::SetAllMaterialOutLine(const COLOR_F color, const float size)
 {
 
 	/*int result = MV1SetMaterialOutLineWidthAll(m_modelHandle, size);
@@ -298,7 +298,7 @@ void Model::SetAllMaterialOutLine(COLOR_F color, float size)
 }
 
 // アニメーションを設定する(ぱっと切り替える)
-void Model::SetAnimation(int animNo, bool isLoop, bool isForceChange, float animPlaySpeed)
+void Model::SetAnimation(const int animNo, const bool isLoop, const bool isForceChange, const float animPlaySpeed)
 {
 	if (!isForceChange)
 	{
@@ -330,7 +330,7 @@ void Model::SetAnimation(int animNo, bool isLoop, bool isForceChange, float anim
 }
 
 // アニメーションを変化させる(数フレームかけて切り替える)
-void Model::ChangeAnimation(int animNo, bool isLoop, bool isForceChange, int changeFrame, float animPlaySpeed)
+void Model::ChangeAnimation(const int animNo, const bool isLoop, const bool isForceChange, const int changeFrame, const float animPlaySpeed)
 {
 	if (!isForceChange)
 	{
@@ -391,7 +391,7 @@ void Model::StopAnim()
 }
 
 // モデルのハンドルの取得
-const int& Model::GetModelHandle() const
+int Model::GetModelHandle() const
 {
 	return m_modelHandle;		
 }
@@ -419,7 +419,7 @@ void Model::InitAnimData(AnimData& anim)
 }
 
 // アニメーションの更新
-void Model::UpdateAnim(AnimData anim)
+void Model::UpdateAnim(const AnimData& anim)
 {
 	// アニメーションが設定されていない場合は何もしない
 	if (anim.attachNo == -1) return;

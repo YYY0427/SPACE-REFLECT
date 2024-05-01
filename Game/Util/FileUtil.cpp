@@ -8,7 +8,7 @@
 namespace FileUtil
 {
 	// フォルダ配下のファイル名の一括読み込み
-	std::vector<std::string> LoadFileNames(std::string folderPath, std::string extension)
+	std::vector<std::string> LoadFileNames(const std::string& folderPath, const std::string& extension)
 	{
 		std::vector<std::string> fileNames;
 
@@ -30,7 +30,7 @@ namespace FileUtil
 
 	// CSVファイルの読み込み
 	// 1行目は読み込まない
-	std::vector<std::vector<std::string>> LoadCsvFile(std::string filePath)
+	std::vector<std::vector<std::string>> LoadCsvFile(const std::string& filePath)
 	{
 		std::vector<std::vector<std::string>> data;
 

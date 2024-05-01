@@ -6,7 +6,9 @@ template<class T>
 class Timer
 {
 public: 
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	Timer() :
 		m_time(0),
 		m_limitTime(0)
@@ -17,7 +19,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="limitTime">制限時間</param>
-	Timer(T limitTime) :
+	Timer(const T limitTime) :
 		m_time(0),
 		m_limitTime(limitTime)
 	{
@@ -30,7 +32,7 @@ public:
 	/// タイマーの更新
 	/// </summary>
 	/// <param name="deltaTime">タイマーを1フレーム毎に更新する値</param>
-	void Update(T deltaTime)
+	void Update(const T deltaTime)
 	{
 		// 更新
 		m_time += deltaTime;
@@ -74,13 +76,19 @@ public:
 	/// タイムの設定
 	/// </summary>
 	/// <param name="limitTime">設定したいタイム</param>
-	void SetTime(T time) { m_time = time; }
+	void SetTime(const T time) { m_time = time; }
 
-	// 制限時間の取得
+	/// <summary>
+	/// 制限時間の取得
+	/// </summary>
+	/// <returns>制限時間</returns>
 	T GetLimitTime() const { return m_limitTime; }
 	
-	// 制限時間の設定
-	void SetLimitTime(T limitTime) { m_limitTime = limitTime; }
+	/// <summary>
+	/// 制限時間の設定 
+	/// </summary>
+	/// <param name="limitTime">設定したい制限時間</param>
+	void SetLimitTime(const T limitTime) { m_limitTime = limitTime; }
 
 private:
 	// 現在の時間

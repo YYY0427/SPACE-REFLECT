@@ -24,27 +24,49 @@ enum class TutorialState
 class TutorialUI
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	TutorialUI();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~TutorialUI();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 状態の設定
-	void StartState(TutorialState state);
+	/// <summary>
+	/// 状態の設定 
+	/// </summary>
+	/// <param name="state">設定したい状態</param>
+	void StartState(const TutorialState state);
 
-	// 現在の状態を終了
+	/// <summary>
+	/// 現在の状態を終了 
+	/// </summary>
 	void EndState();
 
-	// 状態の取得
+	/// <summary>
+	/// 現在の状態を取得
+	/// </summary>
+	/// <returns>現在の状態</returns>
 	TutorialState GetState() const;
-	bool IsEndState(TutorialState state);
+
+	/// <summary>
+	/// 状態が終了しているか
+	/// </summary>
+	/// <param name="state">チェックしたい状態</param>
+	/// <returns>終了しているか</returns>
+	bool IsEndState(const TutorialState state);
 
 private:
 	// チュートリアルのデータ

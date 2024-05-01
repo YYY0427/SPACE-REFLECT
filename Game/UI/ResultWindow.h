@@ -8,19 +8,30 @@
 class ResultWindow
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	ResultWindow();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ResultWindow();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
-	// 終了フラグの取得
+	/// <summary>
+	/// 終了フラグの取得 
+	/// </summary>
+	/// <returns>終了フラグ</returns>	
 	bool IsEnd() const;
 
 private:
@@ -44,5 +55,6 @@ private:
 	// 終了フラグ
 	bool m_isEnd;
 
+	// サウンドを鳴らしたか
 	bool m_isOpenMenuSound;
 };

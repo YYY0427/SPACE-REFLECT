@@ -188,7 +188,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 	}
 
 	// スタート演出をしていない場合
-	if (!m_pBackUI->GetIsStartAnimation())
+	if (!m_pBackUI->IsStartAnimation())
 	{
 		// スタート演出
 		m_pBackUI->UpdateStartAnimation();

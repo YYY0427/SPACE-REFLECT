@@ -6,18 +6,24 @@
 #include "../Math/Vector2.h"
 
 /// <summary>
-/// UIの管理クラス
+/// UIの管理するシングルトンクラス
 /// </summary>
 class UIManager
 {
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~UIManager();
 
-	// UIの更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// UIの描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 	/// <summary>
@@ -33,20 +39,29 @@ public:
 	/// <param name="ui">UIのポインタ</param>
 	/// <param name="drawOrder">描画順</param>
 	/// <param name="storeVec">UIを格納するベクトル</param>
-	void AddUI(std::string key, std::shared_ptr<UIBase> ui, int drawOrder, Vector2 storeVec = {});
+	void AddUI(const std::string& key, const std::shared_ptr<UIBase>& ui, const int drawOrder, const Vector2& storeVec = {});
 
-	// UIの削除
-	void DeleteUI(std::string key);
+	/// <summary>
+	/// UIの削除
+	/// </summary>
+	/// <param name="key">削除したいUIのキー</param>
+	void DeleteUI(const std::string& key);
 
-	// すべてのUIの削除
+	/// <summary>
+	/// 全てのUIの削除
+	/// </summary>
 	void DeleteAllUI();
 
-	// UIの格納
+	/// <summary>
+	/// UIの格納
+	/// </summary>
 	void Store();
 
 private:
-	// コンストラクタ
-	// シングルトンパターンなのでprivate
+	/// <summary>
+	/// コンストラクタ 
+	/// シングルトンパターンなのでprivate
+	/// </summary>
 	UIManager();
 
 	// コピーも代入も禁止

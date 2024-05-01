@@ -2,7 +2,7 @@
 #include "../String/MessageManager.h"
 
 // コンストラクタ
-StringUI::StringUI(std::string stringID) :
+StringUI::StringUI(const std::string& stringID) :
 	m_stringID(stringID),
 	m_color(0xffffff)
 {
@@ -17,17 +17,18 @@ StringUI::~StringUI()
 // 描画
 void StringUI::Draw()
 {
+	// 文字列の描画
 	MessageManager::GetInstance().DrawStringCenter(m_stringID, m_pos.x, m_pos.y, m_color);
 }
 
 // 位置の設定
-void StringUI::SetPos(Vector2 pos)
+void StringUI::SetPos(const Vector2& pos)
 {
 	m_pos = pos;
 }
 
 // 色の設定
-void StringUI::SetColor(unsigned int color)
+void StringUI::SetColor(const unsigned int color)
 {
 	m_color = color;
 }

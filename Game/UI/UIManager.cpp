@@ -49,7 +49,7 @@ UIManager& UIManager::GetInstance()
 }
 
 // UI‚Ì’Ç‰Á
-void UIManager::AddUI(std::string key, std::shared_ptr<UIBase> ui, int drawOrder, Vector2 storeVec)
+void UIManager::AddUI(const std::string& key, const std::shared_ptr<UIBase>& ui, const int drawOrder, const Vector2& storeVec)
 {
 	// ‚·‚Å‚ÉƒL[‚ª“o˜^‚³‚ê‚Ä‚¢‚éê‡‚Í’Ç‰Á‚µ‚È‚¢
 	for (auto& uiT : m_uiTable)
@@ -73,7 +73,7 @@ void UIManager::AddUI(std::string key, std::shared_ptr<UIBase> ui, int drawOrder
 }
 
 // UI‚Ìíœ
-void UIManager::DeleteUI(std::string key)
+void UIManager::DeleteUI(const std::string& key)
 {
 	// ƒL[‚ª“o˜^‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
 	auto itr = std::find_if(m_uiTable.begin(), m_uiTable.end(),

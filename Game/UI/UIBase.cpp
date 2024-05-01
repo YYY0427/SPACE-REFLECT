@@ -13,7 +13,7 @@ UIBase::~UIBase()
 }
 
 // UI‚ÌŠi”[
-void UIBase::Store(Vector2 vec, float storeSpeed)
+void UIBase::Store(const Vector2& vec, const float storeSpeed)
 {
 	m_pos += vec.Normalized() * storeSpeed;
 }

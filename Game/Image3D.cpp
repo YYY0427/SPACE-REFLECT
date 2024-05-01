@@ -3,7 +3,7 @@
 #include <cassert>
 
 // コンストラクタ
-Image3D::Image3D(std::string filePath) :
+Image3D::Image3D(const std::string& filePath) :
 	m_pos({}),
 	m_rot({}),
 	m_imgWidth(0),
@@ -16,7 +16,7 @@ Image3D::Image3D(std::string filePath) :
 }
 
 // コンストラクタ
-Image3D::Image3D(int imgHandle) :
+Image3D::Image3D(const int imgHandle) :
 	m_imgHandle(imgHandle),
 	m_pos({}),
 	m_rot({}),
@@ -128,37 +128,37 @@ int Image3D::GetImageHandle() const
 }
 
 // 画像の頂点情報の取得
-std::array<VERTEX3D, 6> Image3D::GetVertex() const
+const std::array<VERTEX3D, 6>& Image3D::GetVertex() const
 {
 	return m_vertex;
 }
 
 // 位置の設定
-void Image3D::SetPos(Vector3 pos)
+void Image3D::SetPos(const Vector3& pos)
 {
 	m_pos = pos;
 }
 
 // 回転の設定
-void Image3D::SetRot(Vector3 rot)
+void Image3D::SetRot(const Vector3& rot)
 {
 	m_rot = rot;
 }
 
 // 画像の横幅の設定
-void Image3D::SetImgWidth(float width)
+void Image3D::SetImgWidth(const float width)
 {
 	m_imgWidth = width;
 }
 
 // 画像の縦幅の設定
-void Image3D::SetImgHeight(float height)
+void Image3D::SetImgHeight(const float height)
 {
 	m_imgHeight = height;
 }
 
 // 画像の透明度の設定
-void Image3D::SetAlpha(int alpha)
+void Image3D::SetAlpha(const int alpha)
 {
 	m_alpha = alpha;
 }

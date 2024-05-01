@@ -56,7 +56,7 @@ namespace
 	constexpr int energy_recovery_speed = 3;
 
 	// エネルギーの減る速度
-	constexpr int energy_decrease_speed = 2;
+	constexpr int energy_decrease_speed = 1;
 
 	// シールドの拡縮の速度
 	constexpr float scale_speed = 0.1f;

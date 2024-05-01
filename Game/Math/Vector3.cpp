@@ -11,7 +11,7 @@ Vector3::Vector3() :
 }
 
 // コンストラクタ
-Vector3::Vector3(float x, float y, float z) :
+Vector3::Vector3(const float x, const float y, const float z) :
 	x(x),
 	y(y),
 	z(z)
@@ -59,31 +59,31 @@ void Vector3::operator-=(const Vector3& rval)
 }
 
 // Vec3 = Vec3 + float
-Vector3 Vector3::operator+(float add) const
+Vector3 Vector3::operator+(const float add) const
 {
 	return { x + add, y + add, z + add };
 }
 
 // Vec3 = Vec3 - float
-Vector3 Vector3::operator-(float sub) const
+Vector3 Vector3::operator-(const float sub) const
 {
 	return { x - sub, y - sub, z - sub };
 }
 
 // Vec3 = Vec3 * float
-Vector3 Vector3::operator*(float scale) const
+Vector3 Vector3::operator*(const float scale) const
 {
 	return { x * scale, y * scale, z * scale };
 }
 
 // Vec3 = Vec3 / float
-Vector3 Vector3::operator/(float div) const
+Vector3 Vector3::operator/(const float div) const
 {
 	return { x / div, y / div, z / div };
 }
 
 // Vec3 = (Vec3 += float)
-void Vector3::operator+=(float add)
+void Vector3::operator+=(const float add)
 {
 	x += add;
 	y += add;
@@ -91,7 +91,7 @@ void Vector3::operator+=(float add)
 }
 
 // Vec3 = (Vec3 -= float)
-void Vector3::operator-=(float sub)
+void Vector3::operator-=(const float sub)
 {
 	x -= sub;
 	y -= sub;
@@ -99,7 +99,7 @@ void Vector3::operator-=(float sub)
 }
 
 // Vec3 = (Vec3 *= float)
-void Vector3::operator*=(float scale)
+void Vector3::operator*=(const float scale)
 {
 	x *= scale;
 	y *= scale;
@@ -107,7 +107,7 @@ void Vector3::operator*=(float scale)
 }
 
 // Vec3 = (Vec3 /= float)
-void Vector3::operator/=(float div)
+void Vector3::operator/=(const float div)
 {
 	x /= div;
 	y /= div;

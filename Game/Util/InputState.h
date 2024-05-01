@@ -61,11 +61,15 @@ struct InputInfo
 /// </summary>
 namespace InputState
 {
-	// 初期化
+	/// <summary>
+	/// 初期化
+	/// </summary>
 	void Init();
 
-	// 入力情報の更新
-	// 毎フレームUpdateを呼ばないと入力状態は更新されない
+	/// <summary>
+	/// 入力情報の更新 
+	/// 毎フレームUpdateを呼ばないと入力状態は更新されない
+	/// </summary>
 	void Update();
 
 	/// <summary>
@@ -73,21 +77,21 @@ namespace InputState
 	/// </summary>
 	/// <param name="type">取得したい入力タイプ</param>
 	/// <returns>true : 入力、false : 非入力</returns>
-	bool IsTriggered(InputType type);
+	bool IsTriggered(const InputType type);
 
 	/// <summary>
 	/// ボタンが押されている間の入力情報の取得
 	/// </summary>
 	/// <param name="type">取得したい入力タイプ</param>
 	/// <returns>true : 入力中、false : 非入力</returns>
-	bool IsPressed(InputType type);
+	bool IsPressed(const InputType type);
 
 	/// <summary>
 	/// パッドのトリガーの入力情報の取得
 	/// </summary>
 	/// <param name="type">取得したい入力タイプ</param>
 	/// <returns>true : 入力中、false : 非入力</returns>
-	bool IsPadTrigger(PadLR type);
+	bool IsPadTrigger(const PadLR type);
 
 	/// <summary>
 	/// パッドのスティックの入力情報を取得
@@ -95,7 +99,7 @@ namespace InputState
 	/// <param name="stick">スティックの右か左か</param>
 	/// <param name="input">スティックのどの入力タイプか</param>
 	/// <returns>スティックの傾きぐわい(0のときは入力なし)　傾いている角度が大きいほど大きい数字が返ってくる</returns>
-	int IsPadStick(PadLR stic, PadStickInputType type);
+	int IsPadStick(const PadLR stic, const PadStickInputType type);
 
 	// private
 	namespace

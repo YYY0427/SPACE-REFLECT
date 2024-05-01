@@ -33,45 +33,102 @@ public:
 	/// <returns></returns>
 	Matrix operator*=(const Matrix& rval);
 
-	// 行列のスカラー倍
+	/// <summary>
+	/// 行列のスカラー倍 
+	/// </summary>
+	/// <param name="scale">スカラー</param>
+	/// <returns>計算結果</returns>
 	Matrix operator*(const float scale) const;
+
+	/// <summary>
+	/// 行列のスカラー倍
+	/// </summary>
+	/// <param name="scale">スカラー</param>
+	/// <returns>計算結果</returns>
 	Matrix operator*=(const float scale);
 
-	// 行列のスカラー除算
+	/// <summary>
+	/// 行列のスカラー除算 
+	/// </summary>
+	/// <param name="div">スカラー</param>
+	/// <returns>計算結果</returns>
 	Matrix operator/(const float div) const;
+
+	/// <summary>
+	/// 行列のスカラー除算
+	/// </summary>
+	/// <param name="div">スカラー</param>
+	/// <returns>計算結果</returns>
 	Matrix operator/=(const float div);
 
-	// 行列の転置
+	/// <summary>
+	/// 行列の転置 
+	/// </summary>
 	Matrix Transpose() const;
 
-	// 行列からオイラー角に変換
+	/// <summary>
+	/// 行列からオイラー角に変換 
+	/// </summary>
+	/// <returns>オイラー角</returns>
 	Vector3 ToEulerAngle() const;
 
-	// DXライブラリの行列に変換
+	/// <summary>
+	/// DXライブラリの行列に変換 
+	/// </summary>
+	/// <returns></returns>
 	MATRIX ToDxLibMatrix() const;
 
 
 	//// 静的メンバ関数 ////
 	
-	// ある向きからある向きへ変換する回転行列を取得する
+	/// <summary>
+	/// ある向きからある向きへ変換する回転行列を取得する 
+	/// </summary>
+	/// <param name="from">向く前の方向</param>
+	/// <param name="to">向きたい方向</param>
+	/// <returns>変換後の回転行列</returns>
 	static Matrix GetRotationMatrix(const Vector3& from, const Vector3& to);
 
-	// 平行移動行列を取得する
+	/// <summary>
+	/// 平行移動行列を取得する 
+	/// </summary>
+	/// <param name="v">平行移動量</param>
+	/// <returns>平行移動行列</returns>
 	static Matrix GetTranslate(const Vector3& v);
 
-	// 拡大縮小行列を取得する
+	/// <summary>
+	/// 拡大縮小行列を取得する 
+	/// </summary>
+	/// <param name="v">拡大縮小量</param>
+	/// <returns>拡大縮小行列</returns>
 	static Matrix GetScale(const Vector3& v);
 
-	// x軸回転行列を取得する
+	/// <summary>
+	/// x軸回転行列を取得する 
+	/// </summary>
+	/// <param name="angle">回転角度</param>
+	/// <returns>回転行列</returns>
 	static Matrix GetRotationX(const float angle);
 
-	// y軸回転行列を取得する
+	/// <summary>
+	/// y軸回転行列を取得する 
+	/// </summary>
+	/// <param name="angle">回転角度</param>
+	/// <returns>回転行列</returns>
 	static Matrix GetRotationY(const float angle);
 
-	// z軸回転行列を取得する
+	/// <summary>
+	/// z軸回転行列を取得する 
+	/// </summary>
+	/// <param name="angle">回転角度</param>
+	/// <returns>回転行列</returns>
 	static Matrix GetRotationZ(const float angle);
 
-	// 行列からオイラー角に変換
+	/// <summary>
+	/// 行列からオイラー角に変換
+	/// </summary>
+	/// <param name="m">行列</param>
+	/// <returns>オイラー角</returns>
 	static Vector3 ToEulerAngle(const Matrix& m);
 
 public:

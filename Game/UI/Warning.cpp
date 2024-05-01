@@ -24,7 +24,7 @@ namespace
 }
 
 // コンストラクタ
-Warning::Warning(int drawFrame) :
+Warning::Warning(const int drawFrame) :
 	m_isEnd(false),
 	m_scroll(0),
 	m_drawFrame(drawFrame),

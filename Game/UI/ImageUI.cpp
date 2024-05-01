@@ -3,7 +3,7 @@
 #include <DxLib.h>
 
 // コンストラクタ
-ImageUI::ImageUI(std::string filePath) :
+ImageUI::ImageUI(const std::string& filePath) :
 	m_rot(0.0f),
 	m_scale(1.0f, 1.0f),
 	m_alpha(255),
@@ -40,37 +40,37 @@ void ImageUI::Draw()
 }
 
 // 位置の設定
-void ImageUI::SetPos(Vector2 pos)
+void ImageUI::SetPos(const Vector2& pos)
 {
 	m_pos = pos;
 }
 
 // 回転の設定
-void ImageUI::SetRot(float rot)
+void ImageUI::SetRot(const float rot)
 {
 	m_rot = rot;
 }
 
 // 中心座標の設定
-void ImageUI::SetCenter(Vector2 center)
+void ImageUI::SetCenter(const Vector2& center)
 {
 	m_center = center;
 }
 
 // 拡大率の設定
-void ImageUI::SetScale(Vector2 scale)
+void ImageUI::SetScale(const Vector2& scale)
 {
 	m_scale = scale;
 }
 
 // 透明度の設定
-void ImageUI::SetAlpha(float alpha)
+void ImageUI::SetAlpha(const float alpha)
 {
 	m_alpha = alpha;
 }
 
 // 位置の取得
-Vector2 ImageUI::GetPos() const
+const Vector2& ImageUI::GetPos() const
 {
 	return m_pos;
 }
@@ -82,13 +82,13 @@ float ImageUI::GetRot() const
 }
 
 // 中心座標の取得
-Vector2 ImageUI::GetCenter() const
+const Vector2& ImageUI::GetCenter() const
 {
 	return m_center;
 }
 
 // 拡大率の取得
-Vector2 ImageUI::GetScale() const
+const Vector2& ImageUI::GetScale() const
 {
 	return m_scale;
 }

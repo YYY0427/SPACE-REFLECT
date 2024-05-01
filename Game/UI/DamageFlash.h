@@ -7,20 +7,33 @@
 class DamageFlash : public UIBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	DamageFlash();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~DamageFlash();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// 演出開始
-	void Start(int frame, int alpha, unsigned int color);
+	/// <summary>
+	/// 演出開始
+	/// </summary>
+	/// <param name="frame">フラッシュのフレーム数</param>
+	/// <param name="alpha">フラッシュの透明度</param>
+	/// <param name="color">フラッシュの色</param>
+	void Start(const int frame, const int alpha, const unsigned int color);
 
 private:
 	// フレーム数

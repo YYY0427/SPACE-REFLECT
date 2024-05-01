@@ -8,23 +8,38 @@
 class StringUI final : public UIBase
 {
 public:
-	// コンストラクタ
-	StringUI(std::string stringID);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="stringID">文字列ID</param>
+	StringUI(const std::string& stringID);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~StringUI();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final {};
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// 位置の設定
-	void SetPos(Vector2 pos);
+	/// <summary>
+	/// 位置の設定 
+	/// </summary>
+	/// <param name="pos">位置</param>
+	void SetPos(const Vector2& pos);
 
-	// 色の設定
-	void SetColor(unsigned int color);
+	/// <summary>
+	/// 色の設定
+	/// </summary>
+	/// <param name="color">色</param>
+	void SetColor(const unsigned int color);
 
 private:
 	// 文字列ID

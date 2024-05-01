@@ -76,7 +76,7 @@ void StatusBack::Draw()
 }
 
 // スタート演出フラグの取得
-bool StatusBack::GetIsStartAnimation() const
+bool StatusBack::IsStartAnimation() const
 {
 	return m_isStartAnimation;
 }

@@ -18,16 +18,18 @@ public:
 	/// ファイル名を指定してロードを行う
 	/// </summary>
 	/// <param name="fileName">モデルハンドルのファイル名</param>
-	Model(std::string fileName);		
+	Model(const std::string& fileName);		
 
 	/// <summary>
 	/// コンストラクタ
 	/// 指定されたハンドルのモデルをコピーして生成する
 	/// </summary>
 	/// <param name="orgModel">モデルハンドル</param>
-	Model(int modelHandle);		
+	Model(const int modelHandle);		
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Model();
 
 	/// <summary>
@@ -35,12 +37,16 @@ public:
 	/// </summary>
 	/// <param name="isUse">当たり判定をしようするか</param>
 	/// <param name="isNeedUpdate">更新が必要かどうか</param>
-	void SetUseCollision(bool isUse, bool isNeedUpdate = true);
+	void SetUseCollision(const bool isUse, const bool isNeedUpdate = true);
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw();
 
 	/// <summary>
@@ -49,7 +55,7 @@ public:
 	/// <param name="animNo">変更先アニメーション番号</param>
 	/// <param name="isLoop">アニメーションをループさせるか</param>
 	///	<param name="isForceChange">すでに指定されたアニメが再生されている場合も変更するか</param>
-	void SetAnimation(int animNo, bool isLoop, bool isForceChange, float animPlaySpeed = 1.0f);
+	void SetAnimation(const int animNo, const bool isLoop, const bool isForceChange, const float animPlaySpeed = 1.0f);
 
 	/// <summary>
 	/// アニメーションを変化させる(数フレームかけて切り替える)
@@ -58,7 +64,7 @@ public:
 	/// <param name="isLoop">アニメーションをループさせるか</param>
 	/// <param name="isForceChange">すでに指定されたアニメが再生されている場合も変更するか</param>
 	/// <param name="changeFrame">何フレームかけてアニメーションを変更させるか</param>
-	void ChangeAnimation(int animNo, bool isLoop, bool isForceChange, int changeFrame, float animPlaySpeed = 1.0f);
+	void ChangeAnimation(const int animNo, const bool isLoop, const bool isForceChange, const int changeFrame, const float animPlaySpeed = 1.0f);
 
 	/// <summary>
 	/// 現在のアニメーションが終了しているかどうかを取得する
@@ -67,35 +73,126 @@ public:
 	/// <returns>true : 終了、false : 再生中</returns>
 	bool IsAnimEnd();
 
-	// アニメーションを止める
+	/// <summary>
+	/// アニメーションを止める 
+	/// </summary>
 	void StopAnim();
 
-	// ゲッター
-	const int& GetModelHandle() const;		// モデルのハンドルの取得
-	int GetColFrameIndex() const;	// 当たり判定に使用するフレームインデックスを取得する
-	int GetMaterialNum() const;		// モデルのマテリアルの数の取得
 
-	// モデル設定
-	void SetPos(Vector3 pos);			// 表示位置の設定
-	void SetRot(Vector3 rot);			// 回転状態の設定
-	void SetRotMtx(Matrix mtx);			// 回転行列の設定
-	void SetScale(Vector3 scale);		// 拡大率の設定
-	void SetOpacity(float opacity);		// 不透明度の設定(0.0~1.0)
+	//// ゲッター ////
 
-	// 描画モード設定
-	void SetMaterialDrawBlendMode(int materialIndex, int blendMode);	// 指定のマテリアルの描画モードの設定
-	void SetAllMaterialDrawBlendMode(int blendMode);					// 全てのマテリアルの描画モードの設定
-	void SetMaterialDrawBlendParam(int materialIndex, int blendParam);	// 指定のマテリアルの描画ブレンドパラメータの設定
-	void SetAllMaterialDrawBlendParam(int blendParam);					// 全てのマテリアルの描画ブレンドパラメータの設定
+	/// <summary>
+	/// モデルハンドルの取得
+	/// </summary>
+	/// <returns>モデルハンドル</returns>
+	int GetModelHandle() const;		
 
-	// ディフューズカラー設定
-	void SetMaterialDifColor(int materialIndex, COLOR_F color);	// 指定のマテリアルのディフューズカラーの設定
-	void SetAllMaterialDifColor(COLOR_F color);					// 全てのマテリアルのディフューズカラーの設定
-	void InversAllMaterialDifColor();							// 全てのマテリアルのディフューズカラーを反転
-	void RestoreAllMaterialDifColor();							// 全てのマテリアルのディフューズカラーを元に戻す
+	/// <summary>
+	/// 当たり判定に使用するフレームインデックスを取得
+	/// </summary>
+	/// <returns>フレームインデックス</returns>
+	int GetColFrameIndex() const;	
 
-	// 全てのマテリアルのアウトラインを設定する
-	void SetAllMaterialOutLine(COLOR_F color, float size);	
+	/// <summary>
+	/// モデルのマテリアルの数の取得
+	/// </summary>
+	/// <returns>マテリアルの数</returns>
+	int GetMaterialNum() const;		
+
+
+	//// セッター ////
+
+	/// <summary>
+	/// モデルの位置を設定
+	/// </summary>
+	/// <param name="pos">位置</param>
+	void SetPos(const Vector3& pos);	
+
+	/// <summary>
+	/// モデルの回転を設定
+	/// </summary>
+	/// <param name="rot">回転</param>
+	void SetRot(const Vector3& rot);	
+
+	/// <summary>
+	/// モデルの拡大率を設定
+	/// </summary>
+	/// <param name="scale">拡大率</param>
+	void SetRotMtx(const Matrix& mtx);		
+
+	/// <summary>
+	/// モデルの拡大率を設定
+	/// </summary>
+	/// <param name="scale">拡大率</param>
+	void SetScale(const Vector3& scale);	
+
+	/// <summary>
+	/// モデルの不透明度の設定(0.0~1.0)
+	/// </summary>
+	/// <param name="opacity">不透明度</param>
+	void SetOpacity(const float opacity);	
+
+
+	//// 描画モード設定 ////
+
+	/// <summary>
+	/// 指定のマテリアルの描画モードの設定
+	/// </summary>
+	/// <param name="materialIndex">マテリアルのインデックス</param>
+	/// <param name="blendMode">ブレンドモード</param>
+	void SetMaterialDrawBlendMode(const int materialIndex, const int blendMode);
+
+	/// <summary>
+	/// 全てのマテリアルの描画モードの設定
+	/// </summary>
+	/// <param name="blendMode">ブレンドモード</param>
+	void SetAllMaterialDrawBlendMode(const int blendMode);					
+
+	/// <summary>
+	/// 指定のマテリアルの描画ブレンドパラメータの設定
+	/// </summary>
+	/// <param name="materialIndex">マテリアルのインデックス</param>
+	/// <param name="blendParam">ブレンドのパラメーター</param>
+	void SetMaterialDrawBlendParam(const int materialIndex, const int blendParam);	
+
+	/// <summary>
+	/// 全てのマテリアルの描画ブレンドパラメータの設定
+	/// </summary>
+	/// <param name="blendParam">ブレンドのパラメーター</param>
+	void SetAllMaterialDrawBlendParam(const int blendParam);				
+
+
+	//// ディフューズカラー設定 ////
+
+	/// <summary>
+	/// 指定のマテリアルのディフューズカラーの設定
+	/// </summary>
+	/// <param name="materialIndex">マテリアルのインデックス</param>
+	/// <param name="color">ディフューズカラー</param>
+	void SetMaterialDifColor(const int materialIndex, const COLOR_F color);	
+
+	/// <summary>
+	/// 全てのマテリアルのディフューズカラーの設定
+	/// </summary>
+	/// <param name="color">ディフューズカラー</param>
+	void SetAllMaterialDifColor(const COLOR_F color);					
+
+	/// <summary>
+	/// 全てのマテリアルのディフューズカラーを反転
+	/// </summary>
+	void InversAllMaterialDifColor();				
+	
+	/// <summary>
+	/// 全てのマテリアルのディフューズカラーを元に戻す
+	/// </summary>
+	void RestoreAllMaterialDifColor();					 
+
+	/// <summary>
+	/// 全てのマテリアルのアウトラインを設定する 
+	/// </summary>
+	/// <param name="color">アウトラインの色</param>
+	/// <param name="size">アウトラインの太さ</param>
+	void SetAllMaterialOutLine(const COLOR_F color, const float size);	
 
 private:
 	// アニメーション情報
@@ -119,9 +216,11 @@ private:
 	/// アニメーションの更新
 	/// </summary>
 	/// <param name="anim">アニメーションのアタッチ番号</param>
-	void UpdateAnim(AnimData anim);
+	void UpdateAnim(const AnimData& anim);
 
-	// 現在のアニメーション切り替わり情報からアニメーションのブレンド率を設定する
+	/// <summary>
+	/// 現在のアニメーション切り替わり情報からアニメーションのブレンド率を設定する 
+	/// </summary>
 	void UpdateAnimBlendRate();
 
 private:

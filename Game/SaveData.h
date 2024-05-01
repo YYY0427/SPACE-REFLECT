@@ -23,7 +23,9 @@ private:
 		bool windowMode = false;		// ウィンドウモードの切り替え	
 	};
 public:
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~SaveData();
 
 	/// <summary>
@@ -32,48 +34,106 @@ public:
 	/// <returns>唯一の実態の参照</returns>
 	static SaveData& GetInstance();
 
-	// セーブデータの読み込み
+	/// <summary>
+	/// セーブデータの読み込み 
+	/// </summary>
 	void Load();
 
-	// セーブデータの書き込み
-	// セーブデータのバージョンが一致しない場合は止める
+	/// <summary>
+	/// セーブデータの書き込み 
+	/// セーブデータのバージョンが一致しない場合は止める
+	/// </summary>
 	void Write();
 
-	// セーブデータを新規作成して上書き
+	/// <summary>
+	/// セーブデータを新規作成して上書き 
+	/// </summary>
 	void CreateNewData();
 
-	Data GetSaveData() const;
+	/// <summary>
+	/// セーブデータの取得
+	/// </summary>
+	/// <returns>セーブデータ</returns>
+	const Data& GetSaveData() const;
+
+	/// <summary>
+	/// コンフィグの値の設定
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <param name="configValue">設定したい値</param>
+	/// <param name="splitNum">分割数</param>
 	template<class T> void SetConfigValue(T& configValue, int splitNum);
+
+	/// <summary>
+	/// コンフィグのスイッチの設定
+	/// </summary>
+	/// <param name="config">設定したいスイッチ</param>
 	void SetConfigSwitch(bool& config);
 
-	// 音量設定
-	// 音量の設定(最大値を超えると0に戻る)
-	void SetMasterVolume(int configNum);	// 全体音量
-	void SetBgmVolume(int configNum);		// BGM
-	void SetSeVolume(int configNum);		// SE
+	/// <summary>
+	/// 全体音量の設定
+	/// 音量の設定(最大値を超えると0に戻る)
+	/// </summary>
+	/// <param name="configNum">音量の分割数</param>
+	void SetMasterVolume(const int configNum);	
 
-	// パッドのスティックの感度の設定
-	// 感度の設定(最大値を超えると0に戻る)
-	void SetPadStickSensitivityX(int configNum);
-	void SetPadStickSensitivityY(int configNum);
+	/// <summary>
+	/// BGMの音量の設定
+	/// 音量の設定(最大値を超えると0に戻る)
+	/// </summary>
+	/// <param name="configNum">音量の分割数</param>
+	void SetBgmVolume(const int configNum);	
 
-	// パッドのスティックのリバースの設定
+	/// <summary>
+	/// SEの音量の設定
+	/// 音量の設定(最大値を超えると0に戻る)
+	/// </summary>
+	/// <param name="configNum">音量の分割数</param>
+	void SetSeVolume(const int configNum);		
+
+	/// <summary>
+	/// パッドのスティックのX感度の設定 
+	/// 感度の設定(最大値を超えると0に戻る)
+	/// </summary>
+	/// <param name="configNum">分割数</param>
+	void SetPadStickSensitivityX(const int configNum);
+
+	/// <summary>
+	/// パッドのスティックのY感度の設定 
+	/// 感度の設定(最大値を超えると0に戻る)
+	/// </summary>
+	/// <param name="configNum">分割数</param>
+	void SetPadStickSensitivityY(const int configNum);
+
+	/// <summary>
+	/// パッドのスティックXのリバースの設定 
+	/// </summary>
 	void SetPadStickReverseX();
+
+	/// <summary>
+	/// パッドのスティックYのリバースの設定 
+	/// </summary>
 	void SetPadStickReverseY();
 
-	// ウィンドウモードの切り替え
+	/// <summary>
+	/// ウィンドウモードの切り替え 
+	/// </summary>
 	void SetWindowMode();
 
 private:
-	// コンストラクタ
-	// シングルトンパターンなのでprivate
+	/// <summary>
+	/// コンストラクタ
+	/// シングルトンパターンなのでprivate
+	/// </summary>
 	SaveData();
 
 	// コピーと代入の禁止
 	SaveData(const SaveData&) = delete;			// コピーコンストラクタ禁止
 	void operator = (const SaveData&) = delete;	// 代入禁止
 
-	// データの削除
+	/// <summary>
+	/// データの削除 
+	/// </summary>
 	void InitData();
 
 private:

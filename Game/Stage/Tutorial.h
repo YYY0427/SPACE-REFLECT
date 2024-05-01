@@ -14,31 +14,90 @@ class TutorialUI;
 class Tutorial final : public StageBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="manager">シーンマネージャーの参照</param>
 	Tutorial(SceneManager& manager);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Tutorial();
 
-	// 開始
+	/// <summary>
+	/// スタート演出ステートの開始
+	/// </summary>
 	void EnterStartAnimation();
+
+	/// <summary>
+	/// ゲームクリアステートの開始
+	/// </summary>
 	void EnterGameClear();
+
+	/// <summary>
+	/// ゲームオーバーステートの開始
+	/// </summary>
 	void EnterGameOver();
+
+	/// <summary>
+	/// リザルトステートの開始
+	/// </summary>
 	void EnterResult();
 
-	// 更新
+	/// <summary>
+	/// 通常の更新
+	/// </summary>
 	void Update() override final;
+
+	/// <summary>
+	/// スタート演出ステートの更新
+	/// </summary>
 	void UpdateStartAnimation();
+
+	/// <summary>
+	/// 移動チュートリアルステートの更新
+	/// </summary>
 	void UpdateMoveTutorial();
+
+	/// <summary>
+	/// シールドチュートリアルステートの更新
+	/// </summary>
 	void UpdateShieldTutorial();
+
+	/// <summary>
+	/// 反射チュートリアルステートの更新
+	/// </summary>
 	void UpdateReflectTutorial();
+
+	/// <summary>
+	/// キューブチュートリアルステートの更新
+	/// </summary>
 	void UpdateCubeTutorial();
+
+	/// <summary>
+	/// プレイステートの更新
+	/// </summary>
 	void UpdatePlay();
+
+	/// <summary>
+	/// ゲームクリアステートの更新
+	/// </summary>
 	void UpdateGameClear();
+
+	/// <summary>
+	/// ゲームオーバーステートの更新
+	/// </summary>
 	void UpdateGameOver();
+
+	/// <summary>
+	/// リザルトステートの更新
+	/// </summary>
 	void UpdateResult();
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
 private:

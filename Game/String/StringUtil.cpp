@@ -5,7 +5,7 @@
 namespace StringUtil
 {
 	// 文字列を分割する
-	std::vector<std::string> StringUtil::Split(std::string& str, char delimiter)
+	std::vector<std::string> StringUtil::Split(const std::string& str, const char delimiter)
 	{
 		// stringをgetlineで使えるデータに変換
 		std::istringstream stream(str);
@@ -26,7 +26,7 @@ namespace StringUtil
 	}
 
 	// 指定した座標を中心に文字列を描画する 
-	void DrawStringCenter(int x, int y, unsigned int color, std::string str, int fontHandle, unsigned int edgeColor)
+	void DrawStringCenter(const int x, const int y, const unsigned int color, const std::string& str, const int fontHandle, const unsigned int edgeColor)
 	{
 		// 文字列の幅と長さを取得
 		int width = -1;

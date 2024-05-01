@@ -6,9 +6,13 @@
 /// </summary>
 namespace Font
 {
-	// フォントのロード
+	/// <summary>
+	/// フォントのロード
+	/// </summary>
 	void Load();
 
-	// フォントのアンロード
+	/// <summary>
+	/// フォントのアンロード
+	/// </summary>
 	void End();
 }

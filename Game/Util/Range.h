@@ -14,7 +14,7 @@ public:
 	/// </summary>
 	/// <param name="min">下限値</param>
 	/// <param name="max">上限値</param>
-	Range(T min, T max) :
+	Range(const T min, const T max) :
 		m_min(min),
 		m_max(max)
 	{
@@ -27,7 +27,7 @@ public:
 	/// </summary>
 	/// <param name="value">範囲内か調べたい値</param>
 	/// <returns> true : 範囲内, false : 範囲内じゃない </returns>
-	bool IsUpperLimit(T value) const
+	bool IsUpperLimit(const T value) const
 	{
 		return (value <= m_max);
 	}
@@ -37,7 +37,7 @@ public:
 	/// </summary>
 	/// <param name="value">範囲内か調べたい値</param>
 	/// <returns> true : 範囲内, false : 範囲内じゃない </returns>
-	bool IsLowerLimit(T value) const
+	bool IsLowerLimit(const T value) const
 	{
 		return (m_min <= value);
 	}
@@ -47,7 +47,7 @@ public:
 	/// </summary>
 	/// <param name="value">範囲内か調べたい値</param>
 	/// <returns> true : 範囲内, false : 範囲内じゃない </returns>
-	bool IsInside(T value) const
+	bool IsInside(const T value) const
 	{
 		return IsLowerLimit(value) && IsUpperLimit(value);
 	}
@@ -58,7 +58,7 @@ public:
 	/// </summary>
 	/// <param name="value">変更したい値</param>
 	/// <returns>変更後の値</returns>
-	T Clamp(T value) const
+	T Clamp(const T value) const
 	{
 		return  std::clamp(value, m_min, m_max);
 	}
@@ -69,7 +69,7 @@ public:
 	/// </summary>
 	/// <param name="value">変更したい値</param>
 	/// <returns>変更後の値</returns>
-	T Wrap(T value) const
+	T Wrap(const T value) const
 	{
 		const float n = std::fmod(value - m_min, m_max - m_min);
 		return (n >= 0) ? (n + m_min) : (n + m_max);

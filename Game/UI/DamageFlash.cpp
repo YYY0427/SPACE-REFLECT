@@ -47,7 +47,7 @@ void DamageFlash::Draw()
 }
 
 // フラッシュの開始
-void DamageFlash::Start(int frame, int alpha, unsigned int color)
+void DamageFlash::Start(const int frame, const int alpha, const unsigned int color)
 {
 	// 値の設定
 	m_frame = frame;

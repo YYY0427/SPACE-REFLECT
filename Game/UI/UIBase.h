@@ -7,22 +7,39 @@
 class UIBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
 	UIBase();
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~UIBase();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// 純粋仮想関数
+	/// </summary>
 	virtual void Update() = 0;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// 純粋仮想関数
+	/// </summary>
 	virtual void Draw() = 0;
 
-	// UIの格納
-	void Store(Vector2 vec, float storeSpeed);
+	/// <summary>
+	/// UIの格納 
+	/// </summary>
+	/// <param name="vec">格納するベクトル</param>
+	/// <param name="storeSpeed">格納速度</param>
+	void Store(const Vector2& vec, const float storeSpeed);
 
-	// UIが有効かどうか
+	/// <summary>
+	/// UIが有効かどうか 
+	/// </summary>
+	/// <returns></returns>
 	bool IsEnabled() const;
 
 protected:

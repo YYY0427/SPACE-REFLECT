@@ -316,7 +316,7 @@ void TutorialUI::Draw()
 }
 
 // 状態の設定
-void TutorialUI::StartState(TutorialState state)
+void TutorialUI::StartState(const TutorialState state)
 {
 	// すでにスタートしている場合は何もしない
 	if (m_tutorialDataMap[state].isStart) return;
@@ -363,7 +363,7 @@ TutorialState TutorialUI::GetState() const
 }
 
 // 状態が終了しているか
-bool TutorialUI::IsEndState(TutorialState state)
+bool TutorialUI::IsEndState(const TutorialState state)
 {
 	return m_tutorialDataMap[state].isEnd;
 }

@@ -106,6 +106,7 @@ void SaveData::InitData()
 	m_saveData.windowMode = false;
 }
 
+// コンフィグの値の設定
 template<class T> void SaveData::SetConfigValue(T& configValue, int splitNum)
 {
 	if (InputState::IsTriggered(InputType::RIGHT))
@@ -127,7 +128,7 @@ template<class T> void SaveData::SetConfigValue(T& configValue, int splitNum)
 
 // 全体の音量の設定
 // 最大値を超えると0に戻る
-void SaveData::SetMasterVolume(int configNum)
+void SaveData::SetMasterVolume(const int configNum)
 {
 	SetConfigValue(m_saveData.masterVolume, configNum);
 
@@ -140,14 +141,14 @@ void SaveData::SetMasterVolume(int configNum)
 
 // BGMの音量の設定
 // 最大値を超えると0に戻る
-void SaveData::SetBgmVolume(int configNum)
+void SaveData::SetBgmVolume(const int configNum)
 {
 	SetConfigValue(m_saveData.bgmVolume, configNum);
 }
 
 // SEの音量の設定
 // 最大値を超えると0に戻る
-void SaveData::SetSeVolume(int configNum)
+void SaveData::SetSeVolume(const int configNum)
 {
 	SetConfigValue(m_saveData.seVolume, configNum);
 
@@ -160,14 +161,14 @@ void SaveData::SetSeVolume(int configNum)
 
 // パッドのスティックのX軸感度の設定
 // 最大値を超えると0に戻る
-void SaveData::SetPadStickSensitivityX(int configNum)
+void SaveData::SetPadStickSensitivityX(const int configNum)
 {
 	SetConfigValue(m_saveData.padStickSensitivityX, configNum);
 }
 
 // パッドのスティックのY軸感度の設定
 // 最大値を超えると0に戻る
-void SaveData::SetPadStickSensitivityY(int configNum)
+void SaveData::SetPadStickSensitivityY(const int configNum)
 {
 	SetConfigValue(m_saveData.padStickSensitivityY, configNum);
 }
@@ -184,16 +185,19 @@ void SaveData::SetPadStickReverseY()
 	SetConfigSwitch(m_saveData.padStickReverseY);
 }
 
+// ウィンドウモードの設定
 void SaveData::SetWindowMode()
 {
 	SetConfigSwitch(m_saveData.windowMode);
 }
 
-SaveData::Data SaveData::GetSaveData() const
+// セーブデータの取得
+const SaveData::Data& SaveData::GetSaveData() const
 {
 	return m_saveData;
 }
 
+// コンフィグのスイッチの設定
 void SaveData::SetConfigSwitch(bool& config)
 {
 	if (InputState::IsTriggered(InputType::RIGHT) ||

@@ -23,20 +23,38 @@ class Fade;
 class StageBase
 {
 public:
-	// コンストラクタ
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="manager">シーンマネージャーの参照</param>
 	StageBase(SceneManager& manager);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	virtual ~StageBase();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// 純粋仮想関数
+	/// </summary>
 	virtual void Update() = 0;
-	virtual void UpdateResult(std::string stageName);
 
-	// 描画
+	/// <summary>
+	/// リザルトの更新
+	/// </summary>
+	/// <param name="stageName">ステージ名</param>
+	virtual void UpdateResult(const std::string& stageName);
+
+	/// <summary>
+	/// 描画
+	/// 純粋仮想関数
+	/// </summary>
 	virtual void Draw();
 
-	// 当たり判定
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
 	void Collision();
 
 protected:
@@ -67,12 +85,16 @@ protected:
 
 	// 隕石がプレイヤーに与えるダメージ
 	int m_meteorDamage;
+
 	// レーザーがプレイヤーに与えるダメージ
 	int m_laserDamage;
+
 	// プレイヤーが反射レーザーでボス敵に与えるダメージ
 	int m_playerToBossDamage;
+
 	// プレイヤーが反射レーザーで敵に与えるダメージ
 	int m_playerToEnemyDamage;
+
 	// プレイヤーと敵が当たった時のプレイヤーに与えるダメージ
 	int m_enemyDamage;
 };

@@ -11,5 +11,10 @@ namespace my
 	/// <returns>画像のハンドル</returns>
 	int MyLoadGraph(const TCHAR* path);
 
+	/// <summary>
+	/// モデルをロードする
+	/// </summary>
+	/// <param name="path">パス文字列</param>
+	/// <returns>モデルのハンドル</returns>
 	int MyLoadModel(const TCHAR* path);
 }

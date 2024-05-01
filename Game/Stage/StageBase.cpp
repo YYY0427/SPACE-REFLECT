@@ -64,7 +64,7 @@ StageBase::~StageBase()
 }
 
 // リザルト画面の更新
-void StageBase::UpdateResult(std::string stageName)
+void StageBase::UpdateResult(const std::string& stageName)
 {
 	// フェードが終了したら
 	if (m_pFade->IsFadeOutEnd())

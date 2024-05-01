@@ -61,7 +61,7 @@ void MessageManager::End()
 }
 
 // ファイルに読み込んだ文字列の表示
-void MessageManager::DrawString(std::string id, int x, int y, unsigned int color)
+void MessageManager::DrawString(const std::string& id, const int x, const int y, const unsigned int color)
 {
 	// ロードしていない場合は止める
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());	
@@ -70,7 +70,7 @@ void MessageManager::DrawString(std::string id, int x, int y, unsigned int color
 }
 
 // ファイルに読み込んだ文字列を指定した座標を中心とした位置に表示
-void MessageManager::DrawStringCenter(std::string id, int x, int y, unsigned int color, unsigned int edgeColor)
+void MessageManager::DrawStringCenter(const std::string& id, const int x, const int y, const unsigned int color, const unsigned int edgeColor)
 {
 	// ロードしていない場合は止める
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());	
@@ -86,7 +86,7 @@ void MessageManager::DrawStringCenter(std::string id, int x, int y, unsigned int
 }
 
 // メッセージのデータの取得
-MessageData MessageManager::GetMessageData(std::string id)
+const MessageData& MessageManager::GetMessageData(const std::string& id)
 {
 	// ロードしていない場合は止める
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());
@@ -94,7 +94,7 @@ MessageData MessageManager::GetMessageData(std::string id)
 }
 
 // メッセージの幅の取得
-int MessageManager::GetMessageWidth(std::string id)
+int MessageManager::GetMessageWidth(const std::string& id)
 {
 	// ロードしていない場合は止める
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());
@@ -106,7 +106,7 @@ int MessageManager::GetMessageWidth(std::string id)
 }
 
 // メッセージの高さの取得
-int MessageManager::GetMessageHeight(std::string id)
+int MessageManager::GetMessageHeight(const std::string& id)
 {
 	// ロードしていない場合は止める
 	assert(m_messageDataTable.find(id) != m_messageDataTable.end());

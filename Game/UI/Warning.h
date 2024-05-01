@@ -9,19 +9,31 @@
 class Warning final : public UIBase
 {
 public:
-	// コンストラクタ
-	Warning(int drawFrame);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="drawFrame">描画フレーム</param>
+	Warning(const int drawFrame);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~Warning();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final;
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// 終了しているかどうか
+	/// <summary>
+	/// 終了判定
+	/// </summary>
+	/// <returns>終了しているか</returns>
 	bool IsEnd() const;
 
 private:

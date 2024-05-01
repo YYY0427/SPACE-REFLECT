@@ -47,7 +47,7 @@ public:
 	/// <param name="x">Y軸の座標</param>
 	/// <param name="y">Y軸の座標</param>
 	/// <param name="color">文字の描画色</param>
-	void DrawString(std::string id, int x, int y, unsigned int color);
+	void DrawString(const std::string& id, const int x, const int y, const unsigned int color);
 
 	/// <summary>
 	/// ファイルに読み込んだ文字列を指定した座標を中心とした位置に表示
@@ -56,7 +56,7 @@ public:
 	/// <param name="x">真ん中に指定したいX軸の座標</param>
 	/// <param name="y">Y軸の座標</param>
 	/// <param name="color">文字の描画色</param>
-	void DrawStringCenter(std::string id, int x, int y, unsigned int color, unsigned int edgeColor = 0x000000);
+	void DrawStringCenter(const std::string& id, const int x, const int y, const unsigned int color, const unsigned int edgeColor = 0x000000);
 
 	/// <summary>
 	/// フォントに読み込んだデータから作成したフォントデータを使って
@@ -68,7 +68,7 @@ public:
 	/// <param name="y">Y軸の座標</param>
 	/// <param name="color">文字の描画色</param>
 	template<typename T>
-	void DrawNumberCenter(std::string id, T value, int x, int y, unsigned int color, unsigned int edgeColor = 0x000000)
+	void DrawNumberCenter(const std::string& id, const T value, const int x, const int y, const unsigned const int color, const unsigned int edgeColor = 0x000000)
 	{
 		// ロードしていない場合は止める
 		assert(m_messageDataTable.find(id) != m_messageDataTable.end());
@@ -85,21 +85,21 @@ public:
 	/// </summary>
 	/// <param name="id">メッセージID</param>
 	/// <returns>メッセージデータ</returns>
-	MessageData GetMessageData(std::string id);
+	const MessageData& GetMessageData(const std::string& id);
 
 	/// <summary>
 	/// メッセージの幅の取得
 	/// </summary>
 	/// <param name="id">メッセージID</param>
 	/// <returns>メッセージの幅</returns>
-	int GetMessageWidth(std::string id);
+	int GetMessageWidth(const std::string& id);
 
 	/// <summary>
 	/// メッセージの高さの取得
 	/// </summary>
 	/// <param name="id">メッセージID</param>
 	/// <returns>メッセージの高さ</returns>
-	int GetMessageHeight(std::string id);
+	int GetMessageHeight(const std::string& id);
 
 private:
 	/// <summary>

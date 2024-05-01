@@ -9,31 +9,92 @@
 class ImageUI : public UIBase
 {
 public:
-	// コンストラクタ
-	ImageUI(std::string filePath);
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="filePath">画像ファイルのパス</param>
+	ImageUI(const std::string& filePath);
 
-	// デストラクタ
+	/// <summary>
+	/// デストラクタ
+	/// </summary>
 	~ImageUI();
 
-	// 更新
+	/// <summary>
+	/// 更新
+	/// </summary>
 	void Update() override final {};
 
-	// 描画
+	/// <summary>
+	/// 描画
+	/// </summary>
 	void Draw() override final;
 
-	// セッター
-	void SetPos(Vector2 pos);		// 位置
-	void SetRot(float rot);			// 回転
-	void SetCenter(Vector2 center);	// 中心座標
-	void SetScale(Vector2 scale);	// 拡大率
-	void SetAlpha(float alpha);		// 透明度
 
-	// ゲッター
-	Vector2 GetPos() const;		// 位置
-	float GetRot() const;		// 回転
-	Vector2 GetCenter() const;	// 中心座標
-	Vector2 GetScale() const;	// 拡大率
-	float GetAlpha() const;		// 透明度
+	//// セッター ////
+
+	/// <summary>
+	/// 位置の設定
+	/// </summary>
+	/// <param name="pos">位置</param>
+	void SetPos(const Vector2& pos);	
+
+	/// <summary>
+	/// 回転の設定
+	/// </summary>
+	/// <param name="rot">回転</param>
+	void SetRot(const float rot);		
+
+	/// <summary>
+	/// 中心座標の設定
+	/// </summary>
+	/// <param name="center">中心座標</param>
+	void SetCenter(const Vector2& center);	
+
+	/// <summary>
+	/// 拡大率の設定
+	/// </summary>
+	/// <param name="scale">拡大率</param>
+	void SetScale(const Vector2& scale);	
+
+	/// <summary>
+	/// 透明度の設定
+	/// </summary>
+	/// <param name="alpha">透明度</param>
+	void SetAlpha(const float alpha);		
+
+
+	//// ゲッター ////
+
+	/// <summary>
+	/// 位置の取得
+	/// </summary>
+	/// <returns>位置</returns>
+	const Vector2& GetPos() const;		
+
+	/// <summary>
+	/// 回転の取得
+	/// </summary>
+	/// <returns>回転</returns>
+	float GetRot() const;		
+
+	/// <summary>
+	/// 中心座標の取得
+	/// </summary>
+	/// <returns>中心座標</returns>
+	const Vector2& GetCenter() const;	
+
+	/// <summary>
+	/// 拡大率の取得
+	/// </summary>
+	/// <returns>拡大率</returns>
+	const Vector2& GetScale() const;	
+
+	/// <summary>
+	/// 透明度の取得
+	/// </summary>
+	/// <returns>透明度</returns>
+	float GetAlpha() const;		
 
 private:
 	// 画像ハンドル

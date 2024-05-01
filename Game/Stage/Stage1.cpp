@@ -95,20 +95,20 @@ Stage1::~Stage1()
 {
 }
 
-// リザルトの開始
+// リザルトステートの開始
 void Stage1::EnterResult()
 {
 	// リザルト画面のインスタンス生成
 	m_pResultWindow = std::make_shared<ResultWindow>();
 }
 
-// ゲームクリアの開始
+// ゲームクリアステートの開始
 void Stage1::EnterGameClear()
 {
 	SoundManager::GetInstance().PlaySE("GameClear");
 }
 
-// 初期化
+// ゲームオーバーステートの開始
 void Stage1::EnterGameOver()
 {
 	// BGMが再生中なら
@@ -121,7 +121,7 @@ void Stage1::EnterGameOver()
 	}
 }
 
-// 更新
+// 通常の更新
 void Stage1::Update()
 {
 	// プレイヤーが死んだら
@@ -152,7 +152,7 @@ void Stage1::Update()
 	m_stateMachine.Update();							// ステートマシン
 }
 
-// スタート演出の更新
+// スタート演出ステートの更新
 void Stage1::UpdateStartAnimation()
 {
 	// 更新
@@ -171,7 +171,7 @@ void Stage1::UpdateStartAnimation()
 	}
 }
 
-// プレイ中の更新
+// プレイステートの更新
 void Stage1::UpdatePlay()
 {
 	// ボスが死んだらゲームクリアに遷移
@@ -206,7 +206,7 @@ void Stage1::UpdatePlay()
 	m_pMeteorManager->Update(m_pCamera->GetPos());			// 隕石
 }
 
-// ゲームクリアの更新
+// ゲームクリアステートの更新
 void Stage1::UpdateGameClear()
 {
 	// 全てのレーザーの削除
@@ -224,7 +224,7 @@ void Stage1::UpdateGameClear()
 	}
 }
 
-// ゲームオーバーの更新
+// ゲームオーバーステートの更新
 void Stage1::UpdateGameOver()
 {
 	// UIの格納
@@ -252,7 +252,7 @@ void Stage1::UpdateGameOver()
 	DebugText::AddLog("GameOver");
 }
 
-// リザルトの更新
+// リザルトステートの更新
 void Stage1::UpdateResult()
 {
 	StageBase::UpdateResult("Stage1");

@@ -94,19 +94,19 @@ namespace InputState
 	}
 
 	// ボタンが押された瞬間の入力情報の取得
-	bool InputState::IsTriggered(InputType type)
+	bool InputState::IsTriggered(const InputType type)
 	{
 		return IsPressed(type) && !m_lastInput[static_cast<int>(type)];
 	}
 
 	// ボタンが押されている間の入力情報の取得
-	bool InputState::IsPressed(InputType type)
+	bool InputState::IsPressed(const InputType type)
 	{
 		return m_currentInput[static_cast<int>(type)];
 	}
 
 	// パッドのトリガーの入力情報の取得
-	bool InputState::IsPadTrigger(PadLR type)
+	bool InputState::IsPadTrigger(const PadLR type)
 	{
 		// パッドの情報の取得
 		XINPUT_STATE  padState;
@@ -126,7 +126,7 @@ namespace InputState
 	}
 
 	// パッドのスティックの入力情報を取得
-	int InputState::IsPadStick(PadLR stic, PadStickInputType type)
+	int InputState::IsPadStick(const PadLR stic, const PadStickInputType type)
 	{
 		// パッドの情報の取得
 		XINPUT_STATE  padState;
