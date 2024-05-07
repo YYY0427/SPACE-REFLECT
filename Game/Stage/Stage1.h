@@ -21,6 +21,11 @@ public:
 	~Stage1();
 
 	/// <summary>
+	/// プレイステートの開始
+	/// </summary>
+	void EnterPlay();
+
+	/// <summary>
 	/// リザルトステートの開始
 	/// </summary>
 	void EnterResult();

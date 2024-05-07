@@ -307,7 +307,7 @@ void StageSelectScene::UpdateSelectStage()
 	}
 }
 
-// スタート演出の更新
+// スタート演出の更新			
 void StageSelectScene::UpdateStartAnimation()
 {
 	// UI全体のアルファ値を下げる

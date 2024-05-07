@@ -145,8 +145,11 @@ void EnemyManager::UpdateWarning()
 		// ボス敵の生成
 		AddBossEnemy(m_bossType);
 
-		// ボス敵のBGMの再生
+		// 現在流れているBGMのフェードアウトの設定
 		auto& soundManager = SoundManager::GetInstance();
+		soundManager.SetFadeSound(soundManager.GetPlayBGMFileName(), boss_bgm_fade_frame, soundManager.GetMaxVolume(), 0);
+
+		// ボス敵のBGMの再生
 		soundManager.PlayBGM("BossBatleBgm");
 
 		// ボス敵のBGMのフェードインの設定

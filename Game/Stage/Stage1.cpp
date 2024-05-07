@@ -58,7 +58,7 @@ Stage1::Stage1(SceneManager& manager) :
 	m_playerToBossDamage = boss_reflect_laser_damage;
 
 	// ステートマシンの設定
-	m_stateMachine.AddState(State::START_ANIMATION, {}, [this]() { UpdateStartAnimation(); }, {});
+	m_stateMachine.AddState(State::START_ANIMATION, [this](){ EnterPlay(); }, [this]() { UpdateStartAnimation(); }, {});
 	m_stateMachine.AddState(State::PLAY, {}, [this]() { UpdatePlay(); }, {});
 	m_stateMachine.AddState(State::GAME_CLEAR, [this]() {EnterGameClear(); }, [this]() { UpdateGameClear(); }, {});
 	m_stateMachine.AddState(State::GAME_OVER, [this]() {EnterGameOver(); }, [this]() { UpdateGameOver(); }, {});
@@ -93,6 +93,14 @@ Stage1::Stage1(SceneManager& manager) :
 // デストラクタ
 Stage1::~Stage1()
 {
+}
+
+// プレイステートの開始
+void Stage1::EnterPlay()
+{
+	// BGMの再生
+	SoundManager::GetInstance().PlayBGM("TutorialBgm");
+	SoundManager::GetInstance().SetFadeSound("TutorialBgm", 120, 0, 255);
 }
 
 // リザルトステートの開始
