@@ -26,13 +26,13 @@ namespace
 	const std::string player_param_file_path = "Data/Csv/PlayerParam.csv";
 
 	// プレイヤーの移動量
-	const Vector3 player_vec_up    = { 0, 1, 0 };
-	const Vector3 player_vec_down  = { 0, -1, 0 };
-	const Vector3 player_vec_right = { -1, 0, 0 };
-	const Vector3 player_vec_left  = { 1, 0, 0 };
+	const Math::Vector3 player_vec_up    = { 0, 1, 0 };
+	const Math::Vector3 player_vec_down  = { 0, -1, 0 };
+	const Math::Vector3 player_vec_right = { -1, 0, 0 };
+	const Math::Vector3 player_vec_left  = { 1, 0, 0 };
 
 	// プレイヤーの初期の向いている方向
-	const Vector3 init_model_direction = { 0, 0, 1 };
+	const Math::Vector3 init_model_direction = { 0, 0, 1 };
 
 	// 何フレーム前まで位置情報を保存するか
 	constexpr int log_frame = 10;
@@ -58,7 +58,7 @@ namespace
 	const int game_over_frame = 60 * 5;
 
 	// ブーストエフェクトのプレイヤーとの相対位置
-	const Vector3 boost_effect_relative_pos = { 0, -30.0f, -30.0f };
+	const Math::Vector3 boost_effect_relative_pos = { 0, -30.0f, -30.0f };
 
 	// プレイヤーを進んでいるように見せるために傾ける角度
 	constexpr float tilt_angle = 25.0f;
@@ -79,7 +79,7 @@ namespace
 	constexpr float game_over_rotate_angle = 5.0f;
 
 	// ゲームオーバー時のプレイヤーの移動ベクトル
-	const Vector3 game_over_move_vec = { 0.0f, -0.5f, 1.0f };
+	const Math::Vector3 game_over_move_vec = { 0.0f, -0.5f, 1.0f };
 }
 
 //  コンストラクタ
@@ -144,7 +144,7 @@ Player::~Player()
 }
 
 // スタート演出の更新
-void Player::UpdateStart(const Vector3& cameraPos)
+void Player::UpdateStart(const Math::Vector3& cameraPos)
 {
 	// Z軸方向に移動
 	m_moveVec.z = GetParameter(DataType::PlayerParamType::START_MOVE_SPEED_Z);
@@ -228,16 +228,16 @@ void Player::UpdatePlay(const float cameraHorizon)
 	int right = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::RIGHT);
 
 	// カメラの回転に合わせて移動ベクトルを作成
-	Vector3 moveUp    = Vector3::Transform(player_vec_up, Math::Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveDown  = Vector3::Transform(player_vec_down, Math::Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveRight = Vector3::Transform(player_vec_right, Math::Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveLeft  = Vector3::Transform(player_vec_left, Math::Matrix::GetRotationY(cameraHorizon));
+	Math::Vector3 moveUp    = Math::Vector3::Transform(player_vec_up, Math::Matrix::GetRotationY(cameraHorizon));
+	Math::Vector3 moveDown  = Math::Vector3::Transform(player_vec_down, Math::Matrix::GetRotationY(cameraHorizon));
+	Math::Vector3 moveRight = Math::Vector3::Transform(player_vec_right, Math::Matrix::GetRotationY(cameraHorizon));
+	Math::Vector3 moveLeft  = Math::Vector3::Transform(player_vec_left, Math::Matrix::GetRotationY(cameraHorizon));
 
 	// 移動情報の初期化
 	m_isInputLeftStick = false;
 	m_moveVec.z = 0;
-	Vector3 moveVecX = { 0, 0, 0 };
-	Vector3 moveVecY = { 0, 0, 0 };
+	Math::Vector3 moveVecX = { 0, 0, 0 };
+	Math::Vector3 moveVecY = { 0, 0, 0 };
 
 	// 移動ベクトルの減少
 	m_moveVec *= move_vec_decrease_rate;
@@ -271,7 +271,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 		// プレイヤーから見てx方向とz方向のベクトルを足して移動ベクトルを作成する
 		m_moveVec = moveVecY + moveVecX;
 
-		Vector3 moveSpeed;
+		Math::Vector3 moveSpeed;
 		moveSpeed = m_moveSpeed;
 
 		// カメラの移動範囲を超えている場合
@@ -293,19 +293,19 @@ void Player::UpdatePlay(const float cameraHorizon)
 	}
 
 	// 作成した移動ベクトルで座標の移動
-	Vector3 tempPos = m_pos + m_moveVec;
+	Math::Vector3 tempPos = m_pos + m_moveVec;
 
 	// ワールド座標をスクリーン座標に変換
-	Vector3 screenPos = Vector3::FromDxLibVector3(
+	Math::Vector3 screenPos = Math::Vector3::FromDxLibVector3(
 		ConvWorldPosToScreenPos(tempPos.ToDxLibVector3()));
 
 	// 画面外に出ないようにする
-	Size size = Application::GetInstance().GetWindowSize();
+	Size size = Application::GetInstance()->GetWindowSize();
 	if (screenPos.x > size.width - m_playerSize.x)
 	{
 		screenPos.x = size.width - m_playerSize.x;
 
-		Vector3 worldPos = Vector3::FromDxLibVector3(
+		Math::Vector3 worldPos = Math::Vector3::FromDxLibVector3(
 			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 		m_pos.x = worldPos.x;
 		m_pos.y = worldPos.y;
@@ -314,7 +314,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 	{
 		screenPos.x = 0 + m_playerSize.x;
 
-		Vector3 worldPos = Vector3::FromDxLibVector3(
+		Math::Vector3 worldPos = Math::Vector3::FromDxLibVector3(
 			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 		m_pos.x = worldPos.x;
 		m_pos.y = worldPos.y;
@@ -323,7 +323,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 	{
 		screenPos.y = size.height - m_playerSize.y;
 
-		Vector3 worldPos = Vector3::FromDxLibVector3(
+		Math::Vector3 worldPos = Math::Vector3::FromDxLibVector3(
 			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 		m_pos.x = worldPos.x;
 		m_pos.y = worldPos.y;
@@ -332,7 +332,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 	{
 		screenPos.y = 0 + m_playerSize.y;
 
-		Vector3 worldPos = Vector3::FromDxLibVector3(
+		Math::Vector3 worldPos = Math::Vector3::FromDxLibVector3(
 			ConvScreenPosToWorldPos(screenPos.ToDxLibVector3()));
 		m_pos.x = worldPos.x;
 		m_pos.y = worldPos.y;
@@ -359,8 +359,8 @@ void Player::UpdatePlay(const float cameraHorizon)
 	// 0以下にはならない
 	m_ultimateTimer = (std::max)(--m_ultimateTimer, 0);
 
-	Vector3 moveVec = m_moveVec;
-	Vector3 moveSpeed = m_moveSpeed;
+	Math::Vector3 moveVec = m_moveVec;
+	Math::Vector3 moveSpeed = m_moveSpeed;
 	if (m_pCamera->IsOverMoveRangeX())
 	{
 		moveSpeed.x = m_moveSpeed.x * (1.0f - m_pCamera->GetCameraMoveRate());
@@ -607,13 +607,13 @@ bool Player::IsEnabled() const
 }
 
 // 位置情報の取得
-const Vector3& Player::GetPos() const
+const Math::Vector3& Player::GetPos() const
 {
 	return m_pos;
 }
 
 // 移動ベクトルの取得
-const Vector3& Player::GetMoveVec() const
+const Math::Vector3& Player::GetMoveVec() const
 {
 	return m_moveVec;
 }
@@ -643,7 +643,7 @@ const std::shared_ptr<Shield>& Player::GetShield() const
 }
 
 // 決められたフレームの数だけ位置情報を保存するテーブルの取得
-const std::deque<Vector3>& Player::GetPosLogTable() const
+const std::deque<Math::Vector3>& Player::GetPosLogTable() const
 {
 	return m_posLogTable;
 }

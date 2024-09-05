@@ -140,14 +140,14 @@ void Model::Draw()
 }
 
 // モデルの表示位置の設定
-void Model::SetPos(const Vector3& pos)
+void Model::SetPos(const Math::Vector3& pos)
 {
 	int result = MV1SetPosition(m_modelHandle, pos.ToDxLibVector3());
 	assert(result != -1);
 }
 
 // モデルの回転状態の設定
-void Model::SetRot(const Vector3& rot)
+void Model::SetRot(const Math::Vector3& rot)
 {
 	int result = MV1SetRotationXYZ(m_modelHandle, rot.ToDxLibVector3());
 	assert(result != -1);
@@ -161,7 +161,7 @@ void Model::SetRotMtx(const Math::Matrix& mtx)
 }
 
 // モデルの拡大率の設定
-void Model::SetScale(const Vector3& scale)
+void Model::SetScale(const Math::Vector3& scale)
 {
 	int result = MV1SetScale(m_modelHandle, scale.ToDxLibVector3());
 	assert(result != -1);

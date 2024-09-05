@@ -35,13 +35,13 @@ public:
 	/// レーザーを止める
 	/// </summary>
 	/// <param name="pos">レーザーを止める位置</param>
-	virtual void Stop(const Vector3& pos) {};
+	virtual void Stop(const Math::Vector3& pos) {};
 
 	/// <summary>
 	/// 反射
 	/// </summary>
 	/// <param name="pos">反射する位置</param>
-	virtual void Reflect(const Vector3& pos) {};
+	virtual void Reflect(const Math::Vector3& pos) {};
 
 	/// <summary>
 	/// 反射を元に戻す
@@ -72,19 +72,19 @@ public:
 	/// 位置情報を取得
 	/// </summary>
 	/// <returns>位置情報</returns>
-	const Vector3& GetPos() const;	
+	const Math::Vector3& GetPos() const;
 
 	/// <summary>
 	/// レーザーの終端位置を取得
 	/// </summary>
 	/// <returns>レーザーの終端位置</returns>
-	const Vector3& GetEndPos() const;		
+	const Math::Vector3& GetEndPos() const;
 
 	/// <summary>
 	/// 方向ベクトルを取得
 	/// </summary>
 	/// <returns>方向ベクトル</returns>
-	virtual Vector3 GetDirection() const;
+	virtual Math::Vector3 GetDirection() const;
 
 	/// <summary>
 	/// 存在フラグの取得
@@ -105,7 +105,7 @@ public:
 	/// 位置情報を設定
 	/// </summary>
 	/// <param name="pos">位置情報</param>
-	void SetPos(const Vector3& pos);
+	void SetPos(const Math::Vector3& pos);
 
 	/// <summary>
 	/// 反射レーザーのキーを設定
@@ -118,19 +118,19 @@ protected:
 	std::shared_ptr<Model> m_pModel;
 
 	// 位置情報
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 
 	// 開始位置
-	Vector3 m_startPos;
+	Math::Vector3 m_startPos;
 
 	// 終了位置
-	Vector3 m_endPos;
+	Math::Vector3 m_endPos;
 
 	// 回転情報
-	Vector3 m_rot;
+	Math::Vector3 m_rot;
 
 	// 拡大率
-	Vector3 m_scale;
+	Math::Vector3 m_scale;
 
 	// 速度
 	float m_speed;		

@@ -34,7 +34,7 @@ enum class BossEnemyType
 // 敵の行動のデータ
 struct EnemyActionData
 {
-	Vector3 goalPos;		// 目的地
+	Math::Vector3 goalPos;		// 目的地
 	int idleFrame;			// 目的地に到達してから次の目的地に向かうまでの待機フレーム
 	bool isLaser;			// 目的地に到達したらレーザーを撃つか
 	LaserType laserType;	// レーザーを撃つ場合、どのレーザーを撃つか
@@ -48,7 +48,7 @@ struct EnemyActionData
 // 敵のデータ
 struct EnemyData
 {
-	Vector3 pos;	// 敵の初期位置
+	Math::Vector3 pos;	// 敵の初期位置
 	EnemyType type;	// 敵の種類
 	int hp;			// 敵の体力
 	int attack;		// 敵の攻撃力

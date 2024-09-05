@@ -51,7 +51,7 @@ TutorialUI::TutorialUI() :
 	m_changeImageFrame = change_image_frame;
 
 	// 画面サイズの取得
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 
 	// 移動のチュートリアルのデータの設定
 	std::vector<int> imgHandle;
@@ -146,7 +146,7 @@ void TutorialUI::Update()
 				data.second.scale = (std::max)(data.second.scale, 0.6f);
 
 				// 目的地の設定
-				auto& screenSize = Application::GetInstance().GetWindowSize();
+				auto& screenSize = Application::GetInstance()->GetWindowSize();
 				Math::Vector2 goalPos = { static_cast<float>(screenSize.width) - 200.0f,
 									static_cast<float>(screenSize.height - 30.0f) };
 
@@ -230,7 +230,7 @@ void TutorialUI::Draw()
 			// 書き込み
 			SetDrawScreen(data.second.messageTextImgHandle);
 			ClearDrawScreen();
-			auto& screenSize = Application::GetInstance().GetWindowSize();
+			auto& screenSize = Application::GetInstance()->GetWindowSize();
 			String::MessageManager::GetInstance()->DrawStringCenter(data.second.messageId,
 				screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
 			SetDrawScreen(DX_SCREEN_BACK);

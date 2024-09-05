@@ -134,7 +134,7 @@ void SceneManager::DrawFps()
 {
 #ifdef _DEBUG
 	// 画面サイズの取得
-	Size size = Application::GetInstance().GetWindowSize();
+	Size size = Application::GetInstance()->GetWindowSize();
 
 	// fpsの取得
 	float nowFps = GetFPS();
@@ -156,7 +156,7 @@ void SceneManager::DrawUpdateTime()
 {
 #ifdef _DEBUG
 	// 画面サイズの取得
-	Size size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// fpsの取得
 	float nowFps = GetFPS();
@@ -175,7 +175,7 @@ void SceneManager::DrwaDrawTime()
 {
 #ifdef _DEBUG
 	// 画面サイズの取得
-	Size size = Application::GetInstance().GetWindowSize();
+	Size size = Application::GetInstance()->GetWindowSize();
 
 	// fpsの取得
 	float nowFps = GetFPS();

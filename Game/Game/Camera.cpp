@@ -33,17 +33,17 @@ namespace
 
 	// ゲームスタート時
 	constexpr int camera_start_animation_frame = 200;								// カメラの演出のフレーム数
-	const Vector3 camera_init_relative_player_pos        = { 500.0f, 100.0f, 2000.0f };	// カメラの初期位置
-	const Vector3 camera_start_animation_end_pos         = { 0.0f, 50.0f, -400.0f };// カメラの移動先の位置	
-	const Vector3 camera_start_animation_start_direction = { -1.0f, 0.0f, -1.0f };	// カメラの移動先の開始の方向
-	const Vector3 camera_start_animation_end_direction   = { 1.0f, 0.0f, 1.0f };	// カメラの移動先の終了の方向
+	const Math::Vector3 camera_init_relative_player_pos        = { 500.0f, 100.0f, 2000.0f };	// カメラの初期位置
+	const Math::Vector3 camera_start_animation_end_pos         = { 0.0f, 50.0f, -400.0f };// カメラの移動先の位置	
+	const Math::Vector3 camera_start_animation_start_direction = { -1.0f, 0.0f, -1.0f };	// カメラの移動先の開始の方向
+	const Math::Vector3 camera_start_animation_end_direction   = { 1.0f, 0.0f, 1.0f };	// カメラの移動先の終了の方向
 
 	// ゲームクリア時
 	constexpr int camera_game_clear_target_frame = 300;		// カメラのターゲットをプレイヤーに向けるフレーム数
 	constexpr int camera_game_clear_move_frame   = 300;		// カメラの位置を移動させるフレーム数
-	const Vector3 camera_game_clear_end_pos = { 200.0f, 50.0f, 200.0f };	// カメラの移動先の位置
-	const Vector3 camera_game_clear_start_direction = { 1.0f, 0.0f, 1.0f };	// カメラの移動先の開始の方向
-	const Vector3 camera_game_clear_end_direction = { -1.0f, 0.0f, -1.0f };	// カメラの移動先の終了の方向
+	const Math::Vector3 camera_game_clear_end_pos = { 200.0f, 50.0f, 200.0f };	// カメラの移動先の位置
+	const Math::Vector3 camera_game_clear_start_direction = { 1.0f, 0.0f, 1.0f };	// カメラの移動先の開始の方向
+	const Math::Vector3 camera_game_clear_end_direction = { -1.0f, 0.0f, -1.0f };	// カメラの移動先の終了の方向
 
 	// ゲームオーバー時のカメラのターゲットをプレイヤーに向けるフレーム数
 	constexpr int camera_game_over_target_frame = 300;
@@ -71,7 +71,7 @@ Camera::Camera() :
 }
 
 // コンストラクタ
-Camera::Camera(const Vector3& playerPos) :
+Camera::Camera(const Math::Vector3& playerPos) :
 	m_pos(playerPos + camera_init_relative_player_pos),
 	m_target(playerPos),
 	m_perspective(camera_perspective),
@@ -92,7 +92,7 @@ Camera::~Camera()
 }
 
 // プレイ時の更新
-void Camera::UpdatePlay(const Vector3& playerPos, const Vector3& playerVec)
+void Camera::UpdatePlay(const Math::Vector3& playerPos, const Math::Vector3& playerVec)
 {
 #if true
 	// カメラをプレイヤーのベクトルに合わせて少し移動
@@ -115,7 +115,7 @@ void Camera::UpdatePlay(const Vector3& playerPos, const Vector3& playerVec)
 #endif
 
 	// カメラとプレイヤーの差分
-	Vector3 direction = playerPos - m_pos;
+	Math::Vector3 direction = playerPos - m_pos;
 
 	// Y軸、X軸を無視
 	direction.y = 0.0f;
@@ -139,7 +139,7 @@ void Camera::UpdatePlay(const Vector3& playerPos, const Vector3& playerVec)
 }
 
 // スタート演出時の更新
-void Camera::UpdateStart(const Vector3& playerPos)
+void Camera::UpdateStart(const Math::Vector3& playerPos)
 {
 	// 注視点の更新
 	m_target = playerPos;
@@ -152,7 +152,7 @@ void Camera::UpdateStart(const Vector3& playerPos)
 		float hermiteValue = static_cast<float>(m_hermiteFrame) / static_cast<float>(camera_start_animation_frame);
 
 		// カメラの位置をエルミート曲線で移動させる
-		m_pos = Vector3::Hermite
+		m_pos = Math::Vector3::Hermite
 			(
 				m_pos,
 				camera_start_animation_start_direction,
@@ -174,7 +174,7 @@ void Camera::UpdateStart(const Vector3& playerPos)
 }
 
 // ゲームクリア時の更新
-bool Camera::UpdateGameClear(const Vector3& playerPos)
+bool Camera::UpdateGameClear(const Math::Vector3& playerPos)
 {
 	// フレーム数を増やす
 	m_gameClearLerpFrame = (std::min)(++m_gameClearLerpFrame, camera_game_clear_target_frame);
@@ -183,7 +183,7 @@ bool Camera::UpdateGameClear(const Vector3& playerPos)
 	float lerp  = static_cast<float>(m_gameClearLerpFrame) / static_cast<float>(camera_game_clear_target_frame);
 
 	// カメラのターゲットをプレイヤーの位置に徐々に変更
-	m_target = Vector3::Lerp(m_target, playerPos, lerp);
+	m_target = Math::Vector3::Lerp(m_target, playerPos, lerp);
 
 	// フレーム数を増やす
 	m_hermiteFrame = (std::min)(++m_hermiteFrame, camera_game_clear_move_frame);
@@ -192,10 +192,10 @@ bool Camera::UpdateGameClear(const Vector3& playerPos)
 	float hermiteValue = static_cast<float>(m_hermiteFrame) / static_cast<float>(camera_game_clear_move_frame);
 
 	// カメラの移動先の位置
-	Vector3 endPos = playerPos + camera_game_clear_end_pos;
+	Math::Vector3 endPos = playerPos + camera_game_clear_end_pos;
 
 	// カメラの位置をエルミート曲線で移動
-	m_pos = Vector3::Hermite
+	m_pos = Math::Vector3::Hermite
 	(
 		m_pos,
 		camera_game_clear_start_direction,
@@ -220,12 +220,12 @@ bool Camera::UpdateGameClear(const Vector3& playerPos)
 }
 
 // ゲームオーバー時の更新
-void Camera::UpdateGameOver(const Vector3& playerPos)
+void Camera::UpdateGameOver(const Math::Vector3& playerPos)
 {
 	// カメラのターゲットをプレイヤーの位置に徐々に変更
 	m_gameOverLerpFrame = (std::min)(++m_gameOverLerpFrame, camera_game_over_target_frame);
 	float lerp = static_cast<float>(m_gameOverLerpFrame) / static_cast<float>(camera_game_over_target_frame);
-	m_target = Vector3::Lerp(m_target, playerPos, lerp);
+	m_target = Math::Vector3::Lerp(m_target, playerPos, lerp);
 
 	// カメラの設定
 	SetCamera();
@@ -247,7 +247,7 @@ void Camera::SetCamera()
 }
 
 // カメラの設定
-void Camera::SetCamera(const Vector3& pos, const Vector3& target)
+void Camera::SetCamera(const Math::Vector3& pos, const Math::Vector3& target)
 {
 	// カメラの座標と注視点の更新
 	m_pos    = pos;
@@ -258,13 +258,13 @@ void Camera::SetCamera(const Vector3& pos, const Vector3& target)
 }
 
 // カメラの位置の取得
-const Vector3& Camera::GetPos() const
+const Math::Vector3& Camera::GetPos() const
 {
 	return m_pos;
 }
 
 // カメラの注視点の取得
-const Vector3& Camera::GetTarget() const
+const Math::Vector3& Camera::GetTarget() const
 {
 	return m_target;
 }

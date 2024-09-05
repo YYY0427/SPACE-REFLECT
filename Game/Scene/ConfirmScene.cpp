@@ -35,7 +35,7 @@ ConfirmScene::~ConfirmScene()
 void ConfirmScene::Init()
 {
 	// モザイク処理用のグラフィックの作成
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
 
 	// 項目の描画色を選択されていないときの色に初期化
@@ -116,7 +116,7 @@ void ConfirmScene::Draw()
 	Debug::Text::AddLog("currentSelectItem", {m_currentSelectItem});
 
 	// モザイク処理
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 	GetDrawScreenGraph(0, 0, size.width, size.height, m_gaussScreen);
 	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, 8, 600);
 	DrawGraph(0, 0, m_gaussScreen, true);

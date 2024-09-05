@@ -45,7 +45,7 @@ Warning::Warning(const int drawFrame) :
 	}
 
 	// ‰æ‘œ‚ÌÀ•W‚ðÝ’è
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	m_uiDataTable[static_cast<int>(ID::CENTER)].pos.x = screenSize.width / 2.0f;
 	m_uiDataTable[static_cast<int>(ID::CENTER)].pos.y = screenSize.height / 2.0f;
 	m_uiDataTable[static_cast<int>(ID::UP)].pos.y = (screenSize.height / 2.0f) - 300;
@@ -156,7 +156,7 @@ void Warning::Draw()
 		}
 	}
 	// Œx•¶Žš‚Ì•`‰æ
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_stringAlphaParam);
 	String::MessageManager::GetInstance()->DrawStringCenter("WarningUI", screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

@@ -147,10 +147,10 @@ void StageBase::Collision()
 		}
 
 		// シールドの頂点の座標を取得
-		Vector3 shieldLeftTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[0].pos);
-		Vector3 shieldRightTopPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[1].pos);
-		Vector3 shieldLeftBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[2].pos);
-		Vector3 shieldRightBottomPos = Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[3].pos);
+		Math::Vector3 shieldLeftTopPos = Math::Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[0].pos);
+		Math::Vector3 shieldRightTopPos = Math::Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[1].pos);
+		Math::Vector3 shieldLeftBottomPos = Math::Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[2].pos);
+		Math::Vector3 shieldRightBottomPos = Math::Vector3::FromDxLibVector3(m_pPlayer->GetShield()->GetVertex()[3].pos);
 
 		// シールドは2つのポリゴンからできてるので2つのポリゴンともチェック
 		HITRESULT_LINE result = HitCheck_Line_Triangle(
@@ -165,9 +165,9 @@ void StageBase::Collision()
 		if (result.HitFlag || result2.HitFlag)
 		{
 			// 反射レーザーの発射位置を取得
-			Vector3 firePos{};
-			if (result.HitFlag)	firePos = Vector3::FromDxLibVector3(result.Position);
-			else				firePos = Vector3::FromDxLibVector3(result2.Position);
+			Math::Vector3 firePos{};
+			if (result.HitFlag)	firePos = Math::Vector3::FromDxLibVector3(result.Position);
+			else				firePos = Math::Vector3::FromDxLibVector3(result2.Position);
 
 			// まだ反射レーザーがなければ反射レーザーを追加
 			if (!laser.pLaser->IsReflect())
@@ -252,7 +252,7 @@ void StageBase::Collision()
 			if (result.HitNum > 0)
 			{
 				// 敵にダメージ処理
-				enemy->OnDamage(m_playerToEnemyDamage, Vector3::FromDxLibVector3(result.Dim->HitPosition));
+				enemy->OnDamage(m_playerToEnemyDamage, Math::Vector3::FromDxLibVector3(result.Dim->HitPosition));
 			}
 			// 当たり判定情報の後始末
 			MV1CollResultPolyDimTerminate(result);
@@ -272,7 +272,7 @@ void StageBase::Collision()
 			{
 				// ボスにダメージ処理
 				m_pEnemyManager->GetBossEnemy()->OnDamage(
-					m_playerToBossDamage, Vector3::FromDxLibVector3(result.Dim->HitPosition));
+					m_playerToBossDamage, Math::Vector3::FromDxLibVector3(result.Dim->HitPosition));
 			}
 			// 当たり判定情報の後始末
 			MV1CollResultPolyDimTerminate(result);

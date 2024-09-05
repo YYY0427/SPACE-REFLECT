@@ -28,7 +28,7 @@ namespace
 	constexpr float min_scale = 1.0f;	// 最小
 
 	// スクリーンサイズ
-	const auto& screenSize = Application::GetInstance().GetWindowSize();
+	const auto& screenSize = Application::GetInstance()->GetWindowSize();
 
 	// モデルの位置を少しずらす範囲
 	constexpr float model_pos_range = 5.0f;
@@ -60,7 +60,7 @@ namespace
 }
 
 // コンストラクタ
-CubeLaser::CubeLaser(const Vector3& firePos, 
+CubeLaser::CubeLaser(const Math::Vector3& firePos,
 				     const float laserSpeed, 
 					 const std::shared_ptr<Player>& pPlayer,
 					 const std::shared_ptr<Camera>& pCamera)
@@ -146,7 +146,7 @@ void CubeLaser::Draw()
 	for (int i = 0; i < model_num; i++)
 	{
 		// モデルの位置を少しずらして描画
-		Vector3 pos;
+		Math::Vector3 pos;
 		pos.x = m_pos.x + Math::Util::GetRandFloat(-model_pos_range, model_pos_range);
 		pos.y = m_pos.y + Math::Util::GetRandFloat(-model_pos_range, model_pos_range);
 		pos.z = m_pos.z + Math::Util::GetRandFloat(-model_pos_range, model_pos_range);

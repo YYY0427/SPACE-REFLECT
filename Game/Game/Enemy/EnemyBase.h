@@ -40,7 +40,7 @@ public:
 	/// </summary>
 	/// <param name="damage">ダメージ量</param>
 	/// <param name="pos">ダメージを受けた場所</param>
-	virtual void OnDamage(const int damage, const Vector3& pos);
+	virtual void OnDamage(const int damage, const Math::Vector3& pos);
 
 	/// <summary>
 	/// 死亡演出
@@ -54,13 +54,13 @@ public:
 	/// 座標を取得
 	/// </summary>
 	/// <returns>座標</returns>
-	const Vector3& GetPos() const;
+	const Math::Vector3& GetPos() const;
 
 	/// <summary>
 	/// レーザーの発射位置を取得
 	/// </summary>
 	/// <returns>レーザーの発射位置</returns>
-	const Vector3& GetLaserFirePos() const;	
+	const Math::Vector3& GetLaserFirePos() const;
 
 	/// <summary>
 	/// 存在フラグを取得
@@ -90,22 +90,22 @@ protected:
 	std::vector<EnemyActionData> m_actionDataList;
 
 	// 位置情報
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 
 	// 回転情報
-	Vector3 m_rot;
+	Math::Vector3 m_rot;
 
 	// 移動ベクトル
-	Vector3 m_moveVec;
+	Math::Vector3 m_moveVec;
 
 	// 目的地
-	Vector3 m_goalPos;
+	Math::Vector3 m_goalPos;
 
 	// レーザーの発射位置
-	Vector3 m_laserFirePos;
+	Math::Vector3 m_laserFirePos;
 
 	// 大きさ
-	Vector3 m_scale;
+	Math::Vector3 m_scale;
 
 	// 当たり判定の半径
 	float m_collisionRadius;	

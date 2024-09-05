@@ -21,8 +21,8 @@ Fade::Fade() :
 	m_fadeBrightRange(0, 255)
 {
 	// モザイク処理用のグラフィックの作成
-	auto& app = Application::GetInstance();
-	m_gaussScreen = MakeScreen(app.GetWindowSize().width, app.GetWindowSize().height);
+	const auto& app = Application::GetInstance();
+	m_gaussScreen = MakeScreen(app->GetWindowSize().width, app->GetWindowSize().height);
 }
 
 // デストラクタ
@@ -53,9 +53,9 @@ void Fade::DrawFade(bool isDraw)
 {
 	if (!isDraw) return;
 
-	auto& app = Application::GetInstance();
+	const auto& app = Application::GetInstance();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_fadeBright);
-	DrawBox(0, 0, app.GetWindowSize().width, app.GetWindowSize().height, m_fadeColor, true);
+	DrawBox(0, 0, app->GetWindowSize().width, app->GetWindowSize().height, m_fadeColor, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 
@@ -68,8 +68,8 @@ void Fade::DrawGaussFade(bool isDraw)
 	int gaussParameter = m_fadeBright * gauss_max_value / 255;
 
 	// モザイク画像の作成
-	auto& app = Application::GetInstance();
-	GetDrawScreenGraph(0, 0, app.GetWindowSize().width, app.GetWindowSize().height, m_gaussScreen);
+	const auto& app = Application::GetInstance();
+	GetDrawScreenGraph(0, 0, app->GetWindowSize().width, app->GetWindowSize().height, m_gaussScreen);
 	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, 8, gaussParameter);
 	DrawGraph(0, 0, m_gaussScreen, true);
 }

@@ -41,16 +41,6 @@ Application::Application() :
 {
 }
 
-// Applicationクラスのインスタンスを取得
-Application& Application::GetInstance()
-{
-	// 自分自身の静的オブジェクトを作成
-	static Application instance;
-
-	// 作成したオブジェクトの参照を返す
-	return instance;
-}
-
 // 初期化
 bool Application::Init()
 {

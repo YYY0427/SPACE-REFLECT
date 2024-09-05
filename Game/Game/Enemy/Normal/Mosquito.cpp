@@ -17,7 +17,7 @@ namespace
 	constexpr float distance_threshold = 50.0f;  
 
 	// モデルの初期の向いている方向
-	const Vector3 init_model_direction = { 0, 0, -1 };
+	const Math::Vector3 init_model_direction = { 0, 0, -1 };
 
 	// 当たり判定の半径
 	constexpr float hit_radius = 70.0f;
@@ -56,7 +56,7 @@ Mosquito::Mosquito(const EnemyData& data,
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + data.pos.z) / GetCameraFar();
 
 	// 座標の設定
-	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ data.pos.x, data.pos.y, z }));
+	m_pos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ data.pos.x, data.pos.y, z }));
 
 	// プレイヤーを向くように回転行列を設定
 	auto rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
@@ -119,7 +119,7 @@ void Mosquito::Update()
 	if (m_pPlayer->IsEnabled())
 	{
 		// レーザーの発射位置の更新
-		m_laserFirePos = Vector3::FromDxLibVector3(
+		m_laserFirePos = Math::Vector3::FromDxLibVector3(
 			MV1GetFramePosition(m_pModel->GetModelHandle(), laser_fire_frame_pos));
 
 		// プレイヤーを向くように回転行列を設定
@@ -193,7 +193,7 @@ void Mosquito::UpdateMove()
 		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->goalPos.z) / GetCameraFar();
 
 		// 目的地の設定
-		Vector3 goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
+		Math::Vector3 goalPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
 		m_goalPos.z = goalPos.z;
 
 		// 移動ベクトルの設定
@@ -260,7 +260,7 @@ void Mosquito::SetGoalPos()
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->goalPos.z) / GetCameraFar();
 
 	// 目的地の設定
-	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
+	m_goalPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->goalPos.x, itr->goalPos.y, z }));
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
@@ -290,7 +290,7 @@ void Mosquito::DrawOutLine()
 	// TODO : shaderでやる
 
 	// 元々の拡大率を保存
-	Vector3 scale = m_scale;
+	Math::Vector3 scale = m_scale;
 
 	// 輪郭線の為に拡大
 	m_pModel->SetScale({ scale.x * outline_width, scale.y * outline_width, 0.0f });
@@ -309,7 +309,7 @@ void Mosquito::DrawOutLine()
 }
 
 // 座標の取得
-const Vector3& Mosquito::GetPos() const
+const Math::Vector3& Mosquito::GetPos() const
 {
 	return m_pos;
 }

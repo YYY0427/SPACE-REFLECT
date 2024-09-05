@@ -43,7 +43,7 @@ void StripTransitor::Draw()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// 割合を計算
 	auto rate = static_cast<float>(m_frame) / static_cast<float>(m_interval);

@@ -40,7 +40,7 @@ void MeteorManager::UpdateStart()
 }
 
 // XV
-void MeteorManager::Update(const Vector3& cameraPos)
+void MeteorManager::Update(const Math::Vector3& cameraPos)
 {
 	// ‘¶İ‚µ‚È‚¢è¦Î‚ğíœ
 	m_pMeteorList.remove_if([](std::shared_ptr<Meteor> meteor) { return !meteor->IsEnabled(); });

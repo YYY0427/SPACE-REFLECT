@@ -46,7 +46,7 @@ public:
 	/// À•W‚ğæ“¾
 	/// </summary>
 	/// <returns>À•W</returns>
-	const Vector3& GetPos() const;			
+	const Math::Vector3& GetPos() const;
 
 private:
 

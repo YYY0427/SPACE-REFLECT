@@ -84,7 +84,7 @@ public:
 	int AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 						const std::shared_ptr<Shield>& pShield,
 						const std::shared_ptr<LaserBase>& pLaser, 
-					    const Vector3& firePos);
+					    const Math::Vector3& firePos);
 
 	/// <summary>
 	/// キューブレーザーの追加
@@ -92,7 +92,7 @@ public:
 	/// <param name="firePos">発射位置</param>
 	/// <param name="laserSpeed">レーザーの移動速度</param>
 	/// <returns>レーザーのキー</returns>
-	int AddCubeLaser(const Vector3& firePos, const float laserSpeed);
+	int AddCubeLaser(const Math::Vector3& firePos, const float laserSpeed);
 
 	/// <summary>
 	/// レーザーの削除
@@ -128,7 +128,7 @@ public:
 	/// </summary>
 	/// <param name="key">レーザーのキー</param>
 	/// <param name="pos">位置情報</param>
-	void SetLaserPos(const int key, const Vector3& pos);
+	void SetLaserPos(const int key, const Math::Vector3& pos);
 
 private:
 	/// <summary>

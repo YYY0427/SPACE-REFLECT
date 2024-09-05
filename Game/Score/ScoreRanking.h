@@ -2,6 +2,11 @@
 #include <string>
 #include <vector>
 
+namespace Score
+{
+
+}
+
 // スコアの保存データ
 struct ScoreSaveData
 {

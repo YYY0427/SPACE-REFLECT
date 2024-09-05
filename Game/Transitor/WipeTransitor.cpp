@@ -33,7 +33,7 @@ WipeTransitor::WipeTransitor(TransitDirection dir, int interval) :
 	}
 
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// カラーを設定
 	std::array<COLOR_U8, 4> colors{};	

@@ -106,13 +106,13 @@ public:
 	/// モデルの位置を設定
 	/// </summary>
 	/// <param name="pos">位置</param>
-	void SetPos(const Vector3& pos);	
+	void SetPos(const Math::Vector3& pos);
 
 	/// <summary>
 	/// モデルの回転を設定
 	/// </summary>
 	/// <param name="rot">回転</param>
-	void SetRot(const Vector3& rot);	
+	void SetRot(const Math::Vector3& rot);
 
 	/// <summary>
 	/// モデルの拡大率を設定
@@ -124,7 +124,7 @@ public:
 	/// モデルの拡大率を設定
 	/// </summary>
 	/// <param name="scale">拡大率</param>
-	void SetScale(const Vector3& scale);	
+	void SetScale(const Math::Vector3& scale);
 
 	/// <summary>
 	/// モデルの不透明度の設定(0.0~1.0)

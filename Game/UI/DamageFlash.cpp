@@ -38,7 +38,7 @@ void DamageFlash::Update()
 void DamageFlash::Draw()
 {
 	// 画面のサイズを取得
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 
 	// 色の描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);

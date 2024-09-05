@@ -46,7 +46,7 @@ public:
 	/// </summary>
 	/// <param name="damage">ダメージ量</param>
 	/// <param name="pos">ダメージを受けた位置</param>
-	void OnDamage(const int damage, const Vector3& pos) override final;
+	void OnDamage(const int damage, const Math::Vector3& pos) override final;
 
 private:
 
@@ -179,9 +179,9 @@ private:
 	std::shared_ptr<Effect::Flash>        m_pFlash;			// フラッシュ
 
 	// 移動
-	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル
+	std::vector<Math::Vector3> m_movePointTable;	// 移動ポイントテーブル
 	int m_movePointIndex;					// 移動ポイントのインデックス
-	Vector3 m_goalPos;						// 目標座標
+	Math::Vector3 m_goalPos;						// 目標座標
 	bool m_isGoal;							// 目標座標に到達したか
 	bool m_isMoveEnd;						// 移動が終了したか
 

@@ -6,11 +6,11 @@
 namespace
 {
 	// モデルの拡大率
-	const Vector3 model_scale = { 150, 150, 150 };
+	const Math::Vector3 model_scale = { 150, 150, 150 };
 }
 
 // コンストラクタ
-SkyDome::SkyDome(const Vector3& pos) :
+SkyDome::SkyDome(const Math::Vector3& pos) :
 	m_pos(pos)
 {
 	// モデルのインスタンスの作成
@@ -32,7 +32,7 @@ SkyDome::~SkyDome()
 }
 
 // 更新
-void SkyDome::Update(const Vector3& pos)
+void SkyDome::Update(const Math::Vector3& pos)
 {
 	m_pos = pos;
 	m_pModel->SetPos(m_pos);

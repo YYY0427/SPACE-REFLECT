@@ -1,11 +1,11 @@
 #pragma once
 #include <DxLib.h>
 
-// プロトタイプ宣言
-class Vector3;
-
 namespace Math
 {
+	// プロトタイプ宣言
+	class Vector3;
+
 	/// <summary>
 	/// 行列クラス
 	/// </summary>

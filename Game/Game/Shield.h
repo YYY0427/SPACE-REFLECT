@@ -41,7 +41,7 @@ public:
 	/// 位置の取得
 	/// </summary>
 	/// <returns>位置</returns>
-	const Vector3& GetPos() const;
+	const Math::Vector3& GetPos() const;
 
 	/// <summary>
 	/// シールドを使用しているかの取得
@@ -70,16 +70,16 @@ private:
 	int m_enerugyGage;
 
 	// シールドの位置
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 
 	// シールドの回転
-	Vector3 m_rot;
+	Math::Vector3 m_rot;
 
 	// シールドの拡大率
 	Math::Vector2 m_scale;
 
 	// プレイヤーからの相対位置
-	Vector3 m_relativePosToPlayer;
+	Math::Vector3 m_relativePosToPlayer;
 
 	// 入力されたか
 	bool m_isInput;

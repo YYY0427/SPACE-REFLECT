@@ -42,7 +42,7 @@ public:
 	/// ゲームプレイ時の更新
 	/// </summary>
 	/// <param name="playerVec">プレイヤーのベクトル</param>
-	void UpdatePlay(const Vector3& playerVec);
+	void UpdatePlay(const Math::Vector3& playerVec);
 
 	/// <summary>
 	/// ステージセレクト時の更新

@@ -13,13 +13,13 @@
 namespace
 {
 	// 初期方向
-	const Vector3 init_model_direction        = { 1.0f, 0.0f, 0.0f };	// モデル
-	const Vector3 init_laser_effect_direction = { 0.0f, 0.0f, -1.0f };	// エフェクト
+	const Math::Vector3 init_model_direction        = { 1.0f, 0.0f, 0.0f };	// モデル
+	const Math::Vector3 init_laser_effect_direction = { 0.0f, 0.0f, -1.0f };	// エフェクト
 
 	// 拡大率
-	const Vector3 model_scale  = { 1.0f, 0.2f, 0.2f };		// モデル
+	const Math::Vector3 model_scale  = { 1.0f, 0.2f, 0.2f };		// モデル
 //	const Vector3 model_scale  = { 1.0f, 0.1f, 0.1f };		// モデル
-	const Vector3 effect_scale = { 70.0f, 70.0f, 40.0f };	// エフェクト
+	const Math::Vector3 effect_scale = { 70.0f, 70.0f, 40.0f };	// エフェクト
 //	const Vector3 effect_scale = { 40.0f, 40.0f, 40.0f };	// エフェクト
 
 	// レーザーの移動速度
@@ -37,7 +37,7 @@ namespace
 ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager, 
 						   const std::shared_ptr<Shield>& pShield, 
 						   const std::shared_ptr<LaserBase>& pLaser, 
-						   const Vector3& firePos)
+						   const Math::Vector3& firePos)
 {
 	// 初期化
 	m_pos = firePos;
@@ -48,7 +48,7 @@ ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 	m_isEnabled = true;
 
 	// 反射ベクトルを作成
-	m_directionPos = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
+	m_directionPos = Math::Vector3::Reflect(m_pLaser->GetDirection(), Math::Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
 
 	// 指定した位置方向に向ける行列の作成
 	auto rotEffectMtx = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
@@ -96,7 +96,7 @@ void ReflectLaser::Update()
 	}
 
 	// レーザーが向いている方向と近い敵を探す
-	Vector3 enemyPos{};	
+	Math::Vector3 enemyPos{};
 	if (!m_pEnemyManager->GetEnemyList().empty())
 	{
 		enemyPos = m_pEnemyManager->GetEnemyList().front()->GetPos();
@@ -128,12 +128,12 @@ void ReflectLaser::Update()
 	}
 
 	// Z軸を無効にする
-	Vector3 directionPos = m_directionPos;
+	Math::Vector3 directionPos = m_directionPos;
 	directionPos.z = 0;
 	enemyPos.z     = 0;
 
 	// 敵とレーザーの向いている方向との距離が一定範囲内なら
-	Vector3 aimAssistVec{};
+	Math::Vector3 aimAssistVec{};
 	if (enemyPos.Distance(directionPos) < aim_assist_range)
 	{
 		// エイムアシストを有効にする
@@ -141,13 +141,13 @@ void ReflectLaser::Update()
 	}
 
 	// 反射ベクトルを作成
-	Vector3 goalPos = Vector3::Reflect(
-		m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
-	Vector3 reflectVec = (goalPos - m_directionPos).Normalized();
+	Math::Vector3 goalPos = Math::Vector3::Reflect(
+		m_pLaser->GetDirection(), Math::Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
+	Math::Vector3 reflectVec = (goalPos - m_directionPos).Normalized();
 
 	// ベクトルの取得
 	float reflectVecPower = 1.0f - aim_assist_power;
-	Vector3 moveVec = ((reflectVec * reflectVecPower) + (aimAssistVec * aim_assist_power)) * move_speed;
+	Math::Vector3 moveVec = ((reflectVec * reflectVecPower) + (aimAssistVec * aim_assist_power)) * move_speed;
 
 	// 向く方向を更新
 	m_directionPos += moveVec;

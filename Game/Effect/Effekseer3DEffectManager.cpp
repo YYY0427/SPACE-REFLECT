@@ -160,6 +160,9 @@ namespace Effect
 
 		// Effekseerを終了する
 		Effkseer_End();
+
+		// インスタンスの削除
+		DeleteInstance();
 	}
 
 	// エフェクトのロード
@@ -202,7 +205,7 @@ namespace Effect
 	}
 
 	// 指定のエフェクトの再生
-	void Effekseer3DManager::PlayEffect(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
+	void Effekseer3DManager::PlayEffect(int& playingEffectHandle, const std::string& id, const Math::Vector3& pos, const Math::Vector3& scale, const float speed, const Math::Vector3& rot, const bool isZbuffer)
 	{
 		// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 		assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -222,7 +225,7 @@ namespace Effect
 	}
 
 	// 指定のエフェクトのループ再生
-	void Effekseer3DManager::PlayEffectLoop(int& playingEffectHandle, const std::string& id, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
+	void Effekseer3DManager::PlayEffectLoop(int& playingEffectHandle, const std::string& id, const Math::Vector3& pos, const Math::Vector3& scale, const float speed, const Math::Vector3& rot, const bool isZbuffer)
 	{
 		// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 		assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -247,7 +250,7 @@ namespace Effect
 	}
 
 	// 指定のエフェクトの追従再生
-	void Effekseer3DManager::PlayEffectFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
+	void Effekseer3DManager::PlayEffectFollow(int& playingEffectHandle, const std::string& id, Math::Vector3* pos, const Math::Vector3& scale, const float speed, const Math::Vector3& rot, const bool isZbuffer)
 	{
 		// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 		assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -272,7 +275,7 @@ namespace Effect
 	}
 
 	// 指定のエフェクトの追従とループ再生
-	void Effekseer3DManager::PlayEffectLoopAndFollow(int& playingEffectHandle, const std::string& id, Vector3* pos, const Vector3& scale, const float speed, const Vector3& rot, const bool isZbuffer)
+	void Effekseer3DManager::PlayEffectLoopAndFollow(int& playingEffectHandle, const std::string& id, Math::Vector3* pos, const Math::Vector3& scale, const float speed, const Math::Vector3& rot, const bool isZbuffer)
 	{
 		// エフェクトリソースに指定したエフェクトがロードされていない場合止める
 		assert(m_effectResourceTable.find(id) != m_effectResourceTable.end());
@@ -297,7 +300,7 @@ namespace Effect
 	}
 
 	// エフェクトの全ての値の変更
-	void Effekseer3DManager::SetEffectAllParam(const int playingEffectHandle, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot)
+	void Effekseer3DManager::SetEffectAllParam(const int playingEffectHandle, const Math::Vector3& pos, const Math::Vector3& scale, const float speed, const Math::Vector3& rot)
 	{
 		// 再生速度
 		SetEffectSpeed(playingEffectHandle, speed);
@@ -313,7 +316,7 @@ namespace Effect
 	}
 
 	// エフェクトの拡大率の変更
-	void Effekseer3DManager::SetEffectScale(const int playingEffectHandle, const Vector3& scale)
+	void Effekseer3DManager::SetEffectScale(const int playingEffectHandle, const Math::Vector3& scale)
 	{
 		// エフェクトの拡大率の設定
 		int result = SetScalePlayingEffekseer3DEffect(playingEffectHandle, scale.x, scale.y, scale.z);
@@ -367,7 +370,7 @@ namespace Effect
 	}
 
 	// エフェクトの回転率の変更
-	void Effekseer3DManager::SetEffectRot(const int playingEffectHandle, const Vector3& rot)
+	void Effekseer3DManager::SetEffectRot(const int playingEffectHandle, const Math::Vector3& rot)
 	{
 		// エフェクトの回転率の設定
 		int result = SetRotationPlayingEffekseer3DEffect(playingEffectHandle, rot.x, rot.y, rot.z);
@@ -394,7 +397,7 @@ namespace Effect
 	}
 
 	// エフェクトの位置の変更
-	void Effekseer3DManager::SetEffectPos(const int playingEffectHandle, const Vector3& pos)
+	void Effekseer3DManager::SetEffectPos(const int playingEffectHandle, const Math::Vector3& pos)
 	{
 		// エフェクトの位置の設定
 		int result = SetPosPlayingEffekseer3DEffect(playingEffectHandle, pos.x, pos.y, pos.z);

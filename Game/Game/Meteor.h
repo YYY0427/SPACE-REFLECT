@@ -49,7 +49,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="cameraPos">カメラの座標</param>
-	void Update(const Vector3& cameraPos);
+	void Update(const Math::Vector3& cameraPos);
 
 	/// <summary>
 	/// 描画
@@ -86,19 +86,19 @@ private:
 	MeteorType m_type;
 
 	// 位置情報
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 
 	// 回転角度
-	Vector3 m_rot;
+	Math::Vector3 m_rot;
 
 	// 拡大率
-	Vector3 m_scale;
+	Math::Vector3 m_scale;
 
 	// 移動ベクトル
-	Vector3 m_moveVec;
+	Math::Vector3 m_moveVec;
 
 	// 回転ベクトル
-	Vector3 m_rotVec;
+	Math::Vector3 m_rotVec;
 
 	// 透明度
 	float m_opacity;

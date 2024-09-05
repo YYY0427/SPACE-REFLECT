@@ -36,7 +36,7 @@ public:
 	/// ゲーム開始時の更新
 	/// </summary>
 	/// <param name="cameraPos">カメラの位置</param>
-	void UpdateStart(const Vector3& cameraPos);
+	void UpdateStart(const Math::Vector3& cameraPos);
 
 	/// <summary>
 	/// ゲーム中の更新
@@ -118,13 +118,13 @@ public:
 	/// 位置情報の取得
 	/// </summary>
 	/// <returns>位置情報</returns>
-	const Vector3& GetPos() const;	
+	const Math::Vector3& GetPos() const;
 
 	/// <summary>
 	/// 移動ベクトルの取得
 	/// </summary>
 	/// <returns>移動ベクトル</returns>
-	const Vector3& GetMoveVec() const;		
+	const Math::Vector3& GetMoveVec() const;
 
 	/// <summary>
 	/// シールドのポインタの取得
@@ -136,7 +136,7 @@ public:
 	/// プレイヤーの位置情報を保存しているテーブルの取得
 	/// </summary>
 	/// <returns>位置情報を保存しているテーブル</returns>
-	const std::deque<Vector3>& GetPosLogTable() const;
+	const std::deque<Math::Vector3>& GetPosLogTable() const;
 
 	/// <summary>
 	/// パラメータの取得
@@ -163,11 +163,11 @@ private:
 	std::shared_ptr<Camera> m_pCamera;		// カメラ
 
 	// パラメーター
-	Vector3 m_pos;				// 位置
-	Vector3 m_rot;				// 回転
-	Vector3 m_scale;			// 拡大率
-	Vector3 m_moveVec;			// 移動ベクトル
-	Vector3 m_moveSpeed;		// 移動速度
+	Math::Vector3 m_pos;				// 位置
+	Math::Vector3 m_rot;				// 回転
+	Math::Vector3 m_scale;			// 拡大率
+	Math::Vector3 m_moveVec;			// 移動ベクトル
+	Math::Vector3 m_moveSpeed;		// 移動速度
 	Math::Vector2 m_playerSize;		// プレイヤーのサイズ
 
 	float   m_startMoveSpeedZ;	// スタート時の速度
@@ -186,7 +186,7 @@ private:
 
 	// エフェクト
 	int		m_boostEffectHandle;		// ブーストエフェクトハンドル
-	Vector3 m_boostEffectScale;			// ブーストエフェクトの拡大率
+	Math::Vector3 m_boostEffectScale;			// ブーストエフェクトの拡大率
 	float	m_boostEffectSpeed;			// ブーストエフェクトの速度
 	int		m_damageEffectHandle;		// ダメージエフェクトハンドル
 	int		m_playerDeadEffectHandle;	// プレイヤー死亡エフェクトハンドル
@@ -202,5 +202,5 @@ private:
 	std::map<std::string, float> m_parameterTable;
 
 	// 決められたフレーム前まで位置情報を保存しているテーブル
-	std::deque<Vector3> m_posLogTable;
+	std::deque<Math::Vector3> m_posLogTable;
 };

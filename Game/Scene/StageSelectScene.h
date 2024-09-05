@@ -100,7 +100,7 @@ private:
 	// ステージデータ
 	struct StageData
 	{
-		Vector3					cameraPos;		// カメラの位置
+		Math::Vector3			cameraPos;		// カメラの位置
 		std::string				stageNameId;	// ステージ名
 		std::string				missionNameId;	// ミッション名
 		std::string				difficultyId;	// 脅威度
@@ -143,10 +143,10 @@ private:
 	std::vector<ScoreSaveData> m_scoreRanking;
 
 	// カメラ
-	Vector3 m_cameraStartPos;		// カメラの初期位置
-	Vector3 m_cameraGoalPos;		// カメラの目標位置
-	Vector3 m_cameraStartTargetPos;	// カメラの初期注視点
-	Vector3 m_cameraGoalTargetPos;	// カメラの目標注視点
+	Math::Vector3 m_cameraStartPos;		// カメラの初期位置
+	Math::Vector3 m_cameraGoalPos;		// カメラの目標位置
+	Math::Vector3 m_cameraStartTargetPos;	// カメラの初期注視点
+	Math::Vector3 m_cameraGoalTargetPos;	// カメラの目標注視点
 
 	// イージングの時間
 	int m_easeTime;

@@ -8,9 +8,9 @@
 struct UnityGameObject
 {
 	std::string name;
-	Vector3 pos;
-	Vector3 rot;
-	Vector3 scale;
+	Math::Vector3 pos;
+	Math::Vector3 rot;
+	Math::Vector3 scale;
 };
 
 /// <summary>

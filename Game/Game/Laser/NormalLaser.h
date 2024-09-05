@@ -50,13 +50,13 @@ public:
 	/// レーザーを止める
 	/// </summary>
 	/// <param name="pos">止める座標</param>
-	void Stop(const Vector3& pos) override final;
+	void Stop(const Math::Vector3& pos) override final;
 
 	/// <summary>
 	/// レーザーの反射
 	/// </summary>
 	/// <param name="pos">反射する座標</param>
-	void Reflect(const Vector3& pos) override final;
+	void Reflect(const Math::Vector3& pos) override final;
 
 	/// <summary>
 	/// 反射を元に戻す
@@ -70,7 +70,7 @@ public:
 	/// レーザーの向きを取得
 	/// </summary>
 	/// <returns>レーザーの向き</returns>
-	Vector3 GetDirection() const override final;
+	Math::Vector3 GetDirection() const override final;
 
 private:
 	//// 初期化 ///////////////////////////////////////
@@ -114,8 +114,8 @@ private:
 	std::shared_ptr<Player>    m_pPlayer;	// プレイヤーのポインタ
 
 	// 向く方向
-	Vector3 m_directionPos;	// 向く座標
-	Vector3 m_directionVec; // ベクトル
+	Math::Vector3 m_directionPos;	// 向く座標
+	Math::Vector3 m_directionVec; // ベクトル
 
 	// 状態マシン
 	StateMachine<State> m_stateMachine;	
@@ -136,6 +136,6 @@ private:
 
 	// 通常発射時
 	int     m_normalFireMovePointIndex;				// 移動ポイントインデックス
-	Vector3 m_normalFireGoalPos;					// 移動ポイントの座標
+	Math::Vector3 m_normalFireGoalPos;					// 移動ポイントの座標
 	std::vector<Math::Vector2> m_normalFireMovePointList;	// 移動ポイントの座標のリスト
 };

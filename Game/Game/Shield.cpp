@@ -23,7 +23,7 @@ namespace
 	constexpr float shield_height = 110.0f;	// 縦幅サイズ
 
 	// シールドのエフェクトの拡大率
-	const Vector3 effect_scale = { 80.0f,  80.0f, 80.0f, };	
+	const Math::Vector3 effect_scale = { 80.0f,  80.0f, 80.0f, };
 
 	// エネルギーゲージUIの画像のファイルパス
 	const std::string energy_gage_ui_file_path = "Data/Image/EnerugyBar.png";	
@@ -138,13 +138,13 @@ void Shield::Update()
 	int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
 
 	// シールドの位置の計算
-	Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
+	Math::Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
 
 	// プレイヤーの平行移動行列の取得
 	auto playerMtx = Math::Matrix::GetTranslate(m_player.GetPos());
 
 	// シールドの相対位置とプレイヤーの平行行列から位置情報を作成
-	m_pos = Vector3::Transform(tempVec, playerMtx);
+	m_pos = Math::Vector3::Transform(tempVec, playerMtx);
 
 	// ベクトルから角度を求める
 	m_rot = -Math::Matrix::ToEulerAngle(Math::Matrix::GetRotationMatrix({ 0, 0, 1 }, tempVec));
@@ -208,7 +208,7 @@ void Shield::Draw()
 }
 
 // 位置の取得
-const Vector3& Shield::GetPos() const
+const Math::Vector3& Shield::GetPos() const
 {
 	return m_pos;
 }

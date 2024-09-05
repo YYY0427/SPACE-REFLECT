@@ -77,7 +77,7 @@ int LaserManager::AddLaser(LaserType type,
 int LaserManager::AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager, 
 								  const std::shared_ptr<Shield>& pShield, 
 								  const std::shared_ptr<LaserBase>& pLaser, 
-								  const Vector3& firePos)
+								  const Math::Vector3& firePos)
 {
 	// レーザーのデータを作成
 	LaserData laserData;
@@ -96,7 +96,7 @@ int LaserManager::AddReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyMan
 }
 
 // キューブレーザーの追加
-int LaserManager::AddCubeLaser(const Vector3& firePos, const float laserSpeed)
+int LaserManager::AddCubeLaser(const Math::Vector3& firePos, const float laserSpeed)
 {
 	// レーザーのデータを作成
 	LaserData laserData;
@@ -163,7 +163,7 @@ LaserData LaserManager::GetLaserData(const int key) const
 }
 
 // レーザーの位置の設定
-void LaserManager::SetLaserPos(const int key, const Vector3& pos)
+void LaserManager::SetLaserPos(const int key, const Math::Vector3& pos)
 {
 	// キーと一致するレーザーに位置を設定
 	for (auto& laser : m_pLaserList)

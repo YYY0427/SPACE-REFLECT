@@ -87,6 +87,9 @@ namespace Sound
 		{
 			DeleteSoundMem(sound.second.handle);
 		}
+
+		// インスタンスの削除
+		DeleteInstance();
 	}
 
 	// 2Dサウンドのロード
@@ -224,7 +227,7 @@ namespace Sound
 	}
 
 	// 指定の3DSEを鳴らす
-	void Manager::PlaySE3D(const std::string& fileName, const Vector3& soundPos, const float soundRadius)
+	void Manager::PlaySE3D(const std::string& fileName, const Math::Vector3& soundPos, const float soundRadius)
 	{
 		// ロードしていない場合は止める
 		assert(m_soundDataTable.find(fileName) != m_soundDataTable.end());
@@ -356,7 +359,7 @@ namespace Sound
 	}
 
 	// 3Dサウンドのリスナーの位置とリスナーの前方位置を設定する
-	void Manager::Set3DSoundListenerPosAndFrontPos_UpVecY(const Vector3& pos, const Vector3& angle)
+	void Manager::Set3DSoundListenerPosAndFrontPos_UpVecY(const Math::Vector3& pos, const Math::Vector3& angle)
 	{
 		DxLib::Set3DSoundListenerPosAndFrontPos_UpVecY(pos.ToDxLibVector3(), (pos + angle).ToDxLibVector3());
 	}

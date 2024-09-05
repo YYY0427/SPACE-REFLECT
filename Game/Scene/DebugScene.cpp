@@ -11,8 +11,8 @@
 namespace
 {
 	// 表示するテキストの全体の位置
-	const int draw_text_pos_x = Application::GetInstance().GetWindowSize().width / 2 - 100;
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 100;
+	const int draw_text_pos_x = Application::GetInstance()->GetWindowSize().width / 2 - 100;
+	const int draw_text_pos_y = Application::GetInstance()->GetWindowSize().height / 2 - 100;
 
 	// テキストの文字間
 	constexpr int text_space_y = 32;
@@ -74,7 +74,7 @@ void DebugScene::Update()
 			m_manager.ChangeScene(std::make_shared<TestScene>(m_manager));
 			return;
 		case SceneItem::EXIT:
-			Application::GetInstance().Exit();
+			Application::GetInstance()->Exit();
 			return;
 		}
 	}
@@ -87,7 +87,7 @@ void DebugScene::Draw()
 	ClearDrawScreen();
 
 	// 背景の描画
-	DrawBox(0, 0, Application::GetInstance().GetWindowSize().width, Application::GetInstance().GetWindowSize().height, 0x000000, true);
+	DrawBox(0, 0, Application::GetInstance()->GetWindowSize().width, Application::GetInstance()->GetWindowSize().height, 0x000000, true);
 
 	// デバッグシーンから飛べるシーンの項目のテキスト表示
 	DrawString(draw_text_pos_x, draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::TITLE), "TITLE", 0xffffff, true);

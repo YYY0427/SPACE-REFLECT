@@ -117,15 +117,15 @@ void StageSelectScene::Init()
 	m_stageData[Stage::STAGE_1].pPlanet = m_pPlanetManager->GetPlanet(PlanetType::EARTH);
 
 	// インスタンス作成
-	Vector3 pos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
+	Math::Vector3 pos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
 	m_pCamera = std::make_unique<Camera>();
-	m_pCamera->SetCamera(pos, Vector3{ pos.x, pos.y, pos.z + 10.0f });
+	m_pCamera->SetCamera(pos, Math::Vector3{ pos.x, pos.y, pos.z + 10.0f });
 	m_pSkyDome = std::make_unique<SkyDome>(m_pCamera->GetPos());
 
 	// スクリーンの作成
 	m_screenHandle = MakeScreen(
-		Application::GetInstance().GetWindowSize().width,
-		Application::GetInstance().GetWindowSize().height, true);
+		Application::GetInstance()->GetWindowSize().width,
+		Application::GetInstance()->GetWindowSize().height, true);
 
 	// 画像の読み込み
 	m_rbButtonImgHandle = my::MyLoadGraph(xbox_rb_file_path.c_str());
@@ -319,7 +319,7 @@ void StageSelectScene::UpdateStartAnimation()
 	// イージングでカメラの注視点を移動
 	m_decisionStageTargetEasingTime++;
 	m_decisionStageTargetEasingTime = (std::min)(m_decisionStageTargetEasingTime, camera_move_frame_to_planet);
-	Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
+	Math::Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
 	float x = Easing::EaseOutCubic(m_decisionStageTargetEasingTime, camera_move_frame_to_planet, goalPos.x, m_cameraStartTargetPos.x);
 	float y = Easing::EaseOutCubic(m_decisionStageTargetEasingTime, camera_move_frame_to_planet, goalPos.y, m_cameraStartTargetPos.y);
 	m_pCamera->SetCamera(m_pCamera->GetPos(), { x, y, goalPos.z });
@@ -346,7 +346,7 @@ void StageSelectScene::UpdateStartAnimation()
 		// イージングでカメラを移動
 		m_decisionStageCameraEasingTime++;
 		m_decisionStageCameraEasingTime = (std::min)(m_decisionStageCameraEasingTime, camera_move_frame_to_stage);
-		Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
+		Math::Vector3 goalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].pPlanet->GetPos();
 		float posX = Easing::EaseOutCubic(m_decisionStageCameraEasingTime, camera_move_frame_to_stage, goalPos.x, m_cameraStartPos.x);
 		float posY = Easing::EaseOutCubic(m_decisionStageCameraEasingTime, camera_move_frame_to_stage, goalPos.y, m_cameraStartPos.y);
 		float posZ = Easing::EaseOutCubic(m_decisionStageCameraEasingTime, camera_move_frame_to_stage, goalPos.z, m_cameraStartPos.z);
@@ -432,7 +432,7 @@ void StageSelectScene::Draw()
 	const auto& messageManager = String::MessageManager::GetInstance();
 
 	// ステージセレクトタイトルの描画
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
 	messageManager->DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
 

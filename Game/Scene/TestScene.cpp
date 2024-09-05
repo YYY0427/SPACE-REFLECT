@@ -56,7 +56,7 @@ void TestScene::Draw()
 	ClearDrawScreen();
 
 	// ”wŒi‚Ì•`‰æ
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 	DrawBox(0, 0, size.width, size.height, 0x000000, true);
 	
 	static int count = 0;

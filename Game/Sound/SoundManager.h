@@ -97,7 +97,7 @@ namespace Sound
 		/// <param name="fileName">ファイル名</param>
 		/// <param name="soundPos">再生位置</param>
 		/// <param name="soundRadius">聞こえる距離</param>
-		void PlaySE3D(const std::string& fileName, const Vector3& soundPos, const float soundRadius);
+		void PlaySE3D(const std::string& fileName, const Math::Vector3& soundPos, const float soundRadius);
 
 		/// <summary>
 		/// 指定のBGMを鳴らす
@@ -153,7 +153,7 @@ namespace Sound
 		/// </summary>
 		/// <param name="pos">リスナーの座標</param>
 		/// <param name="angle">リスナーの向いている角度(ラジアン)</param>
-		void Set3DSoundListenerPosAndFrontPos_UpVecY(const Vector3& pos, const Vector3& angle);
+		void Set3DSoundListenerPosAndFrontPos_UpVecY(const Math::Vector3& pos, const Math::Vector3& angle);
 
 		/// <summary>
 		/// サウンドのループ範囲を設定

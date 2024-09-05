@@ -9,10 +9,10 @@
 namespace
 {
 	// ステージセレクト時の回転速度
-	const Vector3 stage_select_rotate_speed = { 0, Math::Util::ToRadian(0.5f), 0 };
+	const Math::Vector3 stage_select_rotate_speed = { 0, Math::Util::ToRadian(0.5f), 0 };
 
 	// プレイ画面の回転速度
-	const Vector3 play_rotate_speed = { 0, Math::Util::ToRadian(0.01f), 0 };
+	const Math::Vector3 play_rotate_speed = { 0, Math::Util::ToRadian(0.01f), 0 };
 }
 
 // コンストラクタ
@@ -45,7 +45,7 @@ PlanetManager::~PlanetManager()
 }
 
 // プレイ時の更新
-void PlanetManager::UpdatePlay(const Vector3& playerVec)
+void PlanetManager::UpdatePlay(const Math::Vector3& playerVec)
 {
 	for (auto& planet : m_planetData)
 	{

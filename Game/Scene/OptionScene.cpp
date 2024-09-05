@@ -35,7 +35,7 @@ namespace
 
 	// 表示するテキストの全体の位置
 	constexpr int draw_text_pos_x = 200;
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 100;
+	const int draw_text_pos_y = Application::GetInstance()->GetWindowSize().height / 2 - 100;
 
 	// テキストの文字間
 	constexpr int text_space_y = 64;
@@ -84,7 +84,7 @@ void OptionScene::Init()
 	m_drawStateMachine.SetState(m_state);
 
 	// モザイク処理用のグラフィックの作成
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 	m_gaussScreen = MakeScreen(size.width, size.height);
 
 	// 項目の描画色を選択されていないときの色に初期化
@@ -194,7 +194,7 @@ void OptionScene::Draw()
 	m_drawStateMachine.Update();
 
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// インスタンスの取得
 	const auto& messageManager = String::MessageManager::GetInstance();
@@ -265,7 +265,7 @@ void OptionScene::Draw()
 void OptionScene::DrawStageSelect()
 {
 	// 背景の描画
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	DrawBox(0, 0, screenSize.width, screenSize.height, 0x222222, true);
 
 	// ステージセレクトタイトルの描画
@@ -293,7 +293,7 @@ void OptionScene::DrawStageSelect()
 void OptionScene::DrawPause()
 {
 	// モザイク処理
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 	GetDrawScreenGraph(0, 0, size.width, size.height, m_gaussScreen);
 	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, gauss_param_pixel, gauss_param_power);
 	DrawGraph(0, 0, m_gaussScreen, true);

@@ -15,7 +15,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="pos">位置情報</param>
-	SkyDome(const Vector3& pos);
+	SkyDome(const Math::Vector3& pos);
 
 	/// <summary>
 	/// デストラクタ
@@ -26,7 +26,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="pos">位置情報</param>
-	void Update(const Vector3& pos);
+	void Update(const Math::Vector3& pos);
 
 	/// <summary>
 	/// 描画s
@@ -38,5 +38,5 @@ private:
 	std::unique_ptr<Model> m_pModel;
 
 	// 位置情報
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 };

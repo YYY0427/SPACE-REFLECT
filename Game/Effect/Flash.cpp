@@ -53,7 +53,7 @@ namespace Effect
 	{
 		// “§–¾“x‚ð“K—p‚µ‚ÄŠÛ‚ð•`‰æ
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);
-		auto& screenSize = Application::GetInstance().GetWindowSize();
+		auto& screenSize = Application::GetInstance()->GetWindowSize();
 		DrawBox(0, 0, screenSize.width, screenSize.height, m_color, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	}

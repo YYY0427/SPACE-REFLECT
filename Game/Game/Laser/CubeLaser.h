@@ -18,7 +18,7 @@ public:
 	/// <param name="laserSpeed">レーザーの速さ</param>
 	/// <param name="pPlayer">プレイヤーのポインタ</param>
 	/// <param name="pCamera">カメラのポインタ</param>
-	CubeLaser(const Vector3& firePos, 
+	CubeLaser(const Math::Vector3& firePos,
 			  const float laserSpeed, 
 			  const std::shared_ptr<Player>& pPlayer,
 			  const std::shared_ptr<Camera>& pCamera);
@@ -44,13 +44,13 @@ private:
 	std::shared_ptr<Camera> m_pCamera;	// カメラ
 
 	// 移動ベクトル
-	Vector3 m_moveVec;
+	Math::Vector3 m_moveVec;
 
 	// 1フレームに回転する量
-	Vector3 m_deltaRot;	
+	Math::Vector3 m_deltaRot;
 
 	// 最大スケール
-	Vector3 m_maxScale;		
+	Math::Vector3 m_maxScale;
 
 	// ガウス用スクリーン
 	int m_gaussScreen;	

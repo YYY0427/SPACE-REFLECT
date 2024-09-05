@@ -1,4 +1,5 @@
 #pragma once
+#include "Util/SingletonBase.h"
 
 // ウィンドウのサイズ
 struct Size
@@ -10,14 +11,11 @@ struct Size
 /// <summary>
 /// アプリケーション全体を管理するシングルトンクラス
 /// </summary>
-class Application
+class Application : public SingletonBase<Application>
 {
 public:
-	/// <summary>
-	/// Applicationクラスのインスタンスを取得
-	/// </summary>
-	/// <returns>Applicationクラスのインスタンス</returns>
-	static Application& GetInstance();
+	// SingletonBaseクラスでのみインスタンス生成を許可する
+	friend class SingletonBase<Application>;
 
 	/// <summary>
 	/// 初期化
@@ -53,18 +51,6 @@ private:
 	/// シングルトンのためprivate
 	/// </summary>
 	Application();
-
-	/// <summary>
-	/// コピーコンストラクタ禁止
-	/// </summary>
-	/// <param name="app">コピー元のApplicationクラスのインスタンス</param>
-	Application(const Application& app) = delete;
-
-	/// <summary>
-	/// 代入演算子禁止
-	/// </summary>
-	/// <param name="app">コピー元のApplicationクラスのインスタンス</param>
-	void operator=(const Application& app) = delete;
 
 	/// <summary>
 	/// 終了処理

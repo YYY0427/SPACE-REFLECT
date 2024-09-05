@@ -41,7 +41,7 @@ ResultWindow::ResultWindow() :
 	m_yourScorePos(init_your_score_pos),
 	m_isOpenMenuSound(false)
 {
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	m_windowPos = { screenSize.width / 2.0f, screenSize.height / 2.0f };
 	m_windowSize = { 0, 0 };
 }
@@ -120,7 +120,7 @@ void ResultWindow::Update()
 // •`‰æ
 void ResultWindow::Draw()
 {
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
 	DrawBox(m_windowPos.x - (m_windowSize.x / 2), m_windowPos.y - (m_windowSize.y / 2),
 			m_windowPos.x + (m_windowSize.x / 2), m_windowPos.y + (m_windowSize.y / 2), 0xeeeeee, TRUE);

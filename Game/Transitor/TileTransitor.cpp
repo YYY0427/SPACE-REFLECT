@@ -8,7 +8,7 @@ TileTransitor::TileTransitor(int cellSize, int interval) :
 	m_cellSize(cellSize)
 {
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// セルの数を計算
 	int xNum = (size.width / m_cellSize) + 1;
@@ -52,7 +52,7 @@ void TileTransitor::Update()
 	std::shuffle(m_tiles.begin(), m_tiles.end(), m_mt);
 
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// セルの数を計算
 	int xNum = (size.width / m_cellSize) + 1;
@@ -83,7 +83,7 @@ void TileTransitor::Draw()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// 切り替え先の画面を描画
 	DrawRectGraph(0, 0, 0, 0, size.width, size.height, m_nextScene, true);

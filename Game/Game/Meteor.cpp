@@ -66,7 +66,7 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, co
 		m_scale = { scale, scale, scale };
 
 		// プレイヤーに向かうベクトルを取得
-		Vector3 distance = m_pPlayer->GetPos() - m_pos;
+		Math::Vector3 distance = m_pPlayer->GetPos() - m_pos;
 		distance.Normalize();
 		distance *= meteor_move_speed;
 		m_moveVec = distance;
@@ -76,11 +76,11 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, co
 	m_pos.z = m_pPlayer->GetPos().z + playerRelativePos;
 
 	// 画面内にランダムに生成
-	Vector3 screenPos{};
-	screenPos.x = Math::Util::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().width);
-	screenPos.y = Math::Util::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().height);
+	Math::Vector3 screenPos{};
+	screenPos.x = Math::Util::GetRandFloat(0.0f, Application::GetInstance()->GetWindowSize().width);
+	screenPos.y = Math::Util::GetRandFloat(0.0f, Application::GetInstance()->GetWindowSize().height);
 	screenPos.z = z_linear;
-	Vector3 targetPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
+	Math::Vector3 targetPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
 
 	// ベクトルの作成
 	m_moveVec = (targetPos - m_pos).Normalized() * small_meteor_move_speed;
@@ -128,7 +128,7 @@ Meteor::~Meteor()
 }
 
 // 更新
-void Meteor::Update(const Vector3& cameraPos)
+void Meteor::Update(const Math::Vector3& cameraPos)
 {
 	// カメラより後ろに行ったら
 	if (cameraPos.z > m_pos.z)

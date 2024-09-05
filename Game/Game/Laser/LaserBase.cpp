@@ -24,7 +24,7 @@ void LaserBase::Delete()
 }
 
 // 位置の設定
-void LaserBase::SetPos(const Vector3& pos)
+void LaserBase::SetPos(const Math::Vector3& pos)
 {
 	m_pos = pos;
 }
@@ -48,19 +48,19 @@ int LaserBase::GetReflectLaserKey() const
 }
 
 // 位置情報の取得
-const Vector3& LaserBase::GetPos() const
+const Math::Vector3& LaserBase::GetPos() const
 {
 	return m_pos;
 }
 
 // モデルの先端の位置の取得
-const Vector3& LaserBase::GetEndPos() const
+const Math::Vector3& LaserBase::GetEndPos() const
 {
 	return m_endPos;
 }
 
 // 方向ベクトルの取得
-Vector3 LaserBase::GetDirection() const
+Math::Vector3 LaserBase::GetDirection() const
 {
 	return { 0, 0, 0 };
 }

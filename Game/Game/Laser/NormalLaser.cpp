@@ -15,12 +15,12 @@
 namespace
 {
 	// モデル
-	const Vector3 init_model_direction = { 1.0f, 0.0f, 0.0f };	// 初期方向
-	const Vector3 laser_model_scale    = { 0.1f, 0.1f, 0.1f };	// 拡大率
+	const Math::Vector3 init_model_direction = { 1.0f, 0.0f, 0.0f };	// 初期方向
+	const Math::Vector3 laser_model_scale    = { 0.1f, 0.1f, 0.1f };	// 拡大率
 
 	// エフェクト
-	const Vector3 init_laser_effect_direction    = { 0.0f, 0.0f, -1.0f };	// 初期方向
-	const Vector3 laser_effect_scale             = { 20.0f, 20.0f, 24.0f };	// 拡大率
+	const Math::Vector3 init_laser_effect_direction    = { 0.0f, 0.0f, -1.0f };	// 初期方向
+	const Math::Vector3 laser_effect_scale             = { 20.0f, 20.0f, 24.0f };	// 拡大率
 	constexpr float laser_effect_play_speed      = 1.0f;					// 再生速度
 	constexpr int init_laser_effect_charge_frame = 140;						// 元々のチャージフレーム
 	constexpr float laser_effect_z_length        = 300.0f;					// Z軸の長さ
@@ -41,8 +41,8 @@ namespace
 
 	// プレイヤーを追従しない場合の向かう位置
 	const Math::Vector2 window_size =
-		{ static_cast<float>(Application::GetInstance().GetWindowSize().width), 
-		  static_cast<float>(Application::GetInstance().GetWindowSize().height )};
+		{ static_cast<float>(Application::GetInstance()->GetWindowSize().width), 
+		  static_cast<float>(Application::GetInstance()->GetWindowSize().height )};
 	const Math::Vector2 goal_pos[] =
 	{
 		{ 0 + 200, 0 + 200 },
@@ -95,7 +95,7 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 		// 目的地を設定
 		Math::Vector2 screenPos = m_normalFireMovePointList.front();
 		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
+		m_normalFireGoalPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
 
 	}
 	// レーザーの向く座標を設定
@@ -106,7 +106,7 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 
 	// ベクトル方向の回転行列からオイラー角を出力
 	auto effectRotMtx = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
-	Vector3 effectRot = effectRotMtx.ToEulerAngle();
+	Math::Vector3 effectRot = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの再生
 	Effect::Effekseer3DManager::GetInstance()->PlayEffectFollow(
@@ -200,7 +200,7 @@ void NormalLaser::Update()
 	m_pos = m_pEnemy->GetLaserFirePos();
 
 	// レーザーの先端の座標を設定
-	m_endPos = Vector3::FromDxLibVector3(
+	m_endPos = Math::Vector3::FromDxLibVector3(
 		MV1GetFramePosition(m_pModel->GetModelHandle(), laser_end_frame_no));
 
 	// ベクトル方向の回転行列を作成
@@ -208,7 +208,7 @@ void NormalLaser::Update()
 
 	// ベクトル方向の回転行列からオイラー角を出力
 	auto  effectRotMtx   = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
-	Vector3 effectRot    = effectRotMtx.ToEulerAngle();
+	Math::Vector3 effectRot    = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの回転率を設定
 	Effect::Effekseer3DManager::GetInstance()->SetEffectRot(m_laserEffectHandle, effectRot);
@@ -286,13 +286,13 @@ void NormalLaser::UpdateNormalFire()
 		// 次の目的地を設定
 		Math::Vector2 screenPos = m_normalFireMovePointList[m_normalFireMovePointIndex];
 		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
+		m_normalFireGoalPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
 	}
 	else
 	{
 		// ゴールの座標を設定
 		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
-		m_normalFireGoalPos = Vector3::FromDxLibVector3(
+		m_normalFireGoalPos = Math::Vector3::FromDxLibVector3(
 			ConvScreenPosToWorldPos_ZLinear(
 				{ m_normalFireMovePointList[m_normalFireMovePointIndex].x,
 				  m_normalFireMovePointList[m_normalFireMovePointIndex].y,
@@ -331,10 +331,10 @@ void NormalLaser::Draw()
 }
 
 // レーザーを止める
-void NormalLaser::Stop(const Vector3& pos)
+void NormalLaser::Stop(const Math::Vector3& pos)
 {
 	// レーザーの発射地点からシールドまでの距離を算出
-	Vector3 vec = pos - m_pos;
+	Math::Vector3 vec = pos - m_pos;
 	float length = vec.Length();
 
 	// レーザーのエフェクトがシールドで止まってるよう見えるように、エフェクトの拡大率を設定
@@ -347,7 +347,7 @@ void NormalLaser::Stop(const Vector3& pos)
 }
 
 // 反射
-void NormalLaser::Reflect(const Vector3& pos)
+void NormalLaser::Reflect(const Math::Vector3& pos)
 {
 	// レーザーの反射フラグを立てる
 	m_isReflect = true;
@@ -368,7 +368,7 @@ void NormalLaser::UndoReflect()
 }
 
 // 方向ベクトルの取得
-Vector3 NormalLaser::GetDirection() const
+Math::Vector3 NormalLaser::GetDirection() const
 {
 	return (m_directionPos - m_pos);
 }

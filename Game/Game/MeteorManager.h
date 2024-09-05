@@ -34,7 +34,7 @@ public:
 	/// 更新
 	/// </summary>
 	/// <param name="cameraPos">カメラの座標</param>
-	void Update(const Vector3& cameraPos);
+	void Update(const Math::Vector3& cameraPos);
 
 	/// <summary>
 	/// 描画

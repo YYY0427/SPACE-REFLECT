@@ -21,7 +21,7 @@ public:
 	ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager, 
 				 const std::shared_ptr<Shield>& pShield, 
 				 const std::shared_ptr<LaserBase>& pLaser, 
-				 const Vector3& firePos);
+				 const Math::Vector3& firePos);
 
 	/// <summary>
 	/// デストラクタ
@@ -48,5 +48,5 @@ private:
 	int m_laserEffectHandle;	
 
 	// レーザーの向いている方向の座標
-	Vector3 m_directionPos;
+	Math::Vector3 m_directionPos;
 };

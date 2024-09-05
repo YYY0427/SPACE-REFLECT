@@ -31,8 +31,8 @@ namespace
 	constexpr unsigned int choose_color = 0xffffff;
 
 	// 表示するテキストの全体の位置
-	const int draw_text_pos_x = Application::GetInstance().GetWindowSize().width / 2;
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 - 50;
+	const int draw_text_pos_x = Application::GetInstance()->GetWindowSize().width / 2;
+	const int draw_text_pos_y = Application::GetInstance()->GetWindowSize().height / 2 - 50;
 }
 
 // コンストラクタ	
@@ -53,7 +53,7 @@ PuseScene::~PuseScene()
 void PuseScene::Init()
 {
 	// モザイク処理用のグラフィックの作成
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 	m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
 
 	// 項目の描画色を選択されていないときの色に初期化
@@ -139,7 +139,7 @@ void PuseScene::Draw()
 	Debug::Text::AddLog("currentSelectState", { m_currentSelectItem });
 
 	// 画面サイズの取得
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 
 	// モザイク処理
 	GetDrawScreenGraph(0, 0, screenSize.width, screenSize.height, m_gaussScreen);

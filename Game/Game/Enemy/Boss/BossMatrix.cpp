@@ -27,17 +27,17 @@
 namespace
 {
 	// スクリーンサイズ
-	auto& screenSize = Application::GetInstance().GetWindowSize();
+	auto& screenSize = Application::GetInstance()->GetWindowSize();
 
 	// 位置
-	const Vector3 init_pos      = { 0.0f, 300.0f, 5000.0f };	// 初期位置(ワールド座標)
-	const Vector3 goal_init_pos = { 0.0f, 300.0f, 1800.0f };	// 登場時の位置(ワールド座標)
-	const Vector3 normal_pos    = { 640, 360, 1800.0f };		// 通常時の位置(スクリーン座標)
+	const Math::Vector3 init_pos      = { 0.0f, 300.0f, 5000.0f };	// 初期位置(ワールド座標)
+	const Math::Vector3 goal_init_pos = { 0.0f, 300.0f, 1800.0f };	// 登場時の位置(ワールド座標)
+	const Math::Vector3 normal_pos    = { 640, 360, 1800.0f };		// 通常時の位置(スクリーン座標)
 
 	// モデル
-	const Vector3 model_rot = { Math::Util::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
-	const Vector3 model_scale = { 2.0f , 2.0f, 2.0f };					// 拡大率
-	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };			// 初期の向き
+	const Math::Vector3 model_rot = { Math::Util::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
+	const Math::Vector3 model_scale = { 2.0f , 2.0f, 2.0f };					// 拡大率
+	const Math::Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };			// 初期の向き
 
 	// アニメーション番号
 	constexpr int idle_anim_no = 0;				// 待機
@@ -57,7 +57,7 @@ namespace
 	constexpr float entry_move_speed = 10.0f;	// 登場時の移動速度
 	constexpr float move_speed = 20.0f;			// 移動速度
 	constexpr float distance_threshold = 100.0f;// 目的地に到達したかどうか測る閾値
-	const Vector3 move_pos[] =					// 移動先の座標
+	const Math::Vector3 move_pos[] =					// 移動先の座標
 	{
 		{ screenSize. width / 2.0f, screenSize.height / 2.0f, 1800 },
 		{ 0 + 200, 0 + 200, 1600 },
@@ -113,8 +113,8 @@ namespace
 	constexpr float laser_fire_pos_z_interval = 200.0f;	// レーザーの発射位置のボスとのZ座標の間隔
 
 	// エフェクト
-	const Vector3 damage_effect_scale = { 100.0f, 100.0f, 100.0f };	// ダメージエフェクトの拡大率
-	const Vector3 die_effect_scale    = { 100.0f, 100.0f, 100.0f };	// 死亡エフェクトの拡大率
+	const Math::Vector3 damage_effect_scale = { 100.0f, 100.0f, 100.0f };	// ダメージエフェクトの拡大率
+	const Math::Vector3 die_effect_scale    = { 100.0f, 100.0f, 100.0f };	// 死亡エフェクトの拡大率
 	constexpr float die_effect_z_interval = 300.0f;					// 死亡エフェクトとボスとのZ座標の間隔
 
 	// 画面揺れ
@@ -258,7 +258,7 @@ void BossMatrix::Draw()
 }
 
 // ダメージ処理
-void BossMatrix::OnDamage(const int damage, const Vector3& pos)
+void BossMatrix::OnDamage(const int damage, const Math::Vector3& pos)
 {
 	// HPを減らす
 	m_hp -= damage;
@@ -341,8 +341,8 @@ void BossMatrix::UpdateEntry()
 	if (!m_isMoveEnd)
 	{
 		// ベクトルの取得
-		Vector3 goalPos = { goal_init_pos.x, goal_init_pos.y, goal_init_pos.z + m_pPlayer->GetPos().z };
-		Vector3 moveVec = (goalPos - m_pos).Normalized() * entry_move_speed;
+		Math::Vector3 goalPos = { goal_init_pos.x, goal_init_pos.y, goal_init_pos.z + m_pPlayer->GetPos().z };
+		Math::Vector3 moveVec = (goalPos - m_pos).Normalized() * entry_move_speed;
 
 		// 移動
 		m_pos += moveVec;
@@ -457,12 +457,12 @@ void BossMatrix::UpdateGameOver()
 void BossMatrix::UpdateMoveHomingLaserAttack()
 {
 	// レーザーの発射位置の更新
-	Vector3 pos = Vector3::FromDxLibVector3(
+	Math::Vector3 pos = Math::Vector3::FromDxLibVector3(
 		MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
 	m_laserFirePos = { pos.x, pos.y, pos.z - laser_fire_pos_z_interval };
 
 	// レーザーの方向に向けるようにする
-	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
+	Math::Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
 	auto rotMtx        = Math::Matrix::GetRotationMatrix(init_model_direction, directionVec);
 	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
 
@@ -505,7 +505,7 @@ void BossMatrix::UpdateCubeLaserAttack()
 			m_cubeLaserIntervalFrame = cube_laser_interval_frame;
 
 			// 発射位置の取得
-			Vector3 firePos = Vector3::FromDxLibVector3(
+			Math::Vector3 firePos = Math::Vector3::FromDxLibVector3(
 				MV1GetFramePosition(m_pModel->GetModelHandle(), normal_laser_fire_frame));
 
 			// キューブレーザーの生成
@@ -586,7 +586,7 @@ void BossMatrix::SetGoalPos()
 
 	// 目的地の設定
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + itr->z) / GetCameraFar();
-	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->x, itr->y, z }));
+	m_goalPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ itr->x, itr->y, z }));
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;
@@ -606,7 +606,7 @@ void BossMatrix::LookPlayerDir()
 	float lerpValue = static_cast<float>(m_playerDirLerp) / static_cast<float>(look_player_frame);
 
 	// プレイヤーの方向の行列を取得
-	Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
+	Math::Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
 	auto rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, directionVec);
 
 	// 徐々にプレイヤーの方向を向く
@@ -640,7 +640,7 @@ void BossMatrix::MoveInitPos()
 {
 	// 目的地の設定
 	float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z) + normal_pos.z) / GetCameraFar();
-	m_goalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ normal_pos.x, normal_pos.y, z }));
+	m_goalPos = Math::Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ normal_pos.x, normal_pos.y, z }));
 
 	// 移動ベクトルの設定
 	m_moveVec = (m_goalPos - m_pos).Normalized() * m_moveSpeed;

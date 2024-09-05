@@ -20,7 +20,7 @@
 namespace
 {
 	// 表示するテキストの全体の位置
-	const int draw_text_pos_y = Application::GetInstance().GetWindowSize().height / 2 + 200;
+	const int draw_text_pos_y = Application::GetInstance()->GetWindowSize().height / 2 + 200;
 
 	// テキストの文字間
 	constexpr int text_space_y = 50;
@@ -58,8 +58,8 @@ void TitleScene::Init()
 
 	// インスタンスの作成
 	m_pCamera = std::make_shared<Camera>();
-	m_pCamera->SetCamera(Vector3(0, 0, 0), Vector3(0, 0, 1));
-	m_pSkyDome = std::make_shared<SkyDome>(Vector3(0, 0, 0));
+	m_pCamera->SetCamera(Math::Vector3(0, 0, 0), Math::Vector3(0, 0, 1));
+	m_pSkyDome = std::make_shared<SkyDome>(Math::Vector3(0, 0, 0));
 
 	// タイトル画面のBGMを再生
 	Sound::Manager::GetInstance()->PlayBGM("TitleBgm");
@@ -70,7 +70,7 @@ void TitleScene::Init()
 	SetLaser({ 0, 390 }, { 1280, 390 }, 0x0000ff);
 
 	// ガウスハンドルの作成
-	auto& size = Application::GetInstance().GetWindowSize();
+	auto& size = Application::GetInstance()->GetWindowSize();
 	m_gaussHandle = MakeScreen(size.width, size.height);
 }
 
@@ -107,7 +107,7 @@ void TitleScene::Update()
 	}
 
 	// スカイドームの更新
-	m_pSkyDome->Update(Vector3(0, 0, 0));
+	m_pSkyDome->Update(Math::Vector3(0, 0, 0));
 
 	// レーザーの更新
 	for (auto& laser : m_laserData)
@@ -148,7 +148,7 @@ void TitleScene::Draw()
 	ClearDrawScreen();
 	
 	// インスタンス取得
-	auto& size = Application::GetInstance().GetWindowSize();	
+	auto& size = Application::GetInstance()->GetWindowSize();	
 	const auto& messageManager = String::MessageManager::GetInstance();
 
 	// 描画スクリーンを切り替え

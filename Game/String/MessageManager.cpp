@@ -50,6 +50,9 @@ namespace String
 		{
 			DeleteFontToHandle(font.second.fontHandle);
 		}
+
+		// インスタンスの削除
+		DeleteInstance();
 	}
 
 	// ファイルに読み込んだ文字列の表示

@@ -10,7 +10,7 @@ namespace
 	constexpr float dead_effect_play_speed = 0.5f;
 
 	// 死亡エフェクトの拡大率
-	const Vector3 dead_effect_scale = { 200.0f, 200.0f, 200.0f };
+	const Math::Vector3 dead_effect_scale = { 200.0f, 200.0f, 200.0f };
 }
 
 // コンストラクタ
@@ -35,7 +35,7 @@ EnemyBase::~EnemyBase()
 }
 
 // ダメージ処理
-void EnemyBase::OnDamage(const int damage, const Vector3& pos)
+void EnemyBase::OnDamage(const int damage, const Math::Vector3& pos)
 {
 	// HPを減らす
 	m_hp -= damage;
@@ -68,13 +68,13 @@ void EnemyBase::OnDamage(const int damage, const Vector3& pos)
 }
 
 // 位置の取得
-const Vector3& EnemyBase::GetPos() const
+const Math::Vector3& EnemyBase::GetPos() const
 {
 	return m_pos;
 }
 
 // レーザーの発射位置の取得
-const Vector3& EnemyBase::GetLaserFirePos() const
+const Math::Vector3& EnemyBase::GetLaserFirePos() const
 {
 	return m_laserFirePos;
 }

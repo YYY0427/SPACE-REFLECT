@@ -134,13 +134,13 @@ const std::array<VERTEX3D, 6>& Image3D::GetVertex() const
 }
 
 // ˆÊ’u‚Ìİ’è
-void Image3D::SetPos(const Vector3& pos)
+void Image3D::SetPos(const Math::Vector3& pos)
 {
 	m_pos = pos;
 }
 
 // ‰ñ“]‚Ìİ’è
-void Image3D::SetRot(const Vector3& rot)
+void Image3D::SetRot(const Math::Vector3& rot)
 {
 	m_rot = rot;
 }

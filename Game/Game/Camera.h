@@ -16,7 +16,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
-	Camera(const Vector3& playerPos);
+	Camera(const Math::Vector3& playerPos);
 
 	/// <summary>
 	/// デストラクタ
@@ -27,27 +27,27 @@ public:
 	/// スタート演出時の更新
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
-	void UpdateStart(const Vector3& playerPos);		
+	void UpdateStart(const Math::Vector3& playerPos);
 
 	/// <summary>
 	/// プレイ時の更新
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
 	/// <param name="playerVec">プレイヤーのベクトル</param>
-	void UpdatePlay(const Vector3& playerPos, const Vector3& playerVec);
+	void UpdatePlay(const Math::Vector3& playerPos, const Math::Vector3& playerVec);
 
 	/// <summary>
 	/// ゲームクリア時の更新
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
 	/// <returns>カメラ演出が終了したか</returns>
-	bool UpdateGameClear(const Vector3& playerPos);	
+	bool UpdateGameClear(const Math::Vector3& playerPos);
 
 	/// <summary>
 	/// ゲームオーバー時の更新
 	/// </summary>
 	/// <param name="playerPos">プレイヤーの座標</param>
-	void UpdateGameOver(const Vector3& playerPos);
+	void UpdateGameOver(const Math::Vector3& playerPos);
 
 
 	//// セッター ////
@@ -62,7 +62,7 @@ public:
 	/// </summary>
 	/// <param name="pos">カメラの位置</param>
 	/// <param name="target">カメラの注視点</param>
-	void SetCamera(const Vector3& pos, const Vector3& target);
+	void SetCamera(const Math::Vector3& pos, const Math::Vector3& target);
 
 
 	//// ゲッター ////
@@ -71,13 +71,13 @@ public:
 	/// カメラの座標の取得
 	/// </summary>
 	/// <returns>カメラの座標</returns>
-	const Vector3& GetPos() const;			
+	const Math::Vector3& GetPos() const;
 
 	/// <summary>
 	/// カメラの注視点の取得
 	/// </summary>
 	/// <returns>カメラの注視点</returns>
-	const Vector3& GetTarget() const;	
+	const Math::Vector3& GetTarget() const;
 
 	/// <summary>
 	/// カメラの水平方向の取得
@@ -117,10 +117,10 @@ public:
 
 private:
 	// カメラの座標
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 
 	// カメラの注視点
-	Vector3 m_target;
+	Math::Vector3 m_target;
 
 	// 視野角
 	float m_perspective;

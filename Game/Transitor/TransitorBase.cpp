@@ -25,7 +25,7 @@ TransitorBase::~TransitorBase()
 void TransitorBase::Start()
 {
 	// 画面サイズを取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// 画面を作成
 	m_oldScene = MakeGraph(size.width, size.height);
@@ -54,7 +54,7 @@ void TransitorBase::SetFrame(int frame)
 void TransitorBase::SetOldScene()
 {
 	// 画面サイズを取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// 描画先に設定されているグラフィック領域から指定領域のグラフィックを読みこむ
 	int result = GetDrawScreenGraph(0, 0, size.width, size.height, m_oldScene, true);

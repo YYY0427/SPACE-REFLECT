@@ -23,7 +23,7 @@ namespace Effect
 		m_quakeTimer.SetTime(0);
 
 		// 画面のサイズを取得
-		auto& screenSize = Application::GetInstance().GetWindowSize();
+		auto& screenSize = Application::GetInstance()->GetWindowSize();
 
 		// 画面のサイズで画面を作成
 		m_screenHandle = MakeScreen(screenSize.width, screenSize.height, true);

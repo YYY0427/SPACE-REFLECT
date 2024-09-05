@@ -53,13 +53,13 @@ public:
 	/// 位置の設定 
 	/// </summary>
 	/// <param name="pos">位置</param>
-	void SetPos(const Vector3& pos);
+	void SetPos(const Math::Vector3& pos);
 
 	/// <summary>
 	/// 回転の設定
 	/// </summary>
 	/// <param name="rot">回転</param>
-	void SetRot(const Vector3& rot);
+	void SetRot(const Math::Vector3& rot);
 
 	/// <summary>
 	/// 画像の横幅の設定 
@@ -89,10 +89,10 @@ private:
 	std::array<VERTEX3D, 6> m_vertex;
 
 	// 画像の位置
-	Vector3 m_pos;
+	Math::Vector3 m_pos;
 
 	// 画像の回転
-	Vector3 m_rot;
+	Math::Vector3 m_rot;
 
 	// 画像の透明度
 	int m_alpha;

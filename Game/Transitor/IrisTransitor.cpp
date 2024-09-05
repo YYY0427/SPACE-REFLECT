@@ -11,7 +11,7 @@ IrisTransitor::IrisTransitor(bool irisOut, int interval, bool isTiled, int gHand
 	m_handle(gHandle)
 {
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// マスクスクリーンの作成
 	m_handleForMaskScreen = MakeScreen(size.width, size.height, true);
@@ -54,7 +54,7 @@ void IrisTransitor::Draw()
 	if (IsEnd()) return;
 
 	// ウィンドウサイズの取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// 割合を計算
 	auto rate = static_cast<float>(m_frame) / static_cast<float>(m_interval);

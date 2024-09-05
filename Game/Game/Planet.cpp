@@ -25,7 +25,7 @@ Planet::~Planet()
 }
 
 // プレイ時の更新
-void Planet::Update(const Vector3& playerVec, const Vector3& rotVec)
+void Planet::Update(const Math::Vector3& playerVec, const Math::Vector3& rotVec)
 {
 	// プレイヤーと同じZベクトル移動
 	m_pos.z += playerVec.z;
@@ -40,7 +40,7 @@ void Planet::Update(const Vector3& playerVec, const Vector3& rotVec)
 }
 
 // 更新
-void Planet::UpdateStageSelect(const Vector3& rotVec)
+void Planet::UpdateStageSelect(const Math::Vector3& rotVec)
 {
 	// 回転
 	m_rot += rotVec;
@@ -57,7 +57,7 @@ void Planet::Draw()
 }
 
 // ゲッター
-const Vector3& Planet::GetPos() const
+const Math::Vector3& Planet::GetPos() const
 {
 	return m_pos;
 }

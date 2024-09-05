@@ -41,7 +41,7 @@ void PushTransitor::Draw()
 	if(IsEnd()) return;
 
 	// ウィンドウサイズを取得
-	const auto& size = Application::GetInstance().GetWindowSize();
+	const auto& size = Application::GetInstance()->GetWindowSize();
 
 	// 描画先を裏画面に変更
 	SetDrawScreen(DX_SCREEN_BACK);

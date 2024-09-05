@@ -80,11 +80,11 @@ void EnemyManager::Update()
 	{
 		for (auto& enemy : m_pEnemyList)
 		{
-			enemy->OnDamage(debug_damage, Vector3());
+			enemy->OnDamage(debug_damage, Math::Vector3());
 		}
 		if (m_pBossEnemy)
 		{
-			m_pBossEnemy->OnDamage(debug_damage, Vector3());
+			m_pBossEnemy->OnDamage(debug_damage, Math::Vector3());
 		}
 	}
 #endif
@@ -145,9 +145,11 @@ void EnemyManager::UpdateWarning()
 		// ボス敵の生成
 		AddBossEnemy(m_bossType);
 
-		// 現在流れているBGMのフェードアウトの設定
+		// サウンドマネージャの取得
 		const auto& soundManager = Sound::Manager::GetInstance();
-		soundManager->SetFadeSound(soundManager->GetPlayBGMFileName(), boss_bgm_fade_frame, soundManager->GetMaxVolume(), 0);
+
+		// 現在流れているBGMのフェードアウトの設定
+		//soundManager->SetFadeSound(soundManager->GetPlayBGMFileName(), boss_bgm_fade_frame, soundManager->GetMaxVolume(), 0);
 
 		// ボス敵のBGMの再生
 		soundManager->PlayBGM("BossBatleBgm");

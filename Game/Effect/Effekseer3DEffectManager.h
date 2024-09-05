@@ -40,9 +40,9 @@ namespace Effect
 			std::string effectId;				// エフェクトのID
 			int* playingEffectHandle;			// エフェクトのハンドル
 			PlayType	type;					// 再生タイプ
-			Vector3		pos;					// 位置	
-			Vector3		rot;					// 回転
-			Vector3		scale;					// 拡大率
+			Math::Vector3		pos;					// 位置	
+			Math::Vector3		rot;					// 回転
+			Math::Vector3		scale;					// 拡大率
 			float		speed;					// 再生速度
 			bool		isZBuffer;				// Zバッファを使うか
 		};
@@ -53,9 +53,9 @@ namespace Effect
 			std::string effectId;				// エフェクトのID
 			int* playingEffectHandle;	// エフェクトのハンドル
 			PlayType    type;					// 再生タイプ
-			Vector3* pos;					// 追従したい位置情報変数のアドレス
-			Vector3     rot;					// 回転
-			Vector3		scale;					// 拡大率
+			Math::Vector3* pos;					// 追従したい位置情報変数のアドレス
+			Math::Vector3     rot;					// 回転
+			Math::Vector3		scale;					// 拡大率
 			float		speed;					// 再生速度
 			bool		isZBuffer;				// Zバッファを使うか
 		};
@@ -103,10 +103,10 @@ namespace Effect
 		/// <param name="rot">回転率</param>
 		void PlayEffect(int& playingEffectHandle,
 			const std::string& id,
-			const Vector3& pos,
-			const Vector3& scale = { 1.0f, 1.0f, 1.0f },
+			const Math::Vector3& pos,
+			const Math::Vector3& scale = { 1.0f, 1.0f, 1.0f },
 			const float speed = 1.0f,
-			const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+			const Math::Vector3& rot = { 0.0f, 0.0f, 0.0f },
 			const bool isZbuffer = true);
 
 		/// <summary>
@@ -120,10 +120,10 @@ namespace Effect
 		/// <param name="rot">回転率</param>
 		void PlayEffectLoop(int& playingEffectHandle,
 			const std::string& id,
-			const Vector3& pos,
-			const Vector3& scale = { 1.0f, 1.0f, 1.0f },
+			const Math::Vector3& pos,
+			const Math::Vector3& scale = { 1.0f, 1.0f, 1.0f },
 			const float speed = 1.0f,
-			const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+			const Math::Vector3& rot = { 0.0f, 0.0f, 0.0f },
 			const bool isZbuffer = true);
 
 		/// <summary>
@@ -137,10 +137,10 @@ namespace Effect
 		/// <param name="rot">回転率</param>
 		void PlayEffectFollow(int& playingEffectHandle,
 			const std::string& id,
-			Vector3* pos,
-			const Vector3& scale = { 1.0f, 1.0f, 1.0f },
+			Math::Vector3* pos,
+			const Math::Vector3& scale = { 1.0f, 1.0f, 1.0f },
 			const float speed = 1.0f,
-			const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+			const Math::Vector3& rot = { 0.0f, 0.0f, 0.0f },
 			const bool isZbuffer = true);
 
 		/// <summary>
@@ -154,10 +154,10 @@ namespace Effect
 		/// <param name="rot">回転率</param>
 		void PlayEffectLoopAndFollow(int& playingEffectHandle,
 			const std::string& id,
-			Vector3* pos,
-			const Vector3& scale = { 1.0f, 1.0f, 1.0f },
+			Math::Vector3* pos,
+			const Math::Vector3& scale = { 1.0f, 1.0f, 1.0f },
 			const float speed = 1.0f,
-			const Vector3& rot = { 0.0f, 0.0f, 0.0f },
+			const Math::Vector3& rot = { 0.0f, 0.0f, 0.0f },
 			const bool isZbuffer = true);
 
 		/// <summary>
@@ -168,14 +168,14 @@ namespace Effect
 		/// <param name="scale">拡大率</param>
 		/// <param name="speed">再生速度</param>
 		/// <param name="rot">回転率</param>
-		void SetEffectAllParam(const int playingEffectHandle, const Vector3& pos, const Vector3& scale, const float speed, const Vector3& rot);
+		void SetEffectAllParam(const int playingEffectHandle, const Math::Vector3& pos, const Math::Vector3& scale, const float speed, const Math::Vector3& rot);
 
 		/// <summary>
 		/// エフェクトの拡大率の変更
 		/// </summary>
 		/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 		/// <param name="scale">拡大率</param>
-		void SetEffectScale(const int playingEffectHandle, const Vector3& scale);
+		void SetEffectScale(const int playingEffectHandle, const Math::Vector3& scale);
 
 		/// <summary>
 		/// エフェクトの再生速度の変更
@@ -189,14 +189,14 @@ namespace Effect
 		/// </summary>
 		/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 		/// <param name="rot">回転率</param>
-		void SetEffectRot(const int playingEffectHandle, const Vector3& rot);
+		void SetEffectRot(const int playingEffectHandle, const Math::Vector3& rot);
 
 		/// <summary>
 		/// エフェクトの位置の変更
 		/// </summary>
 		/// <param name="playingEffectHandle">エフェクトのハンドル</param>
 		/// <param name="pos">位置</param>
-		void SetEffectPos(const int playingEffectHandle, const Vector3& pos);
+		void SetEffectPos(const int playingEffectHandle, const Math::Vector3& pos);
 
 		/// <summary>
 		/// 特定のエフェクトが再生中か
