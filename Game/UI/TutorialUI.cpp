@@ -3,7 +3,7 @@
 #include "../Application.h"
 #include "../String/MessageManager.h"
 #include "../Util/Easing.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -147,7 +147,7 @@ void TutorialUI::Update()
 
 				// 目的地の設定
 				auto& screenSize = Application::GetInstance().GetWindowSize();
-				Vector2 goalPos = { static_cast<float>(screenSize.width) - 200.0f, 
+				Math::Vector2 goalPos = { static_cast<float>(screenSize.width) - 200.0f,
 									static_cast<float>(screenSize.height - 30.0f) };
 
 				// 終了している状態の数をカウント
@@ -231,7 +231,7 @@ void TutorialUI::Draw()
 			SetDrawScreen(data.second.messageTextImgHandle);
 			ClearDrawScreen();
 			auto& screenSize = Application::GetInstance().GetWindowSize();
-			MessageManager::GetInstance().DrawStringCenter(data.second.messageId,
+			String::MessageManager::GetInstance()->DrawStringCenter(data.second.messageId,
 				screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
 			SetDrawScreen(DX_SCREEN_BACK);
 
@@ -260,7 +260,7 @@ void TutorialUI::Draw()
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_tutorialDataMap[m_state].imgAlpha);
 
 		// 描画位置の保存
-		Vector2 savePos = m_tutorialDataMap[m_state].imgPos;
+		Math::Vector2 savePos = m_tutorialDataMap[m_state].imgPos;
 
 		// 画像の描画
 		for (size_t i = 0; i < m_tutorialDataMap[m_state].imgHandle.size(); i++)
@@ -292,7 +292,7 @@ void TutorialUI::Draw()
 					&width, &height);
 
 				// テキストの描画
-				MessageManager::GetInstance().DrawStringCenter(
+				String::MessageManager::GetInstance()->DrawStringCenter(
 					"TutorialUI+", 
 					m_tutorialDataMap[m_state].imgPos.x + ((width + image_interval) / 2.0f),
 					m_tutorialDataMap[m_state].imgPos.y, 
@@ -302,8 +302,8 @@ void TutorialUI::Draw()
 		}
 
 		// テキストの描画
-		auto messageHeight = MessageManager::GetInstance().GetMessageHeight(m_tutorialDataMap[m_state].messageId);
-		MessageManager::GetInstance().DrawString(m_tutorialDataMap[m_state].messageId, 
+		auto messageHeight = String::MessageManager::GetInstance()->GetMessageHeight(m_tutorialDataMap[m_state].messageId);
+		String::MessageManager::GetInstance()->DrawString(m_tutorialDataMap[m_state].messageId,
 					  m_tutorialDataMap[m_state].imgPos.x + text_interval,
 					  m_tutorialDataMap[m_state].imgPos.y - (messageHeight / 2.0f), 0xffffff);
 		
@@ -325,7 +325,7 @@ void TutorialUI::StartState(const TutorialState state)
 	if (m_tutorialDataMap[m_state].imgAlpha > 0) return;
 	if (m_tutorialDataMap[m_state].isStart && !m_tutorialDataMap[m_state].isEnd) return;
 
-	SoundManager::GetInstance().PlaySE("TutorialUI");
+	Sound::Manager::GetInstance()->PlaySE("TutorialUI");
 
 	// 状態の設定
 	m_state = state;
@@ -343,10 +343,10 @@ void TutorialUI::StartState(const TutorialState state)
 	if (is_tutorial_ui_hold_test)
 	{
 		// メッセージ画像用のスクリーンの作成
-		MessageManager& message = MessageManager::GetInstance();
+		const auto& messageManager = String::MessageManager::GetInstance();
 		m_tutorialDataMap[m_state].messageTextImgHandle =
-			MakeScreen(message.GetMessageWidth(m_tutorialDataMap[m_state].messageId),
-					   message.GetMessageHeight(m_tutorialDataMap[m_state].messageId));
+			MakeScreen(messageManager->GetMessageWidth(m_tutorialDataMap[m_state].messageId),
+				messageManager->GetMessageHeight(m_tutorialDataMap[m_state].messageId));
 	}
 }
 

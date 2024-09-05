@@ -2,10 +2,10 @@
 #include <fstream>
 #include <sstream>
 
-namespace StringUtil
+namespace String
 {
 	// 文字列を分割する
-	std::vector<std::string> StringUtil::Split(const std::string& str, const char delimiter)
+	std::vector<std::string> String::Split(const std::string& str, const char delimiter)
 	{
 		// stringをgetlineで使えるデータに変換
 		std::istringstream stream(str);

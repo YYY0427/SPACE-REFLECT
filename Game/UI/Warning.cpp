@@ -2,7 +2,7 @@
 #include "../Util/DrawFunctions.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <string>
 #include <DxLib.h>
 
@@ -57,21 +57,21 @@ Warning::Warning(const int drawFrame) :
 	m_uiDataTable[static_cast<int>(ID::CENTER)].scrollDirection = 0;
 
 	// 通常のBGMのファイル名の取得
-	auto& soundManager = SoundManager::GetInstance();
-	auto fileName = soundManager.GetPlayBGMFileName();
+	const auto& soundManager = Sound::Manager::GetInstance();
+	auto fileName = soundManager->GetPlayBGMFileName();
 
 	// 再生中のBGMがあったら
 	if (fileName != "")
 	{
 		// 通常のBGMのフェードアウトの設定
-		soundManager.SetFadeSound(fileName, 120, soundManager.GetSoundVolume(fileName), 0);
+		soundManager->SetFadeSound(fileName, 120, soundManager->GetSoundVolume(fileName), 0);
 	}
 
 	// 警告のSEの再生
-	soundManager.PlaySE("Warning");
+	soundManager->PlaySE("Warning");
 
 	// 警告のSEのフェードインの設定
-	soundManager.SetFadeSound("Warning", 20, 0, 255);
+	soundManager->SetFadeSound("Warning", 20, 0, 255);
 }
 
 // デストラクタ
@@ -94,8 +94,8 @@ void Warning::Update()
 		m_isEnd = true;
 
 		// 警告のSEのフェードアウトの設定
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.SetFadeSound("Warning", 30, soundManager.GetSoundVolume("Warning"), 0);
+		const auto& soundManager = Sound::Manager::GetInstance();
+		soundManager->SetFadeSound("Warning", 30, soundManager->GetSoundVolume("Warning"), 0);
 
 		// 警告画像のアルファ値を減らす
 		m_addImgAlphaParam *= -1;
@@ -158,7 +158,7 @@ void Warning::Draw()
 	// 警告文字の描画
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_stringAlphaParam);
-	MessageManager::GetInstance().DrawStringCenter("WarningUI", screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
+	String::MessageManager::GetInstance()->DrawStringCenter("WarningUI", screenSize.width / 2.0f, screenSize.height / 2.0f, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

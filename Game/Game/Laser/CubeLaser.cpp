@@ -73,14 +73,14 @@ CubeLaser::CubeLaser(const Vector3& firePos,
 	m_moveVec = (m_pPlayer->GetPos() - m_pos).Normalized() * laserSpeed;
 
 	// 1フレームに回転する量をランダムで取得
-	m_deltaRot.x = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
-	m_deltaRot.y = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
-	m_deltaRot.z = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_deltaRot.x = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_deltaRot.y = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_deltaRot.z = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
 
 	// 最大拡大率をランダムで取得
-	m_maxScale.x = MathUtil::ToRadian(MathUtil::GetRandFloat(min_scale, max_scale));
-	m_maxScale.y = MathUtil::ToRadian(MathUtil::GetRandFloat(min_scale, max_scale));
-	m_maxScale.z = MathUtil::ToRadian(MathUtil::GetRandFloat(min_scale, max_scale));
+	m_maxScale.x = Math::Util::ToRadian(Math::Util::GetRandFloat(min_scale, max_scale));
+	m_maxScale.y = Math::Util::ToRadian(Math::Util::GetRandFloat(min_scale, max_scale));
+	m_maxScale.z = Math::Util::ToRadian(Math::Util::GetRandFloat(min_scale, max_scale));
 
 	// ガウス用スクリーンの作成
 	m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
@@ -147,13 +147,13 @@ void CubeLaser::Draw()
 	{
 		// モデルの位置を少しずらして描画
 		Vector3 pos;
-		pos.x = m_pos.x + MathUtil::GetRandFloat(-model_pos_range, model_pos_range);
-		pos.y = m_pos.y + MathUtil::GetRandFloat(-model_pos_range, model_pos_range);
-		pos.z = m_pos.z + MathUtil::GetRandFloat(-model_pos_range, model_pos_range);
+		pos.x = m_pos.x + Math::Util::GetRandFloat(-model_pos_range, model_pos_range);
+		pos.y = m_pos.y + Math::Util::GetRandFloat(-model_pos_range, model_pos_range);
+		pos.z = m_pos.z + Math::Util::GetRandFloat(-model_pos_range, model_pos_range);
 		m_pModel->SetPos(pos);
 
 		// 不透明度を少し変えて描画
-		float opacity = MathUtil::GetRandFloat(model_min_opacity_range, model_max_opacity_range);
+		float opacity = Math::Util::GetRandFloat(model_min_opacity_range, model_max_opacity_range);
 		m_pModel->SetOpacity(opacity);
 
 		// モデルを描画

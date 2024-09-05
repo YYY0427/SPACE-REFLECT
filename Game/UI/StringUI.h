@@ -33,7 +33,7 @@ public:
 	/// ˆÊ’u‚Ìİ’è 
 	/// </summary>
 	/// <param name="pos">ˆÊ’u</param>
-	void SetPos(const Vector2& pos);
+	void SetPos(const Math::Vector2& pos);
 
 	/// <summary>
 	/// F‚Ìİ’è

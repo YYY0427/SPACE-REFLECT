@@ -8,7 +8,7 @@
 #include "../Util/InputState.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include "../Transitor/WipeTransitor.h"
 #include "../Transitor/TileTransitor.h"
 #include "../Transitor/FadeTransitor.h"
@@ -62,8 +62,8 @@ void TitleScene::Init()
 	m_pSkyDome = std::make_shared<SkyDome>(Vector3(0, 0, 0));
 
 	// タイトル画面のBGMを再生
-	SoundManager::GetInstance().PlayBGM("TitleBgm");
-	SoundManager::GetInstance().SetFadeSound("TitleBgm", 120, 0, 255);
+	Sound::Manager::GetInstance()->PlayBGM("TitleBgm");
+	Sound::Manager::GetInstance()->SetFadeSound("TitleBgm", 120, 0, 255);
 
 	// レーザーの配置
 	SetLaser({ 0, 210 }, { 1280, 210 }, 0xff0000);
@@ -95,11 +95,11 @@ void TitleScene::Update()
 		if (!m_isInput)
 		{
 			// タイトル画面のBGMをフェードアウト
-			auto& soundManager = SoundManager::GetInstance();
-			soundManager.SetFadeSound("TitleBgm", 40, soundManager.GetSoundVolume("TitleBgm"), 0);
+			const auto& soundManager = Sound::Manager::GetInstance();
+			soundManager->SetFadeSound("TitleBgm", 40, soundManager->GetSoundVolume("TitleBgm"), 0);
 
 			// タイトル画面の決定音を再生
-			soundManager.PlaySE("Enter");
+			soundManager->PlaySE("Enter");
 		}
 
 		// フラグを立てる
@@ -149,7 +149,7 @@ void TitleScene::Draw()
 	
 	// インスタンス取得
 	auto& size = Application::GetInstance().GetWindowSize();	
-	auto& messageManager = MessageManager::GetInstance();
+	const auto& messageManager = String::MessageManager::GetInstance();
 
 	// 描画スクリーンを切り替え
 	SetDrawScreen(m_gaussHandle);
@@ -173,7 +173,7 @@ void TitleScene::Draw()
 
 	// タイトルロゴの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 170);
-	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0xffffff, 0x000000);
+	messageManager->DrawStringCenter("TitleLogo", size.width / 2, 300, 0xffffff, 0x000000);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// ガウスフィルターの適用
@@ -195,11 +195,11 @@ void TitleScene::Draw()
 	m_pSkyDome->Draw();
 
 	// タイトルロゴをもう一度描画
-	messageManager.DrawStringCenter("TitleLogo", size.width / 2, 300, 0xffffff, GetColor(130, 130, 130));
+	messageManager->DrawStringCenter("TitleLogo", size.width / 2, 300, 0xffffff, GetColor(130, 130, 130));
 
 	// 項目の描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_alpha);
-	messageManager.DrawStringCenter("TitleItemStart", size.width / 2, 
+	messageManager->DrawStringCenter("TitleItemStart", size.width / 2, 
 		draw_text_pos_y + text_space_y * static_cast<int>(SceneItem::GAME), 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
@@ -208,12 +208,12 @@ void TitleScene::Draw()
 }
 
 // レーザーの描画
-void TitleScene::SetLaser(const Vector2& pos1, const Vector2& pos2, const unsigned int color)
+void TitleScene::SetLaser(const Math::Vector2& pos1, const Math::Vector2& pos2, const unsigned int color)
 {
 	for (int i = 0; i < 10; i++)
 	{
 		// レーザーのデータを作成
-		LaserData data;
+		LaserData data{};
 		data.alpha = GetRand(100);
 		data.color = color;
 		data.thickness = GetRand(9) + 1;

@@ -37,7 +37,7 @@ public:
 	/// 位置の設定
 	/// </summary>
 	/// <param name="pos">位置</param>
-	void SetPos(const Vector2& pos);	
+	void SetPos(const Math::Vector2& pos);
 
 	/// <summary>
 	/// 回転の設定
@@ -49,13 +49,13 @@ public:
 	/// 中心座標の設定
 	/// </summary>
 	/// <param name="center">中心座標</param>
-	void SetCenter(const Vector2& center);	
+	void SetCenter(const Math::Vector2& center);
 
 	/// <summary>
 	/// 拡大率の設定
 	/// </summary>
 	/// <param name="scale">拡大率</param>
-	void SetScale(const Vector2& scale);	
+	void SetScale(const Math::Vector2& scale);
 
 	/// <summary>
 	/// 透明度の設定
@@ -70,7 +70,7 @@ public:
 	/// 位置の取得
 	/// </summary>
 	/// <returns>位置</returns>
-	const Vector2& GetPos() const;		
+	const Math::Vector2& GetPos() const;		
 
 	/// <summary>
 	/// 回転の取得
@@ -82,13 +82,13 @@ public:
 	/// 中心座標の取得
 	/// </summary>
 	/// <returns>中心座標</returns>
-	const Vector2& GetCenter() const;	
+	const Math::Vector2& GetCenter() const;	
 
 	/// <summary>
 	/// 拡大率の取得
 	/// </summary>
 	/// <returns>拡大率</returns>
-	const Vector2& GetScale() const;	
+	const Math::Vector2& GetScale() const;
 
 	/// <summary>
 	/// 透明度の取得
@@ -104,10 +104,10 @@ private:
 	float m_rot;
 
 	// 画像の中心座標
-	Vector2 m_center;
+	Math::Vector2 m_center;
 
 	// 画像の拡大率
-	Vector2 m_scale;
+	Math::Vector2 m_scale;
 
 	// 画像の透明度
 	float m_alpha;

@@ -10,7 +10,7 @@ class Camera;
 class SkyDome;
 class MeteorManager;
 class DamageFlash;
-class ScreenShaker;
+namespace Effect { class ScreenShaker; }
 class PlanetManager;
 class LaserManager;
 class EnemyManager;
@@ -67,7 +67,7 @@ protected:
 	std::shared_ptr<SkyDome> m_pSkyDome;
 	std::shared_ptr<MeteorManager> m_pMeteorManager;
 	std::shared_ptr<DamageFlash> m_pDamageFlash;
-	std::shared_ptr<ScreenShaker> m_pScreenShaker;
+	std::shared_ptr<Effect::ScreenShaker> m_pScreenShaker;
 	std::shared_ptr<PlanetManager> m_pPlanetManager;
 	std::shared_ptr<LaserManager> m_pLaserManager;
 	std::shared_ptr<EnemyManager> m_pEnemyManager;

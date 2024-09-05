@@ -76,7 +76,7 @@ private:
 	Vector3 m_rot;
 
 	// シールドの拡大率
-	Vector2 m_scale;
+	Math::Vector2 m_scale;
 
 	// プレイヤーからの相対位置
 	Vector3 m_relativePosToPlayer;

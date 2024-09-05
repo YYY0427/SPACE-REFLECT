@@ -49,7 +49,7 @@ UIManager& UIManager::GetInstance()
 }
 
 // UI‚Ì’Ç‰Á
-void UIManager::AddUI(const std::string& key, const std::shared_ptr<UIBase>& ui, const int drawOrder, const Vector2& storeVec)
+void UIManager::AddUI(const std::string& key, const std::shared_ptr<UIBase>& ui, const int drawOrder, const Math::Vector2& storeVec)
 {
 	// ‚·‚Å‚ÉƒL[‚ª“o˜^‚³‚ê‚Ä‚¢‚éê‡‚Í’Ç‰Á‚µ‚È‚¢
 	for (auto& uiT : m_uiTable)

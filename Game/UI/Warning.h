@@ -50,7 +50,7 @@ private:
 	struct Data
 	{
 		int imgHandle;
-		Vector2 pos;
+		Math::Vector2 pos;
 		int scrollDirection;
 		int imgWidth;
 		int imgHeight;

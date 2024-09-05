@@ -63,7 +63,7 @@ void TestScene::Draw()
 	count++;
 	if (count % 10 == 0)
 	{
-		DebugText::AddLog("TEST", { MathUtil::GetRandFloat(0.1f, 1.0) });
+		Debug::Text::AddLog("TEST", { Math::Util::GetRandFloat(0.1f, 1.0) });
 	}
 
 	//// “Ç‚İ‚ñ‚¾ƒtƒ@ƒCƒ‹‚Ì•`‰æ

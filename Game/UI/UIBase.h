@@ -34,7 +34,7 @@ public:
 	/// </summary>
 	/// <param name="vec">格納するベクトル</param>
 	/// <param name="storeSpeed">格納速度</param>
-	void Store(const Vector2& vec, const float storeSpeed);
+	void Store(const Math::Vector2& vec, const float storeSpeed);
 
 	/// <summary>
 	/// UIが有効かどうか 
@@ -44,7 +44,7 @@ public:
 
 protected:
 	// UIの座標
-	Vector2 m_pos;
+	Math::Vector2 m_pos;
 
 	// UIが有効かどうか
 	bool m_isEnabled;

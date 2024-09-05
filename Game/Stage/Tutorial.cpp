@@ -24,7 +24,7 @@
 #include "../UI/TutorialUI.h"
 #include "../Util/InputState.h"
 #include "../Transitor/Fade.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -83,7 +83,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
 	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name, m_pPlayer);
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-	m_pScreenShaker= std::make_shared<ScreenShaker>(m_pCamera);
+	m_pScreenShaker= std::make_shared<Effect::ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 	m_pTutorialUI = std::make_shared<TutorialUI>();
 
@@ -124,7 +124,7 @@ void Tutorial::Update()
 	m_pEnemyManager->Update();								// 敵
 	m_pDamageFlash->Update();								// ダメージフラッシュ
 	m_pScreenShaker->Update();								// 画面揺れ
-	Effekseer3DEffectManager::GetInstance().Update();		// エフェクト
+	Effect::Effekseer3DManager::GetInstance()->Update();		// エフェクト
 	UIManager::GetInstance().Update();						// UI
 
 	Collision();										// 当たり判定
@@ -198,7 +198,7 @@ void Tutorial::UpdateShieldTutorial()
 	}
 
 	// デバッグテキストの追加
-	DebugText::AddLog("ShieldTutorial");
+	Debug::Text::AddLog("ShieldTutorial");
 }
 
 // 反射チュートリアルの更新
@@ -239,7 +239,7 @@ void Tutorial::UpdateReflectTutorial()
 		}
 	}
 	// デバッグテキストの描画
-	DebugText::AddLog("ReflectTutorial");
+	Debug::Text::AddLog("ReflectTutorial");
 }
 
 // キューブチュートリアルの更新
@@ -283,7 +283,7 @@ void Tutorial::UpdateCubeTutorial()
 	}
 
 	// デバッグテキストの追加
-	DebugText::AddLog("CubeTutorial");
+	Debug::Text::AddLog("CubeTutorial");
 }
 
 // プレイ中の更新
@@ -321,9 +321,9 @@ void Tutorial::UpdatePlay()
 		if (m_pTutorialUI->IsEndState(TutorialState::PLAY))
 		{
 			// 現在流れているBGMのフェードアウト
-			auto& soundManager = SoundManager::GetInstance();
-			auto fileName = soundManager.GetPlayBGMFileName();
-			soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+			const auto& soundManager = Sound::Manager::GetInstance();
+			auto fileName = soundManager->GetPlayBGMFileName();
+			soundManager->SetFadeSound(fileName, 60, soundManager->GetSoundVolume(fileName), 0);
 
 			// シールドチュートリアルに遷移
 			m_stateMachine.SetState(State::GAME_CLEAR);
@@ -377,32 +377,32 @@ void Tutorial::UpdateGameOver()
 	}
 
 	// デバッグテキストの追加
-	DebugText::AddLog("GameOver");
+	Debug::Text::AddLog("GameOver");
 }
 
 // スタートアニメーションの開始
 void Tutorial::EnterStartAnimation()
 {
 	// BGMの再生
-	SoundManager::GetInstance().PlayBGM("TutorialBgm");
-	SoundManager::GetInstance().SetFadeSound("TutorialBgm", 120, 0, 255);
+	Sound::Manager::GetInstance()->PlayBGM("TutorialBgm");
+	Sound::Manager::GetInstance()->SetFadeSound("TutorialBgm", 120, 0, 255);
 }
 
 void Tutorial::EnterGameClear()
 {
-	SoundManager::GetInstance().PlaySE("GameClear");
+	Sound::Manager::GetInstance()->PlaySE("GameClear");
 }
 
 // ゲームオーバーの開始
 void Tutorial::EnterGameOver()
 {
 	// BGMが再生中なら
-	auto& soundManager = SoundManager::GetInstance();
-	if (soundManager.IsPlayBGM())
+	const auto& soundManager = Sound::Manager::GetInstance();
+	if (soundManager->IsPlayBGM())
 	{
 		// BGMのフェードアウト
-		auto fileName = soundManager.GetPlayBGMFileName();
-		soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+		auto fileName = soundManager->GetPlayBGMFileName();
+		soundManager->SetFadeSound(fileName, 60, soundManager->GetSoundVolume(fileName), 0);
 	}
 }
 
@@ -433,7 +433,7 @@ void Tutorial::Draw()
 	m_pLaserManager->Draw();	// レーザー
 	m_pPlayer->Draw();								// プレイヤー
 	m_pPlayer->DrawShield();						// シールド
-	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
+	Effect::Effekseer3DManager::GetInstance()->Draw();	// エフェクト
 	UIManager::GetInstance().Draw();				// UI
 	m_pTutorialUI->Draw();							// チュートリアルUI
 	Score::GetInstance().DrawScore();				// スコア

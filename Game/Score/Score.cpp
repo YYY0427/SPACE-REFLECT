@@ -53,7 +53,7 @@ void Score::AddScore(const ScoreType type)
 void Score::DrawScore()
 {
 	// フォントの取得
-	auto data = MessageManager::GetInstance().GetMessageData("ScoreNumber");
+	auto& data = String::MessageManager::GetInstance()->GetMessageData("ScoreNumber");
 
 	// スコアの文字列の作成
 	std::string str = std::to_string(GetTotalScore());

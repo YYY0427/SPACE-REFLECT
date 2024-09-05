@@ -1,5 +1,5 @@
 #include "SaveData.h"
-#include "SoundManager.h"
+#include "Sound/SoundManager.h"
 #include "Util/Range.h"
 #include "Util/InputState.h"
 #include <string>
@@ -17,10 +17,8 @@ namespace
 }
 
 // コンストラクタ
-SaveData::SaveData() :
-	m_soundManger(SoundManager::GetInstance())
+SaveData::SaveData() 
 {
-	
 }
 
 // デストラクタ
@@ -135,7 +133,7 @@ void SaveData::SetMasterVolume(const int configNum)
 	if (InputState::IsTriggered(InputType::RIGHT) ||
 		InputState::IsTriggered(InputType::LEFT))
 	{
-		m_soundManger.SetVolume("bgmTest", 255);
+		Sound::Manager::GetInstance()->SetVolume("bgmTest", 255);
 	}
 }
 
@@ -155,7 +153,7 @@ void SaveData::SetSeVolume(const int configNum)
 	if (InputState::IsTriggered(InputType::RIGHT) ||
 		InputState::IsTriggered(InputType::LEFT))
 	{
-		m_soundManger.PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 }
 

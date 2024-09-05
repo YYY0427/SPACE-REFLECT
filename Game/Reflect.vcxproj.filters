@@ -60,6 +60,9 @@
     <Filter Include="ソース ファイル\DataType">
       <UniqueIdentifier>{ea788350-b728-447b-8c3f-6721625f17d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Sound">
+      <UniqueIdentifier>{45885f5d-81e5-48b9-80c5-1e2177614bc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -72,9 +75,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SaveData.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Scene\DebugScene.cpp">
@@ -242,9 +242,6 @@
     <ClCompile Include="Effect\Flash.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Effect\Triangle.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="MyDebug\DebugText.cpp">
       <Filter>ソース ファイル\Debug</Filter>
     </ClCompile>
@@ -284,11 +281,11 @@
     <ClCompile Include="Scene\PuseScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Util\FlagManager.cpp">
-      <Filter>ソース ファイル\Util</Filter>
-    </ClCompile>
     <ClCompile Include="Scene\ConfirmScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound\SoundManager.cpp">
+      <Filter>ソース ファイル\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,9 +296,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SaveData.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundManager.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Scene\DebugScene.h">
@@ -475,9 +469,6 @@
     <ClInclude Include="Effect\Flash.h">
       <Filter>ソース ファイル\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Effect\Triangle.h">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClInclude>
     <ClInclude Include="MyDebug\DebugText.h">
       <Filter>ソース ファイル\Debug</Filter>
     </ClInclude>
@@ -517,9 +508,6 @@
     <ClInclude Include="Scene\PuseScene.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Util\FlagManager.h">
-      <Filter>ソース ファイル\Util</Filter>
-    </ClInclude>
     <ClInclude Include="DataType\PlayerParamDataType.h">
       <Filter>ソース ファイル\DataType</Filter>
     </ClInclude>
@@ -531,6 +519,12 @@
     </ClInclude>
     <ClInclude Include="Scene\ConfirmScene.h">
       <Filter>ソース ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\SingletonBase.h">
+      <Filter>ソース ファイル\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound\SoundManager.h">
+      <Filter>ソース ファイル\Sound</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

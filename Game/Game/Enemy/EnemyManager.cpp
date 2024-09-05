@@ -11,7 +11,7 @@
 #include "../../Util/InputState.h"
 #include "../../Util/FileUtil.h"
 #include "../Player.h"
-#include "../../SoundManager.h"
+#include "../../Sound/SoundManager.h"
 #include <fstream>
 #include <sstream>
 #include <cassert>
@@ -40,13 +40,13 @@ namespace
 	constexpr int warning_draw_priority = 0;
 
 	// 警告UIの格納時のベクトル
-	const Vector2 warning_ui_store_vec = { 0, 0 };
+	const Math::Vector2 warning_ui_store_vec = { 0, 0 };
 }
 
 // コンストラクタ
 EnemyManager::EnemyManager(const std::shared_ptr<Player>& pPlayer, 
 						   const std::shared_ptr<LaserManager>& pLaserManager, 
-						   const std::shared_ptr<ScreenShaker>& pScreenShaker) :
+						   const std::shared_ptr<Effect::ScreenShaker>& pScreenShaker) :
 	m_waveNow(0),
 	m_isNextWave(false),
 	m_isLoadWave(false),
@@ -93,10 +93,10 @@ void EnemyManager::Update()
 	if (IsDeadBossAnim() && !m_isDeadEffectSound)
 	{
 		// ボス死亡エフェクト音の再生
-		SoundManager::GetInstance().PlaySE("BossDeathEffect");
+		Sound::Manager::GetInstance()->PlaySE("BossDeathEffect");
 
 		// BGMの停止
-		SoundManager::GetInstance().StopBGM();
+		Sound::Manager::GetInstance()->StopBGM();
 
 		// フラグを立てる
 		m_isDeadEffectSound = true;
@@ -146,14 +146,14 @@ void EnemyManager::UpdateWarning()
 		AddBossEnemy(m_bossType);
 
 		// 現在流れているBGMのフェードアウトの設定
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.SetFadeSound(soundManager.GetPlayBGMFileName(), boss_bgm_fade_frame, soundManager.GetMaxVolume(), 0);
+		const auto& soundManager = Sound::Manager::GetInstance();
+		soundManager->SetFadeSound(soundManager->GetPlayBGMFileName(), boss_bgm_fade_frame, soundManager->GetMaxVolume(), 0);
 
 		// ボス敵のBGMの再生
-		soundManager.PlayBGM("BossBatleBgm");
+		soundManager->PlayBGM("BossBatleBgm");
 
 		// ボス敵のBGMのフェードインの設定
-		soundManager.SetFadeSound("BossBatleBgm", boss_bgm_fade_frame, 0, soundManager.GetMaxVolume());
+		soundManager->SetFadeSound("BossBatleBgm", boss_bgm_fade_frame, 0, soundManager->GetMaxVolume());
 
 		// ステートを通常に遷移
 		m_stateMachine.SetState(State::NORMAL);
@@ -181,7 +181,7 @@ void EnemyManager::Draw()
 		auto itr = m_pEnemyList.begin();
 		std::advance(itr, i);
 
-		DebugText::AddLog("NormalEnemyPos", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
+		Debug::Text::AddLog("NormalEnemyPos", { itr->get()->GetPos().x, itr->get()->GetPos().y, itr->get()->GetPos().z });
 	}
 }
 

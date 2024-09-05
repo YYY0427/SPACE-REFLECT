@@ -6,9 +6,8 @@
 class LaserManager;
 class Gauge;
 class StringUI;
-class Flash;
-class Triangle;
-class ScreenShaker;
+namespace Effect { class Flash; }
+namespace Effect { class ScreenShaker; }
 
 /// <summary>
 /// ボス敵
@@ -25,7 +24,7 @@ public:
 	/// <param name="pScreenShaker">画面揺れのポインタ</param>
 	BossMatrix(const std::shared_ptr<Player>& pPlayer, 
 			   const std::shared_ptr<LaserManager>& pLaserManager,
-			   const std::shared_ptr<ScreenShaker>& pScreenShaker);
+			   const std::shared_ptr<Effect::ScreenShaker>& pScreenShaker);
 
 	/// <summary>
 	/// デストラクタ
@@ -176,8 +175,8 @@ private:
 	std::shared_ptr<Gauge>        m_pHpGauge;		// HPゲージ
 	std::shared_ptr<StringUI>     m_pBossName;		// ボスの名前
 	std::shared_ptr<LaserManager> m_pLaserManager;	// レーザーマネージャー
-	std::shared_ptr<ScreenShaker> m_pScreenShaker;	// 画面揺れ
-	std::shared_ptr<Flash>        m_pFlash;			// フラッシュ
+	std::shared_ptr<Effect::ScreenShaker> m_pScreenShaker;	// 画面揺れ
+	std::shared_ptr<Effect::Flash>        m_pFlash;			// フラッシュ
 
 	// 移動
 	std::vector<Vector3> m_movePointTable;	// 移動ポイントテーブル

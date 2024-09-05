@@ -178,8 +178,8 @@ private:
 	int m_currentSelectItem;
 
 	// 説明ウィンドウ
-	Vector2 m_explanationWindowEasingTime;	// ウィンドウのイージング時間
-	Vector2 m_explanationWindowSize;		// ウィンドウのサイズ
+	Math::Vector2 m_explanationWindowEasingTime;	// ウィンドウのイージング時間
+	Math::Vector2 m_explanationWindowSize;		// ウィンドウのサイズ
 
 	// スタート演出のSEの再生フラグ
 	bool m_isStartAnimSE;	

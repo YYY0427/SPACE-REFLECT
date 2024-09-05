@@ -28,8 +28,8 @@ public:
 		const std::string& gaugeBackImgFilePath,
 		const std::string& gaugeFrameImgFilePath,
 		const float maxValue,
-		const Vector2& pos,
-		const Vector2& dimensions,
+		const Math::Vector2& pos,
+		const Math::Vector2& dimensions,
 		const int   addGaugeFrame = 0,
 		const int   subGaugeFrame = 0,
 		const int   isDelayFrame  = 0);
@@ -86,7 +86,7 @@ private:
 	float m_aimValue;		// 目標の値
 	float m_maxValue;		// 最大値
 
-	Vector2 m_dimensions;	// ゲージの大きさ
+	Math::Vector2 m_dimensions;	// ゲージの大きさ
 
 	// 登場演出でゲージが増えるフレーム数
 	int m_addGaugeFrame;	

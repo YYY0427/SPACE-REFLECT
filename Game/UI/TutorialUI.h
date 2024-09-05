@@ -84,8 +84,8 @@ private:
 		int messageTextImgHandle;
 
 		// 位置
-		Vector2 imgPos;
-		Vector2 goalPos;
+		Math::Vector2 imgPos;
+		Math::Vector2 goalPos;
 
 		// メッセージID
 		std::string messageId;

@@ -16,7 +16,7 @@
 #include "../Effect/Effekseer3DEffectManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include "Camera.h"
 #include <algorithm>
 
@@ -38,12 +38,12 @@ namespace
 	constexpr int log_frame = 10;
 
 	// プレイヤーのHP文字
-	const Vector2 hp_string_pos   = { 70, 560 };	// 位置
-	const Vector2 hp_string_scale = { 0.8f, 0.8f };	// 拡大率
+	const Math::Vector2 hp_string_pos   = { 70, 560 };	// 位置
+	const Math::Vector2 hp_string_scale = { 0.8f, 0.8f };	// 拡大率
 
 	// プレイヤーのHPバー
-	const Vector2 hp_bar_pos  = { 215, 600 };		// 位置
-	const Vector2 hp_bar_size = { 300, 13 };		// サイズ
+	const Math::Vector2 hp_bar_pos  = { 215, 600 };		// 位置
+	const Math::Vector2 hp_bar_size = { 300, 13 };		// サイズ
 
 	// プレイヤーのHPバーのファイルパス
 	const std::string hp_bar_file_path = "Data/Image/HPBar.png";
@@ -129,7 +129,7 @@ Player::Player(const std::string& objectDataFileName) :
 	m_pModel->Update();				// 更新
 
 	// ブーストエフェクトの再生
-	Effekseer3DEffectManager::GetInstance().PlayEffectLoop(
+	Effect::Effekseer3DManager::GetInstance()->PlayEffectLoop(
 		m_boostEffectHandle, 
 		"PlayerBoost",
 		m_pos + boost_effect_relative_pos,
@@ -157,14 +157,14 @@ void Player::UpdateStart(const Vector3& cameraPos)
 	}
 
 	// プレイヤーを傾ける
-	m_rot.x = -MathUtil::ToRadian(tilt_angle);
+	m_rot.x = -Math::Util::ToRadian(tilt_angle);
 
 	// エフェクトの設定
-	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
-	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
-	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
-	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
+	const auto& effectManager = Effect::Effekseer3DManager::GetInstance();
+	effectManager->SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
+	effectManager->SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
+	effectManager->SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
+	effectManager->SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
 
 	// モデルの設定
 	m_pModel->SetPos(m_pos);	// 位置
@@ -177,8 +177,8 @@ void Player::UpdatePlay(const float cameraHorizon)
 {
 	if (!m_pBackUI)
 	{
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.PlaySE("GageRecovery");
+		const auto& soundManager = Sound::Manager::GetInstance();
+		soundManager->PlaySE("GageRecovery");
 
 		// プレイヤーUIの背景画像のインスタンスの生成
 		m_pBackUI = std::make_shared<StatusBack>();
@@ -219,7 +219,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 		UIManager::GetInstance().AddUI("HPString", pHpString, 0, { -2, 0 });
 	}
 
-	auto& effectManager = Effekseer3DEffectManager::GetInstance();
+	const auto& effectManager = Effect::Effekseer3DManager::GetInstance();
 
 	// 左スティックの入力情報の取得
 	int up = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::UP);
@@ -228,10 +228,10 @@ void Player::UpdatePlay(const float cameraHorizon)
 	int right = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::RIGHT);
 
 	// カメラの回転に合わせて移動ベクトルを作成
-	Vector3 moveUp    = Vector3::Transform(player_vec_up, Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveDown  = Vector3::Transform(player_vec_down, Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveRight = Vector3::Transform(player_vec_right, Matrix::GetRotationY(cameraHorizon));
-	Vector3 moveLeft  = Vector3::Transform(player_vec_left, Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveUp    = Vector3::Transform(player_vec_up, Math::Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveDown  = Vector3::Transform(player_vec_down, Math::Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveRight = Vector3::Transform(player_vec_right, Math::Matrix::GetRotationY(cameraHorizon));
+	Vector3 moveLeft  = Vector3::Transform(player_vec_left, Math::Matrix::GetRotationY(cameraHorizon));
 
 	// 移動情報の初期化
 	m_isInputLeftStick = false;
@@ -289,7 +289,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 		// プレイヤーのスピードを掛ける
 		m_moveVec = m_moveVec * moveSpeed;
 
-		DebugText::AddLog("PlayerMoveSpeed", { moveSpeed.x, moveSpeed.y, moveSpeed.z });
+		Debug::Text::AddLog("PlayerMoveSpeed", { moveSpeed.x, moveSpeed.y, moveSpeed.z });
 	}
 
 	// 作成した移動ベクトルで座標の移動
@@ -376,16 +376,16 @@ void Player::UpdatePlay(const float cameraHorizon)
 
 	// 移動ベクトルの大きさからプレイヤーの傾き具合を算出
 	// X軸回転は進んでいるように見せるよう傾ける
-	m_rot = { MathUtil::ToRadian(tilt_angle) + (-moveVec.y * tilt_size), 0.0f, -moveVec.x * tilt_size };
+	m_rot = { Math::Util::ToRadian(tilt_angle) + (-moveVec.y * tilt_size), 0.0f, -moveVec.x * tilt_size };
 
 	// 不透明度を元に戻す
 //	m_opacity = max_opacity;
 
 	// エフェクトの設定
-	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
-	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, 0.0f, -m_rot.z });
-	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
-	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
+	effectManager->SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
+	effectManager->SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, 0.0f, -m_rot.z });
+	effectManager->SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
+	effectManager->SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);	// 不透明度
@@ -418,18 +418,18 @@ void Player::UpdateGameClear()
 	m_pModel->Update();					// 更新
 
 	// エフェクトの設定
-	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
-	effectManager.SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
-	effectManager.SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
-	effectManager.SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
+	const auto& effectManager = Effect::Effekseer3DManager::GetInstance();
+	effectManager->SetEffectPos(m_boostEffectHandle, m_pos + boost_effect_relative_pos);
+	effectManager->SetEffectRot(m_boostEffectHandle, { m_rot.x + DX_PI_F, m_rot.y, -m_rot.z });
+	effectManager->SetEffectScale(m_boostEffectHandle, m_boostEffectScale);
+	effectManager->SetEffectSpeed(m_boostEffectHandle, m_boostEffectSpeed);
 }
 
 // ゲームオーバーの更新
 bool Player::UpdateGameOver()
 {
 	// エフェクトの停止
-	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_boostEffectHandle);
+	Effect::Effekseer3DManager::GetInstance()->DeleteEffect(m_boostEffectHandle);
 
 	// 移動ベクトル作成
 	m_moveVec = game_over_move_vec;
@@ -437,7 +437,7 @@ bool Player::UpdateGameOver()
 	m_moveVec *= 2.0f;
 
 	// プレイヤーを回転
-	m_rot += { 0, 0, MathUtil::ToRadian(game_over_rotate_angle) };
+	m_rot += { 0, 0, Math::Util::ToRadian(game_over_rotate_angle) };
 
 	// 作成した移動ベクトルで座標の移動
 	m_pos = m_pos + m_moveVec;
@@ -448,7 +448,7 @@ bool Player::UpdateGameOver()
 		if (!m_isGameOverSE)
 		{
 			// プレイヤーが死んだ音の再生
-			SoundManager::GetInstance().PlaySE("GameOver");
+			Sound::Manager::GetInstance()->PlaySE("GameOver");
 			m_isGameOverSE = true;
 		}
 	}
@@ -462,7 +462,7 @@ bool Player::UpdateGameOver()
 			m_isPlayerDeadEffect = true;
 
 			// でかい爆発エフェクトを再生
-			Effekseer3DEffectManager::GetInstance().PlayEffect(
+			Effect::Effekseer3DManager::GetInstance()->PlayEffect(
 				m_playerDeadEffectHandle,
 				"PlayerDied",
 				m_pos,
@@ -470,12 +470,12 @@ bool Player::UpdateGameOver()
 				0.5f);
 
 			// 大きい爆発音の再生
-			SoundManager::GetInstance().PlaySE("NormalEnemyDie");
+			Sound::Manager::GetInstance()->PlaySE("NormalEnemyDie");
 		}
 		else
 		{
 			// でかい爆発エフェクトの再生が終了したら
-			if (!Effekseer3DEffectManager::GetInstance().IsPlayingEffect(m_playerDeadEffectHandle))
+			if (!Effect::Effekseer3DManager::GetInstance()->IsPlayingEffect(m_playerDeadEffectHandle))
 			{
 				return true;
 			}
@@ -505,7 +505,7 @@ void Player::Draw()
 		DrawSphere3D(m_pos.ToDxLibVector3(), m_collisionRadius, 8, 0xff0000, 0xff0000, false);
 
 		// プレイヤーの位置情報の描画
-		DebugText::AddLog("PlayerPos", { m_pos.x, m_pos.y, m_pos.z});
+		Debug::Text::AddLog("PlayerPos", { m_pos.x, m_pos.y, m_pos.z});
 #endif 
 	}
 }
@@ -566,14 +566,13 @@ void Player::OnDamage(const int damage)
 	if (m_onDamageSEWaitFrame++ % 3 == 0)
 	{
 		// ダメージ音の再生
-		auto& soundManager = SoundManager::GetInstance();
-		SoundManager::GetInstance().PlaySE("PlayerDamage");
+		Sound::Manager::GetInstance()->PlaySE("PlayerDamage");
 
 		m_onDamageSEWaitFrame = 0;
 	}
 
 	// エフェクトの再生
-	Effekseer3DEffectManager::GetInstance().PlayEffect(
+	Effect::Effekseer3DManager::GetInstance()->PlayEffect(
 		m_damageEffectHandle,
 		"EnemyAttackHitEffect",
 		{ m_pos.x, m_pos.y, m_pos.z },

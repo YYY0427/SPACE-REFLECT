@@ -32,19 +32,19 @@ namespace
 	const std::string energy_gage_ui_back_file_path = "Data/Image/StatusBase.png";
 
 	// エネルギーゲージUIの位置
-	const Vector2 energy_gage_ui_pos = { 215, 660 };
+	const Math::Vector2 energy_gage_ui_pos = { 215, 660 };
 
 	// エネルギーゲージUIのサイズ
-	const Vector2 energy_gage_ui_size = { 300, 13 };
+	const Math::Vector2 energy_gage_ui_size = { 300, 13 };
 
 	// エネルギー文字のファイルパス
 	const std::string energy_string_file_path = "Data/Image/stamina.png";
 
 	// エネルギー文字の位置
-	const Vector2 energy_string_pos = { 70, 620 };
+	const Math::Vector2 energy_string_pos = { 70, 620 };
 
 	// エネルギー文字の拡大率
-	const Vector2 energy_string_scale = { 0.8f, 0.8f };
+	const Math::Vector2 energy_string_scale = { 0.8f, 0.8f };
 
 	// 最大エネルギーゲージ量
 	constexpr int max_energy_gage = 500;
@@ -118,8 +118,8 @@ void Shield::Update()
 	if (!m_player.IsEnabled()) return;
 
 	// 初期化
-	auto& effectManager = Effekseer3DEffectManager::GetInstance();
-	effectManager.DeleteEffect(m_effectHandle);
+	const auto& effectManager = Effect::Effekseer3DManager::GetInstance();
+	effectManager->DeleteEffect(m_effectHandle);
 
 	m_isInput = false;
 	const Range<int> enerugyGageRange(0, max_energy_gage);
@@ -141,13 +141,13 @@ void Shield::Update()
 	Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };
 
 	// プレイヤーの平行移動行列の取得
-	Matrix playerMtx = Matrix::GetTranslate(m_player.GetPos());
+	auto playerMtx = Math::Matrix::GetTranslate(m_player.GetPos());
 
 	// シールドの相対位置とプレイヤーの平行行列から位置情報を作成
 	m_pos = Vector3::Transform(tempVec, playerMtx);
 
 	// ベクトルから角度を求める
-	m_rot = -Matrix::ToEulerAngle(Matrix::GetRotationMatrix({ 0, 0, 1 }, tempVec));
+	m_rot = -Math::Matrix::ToEulerAngle(Math::Matrix::GetRotationMatrix({ 0, 0, 1 }, tempVec));
 
 	// 入力されていたら
 	if (m_isInput)

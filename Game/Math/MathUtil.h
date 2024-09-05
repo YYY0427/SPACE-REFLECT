@@ -3,10 +3,10 @@
 #include "Vector2.h"
 #include "Vector3.h"
 
-///<summary>
-///数学関連のユーティリティクラス
+/// <summary>
+/// 数学関連のユーティリティクラス
 /// </summary>
-namespace MathUtil
+namespace Math::Util
 {
 	/// <summary>
 	/// ラジアンから度に変換

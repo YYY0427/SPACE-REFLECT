@@ -15,7 +15,7 @@ namespace
 	constexpr float start_scale_speed = 0.05f;
 
 	// 初期位置
-	const Vector2 init_pos = { 30, 550 };
+	const Math::Vector2 init_pos = { 30, 550 };
 }
 
 // コンストラクタ

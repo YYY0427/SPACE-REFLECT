@@ -4,7 +4,7 @@
 /// <summary>
 /// フォント
 /// </summary>
-namespace Font
+namespace String::Font
 {
 	/// <summary>
 	/// フォントのロード

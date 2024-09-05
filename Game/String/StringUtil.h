@@ -7,7 +7,7 @@
 /// <summary>
 /// 文字列ユーティリティ
 /// </summary>
-namespace StringUtil
+namespace String
 {
 	/// <summary>
 	/// 文字列を分割する

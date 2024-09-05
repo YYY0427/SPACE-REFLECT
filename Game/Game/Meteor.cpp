@@ -46,23 +46,23 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, co
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Meteor"));
 
 	// 1フレームに回転する量を0度から～1度の間から取得
-	m_rotVec.x = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
-	m_rotVec.y = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
-	m_rotVec.z = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_rotVec.x = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_rotVec.y = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_rotVec.z = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
 
 	// 隕石の種類によって処理を変える
 	// 小さい隕石
 	if (type == MeteorType::SMALL)
 	{
 		// 隕石の拡大率をランダムに設定
-		float scale = MathUtil::GetRandFloat(small_meteor_min_scale, small_meteor_max_scale);
+		float scale = Math::Util::GetRandFloat(small_meteor_min_scale, small_meteor_max_scale);
 		m_scale = { scale, scale, scale };
 	}
 	// 通常の隕石
 	else if (type == MeteorType::NORMAL)
 	{
 		// 隕石の拡大率をランダムに設定
-		float scale = MathUtil::GetRandFloat(normal_meteor_min_scale, normal_meteor_max_scale);
+		float scale = Math::Util::GetRandFloat(normal_meteor_min_scale, normal_meteor_max_scale);
 		m_scale = { scale, scale, scale };
 
 		// プレイヤーに向かうベクトルを取得
@@ -77,8 +77,8 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, co
 
 	// 画面内にランダムに生成
 	Vector3 screenPos{};
-	screenPos.x = MathUtil::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().width);
-	screenPos.y = MathUtil::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().height);
+	screenPos.x = Math::Util::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().width);
+	screenPos.y = Math::Util::GetRandFloat(0.0f, Application::GetInstance().GetWindowSize().height);
 	screenPos.z = z_linear;
 	Vector3 targetPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear(screenPos.ToDxLibVector3()));
 
@@ -110,9 +110,9 @@ Meteor::Meteor(const UnityGameObject& data, const std::shared_ptr<Player>& pPlay
 	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Meteor"));
 
 	// 1フレームに回転する量をランダムに取得
-	m_rotVec.x = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
-	m_rotVec.y = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
-	m_rotVec.z = MathUtil::ToRadian(MathUtil::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_rotVec.x = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_rotVec.y = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
+	m_rotVec.z = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);	// 透明度

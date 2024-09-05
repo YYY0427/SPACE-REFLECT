@@ -4,29 +4,29 @@
 #include "../Util/Easing.h"
 #include "../String/MessageManager.h"
 #include "../Score/Score.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 namespace
 {
 	// ウィンドウサイズ
-	const Vector2 window_size = { 1280, 570 };
+	const Math::Vector2 window_size = { 1280, 570 };
 
 	// MISSIONの位置
-	const Vector2 init_mission_pos = { -500, 200 };
-	const Vector2 goal_mission_pos = { 300, 200 };
+	const Math::Vector2 init_mission_pos = { -500, 200 };
+	const Math::Vector2 goal_mission_pos = { 300, 200 };
 
 	// COMPLETEの位置
-	const Vector2 init_complete_pos = { 1700, 270 };
-	const Vector2 goal_complete_pos = { 440, 270 };
+	const Math::Vector2 init_complete_pos = { 1700, 270 };
+	const Math::Vector2 goal_complete_pos = { 440, 270 };
 
 	// YOUR SCOREの位置
-	const Vector2 init_your_score_pos = { 1700, 425 };
-	const Vector2 your_score_pos = { 800, 425 };
+	const Math::Vector2 init_your_score_pos = { 1700, 425 };
+	const Math::Vector2 your_score_pos = { 800, 425 };
 
 	// スコアの位置
-	const Vector2 init_score_pos = { 1700, 450 };
-	const Vector2 score_pos = { 750, 450 };
+	const Math::Vector2 init_score_pos = { 1700, 450 };
+	const Math::Vector2 score_pos = { 750, 450 };
 }
 
 // コンストラクタ
@@ -63,7 +63,7 @@ void ResultWindow::Update()
 		{
 			if (!m_isOpenMenuSound)
 			{
-				SoundManager::GetInstance().PlaySE("ResultOpenMenu");
+				Sound::Manager::GetInstance()->PlaySE("ResultOpenMenu");
 				m_isOpenMenuSound = true;
 			}
 
@@ -127,17 +127,17 @@ void ResultWindow::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// MISSIONの描画
-	MessageManager::GetInstance().DrawStringCenter(
+	String::MessageManager::GetInstance()->DrawStringCenter(
 		"ResultMission", m_missionPos.x, m_missionPos.y, GetColor(255, 255, 255), 0xffffff);
 	// COMPLETEの描画
-	MessageManager::GetInstance().DrawStringCenter(
+	String::MessageManager::GetInstance()->DrawStringCenter(
 		"ResultComplete", m_completePos.x, m_completePos.y, GetColor(255, 255, 255), 0xffffff);
 
 	// タイトルが終了したら
 	if (m_isTitleEnd)
 	{
 		// フォントの取得
-		auto data = MessageManager::GetInstance().GetMessageData("ResultScore");
+		auto data = String::MessageManager::GetInstance()->GetMessageData("ResultScore");
 		int score = Score::GetInstance().GetTotalScore();
 		std::string str = std::to_string(score);
 		while (str.size() < 4)
@@ -146,7 +146,7 @@ void ResultWindow::Draw()
 		}
 
 		// YOUR SCOREの描画
-		MessageManager::GetInstance().DrawStringCenter("ResultScoreName", m_yourScorePos.x, m_yourScorePos.y, 0xffffff, 0xffffff);
+		String::MessageManager::GetInstance()->DrawStringCenter("ResultScoreName", m_yourScorePos.x, m_yourScorePos.y, 0xffffff, 0xffffff);
 
 		// スコアを1文字ずつ描画
 		for (int i = 0; i < 4; i++)

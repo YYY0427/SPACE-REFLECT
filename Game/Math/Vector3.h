@@ -1,7 +1,8 @@
 #pragma once
 #include <DxLib.h>
 
-class Matrix;
+// プロトタイプ宣言
+namespace Math { class Matrix; }
 
 /// <summary>
 /// Vector3
@@ -265,7 +266,7 @@ public:
 	/// <param name="vec">変換するベクトル</param>
 	/// <param name="mat">適用する変換行列</param>
 	/// <returns>変換後のベクトル</returns>
-	static Vector3 Transform(const Vector3& vec, const Matrix& mat);
+	static Vector3 Transform(const Vector3& vec, const Math::Matrix& mat);
 
 public:
 	float x, y, z;

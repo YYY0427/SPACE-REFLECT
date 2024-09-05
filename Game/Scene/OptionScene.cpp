@@ -8,7 +8,7 @@
 #include "../Application.h"
 #include "../Transitor/FadeTransitor.h"
 #include "../StateMachine.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include "DxLib.h"
 #include <cassert>
 #include <string>
@@ -120,12 +120,12 @@ void OptionScene::Update()
 	if (InputState::IsTriggered(InputType::UP))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 	else if (InputState::IsTriggered(InputType::DOWN))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 
 	// 選択されている項目の色を変える
@@ -169,7 +169,7 @@ void OptionScene::UpdateStageSelect()
 	if (InputState::IsTriggered(InputType::LEFT_SHOULDER))
 	{
 		// 終了
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 		m_manager.PopScene();
 		return;
 	}
@@ -197,31 +197,31 @@ void OptionScene::Draw()
 	const auto& size = Application::GetInstance().GetWindowSize();
 
 	// インスタンスの取得
-	auto& messageManager = MessageManager::GetInstance();
+	const auto& messageManager = String::MessageManager::GetInstance();
 
 	// 項目の描画
 	int windowMode = static_cast<int>(OptionItem::WINDOW_MODE);
-	messageManager.DrawString("OptionItemWindowMode", draw_text_pos_x,
+	messageManager->DrawString("OptionItemWindowMode", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
 	int masterVolume = static_cast<int>(OptionItem::MASTER_VOLUME);
-	messageManager.DrawString("OptionItemMasterVolume", draw_text_pos_x,
+	messageManager->DrawString("OptionItemMasterVolume", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * masterVolume, m_itemColorTable[masterVolume]);
 
 	int bgmVolume = static_cast<int>(OptionItem::BGM_VOLUME);
-	messageManager.DrawString("OptionItemBgmVolume", draw_text_pos_x,
+	messageManager->DrawString("OptionItemBgmVolume", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * bgmVolume, m_itemColorTable[bgmVolume]);
 
 	int seVolume = static_cast<int>(OptionItem::SE_VOLUME);
-	messageManager.DrawString("OptionItemSeVolume", draw_text_pos_x,
+	messageManager->DrawString("OptionItemSeVolume", draw_text_pos_x,
 		draw_text_pos_y + text_space_y * seVolume, m_itemColorTable[seVolume]);
 
 	// ウィンドウモードの状態の表示
 	auto& saveData = SaveData::GetInstance();
 	(saveData.GetSaveData().windowMode) ?
-		messageManager.DrawStringCenter("OptionItemWindowModeOff", size.width / 2 + 120, 
+		messageManager->DrawStringCenter("OptionItemWindowModeOff", size.width / 2 + 120, 
 			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]):
-		messageManager.DrawStringCenter("OptionItemWindowModeOn", size.width / 2 + 120,
+		messageManager->DrawStringCenter("OptionItemWindowModeOn", size.width / 2 + 120,
 			draw_text_pos_y + text_space_y * windowMode, m_itemColorTable[windowMode]);
 
 	// 音量の表示
@@ -271,7 +271,7 @@ void OptionScene::DrawStageSelect()
 	// ステージセレクトタイトルの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 100);
 	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
-	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
+	String::MessageManager::GetInstance()->DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
 
 	// RBボタンの描画
 	DrawRotaGraph((screenSize.width / 2.0f) + 375, 95, 1.0f, 0.0f, m_rbButtonImgHandle, true);
@@ -279,7 +279,7 @@ void OptionScene::DrawStageSelect()
 
 	// オプションタイトルの描画
 	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
-	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
+	String::MessageManager::GetInstance()->DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
 
 	// LBボタンの描画
 	DrawRotaGraph((screenSize.width / 2.0f) - 375, 95, 1.0f, 0.0f, m_lbButtonImgHandle, true);
@@ -304,6 +304,5 @@ void OptionScene::DrawPause()
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// シーンタイトルの描画
-	auto& messageManager = MessageManager::GetInstance();
-	messageManager.DrawStringCenter("PauseOptionTitle", size.width / 2, 100, 0xffffff);
+	String::MessageManager::GetInstance()->DrawStringCenter("PauseOptionTitle", size.width / 2, 100, 0xffffff);
 }

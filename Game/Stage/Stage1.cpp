@@ -24,7 +24,7 @@
 #include "../UI/TutorialUI.h"
 #include "../Util/InputState.h"
 #include "../Transitor/Fade.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -76,7 +76,7 @@ Stage1::Stage1(SceneManager& manager) :
 	m_pPlanetManager = std::make_shared<PlanetManager>(object_data_file_name);
 	m_pMeteorManager = std::make_shared<MeteorManager>(object_data_file_name, m_pPlayer);
 	m_pSkyDome = std::make_shared<SkyDome>(m_pCamera->GetPos());
-	m_pScreenShaker = std::make_shared<ScreenShaker>(m_pCamera);
+	m_pScreenShaker = std::make_shared<Effect::ScreenShaker>(m_pCamera);
 	m_pEnemyManager = std::make_shared<EnemyManager>(m_pPlayer, m_pLaserManager, m_pScreenShaker);
 
 	// ポインタの設定
@@ -99,8 +99,8 @@ Stage1::~Stage1()
 void Stage1::EnterPlay()
 {
 	// BGMの再生
-	SoundManager::GetInstance().PlayBGM("TutorialBgm");
-	SoundManager::GetInstance().SetFadeSound("TutorialBgm", 120, 0, 255);
+	Sound::Manager::GetInstance()->PlayBGM("TutorialBgm");
+	Sound::Manager::GetInstance()->SetFadeSound("TutorialBgm", 120, 0, 255);
 }
 
 // リザルトステートの開始
@@ -113,19 +113,19 @@ void Stage1::EnterResult()
 // ゲームクリアステートの開始
 void Stage1::EnterGameClear()
 {
-	SoundManager::GetInstance().PlaySE("GameClear");
+	Sound::Manager::GetInstance()->PlaySE("GameClear");
 }
 
 // ゲームオーバーステートの開始
 void Stage1::EnterGameOver()
 {
 	// BGMが再生中なら
-	auto& soundManager = SoundManager::GetInstance();
-	if (soundManager.IsPlayBGM())
+	const auto& soundManager = Sound::Manager::GetInstance();
+	if (soundManager->IsPlayBGM())
 	{
 		// BGMのフェードアウト
-		auto fileName = soundManager.GetPlayBGMFileName();
-		soundManager.SetFadeSound(fileName, 60, soundManager.GetSoundVolume(fileName), 0);
+		auto fileName = soundManager->GetPlayBGMFileName();
+		soundManager->SetFadeSound(fileName, 60, soundManager->GetSoundVolume(fileName), 0);
 	}
 }
 
@@ -152,7 +152,7 @@ void Stage1::Update()
 	m_pEnemyManager->Update();								// レーザー
 	m_pDamageFlash->Update();								// ダメージフラッシュ
 	m_pScreenShaker->Update();								// 画面揺れ
-	Effekseer3DEffectManager::GetInstance().Update();		// エフェクト
+	Effect::Effekseer3DManager::GetInstance()->Update();		// エフェクト
 	UIManager::GetInstance().Update();						// UI
 
 	Collision();										// 当たり判定
@@ -257,7 +257,7 @@ void Stage1::UpdateGameOver()
 	}
 
 	// デバッグテキストの追加
-	DebugText::AddLog("GameOver");
+	Debug::Text::AddLog("GameOver");
 }
 
 // リザルトステートの更新
@@ -270,7 +270,7 @@ void Stage1::UpdateResult()
 void Stage1::Draw()
 {
 	// 画面揺れの前処理
-	m_pScreenShaker->PreDraw();
+	m_pScreenShaker->Effect::ScreenShaker::PreDraw();
 
 	// 描画
 	m_pSkyDome->Draw();			// スカイドーム
@@ -280,7 +280,7 @@ void Stage1::Draw()
 	m_pLaserManager->Draw();	// レーザー
 	m_pPlayer->Draw();								// プレイヤー
 	m_pPlayer->DrawShield();						// シールド
-	Effekseer3DEffectManager::GetInstance().Draw();	// エフェクト
+	Effect::Effekseer3DManager::GetInstance()->Draw();	// エフェクト
 	UIManager::GetInstance().Draw();				// UI
 	Score::GetInstance().DrawScore();				// スコア
 

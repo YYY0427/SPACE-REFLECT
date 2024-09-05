@@ -40,7 +40,7 @@ void ImageUI::Draw()
 }
 
 // 位置の設定
-void ImageUI::SetPos(const Vector2& pos)
+void ImageUI::SetPos(const Math::Vector2& pos)
 {
 	m_pos = pos;
 }
@@ -52,13 +52,13 @@ void ImageUI::SetRot(const float rot)
 }
 
 // 中心座標の設定
-void ImageUI::SetCenter(const Vector2& center)
+void ImageUI::SetCenter(const Math::Vector2& center)
 {
 	m_center = center;
 }
 
 // 拡大率の設定
-void ImageUI::SetScale(const Vector2& scale)
+void ImageUI::SetScale(const Math::Vector2& scale)
 {
 	m_scale = scale;
 }
@@ -70,7 +70,7 @@ void ImageUI::SetAlpha(const float alpha)
 }
 
 // 位置の取得
-const Vector2& ImageUI::GetPos() const
+const Math::Vector2& ImageUI::GetPos() const
 {
 	return m_pos;
 }
@@ -82,13 +82,13 @@ float ImageUI::GetRot() const
 }
 
 // 中心座標の取得
-const Vector2& ImageUI::GetCenter() const
+const Math::Vector2& ImageUI::GetCenter() const
 {
 	return m_center;
 }
 
 // 拡大率の取得
-const Vector2& ImageUI::GetScale() const
+const Math::Vector2& ImageUI::GetScale() const
 {
 	return m_scale;
 }

@@ -2,7 +2,7 @@
 #include "SceneManager.h"
 #include "StageSelectScene.h"
 #include "TitleScene.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include "../Util/InputState.h"
 #include "../Application.h"
 #include "../MyDebug/DebugText.h"
@@ -66,12 +66,12 @@ void ConfirmScene::Update()
 	if (InputState::IsTriggered(InputType::LEFT))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 	else if (InputState::IsTriggered(InputType::RIGHT))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 
 	// 選択されている項目の色を変える
@@ -113,7 +113,7 @@ void ConfirmScene::Update()
 // 描画
 void ConfirmScene::Draw()
 {
-	DebugText::AddLog("currentSelectItem", {m_currentSelectItem});
+	Debug::Text::AddLog("currentSelectItem", {m_currentSelectItem});
 
 	// モザイク処理
 	const auto& size = Application::GetInstance().GetWindowSize();
@@ -130,7 +130,7 @@ void ConfirmScene::Draw()
 	DrawBox(0, size.height / 2.0f - 200, size.width, size.height / 2.0f + 200, 0x555555, true);
 
 	// メッセージの描画
-	MessageManager::GetInstance().DrawStringCenter("ConfirmBack", size.width / 2.0f, size.height / 2.0f - 100, 0xffffff);
-	MessageManager::GetInstance().DrawStringCenter("ConfirmYes", size.width / 2.0f - 100, size.height / 2.0f + 50, m_itemColorTable[static_cast<int>(ConfirmScene::State::YES)]);
-	MessageManager::GetInstance().DrawStringCenter("ConfirmNo", size.width / 2.0f + 100, size.height / 2.0f + 50, m_itemColorTable[static_cast<int>(ConfirmScene::State::NO)]);
+	String::MessageManager::GetInstance()->DrawStringCenter("ConfirmBack", size.width / 2.0f, size.height / 2.0f - 100, 0xffffff);
+	String::MessageManager::GetInstance()->DrawStringCenter("ConfirmYes", size.width / 2.0f - 100, size.height / 2.0f + 50, m_itemColorTable[static_cast<int>(ConfirmScene::State::YES)]);
+	String::MessageManager::GetInstance()->DrawStringCenter("ConfirmNo", size.width / 2.0f + 100, size.height / 2.0f + 50, m_itemColorTable[static_cast<int>(ConfirmScene::State::NO)]);
 }

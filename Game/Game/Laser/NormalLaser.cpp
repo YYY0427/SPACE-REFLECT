@@ -7,7 +7,7 @@
 #include "../../Model.h"
 #include "../../MyDebug/DebugText.h"
 #include "../../ModelHandleManager.h"
-#include "../../SoundManager.h"
+#include "../../Sound/SoundManager.h"
 #include <DxLib.h>
 #include <random>
 #include <algorithm>
@@ -40,10 +40,10 @@ namespace
 	constexpr int reflect_collision_shield_frame = 5;
 
 	// プレイヤーを追従しない場合の向かう位置
-	const Vector2 window_size = 
+	const Math::Vector2 window_size =
 		{ static_cast<float>(Application::GetInstance().GetWindowSize().width), 
 		  static_cast<float>(Application::GetInstance().GetWindowSize().height )};
-	const Vector2 goal_pos[] = 
+	const Math::Vector2 goal_pos[] =
 	{
 		{ 0 + 200, 0 + 200 },
 		{ window_size.x - 200, 0 + 200 },
@@ -93,7 +93,7 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 		std::shuffle(m_normalFireMovePointList.begin(), m_normalFireMovePointList.end(), engine);
 
 		// 目的地を設定
-		Vector2 screenPos = m_normalFireMovePointList.front();
+		Math::Vector2 screenPos = m_normalFireMovePointList.front();
 		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
 		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
 
@@ -102,14 +102,14 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 	m_directionPos = m_pPlayer->GetPosLogTable().back();
 
 	// ベクトル方向の回転行列を作成
-	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
+	m_rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
 
 	// ベクトル方向の回転行列からオイラー角を出力
-	Matrix effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
+	auto effectRotMtx = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
 	Vector3 effectRot = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの再生
-	Effekseer3DEffectManager::GetInstance().PlayEffectFollow(
+	Effect::Effekseer3DManager::GetInstance()->PlayEffectFollow(
 		m_laserEffectHandle,
 		"NormalLaser",
 		&m_pos,
@@ -138,10 +138,10 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 NormalLaser::~NormalLaser()
 {
 	// エフェクトの削除
-	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_laserEffectHandle);
+	Effect::Effekseer3DManager::GetInstance()->DeleteEffect(m_laserEffectHandle);
 
 	// レーザーの音の停止
-	SoundManager::GetInstance().StopSound("Laser");
+	Sound::Manager::GetInstance()->StopSound("Laser");
 }
 
 // 更新
@@ -159,17 +159,17 @@ void NormalLaser::Update()
 	if(m_stateMachine.GetCurrentState() != State::CHARGE)
 	{
 		// エフェクトの再生速度の設定
-		Effekseer3DEffectManager::GetInstance().SetEffectSpeed(m_laserEffectHandle, laser_effect_play_speed);
+		Effect::Effekseer3DManager::GetInstance()->SetEffectSpeed(m_laserEffectHandle, laser_effect_play_speed);
 
 		// 反射レーザーの音が再生されていない場合
-		auto& soundManager = SoundManager::GetInstance();
-		if (!soundManager.IsPlaySound("ReflectLaser"))
+		const auto& soundManager = Sound::Manager::GetInstance();
+		if (!soundManager->IsPlaySound("ReflectLaser"))
 		{
 			// 通常レーザーの音が再生されていない場合
-			if (!soundManager.IsPlaySound("Laser"))
+			if (!soundManager->IsPlaySound("Laser"))
 			{
 				// レーザー音の再生
-				soundManager.PlaySE("Laser");
+				soundManager->PlaySE("Laser");
 			}
 		}
 
@@ -204,20 +204,20 @@ void NormalLaser::Update()
 		MV1GetFramePosition(m_pModel->GetModelHandle(), laser_end_frame_no));
 
 	// ベクトル方向の回転行列を作成
-	m_rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
+	m_rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, (m_directionPos - m_pos).Normalized());
 
 	// ベクトル方向の回転行列からオイラー角を出力
-	Matrix  effectRotMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
+	auto  effectRotMtx   = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, (m_directionPos - m_pos).Normalized());
 	Vector3 effectRot    = effectRotMtx.ToEulerAngle();
 
 	// エフェクトの回転率を設定
-	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, effectRot);
+	Effect::Effekseer3DManager::GetInstance()->SetEffectRot(m_laserEffectHandle, effectRot);
 
 	// レーザーの反射フラグが立っていない場合
 	if (!m_isReflect)
 	{
 		// エフェクトの拡大率を設定
-		Effekseer3DEffectManager::GetInstance().SetEffectScale(m_laserEffectHandle, laser_effect_scale);
+		Effect::Effekseer3DManager::GetInstance()->SetEffectScale(m_laserEffectHandle, laser_effect_scale);
 	}
 
 	// モデルの設定
@@ -235,8 +235,8 @@ void NormalLaser::UpdateCharge()
 	if (m_chargeEffectFrame <= laser_charge_sound_start_fade_out_frame)
 	{
 		// レーザーのチャージサウンドのフェードアウトの設定
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.SetFadeSound("LaserCharge", laser_charge_sound_fade_out_frame, soundManager.GetSoundVolume("LaserCharge"), 0);
+		const auto& soundManager = Sound::Manager::GetInstance();
+		soundManager->SetFadeSound("LaserCharge", laser_charge_sound_fade_out_frame, soundManager->GetSoundVolume("LaserCharge"), 0);
 	}
 
 	// チャージ時間が終わったら
@@ -284,7 +284,7 @@ void NormalLaser::UpdateNormalFire()
 		}
 
 		// 次の目的地を設定
-		Vector2 screenPos = m_normalFireMovePointList[m_normalFireMovePointIndex];
+		Math::Vector2 screenPos = m_normalFireMovePointList[m_normalFireMovePointIndex];
 		float z = (fabs(GetCameraPosition().z - m_pPlayer->GetPos().z)) / GetCameraFar();
 		m_normalFireGoalPos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ screenPos.x,screenPos.y, z }));
 	}
@@ -326,7 +326,7 @@ void NormalLaser::Draw()
 //	m_pModel->Draw();
 	SetUseLighting(true);
 
-	DebugText::AddLog("LaserDirectionPos", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
+	Debug::Text::AddLog("LaserDirectionPos", { m_directionPos.x, m_directionPos.y, m_directionPos.z });
 #endif 
 }
 
@@ -338,7 +338,7 @@ void NormalLaser::Stop(const Vector3& pos)
 	float length = vec.Length();
 
 	// レーザーのエフェクトがシールドで止まってるよう見えるように、エフェクトの拡大率を設定
-	Effekseer3DEffectManager::GetInstance().SetEffectScale(
+	Effect::Effekseer3DManager::GetInstance()->SetEffectScale(
 		m_laserEffectHandle, { laser_effect_scale.x, laser_effect_scale.y, length / laser_effect_z_length });
 
 	// レーザーの当たり判定用モデルを反対側に向ける
@@ -376,5 +376,5 @@ Vector3 NormalLaser::GetDirection() const
 // チャージ状態に入る
 void NormalLaser::EnterCharge()
 {
-	SoundManager::GetInstance().PlaySE("LaserCharge");
+	Sound::Manager::GetInstance()->PlaySE("LaserCharge");
 }

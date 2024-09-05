@@ -1,6 +1,6 @@
 #include "Gauge.h"
 #include "../Util/DrawFunctions.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -15,8 +15,8 @@ Gauge::Gauge(
 	const std::string& gaugeBackImgFilePath, 
 	const std::string& gaugeFrameImgFilePath, 
 	const float maxValue, 
-	const Vector2& pos, 
-	const Vector2& dimensions, 
+	const Math::Vector2& pos,
+	const Math::Vector2& dimensions,
 	const int   addGaugeFrame, 
 	const int   subGaugeFrame,
 	const int   isDelayFrame) :

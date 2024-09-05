@@ -17,7 +17,7 @@
 #include "../Score/Score.h"
 #include "../Score/ScoreRanking.h"
 #include "../UI/ResultWindow.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 // コンストラクタ
@@ -54,13 +54,13 @@ StageBase::~StageBase()
 	UIManager::GetInstance().DeleteAllUI();
 
 	// エフェクトの全削除
-	Effekseer3DEffectManager::GetInstance().DeleteAllEffect();
+	Effect::Effekseer3DManager::GetInstance()->DeleteAllEffect();
 
 	// オブジェクトの配置データの削除
 	DataReaderFromUnity::GetInstance().DeleteAllData();
 
 	// 全ての音楽を停止
-	SoundManager::GetInstance().StopAllSound();
+	Sound::Manager::GetInstance()->StopAllSound();
 }
 
 // リザルト画面の更新
@@ -173,7 +173,7 @@ void StageBase::Collision()
 			if (!laser.pLaser->IsReflect())
 			{
 				// 反射音の再生
-				SoundManager::GetInstance().PlaySE("Reflect");
+				Sound::Manager::GetInstance()->PlaySE("Reflect");
 
 				// 反射レーザーを追加
 				int key = m_pLaserManager->AddReflectLaser(m_pEnemyManager, m_pPlayer->GetShield(), laser.pLaser, firePos);

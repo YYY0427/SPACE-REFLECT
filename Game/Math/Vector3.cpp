@@ -266,7 +266,7 @@ Vector3 Vector3::Hermite(const Vector3& startPos, const Vector3& startTangent, c
 }
 
 // 行列を使ったベクトルの変換
-Vector3 Vector3::Transform(const Vector3& vec, const Matrix& mat) 
+Vector3 Vector3::Transform(const Vector3& vec, const Math::Matrix& mat) 
 {
 	/*return { vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + mat.m[3][0],
 			 vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1] + mat.m[3][1],

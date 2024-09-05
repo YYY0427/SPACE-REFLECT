@@ -121,7 +121,7 @@ private:
 	StateMachine<State> m_stateMachine;	
 
 	// 回転行列
-	Matrix m_rotMtx;	
+	Math::Matrix m_rotMtx;	
 
 	// レーザーのエフェクトのハンドル
 	int m_laserEffectHandle;
@@ -137,5 +137,5 @@ private:
 	// 通常発射時
 	int     m_normalFireMovePointIndex;				// 移動ポイントインデックス
 	Vector3 m_normalFireGoalPos;					// 移動ポイントの座標
-	std::vector<Vector2> m_normalFireMovePointList;	// 移動ポイントの座標のリスト
+	std::vector<Math::Vector2> m_normalFireMovePointList;	// 移動ポイントの座標のリスト
 };

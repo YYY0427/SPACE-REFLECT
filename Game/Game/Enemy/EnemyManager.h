@@ -7,12 +7,13 @@
 #include "../../Math/Vector3.h"
 #include "../Laser/LaserManager.h"
 #include "../../StateMachine.h"
+#include "../../Effect/ScreenShaker.h"
 
 // プロトタイプ宣言
 class EnemyBase;
 class Player;
 class Warning;
-class ScreenShaker;
+namespace Effect { class ScreenShaker; }
 
 // 敵の種類
 enum class EnemyType
@@ -77,7 +78,7 @@ public:
 	EnemyManager(
 		const std::shared_ptr<Player>& pPlayer, 
 		const std::shared_ptr<LaserManager>& pLaserManager,
-		const std::shared_ptr<ScreenShaker>& pScreenShaker);
+		const std::shared_ptr<Effect::ScreenShaker>& pScreenShaker);
 
 	/// <summary>
 	/// デストラクタ
@@ -231,7 +232,7 @@ private:
 	std::list<std::shared_ptr<EnemyBase>> m_pEnemyList;		// 雑魚敵リスト
 	std::shared_ptr<EnemyBase> m_pBossEnemy;				// ボス敵
 	std::shared_ptr<Warning> m_pWarning;					// 警告
-	std::shared_ptr<ScreenShaker> m_pScreenShaker;			// 画面揺れ
+	std::shared_ptr<Effect::ScreenShaker> m_pScreenShaker;			// 画面揺れ
 
 	// フラグ
 	bool m_isDeadBoss;			// ボスが倒されたかどうか

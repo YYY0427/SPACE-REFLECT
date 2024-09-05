@@ -13,7 +13,7 @@ namespace
 	};
 }
 
-namespace Font
+namespace String::Font
 {
 	// フォントのロード
 	void Load()

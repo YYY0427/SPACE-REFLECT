@@ -8,7 +8,7 @@
 #include "../../Model.h"
 #include "../../MyDebug/DebugText.h"
 #include "../../ModelHandleManager.h"
-#include "../../SoundManager.h"
+#include "../../Sound/SoundManager.h"
 
 namespace
 {
@@ -51,19 +51,19 @@ ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 	m_directionPos = Vector3::Reflect(m_pLaser->GetDirection(), Vector3::FromDxLibVector3(m_pShield->GetVertex().front().norm));
 
 	// 指定した位置方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
-	Matrix rotModelMtx  = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);			// モデル
+	auto rotEffectMtx = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
+	auto rotModelMtx  = Math::Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);			// モデル
 
 	// レーザーエフェクトの再生
-	Effekseer3DEffectManager::GetInstance().PlayEffectLoopAndFollow(
+	Effect::Effekseer3DManager::GetInstance()->PlayEffectLoopAndFollow(
 		m_laserEffectHandle, "ReflectLaser", &m_pos, effect_scale, effect_play_speed, rotEffectMtx.ToEulerAngle());
 
 	// 元々のレーザー音を停止
-	auto& soundManager = SoundManager::GetInstance();
-	soundManager.StopSound("Laser");
+	const auto& soundManager = Sound::Manager::GetInstance();
+	soundManager->StopSound("Laser");
 	
 	// レーザーの音の再生
-	soundManager.PlaySE("ReflectLaser");
+	soundManager->PlaySE("ReflectLaser");
 
 	// モデルの設定
 	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
@@ -78,10 +78,10 @@ ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 ReflectLaser::~ReflectLaser()
 {
 	// エフェクトの削除
-	Effekseer3DEffectManager::GetInstance().DeleteEffect(m_laserEffectHandle);
+	Effect::Effekseer3DManager::GetInstance()->DeleteEffect(m_laserEffectHandle);
 
 	// レーザーの音の停止
-	SoundManager::GetInstance().StopSound("ReflectLaser");
+	Sound::Manager::GetInstance()->StopSound("ReflectLaser");
 }
 
 // 更新
@@ -153,11 +153,11 @@ void ReflectLaser::Update()
 	m_directionPos += moveVec;
 
 	// 指定したベクトル方向に向ける行列の作成
-	Matrix rotEffectMtx = Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
-	Matrix rotModelMtx  = Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);			// モデル
+	auto rotEffectMtx = Math::Matrix::GetRotationMatrix(init_laser_effect_direction, m_directionPos);	// エフェクト
+	auto rotModelMtx  = Math::Matrix::GetRotationMatrix(init_model_direction, -m_directionPos);			// モデル
 
 	// エフェクトの回転率を設定
-	Effekseer3DEffectManager::GetInstance().SetEffectRot(m_laserEffectHandle, rotEffectMtx.ToEulerAngle());
+	Effect::Effekseer3DManager::GetInstance()->SetEffectRot(m_laserEffectHandle, rotEffectMtx.ToEulerAngle());
 
 	// モデルの設定
 	m_pModel->SetRotMtx(rotModelMtx);	// 回転行列

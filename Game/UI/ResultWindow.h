@@ -36,18 +36,18 @@ public:
 
 private:
 	// ウィンドウ
-	Vector2 m_windowPos;	// 位置
-	Vector2 m_windowSize;	// サイズ
+	Math::Vector2 m_windowPos;	// 位置
+	Math::Vector2 m_windowSize;	// サイズ
 	bool m_isEndWindow;		// 終了フラグ
 
 	// テキスト
-	Vector2 m_missionPos;	// ミッション
-	Vector2 m_completePos;	// コンプリート
-	Vector2 m_scorePos;		// スコア
-	Vector2 m_yourScorePos;	// YOUR SCORE
+	Math::Vector2 m_missionPos;	// ミッション
+	Math::Vector2 m_completePos;	// コンプリート
+	Math::Vector2 m_scorePos;		// スコア
+	Math::Vector2 m_yourScorePos;	// YOUR SCORE
 
 	// イージング
-	Vector2 m_easing;
+	Math::Vector2 m_easing;
 
 	// タイトル終了フラグ
 	bool m_isTitleEnd;

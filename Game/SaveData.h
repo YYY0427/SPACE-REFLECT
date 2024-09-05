@@ -1,8 +1,5 @@
 #pragma once
 
-// プロトタイプ宣言
-class SoundManager;
-
 /// <summary>
 /// セーブデータの管理を行うシングルトンクラス
 /// </summary>
@@ -139,7 +136,4 @@ private:
 private:
 	// セーブデータ
 	Data m_saveData;
-
-	// サウンドマネージャー
-	SoundManager& m_soundManger;
 };

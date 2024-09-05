@@ -50,7 +50,7 @@ public:
 	/// <param name="pos1">左上の位置</param>
 	/// <param name="pos2">右下の位置</param>
 	/// <param name="color">レーザーの色</param>
-	void SetLaser(const Vector2& pos1, const Vector2& pos2, const unsigned int color);
+	void SetLaser(const Math::Vector2& pos1, const Math::Vector2& pos2, const unsigned int color);
 
 private:
 	// ここから飛べるシーン項目
@@ -64,9 +64,9 @@ private:
 	// レーザーのデータ
 	struct LaserData
 	{
-		Vector2 pos1;	
-		Vector2 pos2;
-		Vector2 startPos;
+		Math::Vector2 pos1;
+		Math::Vector2 pos2;
+		Math::Vector2 startPos;
 		float thickness;
 		int alpha;
 		unsigned int color;

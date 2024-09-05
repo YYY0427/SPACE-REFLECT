@@ -118,7 +118,7 @@ public:
 	/// ƒ‚ƒfƒ‹‚ÌŠg‘å—¦‚ğİ’è
 	/// </summary>
 	/// <param name="scale">Šg‘å—¦</param>
-	void SetRotMtx(const Matrix& mtx);		
+	void SetRotMtx(const Math::Matrix& mtx);		
 
 	/// <summary>
 	/// ƒ‚ƒfƒ‹‚ÌŠg‘å—¦‚ğİ’è

@@ -6,7 +6,7 @@
 #include "Scene/SceneManager.h"
 #include "Scene/DebugScene.h"
 #include "Scene/TitleScene.h"
-#include "SoundManager.h"
+#include "Sound/SoundManager.h"
 #include "String/MessageManager.h"
 #include "String/Font.h"
 #include "Util/InputState.h"
@@ -101,19 +101,19 @@ bool Application::Init()
 //	SetUseASyncLoadFlag(TRUE);
 
 	// csvファイルに沿ってサウンドをロード
-	SoundManager::GetInstance().LoadCsvSoundFile();
+	Sound::Manager::GetInstance()->LoadCsvSoundFile();
 
 	// フォントのロード
-	Font::Load();
+	String::Font::Load();
 
 	// スコアランキングのロード
 	ScoreRanking::GetInstance().LoadScore();
 
 	// メッセージをロード
-	MessageManager::GetInstance().LoadMessageFileData();
+	String::MessageManager::GetInstance()->LoadMessageFileData();
 
 	// Effekseerの初期化
-	Effekseer3DEffectManager::GetInstance().Init();
+	Effect::Effekseer3DManager::GetInstance()->Init();
 
 	// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ
 	// Effekseerを使用する場合は必ず設定する
@@ -140,7 +140,7 @@ bool Application::Init()
 	InputState::Init();
 
 	// デバッグテキストの初期化
-	DebugText::Init();
+	Debug::Text::Init();
 
 	// ダブルバッファモード
 	// 裏画面に描画
@@ -171,7 +171,7 @@ void Application::Run()
 		ChangeWindowMode(saveData.GetSaveData().windowMode);
 
 		// デバッグテキストのクリア
-		DebugText::Clear();
+		Debug::Text::ClearLog();
 
 		// 入力の更新
 		InputState::Update();
@@ -180,13 +180,13 @@ void Application::Run()
 		sceneManager.Update();
 
 		// サウンドの更新
-		SoundManager::GetInstance().Update();
+		Sound::Manager::GetInstance()->Update();
 
 		// シーンの描画
 		sceneManager.Draw();
 
 		// デバッグテキストの描画
-		DebugText::Draw();
+		Debug::Text::DrawLog();
 
 		// 画面の更新
 		ScreenFlip();
@@ -213,22 +213,22 @@ void Application::Run()
 void Application::End()
 {
 	// サウンドの終了処理
-	SoundManager::GetInstance().End();
+	Sound::Manager::GetInstance()->End();
 
 	// Effekseerの終了処理
-	Effekseer3DEffectManager::GetInstance().End();
+	Effect::Effekseer3DManager::GetInstance()->End();
 
 	// フォントの終了処理
-	Font::End();
+	String::Font::End();
 
 	// スコアランキングのセーブ
 	ScoreRanking::GetInstance().SaveScore();
 
 	// MessageManagerの終了処理
-	MessageManager::GetInstance().End();
+	String::MessageManager::GetInstance()->End();
 
 	// DebugTextの終了処理
-	DebugText::End();
+	Debug::Text::End();
 
 	// DXライブラリ使用の終了処理
 	DxLib_End();

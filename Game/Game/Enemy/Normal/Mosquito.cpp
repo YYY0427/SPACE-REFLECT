@@ -59,7 +59,7 @@ Mosquito::Mosquito(const EnemyData& data,
 	m_pos = Vector3::FromDxLibVector3(ConvScreenPosToWorldPos_ZLinear({ data.pos.x, data.pos.y, z }));
 
 	// プレイヤーを向くように回転行列を設定
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
+	auto rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
 
 	// ステートマシンの設定
 	m_state.AddState(State::IDLE, {}, [this](){ UpdateIdle(); }, {});
@@ -123,7 +123,7 @@ void Mosquito::Update()
 			MV1GetFramePosition(m_pModel->GetModelHandle(), laser_fire_frame_pos));
 
 		// プレイヤーを向くように回転行列を設定
-		Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
+		auto rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, (m_pPlayer->GetPos() - m_pos).Normalized());
 		m_pModel->SetRotMtx(rotMtx);
 	}
 

@@ -5,7 +5,7 @@
 #include "TitleScene.h"
 #include "ConfirmScene.h"
 #include "../Util/InputState.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include "../MyDebug/DebugText.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
@@ -84,12 +84,12 @@ void PuseScene::Update()
 	if (InputState::IsTriggered(InputType::UP))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 	else if (InputState::IsTriggered(InputType::DOWN))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 
 	// 選択されている項目の色を変える
@@ -136,7 +136,7 @@ void PuseScene::Update()
 void PuseScene::Draw()
 {
 	// デバッグ用ログ
-	DebugText::AddLog("currentSelectState", { m_currentSelectItem });
+	Debug::Text::AddLog("currentSelectState", { m_currentSelectItem });
 
 	// 画面サイズの取得
 	auto& screenSize = Application::GetInstance().GetWindowSize();
@@ -151,30 +151,33 @@ void PuseScene::Draw()
 	DrawBox(0, 0, screenSize.width, screenSize.height, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+	// メッセージマネージャの取得
+	const auto& messageManager = String::MessageManager::GetInstance();
+
 	// メニューの描画
-	MessageManager::GetInstance().DrawStringCenter("PauseMenu", screenSize.width / 2.0f, 150, 0xffffff, 0xffffff);
+	messageManager->DrawStringCenter("PauseMenu", screenSize.width / 2.0f, 150, 0xffffff, 0xffffff);
 
 	// 項目の描画
 	int continueItem = static_cast<int>(State::CONTINUE);
-	MessageManager::GetInstance().DrawStringCenter("PauseContinue", 
+	messageManager->DrawStringCenter("PauseContinue",
 													draw_text_pos_x,
 													draw_text_pos_y + text_space_y * continueItem,
 													m_itemColorTable[continueItem]);
 
 	int optionItem = static_cast<int>(State::OPTION);
-	MessageManager::GetInstance().DrawStringCenter("PauseOption",
+	messageManager->DrawStringCenter("PauseOption",
 													draw_text_pos_x,
 													draw_text_pos_y + text_space_y * optionItem,
 													m_itemColorTable[optionItem]);
 
 	int stageSelectItem = static_cast<int>(State::STAGE_SELECT);
-	MessageManager::GetInstance().DrawStringCenter("PauseStageSelect",
+	messageManager->DrawStringCenter("PauseStageSelect",
 													draw_text_pos_x,
 													draw_text_pos_y + text_space_y * stageSelectItem,
 													m_itemColorTable[stageSelectItem]);
 
 	int restartItem = static_cast<int>(State::TITLE);
-	MessageManager::GetInstance().DrawStringCenter("PauseTitle",
+	messageManager->DrawStringCenter("PauseTitle",
 													draw_text_pos_x,
 													draw_text_pos_y + text_space_y * restartItem,
 													m_itemColorTable[restartItem]);

@@ -10,13 +10,12 @@
 #include "../../Player.h"
 #include "../../../Effect/Effekseer3DEffectManager.h"
 #include "../../../Effect/Flash.h"
-#include "../../../Effect/Triangle.h"
 #include "../../../Effect/ScreenShaker.h"
 #include "../../../Util/InputState.h"
 #include "../../../MyDebug/DebugText.h"
 #include "../../../Score/Score.h"
 #include "../../../ModelHandleManager.h"
-#include "../../../SoundManager.h"
+#include "../../../Sound/SoundManager.h"
 #include <random>
 #include <algorithm>
 #include <cmath>
@@ -36,7 +35,7 @@ namespace
 	const Vector3 normal_pos    = { 640, 360, 1800.0f };		// 通常時の位置(スクリーン座標)
 
 	// モデル
-	const Vector3 model_rot = { MathUtil::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
+	const Vector3 model_rot = { Math::Util::ToRadian(20), DX_PI_F, 0.0f}; // 回転率 
 	const Vector3 model_scale = { 2.0f , 2.0f, 2.0f };					// 拡大率
 	const Vector3 init_model_direction = { 0.0f, 0.0f, -1.0f };			// 初期の向き
 
@@ -69,8 +68,8 @@ namespace
 
 	// HP
 	constexpr int max_hp        = 1000;											// 最大HP
-	const Vector2 hp_gauge_pos  = { screenSize.width / 2.0f, 0.0f + 100.0f};	// HPゲージの位置
-	const Vector2 hp_gauge_size = { 500, 20 };									// HPゲージのサイズ
+	const Math::Vector2 hp_gauge_pos  = { screenSize.width / 2.0f, 0.0f + 100.0f};	// HPゲージの位置
+	const Math::Vector2 hp_gauge_size = { 500, 20 };									// HPゲージのサイズ
 	const std::string hp_gauge_img_file_path       = "Data/Image/HP.png";		// HPゲージの画像ファイルパス
 	const std::string hp_gauge_back_img_file_path  = "Data/Image/HPBack.png";	// HPゲージの背景画像ファイルパス
 	const std::string hp_gauge_frame_img_file_path = "Data/Image/HPFrame.png";	// HPゲージの枠画像ファイルパス
@@ -78,13 +77,13 @@ namespace
 	constexpr int hp_gauge_sub_frame		= 120;		  // ダメージを受けた時のHPゲージの減るフレーム
 	constexpr int hp_gauge_delay_frame		= 60;		  // ダメージを受けてからHPゲージが減るまでの遅延フレーム
 	constexpr int hp_gauge_draw_order		= 2;		  // HPゲージUIの描画優先度
-	const Vector2 hp_gauge_store_vec        = { 0, -1 };  // HPゲージUIの格納ベクトル
+	const Math::Vector2 hp_gauge_store_vec        = { 0, -1 };  // HPゲージUIの格納ベクトル
 
 	// ボスの名前
 	const std::string boss_name_key = "BossMatrixName";							// ボスの名前キー
-	const Vector2 boss_name_pos = { hp_gauge_pos.x, hp_gauge_pos.y - 50.0f };	// ボスの名前の位置
+	const Math::Vector2 boss_name_pos = { hp_gauge_pos.x, hp_gauge_pos.y - 50.0f };	// ボスの名前の位置
 	constexpr int boss_name_ui_draw_order = 2;									// ボスの名前UIの描画優先度
-	const Vector2 boss_name_ui_store_vec = { 0, -1 };							// ボスの名前UIの格納ベクトル
+	const Math::Vector2 boss_name_ui_store_vec = { 0, -1 };							// ボスの名前UIの格納ベクトル
 
 	// 当たり判定の半径
 	constexpr float collision_radius = 250.0f;
@@ -120,13 +119,13 @@ namespace
 
 	// 画面揺れ
 	constexpr int shake_frame = 70;					// 画面揺れのフレーム
-	const Vector2 shake_size  = { 0.0f, 100.0f };	// 画面揺れの大きさ
+	const Math::Vector2 shake_size  = { 0.0f, 100.0f };	// 画面揺れの大きさ
 }
 
 // コンストラクタ
 BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer, 
 					   const std::shared_ptr<LaserManager>& pLaserManager, 
-					   const std::shared_ptr<ScreenShaker>& pScreenShaker) :
+					   const std::shared_ptr<Effect::ScreenShaker>& pScreenShaker) :
 	m_attackStateIndex(0),
 	m_isMoveEnd(false),
 	m_idleFrame(0),
@@ -240,7 +239,7 @@ void BossMatrix::Draw()
 	if (m_isEnabled)
 	{
 		// デバッグログの追加
-		DebugText::AddLog("BossMatrixPos", { m_pos.x, m_pos.y, m_pos.z});
+		Debug::Text::AddLog("BossMatrixPos", { m_pos.x, m_pos.y, m_pos.z});
 
 		// モデルの描画
 		m_pModel->Draw();
@@ -266,7 +265,7 @@ void BossMatrix::OnDamage(const int damage, const Vector3& pos)
 	m_pHpGauge->SetValue(m_hp);
 
 	// ダメージエフェクトの再生
-	Effekseer3DEffectManager::GetInstance().PlayEffect(
+	Effect::Effekseer3DManager::GetInstance()->PlayEffect(
 		m_damageEffectHandle,
 		"PlayerAttackHitEffect",
 		pos,
@@ -295,7 +294,7 @@ void BossMatrix::EnterDie()
 	m_pScreenShaker->StartShake(shake_size, shake_frame);
 
 	// フラッシュの開始
-	m_pFlash = std::make_shared<Flash>(10);
+	m_pFlash = std::make_shared<Effect::Flash>(10);
 }
 
 // 移動しながらホーミングレーザー攻撃の開始
@@ -415,7 +414,7 @@ void BossMatrix::UpdateDie()
 			Score::GetInstance().AddScore(ScoreType::BOSS);
 
 			// エフェクトの再生
-			Effekseer3DEffectManager::GetInstance().PlayEffect(
+			Effect::Effekseer3DManager::GetInstance()->PlayEffect(
 				m_dieEffectHandle,
 				"EnemyBossDie",
 				m_pos,
@@ -428,7 +427,7 @@ void BossMatrix::UpdateDie()
 			m_opacity = 0.0f;
 
 			// エフェクトの再生が終了したら
-			if (!Effekseer3DEffectManager::GetInstance().IsPlayingEffect(m_dieEffectHandle))
+			if (!Effect::Effekseer3DManager::GetInstance()->IsPlayingEffect(m_dieEffectHandle))
 			{
 				// 存在フラグを下げる
 				m_isEnabled = false;
@@ -436,12 +435,12 @@ void BossMatrix::UpdateDie()
 		}
 		if (m_timer++ >= 300 && !m_isExplosionSound)
 		{
-			SoundManager::GetInstance().PlaySE("BossExplosion");
+			Sound::Manager::GetInstance()->PlaySE("BossExplosion");
 			m_isExplosionSound = true;
 		}
 
 		// エフェクトの位置の更新
-		Effekseer3DEffectManager::GetInstance().SetEffectPos(
+		Effect::Effekseer3DManager::GetInstance()->SetEffectPos(
 			m_dieEffectHandle, 
 			{ m_pos.x, m_pos.y, m_pos.z - die_effect_z_interval });
 	}
@@ -464,7 +463,7 @@ void BossMatrix::UpdateMoveHomingLaserAttack()
 
 	// レーザーの方向に向けるようにする
 	Vector3 directionVec = m_pLaserManager->GetLaserData(m_laserKey).pLaser->GetDirection();
-	Matrix rotMtx        = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	auto rotMtx        = Math::Matrix::GetRotationMatrix(init_model_direction, directionVec);
 	m_rot = { rotMtx.ToEulerAngle().x * -1, rotMtx.ToEulerAngle().y + DX_PI_F, rotMtx.ToEulerAngle().z * -1 };
 
 	// フレームが経過したら
@@ -608,7 +607,7 @@ void BossMatrix::LookPlayerDir()
 
 	// プレイヤーの方向の行列を取得
 	Vector3 directionVec = m_pPlayer->GetPos() - m_pos;
-	Matrix rotMtx = Matrix::GetRotationMatrix(init_model_direction, directionVec);
+	auto rotMtx = Math::Matrix::GetRotationMatrix(init_model_direction, directionVec);
 
 	// 徐々にプレイヤーの方向を向く
 	m_rot = m_rot.Lerp(m_rot,

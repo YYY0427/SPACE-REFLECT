@@ -154,7 +154,7 @@ void Model::SetRot(const Vector3& rot)
 }
 
 // ƒ‚ƒfƒ‹‚Ì‰ñ“]s—ñ‚Ìİ’è
-void Model::SetRotMtx(const Matrix& mtx)
+void Model::SetRotMtx(const Math::Matrix& mtx)
 {
 	int result = MV1SetRotationMatrix(m_modelHandle, mtx.ToDxLibMatrix());
 	assert(result != -1);

@@ -18,7 +18,7 @@
 #include "../Math/Vector3.h"
 #include "../Application.h"
 #include "../ModelHandleManager.h"
-#include "../SoundManager.h"
+#include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
 namespace
@@ -37,8 +37,8 @@ namespace
 	constexpr int score_ranking_space           = 20;	// 文字間隔
 
 	// 説明ウィンドウ
-	const Vector2 explanation_window_size = { 400, 425 };	// ウィンドウのサイズ
-	const Vector2 window_scale_frame      = { 15, 20 };		// ウィンドウの拡大のフレーム
+	const Math::Vector2 explanation_window_size = { 400, 425 };	// ウィンドウのサイズ
+	const Math::Vector2 window_scale_frame      = { 15, 20 };		// ウィンドウの拡大のフレーム
 	constexpr int window_max_alpha        = 180;			// ウィンドウの最大アルファ値
 
 	// ステージ選択時にカメラの移動にかかるフレーム
@@ -149,8 +149,8 @@ void StageSelectScene::Init()
 	}
 
 	// BGMの再生
-	SoundManager::GetInstance().PlayBGM("StageSelectBgm");
-	SoundManager::GetInstance().SetFadeSound("StageSelectBgm", 60, 0, 255);
+	Sound::Manager::GetInstance()->PlayBGM("StageSelectBgm");
+	Sound::Manager::GetInstance()->SetFadeSound("StageSelectBgm", 60, 0, 255);
 }
 
 // 終了処理
@@ -160,7 +160,7 @@ void StageSelectScene::End()
 	DeleteLightHandle(m_lightHandle);
 
 	// BGMの停止
-	SoundManager::GetInstance().StopSound("StageSelectBgm");
+	Sound::Manager::GetInstance()->StopSound("StageSelectBgm");
 
 	// 画像の削除
 	DeleteGraph(m_rbButtonImgHandle);
@@ -195,7 +195,7 @@ void StageSelectScene::EnterStartAnimation()
 void StageSelectScene::Update()
 {
 	// デバッグテキスト
-	DebugText::AddLog("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
+	Debug::Text::AddLog("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
 
 	// フェードの更新
 	m_pFade->Update();
@@ -237,7 +237,7 @@ void StageSelectScene::UpdateSelectStage()
 	m_explanationWindowSize.x = Easing::EaseOutCubic(m_explanationWindowEasingTime.x, window_scale_frame.x, explanation_window_size.x, 0);
 	if (m_explanationWindowSize.x < explanation_window_size.x)
 	{
-		SoundManager::GetInstance().PlaySE("StageSelectOpenMenu");
+		Sound::Manager::GetInstance()->PlaySE("StageSelectOpenMenu");
 	}
 
 	// 3Dの線のアルファ値の更新
@@ -265,7 +265,7 @@ void StageSelectScene::UpdateSelectStage()
 	if (InputState::IsTriggered(InputType::RIGHT_SHOULDER))
 	{
 		// SEの再生
-		SoundManager::GetInstance().PlaySE("Select");
+		Sound::Manager::GetInstance()->PlaySE("Select");
 
 		// シーンの遷移
 		m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::STAGE_SELECT));
@@ -279,11 +279,11 @@ void StageSelectScene::UpdateSelectStage()
 		m_stateMachine.SetState(State::START_ANIMATION);
 
 		// SEの再生
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.PlaySE("Enter");
+		const auto& soundManager = Sound::Manager::GetInstance();
+		soundManager->PlaySE("Enter");
 
 		// BGMのフェードアウトの設定
-		soundManager.SetFadeSound("StageSelectBgm", 60, soundManager.GetSoundVolume("StageSelectBgm"), 0);
+		soundManager->SetFadeSound("StageSelectBgm", 60, soundManager->GetSoundVolume("StageSelectBgm"), 0);
 		return;
 	}
 
@@ -294,8 +294,8 @@ void StageSelectScene::UpdateSelectStage()
 		m_pFade->StartFadeOut(255, 10);
 
 		// BGMのフェードアウト
-		auto& soundManager = SoundManager::GetInstance();
-		soundManager.SetFadeSound("StageSelectBgm", 60, soundManager.GetSoundVolume("StageSelectBgm"), 0);
+		const auto& soundManager = Sound::Manager::GetInstance();
+		soundManager->SetFadeSound("StageSelectBgm", 60, soundManager->GetSoundVolume("StageSelectBgm"), 0);
 	}
 
 	// フェードアウトが終了したらシーン遷移
@@ -328,16 +328,16 @@ void StageSelectScene::UpdateStartAnimation()
 	if (m_decisionStageTargetEasingTime >= camera_move_frame_to_planet)
 	{
 		// インスタンスの取得
-		auto& soundManager = SoundManager::GetInstance();
+		const auto& soundManager = Sound::Manager::GetInstance();
 
 		// スタートアニメーションのSEを再生していない場合
 		if (!m_isStartAnimSE)
 		{
 			// スタートアニメーションのSEを再生
-			soundManager.PlaySE("StartAnimSe");
+			soundManager->PlaySE("StartAnimSe");
 
 			// スタートアニメーションのSEのフェードインの設定
-			soundManager.SetFadeSound("StartAnimSe", 30, soundManager.GetSoundVolume("StartAnimSe"), 255);
+			soundManager->SetFadeSound("StartAnimSe", 30, soundManager->GetSoundVolume("StartAnimSe"), 255);
 
 			// 再生したフラグを立てる
 			m_isStartAnimSE = true;
@@ -358,7 +358,7 @@ void StageSelectScene::UpdateStartAnimation()
 			m_pFade->StartFadeOut(255, 10);
 
 			// スタートアニメーションのSEのフェードアウトの設定
-			soundManager.SetFadeSound("StartAnimSe", 60, soundManager.GetSoundVolume("StartAnimSe"), 0);
+			soundManager->SetFadeSound("StartAnimSe", 60, soundManager->GetSoundVolume("StartAnimSe"), 0);
 		}
 	}
 
@@ -429,10 +429,12 @@ void StageSelectScene::Draw()
 	// 画面をクリア
 	ClearDrawScreen();
 
+	const auto& messageManager = String::MessageManager::GetInstance();
+
 	// ステージセレクトタイトルの描画
 	auto& screenSize = Application::GetInstance().GetWindowSize();
 	DrawRoundRectAA((screenSize.width / 2.0f) - 325, 50, (screenSize.width / 2.0f) - 50, 110, 5, 5, 8, 0xffffff, true);
-	MessageManager::GetInstance().DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
+	messageManager->DrawStringCenter("MissionTitle", (screenSize.width / 2.0f) - 187, 80, 0x000000);
 
 	// RBボタンの描画
 	DrawRotaGraph((screenSize.width / 2.0f) + 375, 95, 1.0f, 0.0f, m_rbButtonImgHandle, true);
@@ -440,18 +442,18 @@ void StageSelectScene::Draw()
 	// オプションタイトルの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 	DrawRoundRectAA((screenSize.width / 2.0f) + 325, 50, (screenSize.width / 2.0f) + 50, 110, 5, 5, 8, 0xffffff, true);
-	MessageManager::GetInstance().DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
+	messageManager->DrawStringCenter("OptionTitle", (screenSize.width / 2.0f) + 187, 80, 0x000000);
 	// LBボタンの描画
 	DrawRotaGraph((screenSize.width / 2.0f) - 375, 95, 1.0f, 0.0f, m_lbButtonImgHandle, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	
 	// Bボタンの描画
 	DrawRotaGraph(screenSize.width - 180, screenSize.height - 50, 1.0, 0.0f, m_bButtonImgHandle, true);
-	MessageManager::GetInstance().DrawStringCenter("StageSelectBack", screenSize.width - 100, screenSize.height - 50, 0xffffff);
+	messageManager->DrawStringCenter("StageSelectBack", screenSize.width - 100, screenSize.height - 50, 0xffffff);
 
 	// Aボタンの描画
 	DrawRotaGraph(screenSize.width / 2 - 120, screenSize.height - 75, 1.0, 0.0f, m_aButtonImgHandle, true);
-	MessageManager::GetInstance().DrawStringCenter("StageSelectStart", screenSize.width / 2, screenSize.height - 75, 0xffffff);
+	messageManager->DrawStringCenter("StageSelectStart", screenSize.width / 2, screenSize.height - 75, 0xffffff);
 
 	// 三角形の描画
 	DrawTriangleAA(screenSize.width - 50, screenSize.height / 2.0f, screenSize.width - 100, screenSize.height / 2.0f - 75, screenSize.width - 100, screenSize.height / 2.0f + 75, 0xffffff, true);
@@ -488,15 +490,15 @@ void StageSelectScene::Draw()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpha);
 
 	// ステージタイトルの描画
-	MessageManager::GetInstance().DrawStringCenter("StageSelectMission", 890, 200, 0xffffff);
-	MessageManager::GetInstance().DrawStringCenter(m_stageData[static_cast<Stage>(m_currentSelectItem)].missionNameId, 890, 250, 0xffffff);
+	messageManager->DrawStringCenter("StageSelectMission", 890, 200, 0xffffff);
+	messageManager->DrawStringCenter(m_stageData[static_cast<Stage>(m_currentSelectItem)].missionNameId, 890, 250, 0xffffff);
 
 	// 線の描画
 	DrawLine(screenSize.width / 2.0f + 100, 280,  screenSize.width / 2.0f + 400, 280, 0xffffff, 2.0f);
 
 	// 難易度の描画
-	MessageManager::GetInstance().DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].difficultyId, 790, 310, 0xffffff);
-	MessageManager::GetInstance().DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].conditionsId, 790, 350, 0xffffff);
+	messageManager->DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].difficultyId, 790, 310, 0xffffff);
+	messageManager->DrawString(m_stageData[static_cast<Stage>(m_currentSelectItem)].conditionsId, 790, 350, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// スコアランキングの描画
@@ -529,9 +531,12 @@ void StageSelectScene::DrawScoreRanking()
 		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 	}
 
+	// メッセージマネージャの取得
+	const auto& messageManager = String::MessageManager::GetInstance();
+
 	// ランキングタイトルの描画
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_textAlpha);
-	MessageManager::GetInstance().DrawStringCenter("RankingTitle", 805, 425, 0xffffff);
+	messageManager->DrawStringCenter("RankingTitle", 805, 425, 0xffffff);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
 	// スコアランキングの描画
@@ -539,14 +544,14 @@ void StageSelectScene::DrawScoreRanking()
 	for(int i = m_scoreRanking.size() - 1; i >= 0; i--)
 	{
 		// フォントハンドルの取得
-		auto fontHandle = MessageManager::GetInstance().GetMessageData("RankingFont").fontHandle;
+		auto fontHandle = messageManager->GetMessageData("RankingFont").fontHandle;
 
 		// 徐々に描画
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, m_rankingAlpha[i]);
 
 		// 順位の文字列の作成
 		std::string rank = std::to_string(i + 1);
-		DrawStringToHandle(750, 450 + i * score_ranking_space, rank.c_str(), 0xffffff, MessageManager::GetInstance().GetMessageData("RankingFont").fontHandle);
+		DrawStringToHandle(750, 450 + i * score_ranking_space, rank.c_str(), 0xffffff, messageManager->GetMessageData("RankingFont").fontHandle);
 
 		// プレイヤー名の描画
 		DrawStringToHandle(800, 450 + i * score_ranking_space, m_scoreRanking[i].playerName, 0xffffff, fontHandle);

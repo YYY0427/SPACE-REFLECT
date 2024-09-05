@@ -168,7 +168,7 @@ private:
 	Vector3 m_scale;			// 拡大率
 	Vector3 m_moveVec;			// 移動ベクトル
 	Vector3 m_moveSpeed;		// 移動速度
-	Vector2 m_playerSize;		// プレイヤーのサイズ
+	Math::Vector2 m_playerSize;		// プレイヤーのサイズ
 
 	float   m_startMoveSpeedZ;	// スタート時の速度
 	float   m_opacity;			// 透明度

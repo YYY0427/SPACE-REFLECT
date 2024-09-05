@@ -33,77 +33,97 @@ namespace
 	constexpr int draw_back_alpha = 127;
 }
 
-/// <summary>
-/// デバッグ用の関数をまとめたクラス
-/// </summary>
-class DebugText
+namespace Debug
 {
-public:
-	/// <summary>
-	/// 初期化
-	/// </summary>
-	static void Init();
-
-	/// <summary>
-	/// 終了処理
-	/// </summary>
-	static void End();
-
-	/// <summary>
-	/// ログのクリア
-	/// </summary>
-	static void Clear();
-
-	/// <summary>
-	/// ログの描画
-	/// </summary>
-	static void Draw();
-
-	/// <summary>
-	/// ログの追加(文字のみ)
-	/// </summary>
-	/// <param name="string">出力する文字列</param>
-	static void AddLog(const std::string& string);
-
-	/// <summary>
-	/// ログの追加(文字と数字)
-	/// </summary>
-	/// <typeparam name="T">変数の型</typeparam>
-	/// <typeparam name="N">変数の数</typeparam>
-	/// <param name="string">文字列</param>
-	template <typename T, size_t N>
-	static void AddLog(const std::string& string, const T(&array)[N])
+	class Text
 	{
-#ifdef _DEBUG
-		// 文字列を作成
-		std::string str = string;
+	/// <summary>
+	/// デバッグ時に表示するテキスト
+	/// printfのようなもの
+	/// </summary>
+	public:
+		/// <summary>
+		/// 初期化
+		/// </summary>
+		static void Init();
 
-		// 配列の中身を文字列に変換
-		for (int i = 0; i < N; i++)
+		/// <summary>
+		/// 終了処理
+		/// </summary>
+		static void End();
+
+		/// <summary>
+		/// ログのクリア
+		/// </summary>
+		static void ClearLog();
+
+		/// <summary>
+		/// ログの描画
+		/// </summary>
+		static void DrawLog();
+
+		/// <summary>
+		/// ログの追加(文字のみ)
+		/// </summary>
+		/// <param name="string">出力する文字列</param>
+		/// <param name="color">文字の色</param>
+		static void AddLog(const std::string& string, const unsigned int color = 0xffffff);
+
+		/// <summary>
+		/// ログの追加(文字と数字)
+		/// </summary>
+		/// <param name="string">文字列</param>
+		/// <typeparam name="T">変数の型</typeparam>
+		/// <param name="array">変数</param>
+		/// <typeparam name="N">変数の数</typeparam>
+		/// <param name="color">文字の色</param>
+		template <typename T, size_t N>
+		static void AddLog(const std::string& string, const T(&array)[N], const unsigned int color = 0xffffff)
 		{
-			// 1つ目の要素は : で区切る
-			if (i == 0)
+#ifdef _DEBUG
+			// ログデータの作成
+			LogData logData;
+			logData.str = string;
+			logData.color = color;
+
+			// 配列の中身を文字列に変換
+			for (int i = 0; i < N; i++)
 			{
-				str += " : " + std::to_string(array[i]);
+				// 1つ目の要素は : で区切る
+				if (i == 0)
+				{
+					logData.str += " : " + std::to_string(array[i]);
+				}
+				// 2つ目以降の要素は , で区切る
+				else
+				{
+					logData.str += ", " + std::to_string(array[i]);
+				}
 			}
-			// 2つ目以降の要素は , で区切る
-			else
-			{
-				str += ", " + std::to_string(array[i]);
-			}
-		}
-		// ログを格納
-		m_logList.push_front(str);
+			// ログを格納
+			m_logList.push_back(logData);
 #endif
-	}
+		}
 
-private:
-	// ログのリスト
-	static std::list<std::string> m_logList;
+	private:
+		// ログデータ
+		struct LogData
+		{
+			// 文字列
+			std::string str;
 
-	// ログの出力回数
-	static int m_logCount;
+			// 文字の色
+			unsigned int color = 0xffffff;
+		};
 
-	// フォントハンドル
-	static int m_fontHandle;
-};
+	private:
+		// ログリスト
+		static std::list<LogData> m_logList;
+
+		// ログの出力回数
+		static int m_logCount;
+
+		// フォントハンドル
+		static int m_fontHandle;
+	};
+}

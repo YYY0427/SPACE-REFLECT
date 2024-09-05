@@ -53,7 +53,7 @@ namespace FileUtil
 				}
 
 				// csvデータ１行を','で複数の文字列に変換
-				std::vector<std::string> lineData = StringUtil::Split(line, ',');
+				std::vector<std::string> lineData = String::Split(line, ',');
 
 				// 1行分のデータを保存
 				data.push_back(lineData);

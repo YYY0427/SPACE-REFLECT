@@ -39,7 +39,7 @@ public:
 	/// <param name="ui">UIのポインタ</param>
 	/// <param name="drawOrder">描画順</param>
 	/// <param name="storeVec">UIを格納するベクトル</param>
-	void AddUI(const std::string& key, const std::shared_ptr<UIBase>& ui, const int drawOrder, const Vector2& storeVec = {});
+	void AddUI(const std::string& key, const std::shared_ptr<UIBase>& ui, const int drawOrder, const Math::Vector2& storeVec = {});
 
 	/// <summary>
 	/// UIの削除
@@ -75,7 +75,7 @@ private:
 		std::string key;			// キー
 		std::shared_ptr<UIBase> ui; // UIのポインタ
 		int drawOrder;				// 描画順
-		Vector2 storeVec;			// UIを格納するベクトル
+		Math::Vector2 storeVec;			// UIを格納するベクトル
 	};
 
 private:

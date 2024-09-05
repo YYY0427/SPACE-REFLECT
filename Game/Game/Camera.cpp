@@ -23,7 +23,7 @@ namespace
 	constexpr float camera_move_speed = 7.5f;
 
 	// カメラの移動制限範囲
-	const Vector2 camera_move_limit = { 150.0f * 3.0f, 100.0f * 3.0f };
+	const Math::Vector2 camera_move_limit = { 150.0f * 3.0f, 100.0f * 3.0f };
 
 	// カメラをプレイヤーのベクトルに合わせて少し移動する割合
 	constexpr float camera_move_ratio = 0.7f;
@@ -134,8 +134,8 @@ void Camera::UpdatePlay(const Vector3& playerPos, const Vector3& playerVec)
 	SetCamera();
 
 	// デバッグログの追加
-	DebugText::AddLog("CameraPos",    { m_pos.x, m_pos.y, m_pos.z });
-	DebugText::AddLog("CameraTarget", { m_target.x, m_target.y, m_target.z });
+	Debug::Text::AddLog("CameraPos",    { m_pos.x, m_pos.y, m_pos.z });
+	Debug::Text::AddLog("CameraTarget", { m_target.x, m_target.y, m_target.z });
 }
 
 // スタート演出時の更新
@@ -238,7 +238,7 @@ void Camera::SetCamera()
 	SetCameraNearFar(near_distance, far_distance);
 
 	// カメラの視野角を設定(ラジアン)
-	SetupCamera_Perspective(MathUtil::ToRadian(m_perspective));
+	SetupCamera_Perspective(Math::Util::ToRadian(m_perspective));
 
 	// カメラの位置、どこを見ているかを設定する
 	SetCameraPositionAndTarget_UpVecY(
