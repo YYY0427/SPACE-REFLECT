@@ -1,55 +1,55 @@
-#include "InputState.h"
+#include "InputManager.h"
 #include <DxLib.h>
 #include <map>
 #include <vector>
 #include <string>
 #include <cmath>
 
-namespace InputState
+namespace Input::Manager
 {
 	// 初期化
-	void InputState::Init()
+	void Input::Manager::Init()
 	{
 		// ボタンの入力タイプをどのボタンにするかの設定
-		m_inputMapTable[InputType::DECISION] = { {InputCategory::PAD, XINPUT_BUTTON_A },				// Aボタン
+		m_inputMapTable[Type::DECISION] = { {InputCategory::PAD, XINPUT_BUTTON_A },				// Aボタン
 												 {InputCategory::KEYBORD, KEY_INPUT_RETURN} };			// Enterキー
-		m_inputMapTable[InputType::BACK]     = { {InputCategory::PAD, XINPUT_BUTTON_B},					// Bボタン
+		m_inputMapTable[Type::BACK]     = { {InputCategory::PAD, XINPUT_BUTTON_B},					// Bボタン
 												 {InputCategory::KEYBORD, KEY_INPUT_SPACE} };			// SPACEキー	
-		m_inputMapTable[InputType::PAUSE]    = { {InputCategory::PAD, XINPUT_BUTTON_START },			// STARTボタン
+		m_inputMapTable[Type::PAUSE]    = { {InputCategory::PAD, XINPUT_BUTTON_START },			// STARTボタン
 												 {InputCategory::KEYBORD, KEY_INPUT_P} };				// Pキー
-		m_inputMapTable[InputType::SHIELD]   = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER},	// RBボタン
+		m_inputMapTable[Type::SHIELD]   = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER},	// RBボタン
 											     {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };	// LBボタン
-		m_inputMapTable[InputType::UP]       = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_UP },			// PAD↑
+		m_inputMapTable[Type::UP]       = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_UP },			// PAD↑
 												 {InputCategory::KEYBORD, KEY_INPUT_UP},				// KEY↑
 												 {InputCategory::KEYBORD, KEY_INPUT_W} };				// Wキー
-		m_inputMapTable[InputType::DOWN]     = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_DOWN },		// PAD↓
+		m_inputMapTable[Type::DOWN]     = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_DOWN },		// PAD↓
 												 {InputCategory::KEYBORD, KEY_INPUT_DOWN},				// KEY↓
 												 {InputCategory::KEYBORD, KEY_INPUT_S} };				// Sキー
-		m_inputMapTable[InputType::RIGHT]    = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_RIGHT },		// PAD→
+		m_inputMapTable[Type::RIGHT]    = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_RIGHT },		// PAD→
 												 {InputCategory::KEYBORD, KEY_INPUT_RIGHT},				// KEY→
 												 {InputCategory::KEYBORD, KEY_INPUT_D} };				// Dキー
-		m_inputMapTable[InputType::LEFT]     = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_LEFT },		// PAD←
+		m_inputMapTable[Type::LEFT]     = { {InputCategory::PAD, XINPUT_BUTTON_DPAD_LEFT },		// PAD←
 												 {InputCategory::KEYBORD, KEY_INPUT_LEFT},				// KEY←
 												 {InputCategory::KEYBORD, KEY_INPUT_A} };				// Aキー
-		m_inputMapTable[InputType::RIGHT_SHOULDER] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };// RBボタン
-		m_inputMapTable[InputType::LEFT_SHOULDER]  = { {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };	// LBボタン
-		m_inputMapTable[InputType::ANY_BUTTON] = { {InputCategory::PAD, XINPUT_BUTTON_A },
+		m_inputMapTable[Type::RIGHT_SHOULDER] = { {InputCategory::PAD, XINPUT_BUTTON_RIGHT_SHOULDER} };// RBボタン
+		m_inputMapTable[Type::LEFT_SHOULDER]  = { {InputCategory::PAD, XINPUT_BUTTON_LEFT_SHOULDER} };	// LBボタン
+		m_inputMapTable[Type::ANY_BUTTON] = { {InputCategory::PAD, XINPUT_BUTTON_A },
 													{InputCategory::PAD, XINPUT_BUTTON_B },
 													{InputCategory::PAD, XINPUT_BUTTON_X },
 													{InputCategory::PAD, XINPUT_BUTTON_Y } };
 
 #ifdef _DEBUG
 		// デバッグ用　
-		m_inputMapTable[InputType::ENEMY_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// 敵の死亡
+		m_inputMapTable[Type::ENEMY_DETH_DEBUG] = { {InputCategory::KEYBORD, KEY_INPUT_R} };	// 敵の死亡
 #endif
 
 		// 設定したボタンの数によって配列の数を変更
-		m_currentInput.resize(static_cast<int>(InputType::NUM));
-		m_lastInput.resize(static_cast<int>(InputType::NUM));
+		m_currentInput.resize(static_cast<int>(Type::NUM));
+		m_lastInput.resize(static_cast<int>(Type::NUM));
 	}
 
 	// 更新
-	void InputState::Update()
+	void Input::Manager::Update()
 	{
 		// 直前の入力情報を記憶しておく
 		m_lastInput = m_currentInput;
@@ -94,19 +94,19 @@ namespace InputState
 	}
 
 	// ボタンが押された瞬間の入力情報の取得
-	bool InputState::IsTriggered(const InputType type)
+	bool Input::Manager::IsTriggered(const Type type)
 	{
 		return IsPressed(type) && !m_lastInput[static_cast<int>(type)];
 	}
 
 	// ボタンが押されている間の入力情報の取得
-	bool InputState::IsPressed(const InputType type)
+	bool Input::Manager::IsPressed(const Type type)
 	{
 		return m_currentInput[static_cast<int>(type)];
 	}
 
 	// パッドのトリガーの入力情報の取得
-	bool InputState::IsPadTrigger(const PadLR type)
+	bool Input::Manager::IsPadTrigger(const PadLR type)
 	{
 		// パッドの情報の取得
 		XINPUT_STATE  padState;
@@ -126,7 +126,7 @@ namespace InputState
 	}
 
 	// パッドのスティックの入力情報を取得
-	int InputState::IsPadStick(const PadLR stic, const PadStickInputType type)
+	int Input::Manager::IsPadStick(const PadLR stic, const PadStickInputType type)
 	{
 		// パッドの情報の取得
 		XINPUT_STATE  padState;

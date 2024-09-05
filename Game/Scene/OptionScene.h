@@ -1,6 +1,6 @@
 #pragma once
 #include "SceneBase.h"
-#include "../StateMachine.h"
+#include "../Util/StateMachine.h"
 #include <vector>
 
 /// <summary>

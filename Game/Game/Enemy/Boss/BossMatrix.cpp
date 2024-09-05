@@ -11,9 +11,9 @@
 #include "../../../Effect/Effekseer3DEffectManager.h"
 #include "../../../Effect/Flash.h"
 #include "../../../Effect/ScreenShaker.h"
-#include "../../../Util/InputState.h"
+#include "../../../Input/InputManager.h"
 #include "../../../MyDebug/DebugText.h"
-#include "../../../Score/Score.h"
+#include "../../../Score/ScoreManager.h"
 #include "../../../ModelHandleManager.h"
 #include "../../../Sound/SoundManager.h"
 #include <random>
@@ -411,7 +411,7 @@ void BossMatrix::UpdateDie()
 		if (m_dieEffectHandle == -1)
 		{
 			// スコアの加算
-			Score::GetInstance().AddScore(ScoreType::BOSS);
+			Score::Manager::GetInstance()->AddScore(Score::Type::BOSS);
 
 			// エフェクトの再生
 			Effect::Effekseer3DManager::GetInstance()->PlayEffect(

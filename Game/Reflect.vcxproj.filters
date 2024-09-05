@@ -63,6 +63,9 @@
     <Filter Include="ソース ファイル\Sound">
       <UniqueIdentifier>{45885f5d-81e5-48b9-80c5-1e2177614bc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Input">
+      <UniqueIdentifier>{e3c0b35f-ca5d-458d-b0d2-3dfe3b9fafee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,9 +87,6 @@
       <Filter>ソース ファイル\Util</Filter>
     </ClCompile>
     <ClCompile Include="Util\Easing.cpp">
-      <Filter>ソース ファイル\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\InputState.cpp">
       <Filter>ソース ファイル\Util</Filter>
     </ClCompile>
     <ClCompile Include="Scene\TitleScene.cpp">
@@ -248,7 +248,7 @@
     <ClCompile Include="Game\Laser\CubeLaser.cpp">
       <Filter>ソース ファイル\Game\Laser</Filter>
     </ClCompile>
-    <ClCompile Include="Score\Score.cpp">
+    <ClCompile Include="Score\ScoreManager.cpp">
       <Filter>ソース ファイル\Score</Filter>
     </ClCompile>
     <ClCompile Include="Score\ScoreRanking.cpp">
@@ -287,6 +287,9 @@
     <ClCompile Include="Sound\SoundManager.cpp">
       <Filter>ソース ファイル\Sound</Filter>
     </ClCompile>
+    <ClCompile Include="Input\InputManager.cpp">
+      <Filter>ソース ファイル\Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -305,9 +308,6 @@
       <Filter>ソース ファイル\Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Easing.h">
-      <Filter>ソース ファイル\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\InputState.h">
       <Filter>ソース ファイル\Util</Filter>
     </ClInclude>
     <ClInclude Include="Util\Range.h">
@@ -403,9 +403,6 @@
     <ClInclude Include="UI\ImageUI.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="UI\StatusBack.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
@@ -475,7 +472,7 @@
     <ClInclude Include="Game\Laser\CubeLaser.h">
       <Filter>ソース ファイル\Game\Laser</Filter>
     </ClInclude>
-    <ClInclude Include="Score\Score.h">
+    <ClInclude Include="Score\ScoreManager.h">
       <Filter>ソース ファイル\Score</Filter>
     </ClInclude>
     <ClInclude Include="Score\ScoreRanking.h">
@@ -525,6 +522,12 @@
     </ClInclude>
     <ClInclude Include="Sound\SoundManager.h">
       <Filter>ソース ファイル\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputManager.h">
+      <Filter>ソース ファイル\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\StateMachine.h">
+      <Filter>ソース ファイル\Util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

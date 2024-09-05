@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Shield.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Util/FileUtil.h"
 #include "../Util/Range.h"
 #include "../Application.h"
@@ -222,10 +222,10 @@ void Player::UpdatePlay(const float cameraHorizon)
 	const auto& effectManager = Effect::Effekseer3DManager::GetInstance();
 
 	// 左スティックの入力情報の取得
-	int up = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::UP);
-	int down = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::DOWN);
-	int left = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::LEFT);
-	int right = InputState::IsPadStick(PadLR::LEFT, PadStickInputType::RIGHT);
+	int up = Input::Manager::IsPadStick(Input::PadLR::LEFT, Input::PadStickInputType::UP);
+	int down = Input::Manager::IsPadStick(Input::PadLR::LEFT, Input::PadStickInputType::DOWN);
+	int left = Input::Manager::IsPadStick(Input::PadLR::LEFT, Input::PadStickInputType::LEFT);
+	int right = Input::Manager::IsPadStick(Input::PadLR::LEFT, Input::PadStickInputType::RIGHT);
 
 	// カメラの回転に合わせて移動ベクトルを作成
 	Math::Vector3 moveUp    = Math::Vector3::Transform(player_vec_up, Math::Matrix::GetRotationY(cameraHorizon));

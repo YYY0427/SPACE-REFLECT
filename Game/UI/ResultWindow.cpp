@@ -1,9 +1,9 @@
 #include "ResultWindow.h"
 #include "../Application.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Util/Easing.h"
 #include "../String/MessageManager.h"
-#include "../Score/Score.h"
+#include "../Score/ScoreManager.h"
 #include "../Sound/SoundManager.h"
 #include <DxLib.h>
 
@@ -111,7 +111,7 @@ void ResultWindow::Update()
 	}
 
 	// 決定ボタンが押されたらシーン遷移
-	if (InputState::IsTriggered(InputType::DECISION))
+	if (Input::Manager::IsTriggered(Input::Type::DECISION))
 	{
 		m_isEnd = true;
 	}
@@ -137,8 +137,8 @@ void ResultWindow::Draw()
 	if (m_isTitleEnd)
 	{
 		// フォントの取得
-		auto data = String::MessageManager::GetInstance()->GetMessageData("ResultScore");
-		int score = Score::GetInstance().GetTotalScore();
+		auto& data = String::MessageManager::GetInstance()->GetMessageData("ResultScore");
+		int score = Score::Manager::GetInstance()->GetTotalScore();
 		std::string str = std::to_string(score);
 		while (str.size() < 4)
 		{

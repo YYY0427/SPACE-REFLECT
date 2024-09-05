@@ -6,7 +6,7 @@
 #include <map>
 #include "../../Math/Vector3.h"
 #include "../Laser/LaserManager.h"
-#include "../../StateMachine.h"
+#include "../../Util/StateMachine.h"
 #include "../../Effect/ScreenShaker.h"
 
 // プロトタイプ宣言
@@ -34,7 +34,7 @@ enum class BossEnemyType
 // 敵の行動のデータ
 struct EnemyActionData
 {
-	Math::Vector3 goalPos;		// 目的地
+	Math::Vector3 goalPos;	// 目的地
 	int idleFrame;			// 目的地に到達してから次の目的地に向かうまでの待機フレーム
 	bool isLaser;			// 目的地に到達したらレーザーを撃つか
 	LaserType laserType;	// レーザーを撃つ場合、どのレーザーを撃つか

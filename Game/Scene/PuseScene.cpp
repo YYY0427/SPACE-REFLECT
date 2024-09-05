@@ -4,7 +4,7 @@
 #include "StageSelectScene.h"
 #include "TitleScene.h"
 #include "ConfirmScene.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Sound/SoundManager.h"
 #include "../MyDebug/DebugText.h"
 #include "../Application.h"
@@ -81,12 +81,12 @@ void PuseScene::Update()
 
 	// 選択肢を回す処理
 	int itemTotalValue = static_cast<int>(State::NUM);
-	if (InputState::IsTriggered(InputType::UP))
+	if (Input::Manager::IsTriggered(Input::Type::UP))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
 		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
-	else if (InputState::IsTriggered(InputType::DOWN))
+	else if (Input::Manager::IsTriggered(Input::Type::DOWN))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
 		Sound::Manager::GetInstance()->PlaySE("Select");
@@ -96,7 +96,7 @@ void PuseScene::Update()
 	m_itemColorTable[m_currentSelectItem] = choose_color;
 
 	// 決定
-	if (InputState::IsTriggered(InputType::DECISION))
+	if (Input::Manager::IsTriggered(Input::Type::DECISION))
 	{
 		// 選択されている項目がどれか
 		switch (static_cast<State>(m_currentSelectItem))
@@ -124,8 +124,8 @@ void PuseScene::Update()
 	}
 
 	// ポーズ解除
-	if (InputState::IsTriggered(InputType::PAUSE) ||
-		InputState::IsTriggered(InputType::BACK))
+	if (Input::Manager::IsTriggered(Input::Type::PAUSE) ||
+		Input::Manager::IsTriggered(Input::Type::BACK))
 	{
 		m_manager.PopScene();
 		return;

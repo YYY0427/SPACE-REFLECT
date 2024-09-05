@@ -1,7 +1,7 @@
 #include "SaveData.h"
 #include "Sound/SoundManager.h"
 #include "Util/Range.h"
-#include "Util/InputState.h"
+#include "Input/InputManager.h"
 #include <string>
 #include <cassert>
 #include <fstream>
@@ -107,11 +107,11 @@ void SaveData::InitData()
 // コンフィグの値の設定
 template<class T> void SaveData::SetConfigValue(T& configValue, int splitNum)
 {
-	if (InputState::IsTriggered(InputType::RIGHT))
+	if (Input::Manager::IsTriggered(Input::Type::RIGHT))
 	{
 		configValue++;
 	}
-	if (InputState::IsTriggered(InputType::LEFT))
+	if (Input::Manager::IsTriggered(Input::Type::LEFT))
 	{
 		configValue--;
 	}
@@ -130,8 +130,8 @@ void SaveData::SetMasterVolume(const int configNum)
 {
 	SetConfigValue(m_saveData.masterVolume, configNum);
 
-	if (InputState::IsTriggered(InputType::RIGHT) ||
-		InputState::IsTriggered(InputType::LEFT))
+	if (Input::Manager::IsTriggered(Input::Type::RIGHT) ||
+		Input::Manager::IsTriggered(Input::Type::LEFT))
 	{
 		Sound::Manager::GetInstance()->SetVolume("bgmTest", 255);
 	}
@@ -150,8 +150,8 @@ void SaveData::SetSeVolume(const int configNum)
 {
 	SetConfigValue(m_saveData.seVolume, configNum);
 
-	if (InputState::IsTriggered(InputType::RIGHT) ||
-		InputState::IsTriggered(InputType::LEFT))
+	if (Input::Manager::IsTriggered(Input::Type::RIGHT) ||
+		Input::Manager::IsTriggered(Input::Type::LEFT))
 	{
 		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
@@ -198,8 +198,8 @@ const SaveData::Data& SaveData::GetSaveData() const
 // コンフィグのスイッチの設定
 void SaveData::SetConfigSwitch(bool& config)
 {
-	if (InputState::IsTriggered(InputType::RIGHT) ||
-		InputState::IsTriggered(InputType::LEFT))
+	if (Input::Manager::IsTriggered(Input::Type::RIGHT) ||
+		Input::Manager::IsTriggered(Input::Type::LEFT))
 	{
 		if (config)
 		{

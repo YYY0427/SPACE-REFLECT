@@ -2,12 +2,12 @@
 #include "SceneManager.h"
 #include "StageSelectScene.h"
 #include "../Util/DrawFunctions.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../SaveData.h"
 #include "../String/MessageManager.h"
 #include "../Application.h"
 #include "../Transitor/FadeTransitor.h"
-#include "../StateMachine.h"
+#include "../Util/StateMachine.h"
 #include "../Sound/SoundManager.h"
 #include "DxLib.h"
 #include <cassert>
@@ -117,12 +117,12 @@ void OptionScene::Update()
 
 	// 選択肢を回す処理
 	int itemTotalValue = static_cast<int>(OptionItem::NUM);
-	if (InputState::IsTriggered(InputType::UP))
+	if (Input::Manager::IsTriggered(Input::Type::UP))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
 		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
-	else if (InputState::IsTriggered(InputType::DOWN))
+	else if (Input::Manager::IsTriggered(Input::Type::DOWN))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
 		Sound::Manager::GetInstance()->PlaySE("Select");
@@ -166,7 +166,7 @@ void OptionScene::Update()
 void OptionScene::UpdateStageSelect()
 {
 	// 特定のボタンが押されたとき
-	if (InputState::IsTriggered(InputType::LEFT_SHOULDER))
+	if (Input::Manager::IsTriggered(Input::Type::LEFT_SHOULDER))
 	{
 		// 終了
 		Sound::Manager::GetInstance()->PlaySE("Select");
@@ -179,7 +179,7 @@ void OptionScene::UpdateStageSelect()
 void OptionScene::UpdatePause()
 {
 	// 戻るボタンが押されたとき
-	if (InputState::IsTriggered(InputType::BACK) || InputState::IsTriggered(InputType::PAUSE))
+	if (Input::Manager::IsTriggered(Input::Type::BACK) || Input::Manager::IsTriggered(Input::Type::PAUSE))
 	{
 		// 終了
 		m_manager.PopScene();

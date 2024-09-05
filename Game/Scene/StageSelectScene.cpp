@@ -8,7 +8,7 @@
 #include "../Transitor/Fade.h"
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Util/Easing.h"
 #include "../Util/DrawFunctions.h"
 #include "../Game/Camera.h"
@@ -138,12 +138,12 @@ void StageSelectScene::Init()
 	m_cameraGoalPos = m_stageData[static_cast<Stage>(m_currentSelectItem)].cameraPos;
 
 	// スコアランキングの初期化
-	if (ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId).empty())
+	if (Score::Ranking::GetInstance()->GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId).empty())
 	{
-		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
+		Score::Ranking::GetInstance()->CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 	}
 	// アルファ値の初期化
-	for (int i = 0; i < ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId).size(); i++)
+	for (int i = 0; i < Score::Ranking::GetInstance()->GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId).size(); i++)
 	{
 		m_rankingAlpha.push_back(0);
 	}
@@ -215,12 +215,12 @@ void StageSelectScene::UpdateSelectStage()
 	{
 		// 選択肢を回す処理
 		int sceneItemTotalValue = static_cast<int>(Stage::NUM);
-		if (InputState::IsTriggered(InputType::RIGHT))
+		if (Input::Manager::IsTriggered(Input::Type::RIGHT))
 		{
 			m_currentSelectItem = ((m_currentSelectItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
 			SelectStageProcess();
 		}
-		else if (InputState::IsTriggered(InputType::LEFT))
+		else if (Input::Manager::IsTriggered(Input::Type::LEFT))
 		{
 			m_currentSelectItem = (m_currentSelectItem + 1) % sceneItemTotalValue;
 			SelectStageProcess();
@@ -262,7 +262,7 @@ void StageSelectScene::UpdateSelectStage()
 	}
 
 	// オプション画面に遷移
-	if (InputState::IsTriggered(InputType::RIGHT_SHOULDER))
+	if (Input::Manager::IsTriggered(Input::Type::RIGHT_SHOULDER))
 	{
 		// SEの再生
 		Sound::Manager::GetInstance()->PlaySE("Select");
@@ -273,7 +273,7 @@ void StageSelectScene::UpdateSelectStage()
 	}
 
 	// 決定ボタンが押されたらスタート演出に遷移
-	if (InputState::IsTriggered(InputType::DECISION))
+	if (Input::Manager::IsTriggered(Input::Type::DECISION))
 	{
 		// ステートマシンの設定
 		m_stateMachine.SetState(State::START_ANIMATION);
@@ -288,7 +288,7 @@ void StageSelectScene::UpdateSelectStage()
 	}
 
 	// キャンセルボタンが押されたら
-	if (InputState::IsTriggered(InputType::BACK))
+	if (Input::Manager::IsTriggered(Input::Type::BACK))
 	{
 		// フェードアウトの演出の開始
 		m_pFade->StartFadeOut(255, 10);
@@ -523,12 +523,12 @@ void StageSelectScene::Draw()
 void StageSelectScene::DrawScoreRanking()
 {
 	// スコアランキングの取得
-	m_scoreRanking = ScoreRanking::GetInstance().GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
+	m_scoreRanking = Score::Ranking::GetInstance()->GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 
 	// スコアランキングが空だったら新規作成
 	if (m_scoreRanking.empty())
 	{
-		ScoreRanking::GetInstance().CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
+		Score::Ranking::GetInstance()->CreateNewScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);
 	}
 
 	// メッセージマネージャの取得

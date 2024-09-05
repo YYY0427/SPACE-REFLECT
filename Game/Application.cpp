@@ -9,9 +9,10 @@
 #include "Sound/SoundManager.h"
 #include "String/MessageManager.h"
 #include "String/Font.h"
-#include "Util/InputState.h"
+#include "Input/InputManager.h"
 #include "MyDebug/DebugText.h"
 #include "Score/ScoreRanking.h"
+#include "Score/ScoreManager.h"
 #include <string>
 #include <memory>
 
@@ -97,7 +98,7 @@ bool Application::Init()
 	String::Font::Load();
 
 	// スコアランキングのロード
-	ScoreRanking::GetInstance().LoadScore();
+	Score::Ranking::GetInstance()->LoadScore();
 
 	// メッセージをロード
 	String::MessageManager::GetInstance()->LoadMessageFileData();
@@ -127,7 +128,7 @@ bool Application::Init()
 	SetUseBackCulling(TRUE);
 
 	// 入力タイプの初期化
-	InputState::Init();
+	Input::Manager::Init();
 
 	// デバッグテキストの初期化
 	Debug::Text::Init();
@@ -164,7 +165,7 @@ void Application::Run()
 		Debug::Text::ClearLog();
 
 		// 入力の更新
-		InputState::Update();
+		Input::Manager::Update();
 
 		// シーンの更新
 		sceneManager.Update();
@@ -212,7 +213,9 @@ void Application::End()
 	String::Font::End();
 
 	// スコアランキングのセーブ
-	ScoreRanking::GetInstance().SaveScore();
+	Score::Ranking::GetInstance()->SaveScore();
+	Score::Ranking::GetInstance()->DeleteInstance();
+	Score::Manager::GetInstance()->DeleteInstance();
 
 	// MessageManagerの終了処理
 	String::MessageManager::GetInstance()->End();

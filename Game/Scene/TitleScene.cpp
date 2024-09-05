@@ -5,7 +5,7 @@
 #include "../Game/Camera.h"
 #include "../Game/SkyDome.h"
 #include "../Transitor/Fade.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Application.h"
 #include "../String/MessageManager.h"
 #include "../Sound/SoundManager.h"
@@ -83,7 +83,7 @@ void TitleScene::End()
 void TitleScene::Update()
 {
 	// どこかのボタンが押されたら次のシーンに遷移
-	if (InputState::IsTriggered(InputType::ANY_BUTTON))
+	if (Input::Manager::IsTriggered(Input::Type::ANY_BUTTON))
 	{
 		// フェードアウトの演出の開始
 		m_pFade->StartFadeOut(255);

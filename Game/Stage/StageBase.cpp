@@ -14,7 +14,7 @@
 #include "../Game/Enemy/EnemyBase.h"
 #include "../Effect/ScreenShaker.h"
 #include "../UI/DamageFlash.h"
-#include "../Score/Score.h"
+#include "../Score/ScoreManager.h"
 #include "../Score/ScoreRanking.h"
 #include "../UI/ResultWindow.h"
 #include "../Sound/SoundManager.h"
@@ -41,7 +41,7 @@ StageBase::StageBase(SceneManager& manager) :
 	SetLightDifColorHandle(m_directionalLightHandle, GetColorF(0.5f, 0.5f, 0.5f, 0.0f));
 
 	// スコアの初期化
-	Score::GetInstance().Reset();
+	Score::Manager::GetInstance()->Reset();
 }
 
 // デストラクタ
@@ -81,7 +81,7 @@ void StageBase::UpdateResult(const std::string& stageName)
 	if (m_pResultWindow->IsEnd() && !m_pFade->IsFadingOut())
 	{
 		// スコアをランキングに追加
-		ScoreRanking::GetInstance().AddScore(stageName, "NO NAME", Score::GetInstance().GetTotalScore());
+		Score::Ranking::GetInstance()->AddScore(stageName, "NO NAME", Score::Manager::GetInstance()->GetTotalScore());
 
 		// フェードアウト開始
 		m_pFade->StartFadeOut(255);

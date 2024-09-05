@@ -5,7 +5,7 @@
 #include "../UI/Gauge.h"
 #include "../UI/UIManager.h"
 #include "../UI/ImageUI.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Util/Range.h"
 #include "../Util/Timer.h"
 #include "../Math/MathUtil.h"
@@ -125,17 +125,17 @@ void Shield::Update()
 	const Range<int> enerugyGageRange(0, max_energy_gage);
 
 	// 入力されているか
-	if (InputState::IsPressed(InputType::SHIELD))
+	if (Input::Manager::IsPressed(Input::Type::SHIELD))
 	{
 		// 入力されている
 		m_isInput = true;
 	}
 
 	// 右スティックの入力情報の取得
-	int up = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::UP);
-	int down = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::DOWN);
-	int right = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::RIGHT);
-	int left = InputState::IsPadStick(PadLR::RIGHT, PadStickInputType::LEFT);
+	int up = Input::Manager::IsPadStick(Input::PadLR::RIGHT, Input::PadStickInputType::UP);
+	int down = Input::Manager::IsPadStick(Input::PadLR::RIGHT, Input::PadStickInputType::DOWN);
+	int right = Input::Manager::IsPadStick(Input::PadLR::RIGHT, Input::PadStickInputType::RIGHT);
+	int left = Input::Manager::IsPadStick(Input::PadLR::RIGHT, Input::PadStickInputType::LEFT);
 
 	// シールドの位置の計算
 	Math::Vector3 tempVec = { (right + -left) * 10.0f, (up + -down) * 10.0f, player_distance };

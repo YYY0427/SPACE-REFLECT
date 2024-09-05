@@ -167,7 +167,7 @@
     <ClCompile Include="Game\Laser\NormalLaser.cpp" />
     <ClCompile Include="Game\Laser\ReflectLaser.cpp" />
     <ClCompile Include="MyDebug\DebugText.cpp" />
-    <ClCompile Include="Score\Score.cpp" />
+    <ClCompile Include="Score\ScoreManager.cpp" />
     <ClCompile Include="Score\ScoreRanking.cpp" />
     <ClCompile Include="String\StringUtil.cpp" />
     <ClCompile Include="UI\StringUI.cpp" />
@@ -200,7 +200,7 @@
     <ClCompile Include="UI\Gauge.cpp" />
     <ClCompile Include="UI\UIBase.cpp" />
     <ClCompile Include="UI\UIManager.cpp" />
-    <ClCompile Include="Util\InputState.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="SaveData.cpp" />
@@ -246,7 +246,7 @@
     <ClInclude Include="Game\Laser\LaserManager.h" />
     <ClInclude Include="Game\Laser\NormalLaser.h" />
     <ClInclude Include="Game\Laser\ReflectLaser.h" />
-    <ClInclude Include="Score\Score.h" />
+    <ClInclude Include="Score\ScoreManager.h" />
     <ClInclude Include="Score\ScoreRanking.h" />
     <ClInclude Include="String\StringUtil.h" />
     <ClInclude Include="UI\StringUI.h" />
@@ -260,7 +260,7 @@
     <ClInclude Include="Game\Meteor.h" />
     <ClInclude Include="Game\MeteorManager.h" />
     <ClInclude Include="Stage\StageBase.h" />
-    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="Util\StateMachine.h" />
     <ClInclude Include="Stage\Tutorial.h" />
     <ClInclude Include="UI\StatusBack.h" />
     <ClInclude Include="UI\ImageUI.h" />
@@ -280,7 +280,7 @@
     <ClInclude Include="UI\Gauge.h" />
     <ClInclude Include="UI\UIBase.h" />
     <ClInclude Include="UI\UIManager.h" />
-    <ClInclude Include="Util\InputState.h" />
+    <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="Scene\DebugScene.h" />

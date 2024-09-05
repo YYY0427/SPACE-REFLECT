@@ -3,7 +3,7 @@
 #include "StageSelectScene.h"
 #include "TitleScene.h"
 #include "../Sound/SoundManager.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Application.h"
 #include "../MyDebug/DebugText.h"
 #include "../String/MessageManager.h"
@@ -63,12 +63,12 @@ void ConfirmScene::Update()
 
 	// ‘I‘ğˆ‚ğ‰ñ‚·ˆ—
 	int itemTotalValue = static_cast<int>(ConfirmScene::State::NUM);
-	if (InputState::IsTriggered(InputType::LEFT))
+	if (Input::Manager::IsTriggered(Input::Type::LEFT))
 	{
 		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
 		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
-	else if (InputState::IsTriggered(InputType::RIGHT))
+	else if (Input::Manager::IsTriggered(Input::Type::RIGHT))
 	{
 		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
 		Sound::Manager::GetInstance()->PlaySE("Select");
@@ -78,7 +78,7 @@ void ConfirmScene::Update()
 	m_itemColorTable[m_currentSelectItem] = choose_color;
 
 	// Œˆ’è
-	if (InputState::IsTriggered(InputType::DECISION))
+	if (Input::Manager::IsTriggered(Input::Type::DECISION))
 	{
 		// ‚Ç‚±‚ÌƒV[ƒ“‚É–ß‚é‚©
 		switch (static_cast<ConfirmScene::State>(m_currentSelectItem))
@@ -103,7 +103,7 @@ void ConfirmScene::Update()
 	}
 
 	// –ß‚é
-	if (InputState::IsTriggered(InputType::BACK))
+	if (Input::Manager::IsTriggered(Input::Type::BACK))
 	{
 		m_manager.PopScene();
 		return;

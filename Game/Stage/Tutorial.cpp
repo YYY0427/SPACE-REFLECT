@@ -18,11 +18,11 @@
 #include "../Game/Enemy/EnemyManager.h"
 #include "../Game/Enemy/EnemyBase.h"
 #include "../Score/ScoreRanking.h"
-#include "../Score/Score.h"
+#include "../Score/ScoreManager.h"
 #include "../String/MessageManager.h"
 #include "../MyDebug/DebugText.h"
 #include "../UI/TutorialUI.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Transitor/Fade.h"
 #include "../Sound/SoundManager.h"
 #include <DxLib.h>
@@ -436,7 +436,7 @@ void Tutorial::Draw()
 	Effect::Effekseer3DManager::GetInstance()->Draw();	// エフェクト
 	UIManager::GetInstance().Draw();				// UI
 	m_pTutorialUI->Draw();							// チュートリアルUI
-	Score::GetInstance().DrawScore();				// スコア
+	Score::Manager::GetInstance()->DrawScore();				// スコア
 
 	// リザルト画面が開始されていたら
 	if (m_stateMachine.GetCurrentState() == State::RESULT)

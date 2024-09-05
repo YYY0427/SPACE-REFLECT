@@ -4,7 +4,7 @@
 #include "../Math/Vector3.h"
 #include "../Math/Vector2.h"
 #include "../Game/Planet.h"
-#include "../StateMachine.h"
+#include "../Util/StateMachine.h"
 #include <memory>
 #include <vector>
 #include <map>
@@ -140,7 +140,7 @@ private:
 	std::map<Stage, StageData> m_stageData;
 
 	// スコアランキング
-	std::vector<ScoreSaveData> m_scoreRanking;
+	std::vector<Score::ScoreSaveData> m_scoreRanking;
 
 	// カメラ
 	Math::Vector3 m_cameraStartPos;		// カメラの初期位置

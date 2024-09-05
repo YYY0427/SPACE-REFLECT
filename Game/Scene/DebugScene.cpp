@@ -4,7 +4,7 @@
 #include "OptionScene.h"
 #include "StageSelectScene.h"
 #include "SceneManager.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Application.h"
 #include "DxLib.h"
 
@@ -45,17 +45,17 @@ void DebugScene::Update()
 {
 	// 選択肢を回す処理
 	int sceneItemTotalValue = static_cast<int>(SceneItem::NUM);
-	if (InputState::IsTriggered(InputType::UP))
+	if (Input::Manager::IsTriggered(Input::Type::UP))
 	{
 		m_currentSelectSceneItem = ((m_currentSelectSceneItem - 1) + sceneItemTotalValue) % sceneItemTotalValue;
 	}
-	else if (InputState::IsTriggered(InputType::DOWN))
+	else if (Input::Manager::IsTriggered(Input::Type::DOWN))
 	{
 		m_currentSelectSceneItem = (m_currentSelectSceneItem + 1) % sceneItemTotalValue;
 	}
 
 	// 決定ボタンが押されたらシーン遷移
-	if (InputState::IsTriggered(InputType::DECISION))
+	if (Input::Manager::IsTriggered(Input::Type::DECISION))
 	{
 		switch(static_cast<SceneItem>(m_currentSelectSceneItem))
 		{

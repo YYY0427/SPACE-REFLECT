@@ -1,7 +1,7 @@
 #include "EnemyBase.h"
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Model.h"
-#include "../../Score/Score.h"
+#include "../../Score/ScoreManager.h"
 #include "../../Sound/SoundManager.h"
 
 namespace
@@ -44,7 +44,7 @@ void EnemyBase::OnDamage(const int damage, const Math::Vector3& pos)
 	if (m_hp <= 0)
 	{
 		// ƒXƒRƒA‚Ì‰ÁŽZ
-		Score::GetInstance().AddScore(ScoreType::ENEMY);
+		Score::Manager::GetInstance()->AddScore(Score::Type::ENEMY);
 
 		// Ž€–S‰¹‚ÌÄ¶
 		Sound::Manager::GetInstance()->PlaySE("NormalEnemyDie");

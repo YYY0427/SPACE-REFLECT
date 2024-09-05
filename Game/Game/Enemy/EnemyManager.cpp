@@ -8,7 +8,7 @@
 #include "../../UI/Warning.h"
 #include "../../UI/UIManager.h"
 #include "../../MyDebug/DebugText.h"
-#include "../../Util/InputState.h"
+#include "../../Input/InputManager.h"
 #include "../../Util/FileUtil.h"
 #include "../Player.h"
 #include "../../Sound/SoundManager.h"
@@ -76,7 +76,7 @@ void EnemyManager::Update()
 	// デバッグ用
 #ifdef _DEBUG
 	// 敵の全滅デバッグ
-	if (InputState::IsTriggered(InputType::ENEMY_DETH_DEBUG))
+	if (Input::Manager::IsTriggered(Input::Type::ENEMY_DETH_DEBUG))
 	{
 		for (auto& enemy : m_pEnemyList)
 		{

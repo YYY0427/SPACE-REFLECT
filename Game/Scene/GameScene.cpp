@@ -3,7 +3,7 @@
 #include "../Application.h"
 #include "../Stage/Tutorial.h"
 #include "../Stage/Stage1.h"
-#include "../Util/InputState.h"
+#include "../Input/InputManager.h"
 #include "../Transitor/FadeTransitor.h"
 #include "../Transitor/TileTransitor.h"
 #include "../Scene/SceneManager.h"
@@ -48,7 +48,7 @@ void GameScene::Update()
 	m_pStage->Update();
 
 	// É|Å[ÉY
-	if (InputState::IsTriggered(InputType::PAUSE))
+	if (Input::Manager::IsTriggered(Input::Type::PAUSE))
 	{
 		m_manager.PushScene(std::make_shared<PuseScene>(m_manager, m_stage));
 		return;

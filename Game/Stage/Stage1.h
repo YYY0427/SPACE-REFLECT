@@ -1,6 +1,6 @@
 #pragma once
 #include "StageBase.h"
-#include "../StateMachine.h"
+#include "../Util/StateMachine.h"
 #include <memory>
 
 /// <summary>
