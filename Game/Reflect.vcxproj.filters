@@ -83,7 +83,7 @@
     <ClCompile Include="SaveData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\DebugScene.cpp">
+    <ClCompile Include="Scene\TransporterScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Util\DrawFunctions.cpp">
@@ -99,9 +99,6 @@
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\SceneManager.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneBase.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Math\Vector2.cpp">
@@ -296,6 +293,9 @@
     <ClCompile Include="Game\Image3D.cpp">
       <Filter>ソース ファイル\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\LoadScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -304,7 +304,7 @@
     <ClInclude Include="SaveData.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\DebugScene.h">
+    <ClInclude Include="Scene\TransporterScene.h">
       <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Util\DrawFunctions.h">
@@ -534,6 +534,9 @@
     </ClInclude>
     <ClInclude Include="Game\Image3D.h">
       <Filter>ソース ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\LoadScene.h">
+      <Filter>ソース ファイル\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,30 +1,25 @@
 #pragma once
-#include "StageSelectScene.h"
 #include "SceneBase.h"
-#include <memory>
-
-// プロトタイプ宣言
-class StageBase;
 
 namespace Scene
 {
 	/// <summary>
-	/// ゲームシーン
+	/// ロードシーン
 	/// </summary>
-	class GameScene final : public Scene::Base
+	class Load final : public Scene::Base
 	{
 	public:
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
-		/// <param name="manager">シーンマネージャーの参照</param>
-		/// <param name="fileName">どのステージか</param>
-		GameScene(const std::shared_ptr<Scene::Manager>& pSceneManager, const Stage stage);
+		/// <param name="manager">シーンマネージャのインスタンス</param>
+		/// <param name="isEternal">永続表示か(デバッグ用)</param>
+		Load(const std::shared_ptr<Scene::Manager>& pSceneManager, const bool isDrawEternal = false);
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~GameScene();
+		~Load();
 
 		/// <summary>
 		/// 初期化
@@ -47,10 +42,10 @@ namespace Scene
 		void Draw() override final;
 
 	private:
-		// ステージ
-		std::unique_ptr<StageBase> m_pStage;
+		// ロード画面が表示されている時間
+		int m_time;
 
-		// いまのステージ
-		Stage m_stage;
+		// ロード画面が永続表示か
+		bool m_isDrawEternal;
 	};
 }

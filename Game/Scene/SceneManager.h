@@ -2,90 +2,111 @@
 #include <memory>
 #include <list>
 #include <DxLib.h>
+#include "SceneBase.h"
 
-// プロトタイプ宣言
-class SceneBase;
-
-/// <summary>
-/// 各シーンを管理するクラス
-/// </summary>
-class SceneManager
+namespace Scene
 {
-public:
-	/// <summary>
-	/// コンストラクタ
-	/// </summary>
-	SceneManager();
+	// プロトタイプ宣言
+	class Base;
 
 	/// <summary>
-	/// デストラクタ
+	/// シーンを管理するクラス
+	/// シーンの切り替えやシーンの追加など
 	/// </summary>
-	~SceneManager();
+	class Manager : public std::enable_shared_from_this<Manager>
+	{
+	public:
+		/// <summary>
+		/// コンストラクタ
+		/// </summary>
+		Manager();
 
-	/// <summary>
-	/// 更新
-	/// </summary>
-	void Update();
+		/// <summary>
+		/// デストラクタ
+		/// </summary>
+		~Manager() {}
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	void Draw();
+		/// <summary>
+		/// シーンの更新
+		/// </summary>
+		void Update();
 
-	/// <summary>
-	/// シーンの切り替え
-	/// </summary>
-	/// <param name="scene">切り替えたいシーンのアドレス</param>
-	void ChangeScene(const std::shared_ptr<SceneBase>& nextScene);
+		/// <summary>
+		/// シーンの描画
+		/// </summary>
+		void Draw();
 
-	/// <summary>
-	/// シーンを全て削除してから新しいシーンを追加
-	/// </summary>
-	/// <param name="nextScene"></param>
-	void ChangeAndClearScene(const std::shared_ptr<SceneBase>& nextScene);
+		/// <summary>
+		/// シーンの切り替え
+		/// 現在のシーンを削除し、引数で渡されたシーンに切り替える
+		/// </summary>
+		/// <param name="nextScene">切り替えたいシーンのインスタンス</param>
+		void ChangeScene(const std::shared_ptr<Scene::Base>& pScene);
 
-	/// <summary>
-	/// 現在のシーンの上にシーンを積む(ポーズ)
-	/// Updateで実行されるのは上につまれたシーン
-	/// </summary>
-	/// <param name="scene">上に積みたいシーンのアドレス</param>
-	void PushScene(const std::shared_ptr<SceneBase>& scene);
+		/// <summary>
+		/// 現在のシーンを削除せずに、引数で渡されたシーンを上に積む
+		/// Updateは、一番上に積まれたシーンのみが呼ばれる
+		/// </summary>
+		/// <param name="scene">追加したいシーンのインスタンス</param>
+		void PushScene(const std::shared_ptr<Scene::Base>& pScene);
 
-	/// <summary>
-	/// 一番上のシーンを削除 
-	/// </summary>
-	void PopScene();
+		/// <summary>
+		/// 一番上に積まれたシーンを削除する
+		/// </summary>
+		void PopScene();
 
-	/// <summary>
-	/// シーンを全て削除
-	/// </summary>
-	void ClearScene();
+		/// <summary>
+		/// シーンを全て削除する
+		/// </summary>
+		void ClearScene();
 
-	/// <summary>
-	/// FPSを描画
-	/// </summary>
-	void DrawFps();
+		/// <summary>
+		/// シーンを全て削除してから新しいシーンを追加
+		/// </summary>
+		/// <param name="nextScene"></param>
+		void ChangeAndClearScene(const std::shared_ptr<Scene::Base>& nextScene);
 
-	/// <summary>
-	/// 更新時間を描画
-	/// </summary>
-	void DrawUpdateTime();
+		/// <summary>
+		/// 非同期読み込みのチェック
+		/// 読み込み中の場合、ロード画面を上に積む
+		/// </summary>
+		void CheckAsyncLoad();
 
-	/// <summary>
-	/// 描画時間を描画
-	/// </summary>
-	void DrwaDrawTime();
+		/// <summary>
+		/// ロード画面の存在フラグの設定 
+		/// </summary>
+		/// <param name="flag">ロード画面の存在フラグ</param>
+		void SetLoadSceneFlag(const bool flag) { m_isLoadScene = flag; }
 
-private:
-	// シーン
-	std::list<std::shared_ptr<SceneBase>> m_scenes;
+		/// <summary>
+		/// 更新時間を描画
+		/// </summary>
+		void DrawUpdateTime();
 
-	// シーンの更新時間
-	LONGLONG m_updateTime;
+		/// <summary>
+		/// 描画時間を描画
+		/// </summary>
+		void DrwaDrawTime();
 
-	// シーンの描画時間
-	LONGLONG m_drawTime;
+		/// <summary>
+		/// FPSを描画
+		/// </summary>
+		void DrawFps();
 
-	// fps
-	float m_prevFps;
-};
+	private:
+		// シーンのリスト
+		std::list<std::shared_ptr<Scene::Base>> m_pSceneTable;
+
+		// ロード画面が存在するか
+		bool m_isLoadScene;
+
+		// fps
+		float m_prevFps;
+	
+		// シーンの更新時間
+		LONGLONG m_updateTime;
+
+		// シーンの描画時間
+		LONGLONG m_drawTime;
+	};
+}

@@ -35,151 +35,153 @@ namespace
 	const int draw_text_pos_y = Application::GetInstance()->GetWindowSize().height / 2 - 50;
 }
 
-// コンストラクタ	
-PuseScene::PuseScene(SceneManager& manager, const Stage stage) :
-	SceneBase(manager),
-	m_currentSelectItem(0),
-	m_stage(stage),
-	m_gaussScreen(-1)
+namespace Scene
 {
-}
-
-// デストラクタ
-PuseScene::~PuseScene()
-{
-}
-
-// 初期化
-void PuseScene::Init()
-{
-	// モザイク処理用のグラフィックの作成
-	auto& screenSize = Application::GetInstance()->GetWindowSize();
-	m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
-
-	// 項目の描画色を選択されていないときの色に初期化
-	for (int i = 0; i < static_cast<int>(State::NUM); i++)
+	// コンストラクタ	
+	Puse::Puse(const std::shared_ptr<Scene::Manager>& pSceneManager, const Stage stage) :
+		Base(pSceneManager),
+		m_currentSelectItem(0),
+		m_stage(stage),
+		m_gaussScreen(-1)
 	{
-		m_itemColorTable.push_back(normal_color);
-	}
-}
-
-// 終了処理
-void PuseScene::End()
-{
-	// モザイク処理用のグラフィックの削除
-	DeleteGraph(m_gaussScreen);
-}
-
-// 更新
-void PuseScene::Update()
-{
-	// カラーの初期化
-	for (auto& itemColor : m_itemColorTable)
-	{
-		itemColor = normal_color;
 	}
 
-	// 選択肢を回す処理
-	int itemTotalValue = static_cast<int>(State::NUM);
-	if (Input::Manager::IsTriggered(Input::Type::UP))
+	// デストラクタ
+	Puse::~Puse()
 	{
-		m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
-		Sound::Manager::GetInstance()->PlaySE("Select");
-	}
-	else if (Input::Manager::IsTriggered(Input::Type::DOWN))
-	{
-		m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
-		Sound::Manager::GetInstance()->PlaySE("Select");
 	}
 
-	// 選択されている項目の色を変える
-	m_itemColorTable[m_currentSelectItem] = choose_color;
-
-	// 決定
-	if (Input::Manager::IsTriggered(Input::Type::DECISION))
+	// 初期化
+	void Puse::Init()
 	{
-		// 選択されている項目がどれか
-		switch (static_cast<State>(m_currentSelectItem))
+		// モザイク処理用のグラフィックの作成
+		auto& screenSize = Application::GetInstance()->GetWindowSize();
+		m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
+
+		// 項目の描画色を選択されていないときの色に初期化
+		for (int i = 0; i < static_cast<int>(State::NUM); i++)
 		{
-			// 続ける
-		case State::CONTINUE:
-			m_manager.PopScene();
-			break;
-
-			// オプション
-		case State::OPTION:
-			m_manager.PushScene(std::make_shared<OptionScene>(m_manager, OptionScene::State::PAUSE));
-			break;
-
-			// ステージセレクトに戻る
-		case State::STAGE_SELECT:
-			m_manager.PushScene(std::make_shared<ConfirmScene>(m_manager, State::STAGE_SELECT));
-			break;
-
-			// タイトルに戻る
-		case State::TITLE:
-			m_manager.PushScene(std::make_shared<ConfirmScene>(m_manager, State::TITLE));
-			break;
+			m_itemColorTable.push_back(normal_color);
 		}
 	}
 
-	// ポーズ解除
-	if (Input::Manager::IsTriggered(Input::Type::PAUSE) ||
-		Input::Manager::IsTriggered(Input::Type::BACK))
+	// 終了処理
+	void Puse::End()
 	{
-		m_manager.PopScene();
-		return;
+		// モザイク処理用のグラフィックの削除
+		DeleteGraph(m_gaussScreen);
 	}
-}
 
-// 描画
-void PuseScene::Draw()
-{
-	// デバッグ用ログ
-	Debug::Text::AddLog("currentSelectState", { m_currentSelectItem });
+	// 更新
+	void Puse::Update()
+	{
+		// カラーの初期化
+		for (auto& itemColor : m_itemColorTable)
+		{
+			itemColor = normal_color;
+		}
 
-	// 画面サイズの取得
-	auto& screenSize = Application::GetInstance()->GetWindowSize();
+		// 選択肢を回す処理
+		int itemTotalValue = static_cast<int>(State::NUM);
+		if (Input::Manager::IsTriggered(Input::Type::UP))
+		{
+			m_currentSelectItem = ((m_currentSelectItem - 1) + itemTotalValue) % itemTotalValue;
+			Sound::Manager::GetInstance()->PlaySE("Select");
+		}
+		else if (Input::Manager::IsTriggered(Input::Type::DOWN))
+		{
+			m_currentSelectItem = (m_currentSelectItem + 1) % itemTotalValue;
+			Sound::Manager::GetInstance()->PlaySE("Select");
+		}
 
-	// モザイク処理
-	GetDrawScreenGraph(0, 0, screenSize.width, screenSize.height, m_gaussScreen);
-	GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, gauss_param_pixel, gauss_param_power);
-	DrawGraph(0, 0, m_gaussScreen, true);
+		// 選択されている項目の色を変える
+		m_itemColorTable[m_currentSelectItem] = choose_color;
 
-	// 画面を暗くする
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, dark_param_power);
-	DrawBox(0, 0, screenSize.width, screenSize.height, 0x000000, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		// 決定
+		if (Input::Manager::IsTriggered(Input::Type::DECISION))
+		{
+			// 選択されている項目がどれか
+			switch (static_cast<State>(m_currentSelectItem))
+			{
+				// 続ける
+			case State::CONTINUE:
+				m_pSceneManager->PopScene();
+				break;
 
-	// メッセージマネージャの取得
-	const auto& messageManager = String::MessageManager::GetInstance();
+				// オプション
+			case State::OPTION:
+				m_pSceneManager->PushScene(std::make_shared<Scene::Option>(m_pSceneManager, Scene::Option::State::PAUSE));
+				break;
 
-	// メニューの描画
-	messageManager->DrawStringCenter("PauseMenu", screenSize.width / 2.0f, 150, 0xffffff, 0xffffff);
+				// ステージセレクトに戻る
+			case State::STAGE_SELECT:
+				m_pSceneManager->PushScene(std::make_shared<Scene::Confirm>(m_pSceneManager, State::STAGE_SELECT));
+				break;
 
-	// 項目の描画
-	int continueItem = static_cast<int>(State::CONTINUE);
-	messageManager->DrawStringCenter("PauseContinue",
-													draw_text_pos_x,
-													draw_text_pos_y + text_space_y * continueItem,
-													m_itemColorTable[continueItem]);
+				// タイトルに戻る
+			case State::TITLE:
+				m_pSceneManager->PushScene(std::make_shared<Scene::Confirm>(m_pSceneManager, State::TITLE));
+				break;
+			}
+		}
 
-	int optionItem = static_cast<int>(State::OPTION);
-	messageManager->DrawStringCenter("PauseOption",
-													draw_text_pos_x,
-													draw_text_pos_y + text_space_y * optionItem,
-													m_itemColorTable[optionItem]);
+		// ポーズ解除
+		if (Input::Manager::IsTriggered(Input::Type::PAUSE) ||
+			Input::Manager::IsTriggered(Input::Type::BACK))
+		{
+			m_pSceneManager->PopScene();
+			return;
+		}
+	}
 
-	int stageSelectItem = static_cast<int>(State::STAGE_SELECT);
-	messageManager->DrawStringCenter("PauseStageSelect",
-													draw_text_pos_x,
-													draw_text_pos_y + text_space_y * stageSelectItem,
-													m_itemColorTable[stageSelectItem]);
+	// 描画
+	void Puse::Draw()
+	{
+		// デバッグ用ログ
+		Debug::Text::AddLog("currentSelectState", { m_currentSelectItem });
 
-	int restartItem = static_cast<int>(State::TITLE);
-	messageManager->DrawStringCenter("PauseTitle",
-													draw_text_pos_x,
-													draw_text_pos_y + text_space_y * restartItem,
-													m_itemColorTable[restartItem]);
+		// 画面サイズの取得
+		auto& screenSize = Application::GetInstance()->GetWindowSize();
 
+		// モザイク処理
+		GetDrawScreenGraph(0, 0, screenSize.width, screenSize.height, m_gaussScreen);
+		GraphFilter(m_gaussScreen, DX_GRAPH_FILTER_GAUSS, gauss_param_pixel, gauss_param_power);
+		DrawGraph(0, 0, m_gaussScreen, true);
+
+		// 画面を暗くする
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, dark_param_power);
+		DrawBox(0, 0, screenSize.width, screenSize.height, 0x000000, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+		// メッセージマネージャの取得
+		const auto& messageManager = String::MessageManager::GetInstance();
+
+		// メニューの描画
+		messageManager->DrawStringCenter("PauseMenu", screenSize.width / 2.0f, 150, 0xffffff, 0xffffff);
+
+		// 項目の描画
+		int continueItem = static_cast<int>(State::CONTINUE);
+		messageManager->DrawStringCenter("PauseContinue",
+			draw_text_pos_x,
+			draw_text_pos_y + text_space_y * continueItem,
+			m_itemColorTable[continueItem]);
+
+		int optionItem = static_cast<int>(State::OPTION);
+		messageManager->DrawStringCenter("PauseOption",
+			draw_text_pos_x,
+			draw_text_pos_y + text_space_y * optionItem,
+			m_itemColorTable[optionItem]);
+
+		int stageSelectItem = static_cast<int>(State::STAGE_SELECT);
+		messageManager->DrawStringCenter("PauseStageSelect",
+			draw_text_pos_x,
+			draw_text_pos_y + text_space_y * stageSelectItem,
+			m_itemColorTable[stageSelectItem]);
+
+		int restartItem = static_cast<int>(State::TITLE);
+		messageManager->DrawStringCenter("PauseTitle",
+			draw_text_pos_x,
+			draw_text_pos_y + text_space_y * restartItem,
+			m_itemColorTable[restartItem]);
+	}
 }

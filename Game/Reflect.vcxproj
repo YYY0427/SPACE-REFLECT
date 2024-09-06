@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Scene\LoadScene.cpp" />
     <ClCompile Include="Scene\ConfirmScene.cpp" />
     <ClCompile Include="Resource\Model\ModelResourceManager.cpp" />
     <ClCompile Include="Scene\PuseScene.cpp" />
@@ -204,8 +205,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Game\Model.cpp" />
     <ClCompile Include="SaveData.cpp" />
-    <ClCompile Include="Scene\DebugScene.cpp" />
-    <ClCompile Include="Scene\SceneBase.cpp" />
+    <ClCompile Include="Scene\TransporterScene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\TestScene.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
@@ -220,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Scene\LoadScene.h" />
     <ClInclude Include="Resource\Type\EffectDataType.h" />
     <ClInclude Include="Resource\Type\PlayerParamDataType.h" />
     <ClInclude Include="Scene\ConfirmScene.h" />
@@ -283,7 +284,7 @@
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Game\Model.h" />
     <ClInclude Include="SaveData.h" />
-    <ClInclude Include="Scene\DebugScene.h" />
+    <ClInclude Include="Scene\TransporterScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\SceneManager.h" />
     <ClInclude Include="Scene\TestScene.h" />

@@ -9,55 +9,58 @@
 #include "../Scene/SceneManager.h"
 #include "../Scene/PuseScene.h"
 
-// コンストラクタ
-GameScene::GameScene(SceneManager& manager, const Stage stage) :
-	SceneBase(manager),
-	m_stage(stage)
+namespace Scene
 {
-}
-
-// デストラクタ
-GameScene::~GameScene()
-{
-}
-
-// 初期化
-void GameScene::Init()
-{
-	// 選ばれたステージの作成
-	switch (m_stage)
+	// コンストラクタ
+	GameScene::GameScene(const std::shared_ptr<Scene::Manager>& pSceneManager, const Stage stage) :
+		Base(pSceneManager),
+		m_stage(stage)
 	{
-	case Stage::TUTORIAL:
-		m_pStage = std::make_unique<Tutorial>(m_manager);
-		break;
-	case Stage::STAGE_1:
-		m_pStage = std::make_unique<Stage1>(m_manager);
-		break;
 	}
-}
 
-// 終了処理
-void GameScene::End()
-{
-}
-
-// 更新
-void GameScene::Update()
-{
-	// ステージの更新
-	m_pStage->Update();
-
-	// ポーズ
-	if (Input::Manager::IsTriggered(Input::Type::PAUSE))
+	// デストラクタ
+	GameScene::~GameScene()
 	{
-		m_manager.PushScene(std::make_shared<PuseScene>(m_manager, m_stage));
-		return;
 	}
-}
 
-// 描画
-void GameScene::Draw()
-{
-	// ステージの描画
-	m_pStage->Draw();
+	// 初期化
+	void GameScene::Init()
+	{
+		// 選ばれたステージの作成
+		switch (m_stage)
+		{
+		case Stage::TUTORIAL:
+			m_pStage = std::make_unique<Tutorial>(m_pSceneManager);
+			break;
+		case Stage::STAGE_1:
+			m_pStage = std::make_unique<Stage1>(m_pSceneManager);
+			break;
+		}
+	}
+
+	// 終了処理
+	void GameScene::End()
+	{
+	}
+
+	// 更新
+	void GameScene::Update()
+	{
+		// ステージの更新
+		m_pStage->Update();
+
+		// ポーズ
+		if (Input::Manager::IsTriggered(Input::Type::PAUSE))
+		{
+			m_pSceneManager->PushScene(std::make_shared<Puse>(m_pSceneManager, m_stage));
+			return;
+		}
+	}
+
+	// 描画
+	void GameScene::Draw()
+	{
+		// ステージの描画
+		m_pStage->Draw();
+	}
 }
