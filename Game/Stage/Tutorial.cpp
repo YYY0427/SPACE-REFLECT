@@ -50,8 +50,8 @@ namespace
 }
 
 // コンストラクタ
-Tutorial::Tutorial(SceneManager& manager) :
-	StageBase(manager)
+Tutorial::Tutorial(const std::shared_ptr<Scene::Manager>& pSceneManager) :
+	StageBase(pSceneManager)
 {
 	// ダメージの設定
 	m_meteorDamage= meteor_damage;
@@ -372,7 +372,7 @@ void Tutorial::UpdateGameOver()
 	if (m_pFade->IsFadeOutEnd())
 	{
 		// ステージセレクトに遷移
-		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		m_pSceneManager->ChangeScene(std::make_shared<Scene::StageSelect>(m_pSceneManager));
 		return;
 	}
 

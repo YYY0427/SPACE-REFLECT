@@ -2,9 +2,7 @@
 #include <memory>
 #include "../Transitor/TransitorBase.h"
 #include "SceneManager.h"
-
-// プロトタイプ宣言
-class Fade;
+#include "../Transitor/Fade.h"
 
 namespace Scene
 {

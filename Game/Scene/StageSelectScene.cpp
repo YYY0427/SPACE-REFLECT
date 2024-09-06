@@ -52,7 +52,7 @@ namespace
 namespace Scene
 {
 	// コンストラクタ
-	StageSelectScene::StageSelectScene(const std::shared_ptr<Scene::Manager>& pSceneManager) :
+	StageSelect::StageSelect(const std::shared_ptr<Scene::Manager>& pSceneManager) :
 		Base(pSceneManager),
 		m_currentSelectItem(0),
 		m_easeTime(0),
@@ -77,12 +77,12 @@ namespace Scene
 	}
 
 	// デストラクタ
-	StageSelectScene::~StageSelectScene()
+	StageSelect::~StageSelect()
 	{
 	}
 
 	// 初期化
-	void StageSelectScene::Init()
+	void StageSelect::Init()
 	{
 		// ステートマシンの設定
 		m_stateMachine.AddState(State::STAGE_SELECT, {}, [this]() {UpdateSelectStage(); }, {});
@@ -156,7 +156,7 @@ namespace Scene
 	}
 
 	// 終了処理
-	void StageSelectScene::End()
+	void StageSelect::End()
 	{
 		// ライトのハンドルを削除
 		DeleteLightHandle(m_lightHandle);
@@ -172,7 +172,7 @@ namespace Scene
 	}
 
 	// ステージ選択時の初期化
-	void StageSelectScene::SelectStageProcess()
+	void StageSelect::SelectStageProcess()
 	{
 		// 初期化
 		m_isInput = true;
@@ -187,14 +187,14 @@ namespace Scene
 	}
 
 	// スタート演出の開始
-	void StageSelectScene::EnterStartAnimation()
+	void StageSelect::EnterStartAnimation()
 	{
 		m_cameraStartTargetPos = m_pCamera->GetTarget();
 		m_cameraStartPos = m_pCamera->GetPos();
 	}
 
 	// 更新
-	void StageSelectScene::Update()
+	void StageSelect::Update()
 	{
 		// デバッグテキスト
 		Debug::Text::AddLog("cameraPos", { m_pCamera->GetPos().x, m_pCamera->GetPos().y ,m_pCamera->GetPos().z });
@@ -207,7 +207,7 @@ namespace Scene
 	}
 
 	// ステージ選択の更新
-	void StageSelectScene::UpdateSelectStage()
+	void StageSelect::UpdateSelectStage()
 	{
 		// 初期化
 		m_isInput = false;
@@ -304,13 +304,13 @@ namespace Scene
 		if (m_pFade->IsFadeOutEnd())
 		{
 			// タイトル画面に戻る
-			m_pSceneManager->ChangeScene(std::make_shared<TitleScene>(m_pSceneManager));
+			m_pSceneManager->ChangeScene(std::make_shared<Title>(m_pSceneManager));
 			return;
 		}
 	}
 
 	// スタート演出の更新			
-	void StageSelectScene::UpdateStartAnimation()
+	void StageSelect::UpdateStartAnimation()
 	{
 		// UI全体のアルファ値を下げる
 		m_uiAlpha -= 10;
@@ -368,14 +368,14 @@ namespace Scene
 		if (m_pFade->IsFadeOutEnd())
 		{
 			// ゲームシーンに遷移
-			m_pSceneManager.ChangeScene(
+			m_pSceneManager->ChangeScene(
 				std::make_shared<GameScene>(m_pSceneManager, static_cast<Stage>(m_currentSelectItem)));
 			return;
 		}
 	}
 
 	// カメラの更新
-	void StageSelectScene::UpdateCamera()
+	void StageSelect::UpdateCamera()
 	{
 		// 入力があった
 		// 現在のイージングが終了していたら
@@ -399,7 +399,7 @@ namespace Scene
 	}
 
 	// ランキングのアルファ値の更新
-	void StageSelectScene::UpdateRankingAlpha()
+	void StageSelect::UpdateRankingAlpha()
 	{
 		// スコアランキングのアルファ値の更新
 		// 一番下の順位が255になったら次の順位を更新
@@ -420,7 +420,7 @@ namespace Scene
 	}
 
 	// 描画
-	void StageSelectScene::Draw()
+	void StageSelect::Draw()
 	{
 		// 画面をクリア
 		ClearDrawScreen();
@@ -522,7 +522,7 @@ namespace Scene
 	}
 
 	// スコアランキングの描画
-	void StageSelectScene::DrawScoreRanking()
+	void StageSelect::DrawScoreRanking()
 	{
 		// スコアランキングの取得
 		m_scoreRanking = Score::Ranking::GetInstance()->GetScoreData(m_stageData[static_cast<Stage>(m_currentSelectItem)].stageNameId);

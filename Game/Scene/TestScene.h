@@ -13,19 +13,19 @@ namespace Scene
 	/// テスト用シーン
 	/// 色々試すときに使う
 	/// </summary>
-	class TestScene final : public Scene::Base
+	class Test final : public Scene::Base
 	{
 	public:
 		/// </summary>
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="manager">シーンマネージャーの参照</param>
-		TestScene(const std::shared_ptr<Scene::Manager>& pSceneManager);
+		Test(const std::shared_ptr<Scene::Manager>& pSceneManager);
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~TestScene();
+		~Test();
 
 		/// <summary>
 		/// 初期化

@@ -69,10 +69,10 @@ namespace Scene
 			switch (static_cast<SceneItem>(m_selectIndex))
 			{
 			case SceneItem::TITLE:
-				m_pSceneManager->ChangeScene(std::make_shared<TitleScene>(m_pSceneManager));
+				m_pSceneManager->ChangeScene(std::make_shared<Title>(m_pSceneManager));
 				return;
 			case SceneItem::STAGE_SELECT:
-				m_pSceneManager->ChangeScene(std::make_shared<StageSelectScene>(m_pSceneManager));
+				m_pSceneManager->ChangeScene(std::make_shared<StageSelect>(m_pSceneManager));
 				return;
 			case SceneItem::PAUSE:
 				return;
@@ -80,7 +80,7 @@ namespace Scene
 				m_pSceneManager->PushScene(std::make_shared<Option>(m_pSceneManager, Option::State::PAUSE));
 				return;
 			case SceneItem::TEST:
-				m_pSceneManager->ChangeScene(std::make_shared<TestScene>(m_pSceneManager));
+				m_pSceneManager->ChangeScene(std::make_shared<Test>(m_pSceneManager));
 				return;
 			case SceneItem::EXIT:
 				Application::GetInstance()->Exit();

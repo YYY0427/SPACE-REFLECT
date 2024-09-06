@@ -11,12 +11,12 @@ namespace
 
 namespace Scene
 {
-
 	// コンストラクタ
 	Manager::Manager() :
 		m_updateTime(0),
 		m_drawTime(0),
-		m_prevFps(0.0f)
+		m_prevFps(0.0f),
+		m_isLoadScene(false)
 	{
 	}
 
@@ -87,6 +87,9 @@ namespace Scene
 
 			// シーンの初期化
 			m_pSceneTable.front()->Init();
+
+			// 非同期読み込みのチェック
+			CheckAsyncLoad();
 		}
 	}
 
@@ -122,6 +125,9 @@ namespace Scene
 
 		// シーンの初期化
 		m_pSceneTable.front()->Init();
+
+		// 非同期読み込みのチェック
+		CheckAsyncLoad();
 	}
 
 	// 一番上のシーンを削除

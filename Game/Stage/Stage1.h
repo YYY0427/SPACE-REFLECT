@@ -13,7 +13,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
-	Stage1(SceneManager& manager);
+	Stage1(const std::shared_ptr<Scene::Manager>& pSceneManager);
 
 	/// <summary>
 	/// デストラクタ

@@ -29,19 +29,19 @@ namespace Scene
 	/// <summary>
 	/// ステージ選択シーン
 	/// </summary>
-	class StageSelectScene final : public Scene::Base
+	class StageSelect final : public Scene::Base
 	{
 	public:
 		/// <summary>
 		/// コンストラクタ
 		/// </summary>
 		/// <param name="manager">シーンマネージャー</param>
-		StageSelectScene(const std::shared_ptr<Scene::Manager>& pSceneManager);
+		StageSelect(const std::shared_ptr<Scene::Manager>& pSceneManager);
 
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~StageSelectScene();
+		~StageSelect();
 
 		/// <summary>
 		/// 初期化

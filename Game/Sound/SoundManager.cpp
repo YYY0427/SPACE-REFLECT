@@ -32,6 +32,8 @@ namespace Sound
 	// デストラクタ
 	Manager::~Manager()
 	{
+		// 終了処理
+		End();
 	}
 
 	// 更新
@@ -87,9 +89,6 @@ namespace Sound
 		{
 			DeleteSoundMem(sound.second.handle);
 		}
-
-		// インスタンスの削除
-		DeleteInstance();
 	}
 
 	// 2Dサウンドのロード

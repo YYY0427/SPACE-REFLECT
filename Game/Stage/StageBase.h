@@ -27,7 +27,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
-	StageBase(SceneManager& manager);
+	StageBase(const std::shared_ptr<Scene::Manager>& pSceneManager);
 
 	/// <summary>
 	/// デストラクタ
@@ -59,7 +59,7 @@ public:
 
 protected:
 	// シーンマネージャー
-	SceneManager& m_manager;
+	std::shared_ptr<Scene::Manager> m_pSceneManager;
 
 	// ポインタ
 	std::shared_ptr<Player> m_pPlayer;

@@ -21,8 +21,8 @@
 #include <DxLib.h>
 
 // コンストラクタ
-StageBase::StageBase(SceneManager& manager) :
-	m_manager(manager),
+StageBase::StageBase(const std::shared_ptr<Scene::Manager>& pSceneManager) :
+	m_pSceneManager(pSceneManager),
 	m_currentFrame(0),
 	m_isWaveStart(false),
 	m_directionalLightHandle(-1),
@@ -70,7 +70,7 @@ void StageBase::UpdateResult(const std::string& stageName)
 	if (m_pFade->IsFadeOutEnd())
 	{
 		// ステージセレクトに遷移
-		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		m_pSceneManager->ChangeScene(std::make_shared<Scene::StageSelect>(m_pSceneManager));
 		return;
 	}
 

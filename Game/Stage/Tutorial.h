@@ -18,7 +18,7 @@ public:
 	/// コンストラクタ
 	/// </summary>
 	/// <param name="manager">シーンマネージャーの参照</param>
-	Tutorial(SceneManager& manager);
+	Tutorial(const std::shared_ptr<Scene::Manager>& pSceneManager);
 
 	/// <summary>
 	/// デストラクタ

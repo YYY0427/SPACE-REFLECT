@@ -28,6 +28,8 @@ namespace Effect
 	// デストラクタ
 	Effekseer3DManager::~Effekseer3DManager()
 	{
+		// 終了処理
+		End();
 	}
 
 	// Effekseerの初期化とエフェクトのロード
@@ -160,9 +162,6 @@ namespace Effect
 
 		// Effekseerを終了する
 		Effkseer_End();
-
-		// インスタンスの削除
-		DeleteInstance();
 	}
 
 	// エフェクトのロード

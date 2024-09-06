@@ -21,18 +21,18 @@ namespace
 namespace Scene
 {
 	// コンストラクタ
-	TestScene::TestScene(SceneManager& manager) :
-		SceneBase(manager)
+	Test::Test(const std::shared_ptr<Scene::Manager>& pSceneManager) :
+		Base(pSceneManager)
 	{
 	}
 
 	// デストラクタ
-	TestScene::~TestScene()
+	Test::~Test()
 	{
 	}
 
 	// 初期化
-	void TestScene::Init()
+	void Test::Init()
 	{
 		// 画面切り替え演出の設定
 		m_pTransitor = std::make_unique<StripTransitor>();
@@ -40,19 +40,19 @@ namespace Scene
 	}
 
 	// 終了処理
-	void TestScene::End()
+	void Test::End()
 	{
 	}
 
 	// 更新
-	void TestScene::Update()
+	void Test::Update()
 	{
 		// 画面切り替え演出の更新
 		m_pTransitor->Update();
 	}
 
 	// 描画
-	void TestScene::Draw()
+	void Test::Draw()
 	{
 		// 画面をクリア
 		ClearDrawScreen();

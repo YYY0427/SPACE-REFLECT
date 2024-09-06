@@ -4,7 +4,7 @@
 #include "Effect/Effekseer3DEffectManager.h"
 #include "SaveData.h"
 #include "Scene/SceneManager.h"
-#include "Scene/DebugScene.h"
+#include "Scene/TransporterScene.h"
 #include "Scene/TitleScene.h"
 #include "Sound/SoundManager.h"
 #include "String/MessageManager.h"
@@ -13,6 +13,8 @@
 #include "MyDebug/DebugText.h"
 #include "Score/ScoreRanking.h"
 #include "Score/ScoreManager.h"
+#include "UI/UIManager.h"
+#include "Resource/Model/ModelResourceManager.h"
 #include <string>
 #include <memory>
 
@@ -144,11 +146,11 @@ bool Application::Init()
 void Application::Run()
 {
 	// 最初のシーンを設定
-	SceneManager sceneManager;
+	m_pSceneManager = std::make_shared<Scene::Manager>();
 #ifdef _DEBUG
-	sceneManager.ChangeScene(std::make_shared<DebugScene>(sceneManager));
+	m_pSceneManager->ChangeScene(std::make_shared<Scene::Transporter>(m_pSceneManager));
 #else
-	sceneManager.ChangeScene(std::make_shared<TitleScene>(sceneManager));
+	m_pSceneManager->ChangeScene(std::make_shared<Scene::Title>(m_pSceneManager));
 #endif
 
 	// ゲームループ
@@ -168,13 +170,13 @@ void Application::Run()
 		Input::Manager::Update();
 
 		// シーンの更新
-		sceneManager.Update();
+		m_pSceneManager->Update();
 
 		// サウンドの更新
 		Sound::Manager::GetInstance()->Update();
 
 		// シーンの描画
-		sceneManager.Draw();
+		m_pSceneManager->Draw();
 
 		// デバッグテキストの描画
 		Debug::Text::DrawLog();
@@ -203,25 +205,36 @@ void Application::Run()
 // 終了処理
 void Application::End()
 {
-	// サウンドの終了処理
-	Sound::Manager::GetInstance()->End();
-
-	// Effekseerの終了処理
-	Effect::Effekseer3DManager::GetInstance()->End();
-
 	// フォントの終了処理
 	String::Font::End();
 
+	// DebugTextの終了処理
+	Debug::Text::End();
+
 	// スコアランキングのセーブ
 	Score::Ranking::GetInstance()->SaveScore();
+
+	// シーンを全て削除
+	m_pSceneManager->ClearScene();
+
+	// サウンドのインスタンス削除
+	Sound::Manager::GetInstance()->DeleteInstance();
+
+	// Effekseerのインスタンス削除
+	Effect::Effekseer3DManager::GetInstance()->DeleteInstance();
+
+	// スコアのインスタンス削除
 	Score::Ranking::GetInstance()->DeleteInstance();
 	Score::Manager::GetInstance()->DeleteInstance();
 
-	// MessageManagerの終了処理
-	String::MessageManager::GetInstance()->End();
+	// UIManagerのインスタンス削除
+	UI::Manager::GetInstance()->DeleteInstance();
 
-	// DebugTextの終了処理
-	Debug::Text::End();
+	// MessageManagerのインスタンス削除
+	String::MessageManager::GetInstance()->DeleteInstance();
+
+	// ModelResourceManagerのインスタンス削除
+	Resource::Model::Manager::GetInstance()->DeleteInstance();
 
 	// DXライブラリ使用の終了処理
 	DxLib_End();

@@ -89,11 +89,11 @@ namespace Scene
 				switch (m_state)
 				{
 				case Puse::State::STAGE_SELECT:
-					m_pSceneManager->ChangeAndClearScene(std::make_shared<StageSelectScene>(m_pSceneManager));
+					m_pSceneManager->ChangeAndClearScene(std::make_shared<StageSelect>(m_pSceneManager));
 					break;
 
 				case Puse::State::TITLE:
-					m_pSceneManager->ChangeAndClearScene(std::make_shared<TitleScene>(m_pSceneManager));
+					m_pSceneManager->ChangeAndClearScene(std::make_shared<Title>(m_pSceneManager));
 					break;
 				}
 				break;

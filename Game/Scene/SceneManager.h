@@ -24,7 +24,7 @@ namespace Scene
 		/// <summary>
 		/// デストラクタ
 		/// </summary>
-		~Manager() {}
+		~Manager();
 
 		/// <summary>
 		/// シーンの更新

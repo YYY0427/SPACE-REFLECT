@@ -74,6 +74,6 @@ namespace Scene
 	// •`‰æ
 	void Load::Draw()
 	{
-		DrawBox(0, 0, 1920, 1080, 0x000000, true);
+		DrawBox(0, 0, 1920, 1080, 0xffffff, true);
 	}
 }

@@ -64,6 +64,4 @@ namespace Scene
 		// モザイク処理用スクリーン
 		int m_gaussScreen;
 	};
-
-
 }

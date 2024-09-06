@@ -47,8 +47,8 @@ namespace
 }
 
 // コンストラクタ
-Stage1::Stage1(SceneManager& manager) :
-	StageBase(manager)
+Stage1::Stage1(const std::shared_ptr<Scene::Manager>& pSceneManager) :
+	StageBase(pSceneManager)
 {
 	// ダメージの設定
 	m_meteorDamage = meteor_damage;
@@ -253,7 +253,7 @@ void Stage1::UpdateGameOver()
 	if (m_pFade->IsFadeOutEnd())
 	{
 		// ステージセレクトに遷移
-		m_manager.ChangeScene(std::make_shared<StageSelectScene>(m_manager));
+		m_pSceneManager->ChangeScene(std::make_shared<Scene::StageSelect>(m_pSceneManager));
 	}
 
 	// デバッグテキストの追加

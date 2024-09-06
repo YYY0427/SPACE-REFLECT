@@ -18,6 +18,8 @@ namespace String
 	// デストラクタ
 	MessageManager::~MessageManager()
 	{
+		// 終了処理
+		End();
 	}
 
 	// ファイルから文字列のデータを読み取ってデータテーブルに格納
@@ -52,7 +54,7 @@ namespace String
 		}
 
 		// インスタンスの削除
-		DeleteInstance();
+	//	DeleteInstance();
 	}
 
 	// ファイルに読み込んだ文字列の表示

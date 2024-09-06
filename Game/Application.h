@@ -1,5 +1,7 @@
 #pragma once
+#include <memory>
 #include "Util/SingletonBase.h"
+#include "Scene/SceneManager.h"
 
 // ウィンドウのサイズ
 struct Size
@@ -58,6 +60,9 @@ private:
 	void End();
 
 private:
+	// シーンのマネージャー
+	std::shared_ptr<Scene::Manager> m_pSceneManager;
+
 	// ウィンドウのサイズ
 	Size m_screenSize;
 
