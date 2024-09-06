@@ -4,18 +4,17 @@
 #include <string>
 
 // プロトタイプ宣言
-class UIManager;
 class Player;
 class Camera;
 class SkyDome;
 class MeteorManager;
 class DamageFlash;
-namespace Effect { class ScreenShaker; }
 class PlanetManager;
 class LaserManager;
 class EnemyManager;
 class ResultWindow;
 class Fade;
+namespace Effect { class ScreenShaker; }
 
 /// <summary>
 /// ステージ基底クラス

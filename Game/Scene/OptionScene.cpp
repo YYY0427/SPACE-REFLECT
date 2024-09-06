@@ -62,6 +62,8 @@ namespace Scene
 		m_gaussScreen(-1),
 		m_state(state)
 	{
+		// ロードシーンを使用しない
+		m_isUseLoadScene = false;
 	}
 
 	// デストラクタ

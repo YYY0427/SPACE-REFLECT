@@ -106,14 +106,18 @@ namespace Scene
 	// 非同期読み込みのチェック 
 	void Manager::CheckAsyncLoad()
 	{
-		// 非同期読み込み中の数を取得
-		if (GetASyncLoadNum() > 0 && !m_isLoadScene)
+		// 現在のシーンのロード画面の使用可否の確認
+		if (m_pSceneTable.front()->IsUseLoadScene())
 		{
-			// フラグを立てる
-			m_isLoadScene = true;
+			// 非同期読み込み中の数を取得
+			if (GetASyncLoadNum() > 0 && !m_isLoadScene)
+			{
+				// フラグを立てる
+				m_isLoadScene = true;
 
-			// 非同期読み込みがあった場合ロード画面に飛ぶ
-			PushScene(std::make_shared<Scene::Load>(shared_from_this()));
+				// 非同期読み込みがあった場合ロード画面に飛ぶ
+				PushScene(std::make_shared<Scene::Load>(shared_from_this()));
+			}
 		}
 	}
 

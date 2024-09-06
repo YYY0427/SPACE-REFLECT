@@ -20,7 +20,8 @@ namespace Scene
 		/// </summary>
 		/// <param name="manager">シーンマネージャのインスタンス</param>
 		Base(const std::shared_ptr<Scene::Manager>& pSceneManager) :
-			m_pSceneManager(pSceneManager)
+			m_pSceneManager(pSceneManager),
+			m_isUseLoadScene(true)
 		{
 		}
 
@@ -51,6 +52,15 @@ namespace Scene
 		/// </summary>
 		virtual void Draw() = 0;
 
+		/// <summary>
+		/// ロードシーンを使用可否の変数の取得
+		/// </summary>
+		/// <returns> true : 使用、false : 不使用 </returns>
+		bool IsUseLoadScene() const
+		{
+			return m_isUseLoadScene;
+		}
+
 	protected:
 		// シーンのマネージャー
 		std::shared_ptr<Scene::Manager> m_pSceneManager;
@@ -60,5 +70,8 @@ namespace Scene
 
 		// フェード
 		std::unique_ptr<Fade> m_pFade;
+
+		// ロードシーンを使用するか
+		bool m_isUseLoadScene;
 	};
 }
