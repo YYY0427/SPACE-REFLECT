@@ -34,7 +34,6 @@ namespace
 
 namespace Scene
 {
-
 	// コンストラクタ
 	Title::Title(const std::shared_ptr<Scene::Manager>& pSceneManager) :
 		Base(pSceneManager),
@@ -66,7 +65,7 @@ namespace Scene
 
 		// タイトル画面のBGMを再生
 		Sound::Manager::GetInstance()->PlayBGM("TitleBgm");
-		Sound::Manager::GetInstance()->SetFadeSound("TitleBgm", 120, 0, 255);
+		Sound::Manager::GetInstance()->SetFadeSound("TitleBgm", 60, 0, 255);
 
 		// レーザーの配置
 		SetLaser({ 0, 210 }, { 1280, 210 }, 0xff0000);

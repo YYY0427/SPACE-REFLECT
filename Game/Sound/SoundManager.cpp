@@ -141,7 +141,7 @@ namespace Sound
 	}
 
 	// サウンドのCSVファイルを読み込む
-	void Manager::LoadCsvSoundFile()
+	void Manager::LoadSoundFromCsv()
 	{
 		// ファイル情報の読み込み(読み込みに失敗したら止める)
 		auto str = FileUtil::LoadCsvFile(sound_data_csv_file_path);

@@ -45,9 +45,6 @@ namespace Effect
 
 		// 画像のロード
 		m_imgHandle = my::MyLoadGraph(img_file_path.c_str());
-
-		// エフェクトのロード
-		LoadCsvEffectFile(effect_list_file_path);
 	}
 
 	// 更新
@@ -165,30 +162,39 @@ namespace Effect
 	}
 
 	// エフェクトのロード
-	void Effekseer3DManager::LoadCsvEffectFile(const std::string& filePath)
+	void Effekseer3DManager::LoadEffectsFromCsv()
 	{
 		// ファイルの読み込み
-		auto data = FileUtil::LoadCsvFile(filePath);
+		auto data = FileUtil::LoadCsvFile(effect_list_file_path);
 
 		for (auto& list : data)
 		{
+			auto& id = list[static_cast<int>(EffectFileType::ID)];
+			auto& path = list[static_cast<int>(EffectFileType::FILE_PATH)];
+
 			// 同じファイルパスが登録されている場合はそのハンドルを使う
 			for (auto& effect : m_effectResourceTable)
 			{
-				if (effect.second.effectFilePath == list[static_cast<int>(EffectFileType::FILE_PATH)])
+				if (effect.second.effectFilePath == path)
 				{
-					m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]] = effect.second;
+					m_effectResourceTable[id] = effect.second;
 					continue;
 				}
 			}
 
 			// エフェクトのファイルパスを保存
-			m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]].effectFilePath =
-				list[static_cast<int>(EffectFileType::FILE_PATH)];
+			m_effectResourceTable[id].effectFilePath = path;
 
-			// エフェクトのロード(失敗したら止める)
-			m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]].effectHandle =
-				LoadEffekseerEffect(list[static_cast<int>(EffectFileType::FILE_PATH)].c_str());
+			// なんかEffekseerの非同期ロードがうまくいかないので同期ロードにする
+			SetUseASyncLoadFlag(false);
+
+			// エフェクトのロード
+			m_effectResourceTable[id].effectHandle = LoadEffekseerEffect(path.c_str());
+
+			// 非同期ロードに戻す
+			SetUseASyncLoadFlag(true);
+
+			// エフェクトのロードに失敗した場合は止める
 			assert(m_effectResourceTable[list[static_cast<int>(EffectFileType::ID)]].effectHandle != -1 && "エフェクトのロードに失敗したよ");
 		}
 	}

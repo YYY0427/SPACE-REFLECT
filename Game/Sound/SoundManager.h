@@ -75,7 +75,7 @@ namespace Sound
 		/// <summary>
 		/// サウンドのCSVファイルを読み込む
 		/// </summary>
-		void LoadCsvSoundFile();
+		void LoadSoundFromCsv();
 
 		/// <summary>
 		/// 指定の2DSEを鳴らす

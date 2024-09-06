@@ -16,6 +16,8 @@ namespace Scene
 		Base(pSceneManager),
 		m_stage(stage)
 	{
+		// ロードシーンを使用しない
+		m_isUseLoadScene = false;
 	}
 
 	// デストラクタ

@@ -90,8 +90,14 @@ bool Application::Init()
 		return false;
 	}
 
+	// Effekseerの初期化
+	Effect::Effekseer3DManager::GetInstance()->Init();
+
+	// 非同期読み込み設定に変更
+	SetUseASyncLoadFlag(TRUE);
+
 	// csvファイルに沿ってサウンドをロード
-	Sound::Manager::GetInstance()->LoadCsvSoundFile();
+	Sound::Manager::GetInstance()->LoadSoundFromCsv();
 
 	// フォントのロード
 	String::Font::Load();
@@ -102,11 +108,8 @@ bool Application::Init()
 	// メッセージをロード
 	String::MessageManager::GetInstance()->LoadMessageFileData();
 
-	// Effekseerの初期化
-	Effect::Effekseer3DManager::GetInstance()->Init();
-
-	// 非同期読み込み設定に変更
-	SetUseASyncLoadFlag(TRUE);
+	// エフェクトのロード
+	Effect::Effekseer3DManager::GetInstance()->LoadEffectsFromCsv();
 
 	// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ
 	// Effekseerを使用する場合は必ず設定する
@@ -173,7 +176,10 @@ void Application::Run()
 		m_pSceneManager->Update();
 
 		// サウンドの更新
-		Sound::Manager::GetInstance()->Update();
+		if (!m_pSceneManager->IsLoadScene())
+		{
+			Sound::Manager::GetInstance()->Update();
+		}
 
 		// シーンの描画
 		m_pSceneManager->Draw();

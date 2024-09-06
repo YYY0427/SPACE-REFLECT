@@ -79,6 +79,12 @@ namespace Scene
 		void SetLoadSceneFlag(const bool flag) { m_isLoadScene = flag; }
 
 		/// <summary>
+		/// ロード画面の存在フラグの取得
+		/// </summary>
+		/// <returns></returns>
+		bool IsLoadScene() const { return m_isLoadScene; }
+
+		/// <summary>
 		/// 更新時間を描画
 		/// </summary>
 		void DrawUpdateTime();

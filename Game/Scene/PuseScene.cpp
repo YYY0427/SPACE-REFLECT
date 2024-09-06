@@ -44,6 +44,8 @@ namespace Scene
 		m_stage(stage),
 		m_gaussScreen(-1)
 	{
+		// ロード画面を使用しない
+		m_isUseLoadScene = false;
 	}
 
 	// デストラクタ

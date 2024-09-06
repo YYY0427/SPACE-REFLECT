@@ -78,6 +78,11 @@ namespace Effect
 		void Init();
 
 		/// <summary>
+		/// エフェクトをCSVファイルのデータから読み込みロードする
+		/// </summary>
+		void LoadEffectsFromCsv();
+
+		/// <summary>
 		/// 更新
 		/// </summary>
 		void Update();
@@ -234,12 +239,6 @@ namespace Effect
 		/// コンストラクタ
 		/// シングルトンパターンなのでprivate</summary>
 		Effekseer3DManager();
-
-		/// <summary>
-		/// エフェクトのCSVファイルの読み込み
-		/// </summary>
-		/// <param name="filePath">ファイルパス</param>
-		void LoadCsvEffectFile(const std::string& filePath);
 
 		/// <summary>
 		/// ループエフェクトの再再生
