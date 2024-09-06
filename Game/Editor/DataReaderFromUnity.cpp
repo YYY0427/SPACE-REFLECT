@@ -1,7 +1,7 @@
 #include "DataReaderFromUnity.h"
 #include <cassert>
 #include "../Math/MathUtil.h"
-#include "DxLib.h"
+#include <DxLib.h>
 
 namespace
 {
@@ -25,6 +25,10 @@ DataReaderFromUnity::~DataReaderFromUnity()
 // Unityで配置したオブジェクトのデータを読み取る
 void DataReaderFromUnity::LoadUnityGameObjectData(const std::string& fileName)
 {
+	// 非同期読み込みを行わない
+	// ここで読み込んだデータをすぐ使うから
+	SetUseASyncLoadFlag(false);
+
 	// ファイルパスの作成
 	std::string filePath = file_hierarchy + fileName + extension;
 
@@ -78,6 +82,9 @@ void DataReaderFromUnity::LoadUnityGameObjectData(const std::string& fileName)
 
 	// ファイルを閉じる
 	FileRead_close(dataHandle);
+
+	// 非同期読み込みを行う
+	SetUseASyncLoadFlag(true);
 }
 
 // インスタンスの取得

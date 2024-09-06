@@ -90,9 +90,6 @@ bool Application::Init()
 		return false;
 	}
 
-	// 非同期読み込み設定に変更
-//	SetUseASyncLoadFlag(TRUE);
-
 	// csvファイルに沿ってサウンドをロード
 	Sound::Manager::GetInstance()->LoadCsvSoundFile();
 
@@ -107,6 +104,9 @@ bool Application::Init()
 
 	// Effekseerの初期化
 	Effect::Effekseer3DManager::GetInstance()->Init();
+
+	// 非同期読み込み設定に変更
+	SetUseASyncLoadFlag(TRUE);
 
 	// フルスクリーンウインドウの切り替えでリソースが消えるのを防ぐ
 	// Effekseerを使用する場合は必ず設定する
