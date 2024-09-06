@@ -17,7 +17,7 @@
 #include "../Editor/DataReaderFromUnity.h"
 #include "../Math/Vector3.h"
 #include "../Application.h"
-#include "../ModelHandleManager.h"
+#include "../Resource/Model/ModelResourceManager.h"
 #include "../Sound/SoundManager.h"
 #include <DxLib.h>
 

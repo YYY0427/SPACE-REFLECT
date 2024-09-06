@@ -51,7 +51,7 @@ StageBase::~StageBase()
 	DeleteLightHandle(m_directionalLightHandle);
 
 	// すべてのUIを削除
-	UIManager::GetInstance().DeleteAllUI();
+	UI::Manager::GetInstance()->DeleteAllUI();
 
 	// エフェクトの全削除
 	Effect::Effekseer3DManager::GetInstance()->DeleteAllEffect();

@@ -84,7 +84,7 @@ Stage1::Stage1(SceneManager& manager) :
 
 	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
-	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
+	UI::Manager::GetInstance()->AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
 
 	// ウェーブデータの読み込み
 	m_pEnemyManager->LoadEnemyStageFileData(enemy_data_file_name);
@@ -153,7 +153,7 @@ void Stage1::Update()
 	m_pDamageFlash->Update();								// ダメージフラッシュ
 	m_pScreenShaker->Update();								// 画面揺れ
 	Effect::Effekseer3DManager::GetInstance()->Update();		// エフェクト
-	UIManager::GetInstance().Update();						// UI
+	UI::Manager::GetInstance()->Update();						// UI
 
 	Collision();										// 当たり判定
 	m_pFade->Update();									// フェード
@@ -236,7 +236,7 @@ void Stage1::UpdateGameClear()
 void Stage1::UpdateGameOver()
 {
 	// UIの格納
-	UIManager::GetInstance().Store();
+	UI::Manager::GetInstance()->Store();
 
 	// 全てのレーザーの削除
 	m_pLaserManager->DeleteAllLaser();
@@ -281,7 +281,7 @@ void Stage1::Draw()
 	m_pPlayer->Draw();								// プレイヤー
 	m_pPlayer->DrawShield();						// シールド
 	Effect::Effekseer3DManager::GetInstance()->Draw();	// エフェクト
-	UIManager::GetInstance().Draw();				// UI
+	UI::Manager::GetInstance()->Draw();				// UI
 	Score::Manager::GetInstance()->DrawScore();				// スコア
 
 	// リザルト画面が開始されていたら

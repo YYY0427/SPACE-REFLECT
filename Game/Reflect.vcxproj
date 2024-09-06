@@ -145,7 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Scene\ConfirmScene.cpp" />
-    <ClCompile Include="ModelHandleManager.cpp" />
+    <ClCompile Include="Resource\Model\ModelResourceManager.cpp" />
     <ClCompile Include="Scene\PuseScene.cpp" />
     <ClCompile Include="UI\TutorialUI.cpp" />
     <ClCompile Include="UI\ResultWindow.cpp" />
@@ -184,7 +184,7 @@
     <ClCompile Include="Stage\Tutorial.cpp" />
     <ClCompile Include="UI\StatusBack.cpp" />
     <ClCompile Include="UI\ImageUI.cpp" />
-    <ClCompile Include="Image3D.cpp" />
+    <ClCompile Include="Game\Image3D.cpp" />
     <ClCompile Include="Math\MathUtil.cpp" />
     <ClCompile Include="Scene\GameScene.cpp" />
     <ClCompile Include="Scene\OptionScene.cpp" />
@@ -202,7 +202,7 @@
     <ClCompile Include="UI\UIManager.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Game\Model.cpp" />
     <ClCompile Include="SaveData.cpp" />
     <ClCompile Include="Scene\DebugScene.cpp" />
     <ClCompile Include="Scene\SceneBase.cpp" />
@@ -220,10 +220,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Resource\Type\EffectDataType.h" />
+    <ClInclude Include="Resource\Type\PlayerParamDataType.h" />
     <ClInclude Include="Scene\ConfirmScene.h" />
-    <ClInclude Include="DataType\PlayerParamDataType.h" />
-    <ClInclude Include="DataType\EffectDataType.h" />
-    <ClInclude Include="ModelHandleManager.h" />
+    <ClInclude Include="Resource\Model\ModelResourceManager.h" />
     <ClInclude Include="Scene\PuseScene.h" />
     <ClInclude Include="Util\SingletonBase.h" />
     <ClInclude Include="UI\TutorialUI.h" />
@@ -264,7 +264,7 @@
     <ClInclude Include="Stage\Tutorial.h" />
     <ClInclude Include="UI\StatusBack.h" />
     <ClInclude Include="UI\ImageUI.h" />
-    <ClInclude Include="Image3D.h" />
+    <ClInclude Include="Game\Image3D.h" />
     <ClInclude Include="Math\MathUtil.h" />
     <ClInclude Include="Scene\GameScene.h" />
     <ClInclude Include="Scene\OptionScene.h" />
@@ -281,7 +281,7 @@
     <ClInclude Include="UI\UIBase.h" />
     <ClInclude Include="UI\UIManager.h" />
     <ClInclude Include="Input\InputManager.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="Game\Model.h" />
     <ClInclude Include="SaveData.h" />
     <ClInclude Include="Scene\DebugScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />

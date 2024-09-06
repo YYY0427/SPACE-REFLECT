@@ -1,6 +1,6 @@
 #include "SkyDome.h"
-#include "../Model.h"
-#include "../ModelHandleManager.h"
+#include "../Game/Model.h"
+#include "../Resource/Model/ModelResourceManager.h"
 #include <string>
 
 namespace
@@ -14,7 +14,7 @@ SkyDome::SkyDome(const Math::Vector3& pos) :
 	m_pos(pos)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("SkyDome"));
+	m_pModel = std::make_unique<Model>(Resource::Model::Manager::GetInstance()->GetHandle("SkyDome"));
 
 	// モデルの位置を設定
 	m_pModel->SetPos(m_pos);

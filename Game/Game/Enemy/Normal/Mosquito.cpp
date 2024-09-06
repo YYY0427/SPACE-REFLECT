@@ -1,7 +1,7 @@
 #include "Mosquito.h"
-#include "../../../Model.h"
+#include "../../../Game/Model.h"
 #include "../../Player.h"
-#include "../../../ModelHandleManager.h"
+#include "../../../Resource/Model/ModelResourceManager.h"
 #include <DxLib.h>
 
 namespace
@@ -68,7 +68,7 @@ Mosquito::Mosquito(const EnemyData& data,
 	m_state.SetState(State::MOVE);
 
 	// モデルのインスタンスの作成
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Mosquito"));
+	m_pModel = std::make_shared<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Mosquito"));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);

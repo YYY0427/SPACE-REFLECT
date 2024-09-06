@@ -5,9 +5,9 @@
 #include "../../Effect/Effekseer3DEffectManager.h"
 #include "../../Game/Enemy/EnemyManager.h"
 #include "../../Game/Enemy/EnemyBase.h"
-#include "../../Model.h"
+#include "../../Game/Model.h"
 #include "../../MyDebug/DebugText.h"
-#include "../../ModelHandleManager.h"
+#include "../../Resource/Model/ModelResourceManager.h"
 #include "../../Sound/SoundManager.h"
 
 namespace
@@ -66,7 +66,7 @@ ReflectLaser::ReflectLaser(const std::shared_ptr<EnemyManager>& pEnemyManager,
 	soundManager->PlaySE("ReflectLaser");
 
 	// モデルの設定
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
+	m_pModel = std::make_shared<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Laser"));	// インスタンス生成
 	m_pModel->SetUseCollision(true);	// 当たり判定設定
 	m_pModel->SetScale(model_scale);	// 拡大率
 	m_pModel->SetRotMtx(rotModelMtx);	// 回転行列

@@ -1,5 +1,5 @@
 #pragma once
-#include "../DataType/PlayerParamDataType.h"
+#include "../Resource/Type/PlayerParamDataType.h"
 #include "../Math/Vector3.h"
 #include "../Math/Vector2.h"
 #include "../Util/Timer.h"
@@ -143,7 +143,7 @@ public:
 	/// </summary>
 	/// <param name="type">パラメータの種類</param>
 	/// <returns>パラメータ</returns>
-	float GetParameter(const DataType::PlayerParamType type);
+	float GetParameter(const Resource::Type::PlayerParam type);
 
 
 	//// セッター ////

@@ -140,7 +140,7 @@ void EnemyManager::UpdateWarning()
 	if (m_pWarning->IsEnd())
 	{
 		// Œx‚Ìíœ
-		UIManager::GetInstance().DeleteUI("Warning");
+		UI::Manager::GetInstance()->DeleteUI("Warning");
 
 		// ƒ{ƒX“G‚Ì¶¬
 		AddBossEnemy(m_bossType);
@@ -219,7 +219,7 @@ void EnemyManager::StartWave()
 
 		// Œx‚Ì¶¬
 		m_pWarning = std::make_shared<Warning>(warning_frame);
-		UIManager::GetInstance().AddUI("Warning", m_pWarning, warning_draw_priority, warning_ui_store_vec);
+		UI::Manager::GetInstance()->AddUI("Warning", m_pWarning, warning_draw_priority, warning_ui_store_vec);
 	}
 	else
 	{
@@ -264,7 +264,7 @@ void EnemyManager::NextWave()
 
 			// Œx‚Ì¶¬
 			m_pWarning = std::make_shared<Warning>(warning_frame);
-			UIManager::GetInstance().AddUI("Warning", m_pWarning, warning_draw_priority, warning_ui_store_vec);
+			UI::Manager::GetInstance()->AddUI("Warning", m_pWarning, warning_draw_priority, warning_ui_store_vec);
 		}
 	}
 	else

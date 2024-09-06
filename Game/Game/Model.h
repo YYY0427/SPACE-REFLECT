@@ -2,8 +2,8 @@
 #include <DxLib.h>
 #include <string>
 #include <vector>
-#include "Math/Vector3.h"
-#include "Math/Matrix.h"
+#include "../Math/Vector3.h"
+#include "../Math/Matrix.h"
 
 // TODO : “–‚½‚è”»’èŠÖŒW‚ÌŠÖ”‚Ì’Ç‰Á
 

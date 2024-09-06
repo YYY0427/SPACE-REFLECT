@@ -92,7 +92,7 @@ Tutorial::Tutorial(SceneManager& manager) :
 
 	// UIのインスタンスの作成
 	m_pDamageFlash = std::make_shared<DamageFlash>();
-	UIManager::GetInstance().AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
+	UI::Manager::GetInstance()->AddUI("DamageFlash", m_pDamageFlash, 3, { 0, 0 });
 
 	// ウェーブデータの読み込み
 	m_pEnemyManager->LoadEnemyStageFileData(enemy_data_file_name);
@@ -125,7 +125,7 @@ void Tutorial::Update()
 	m_pDamageFlash->Update();								// ダメージフラッシュ
 	m_pScreenShaker->Update();								// 画面揺れ
 	Effect::Effekseer3DManager::GetInstance()->Update();		// エフェクト
-	UIManager::GetInstance().Update();						// UI
+	UI::Manager::GetInstance()->Update();						// UI
 
 	Collision();										// 当たり判定
 	m_pFade->Update();									// フェード
@@ -335,7 +335,7 @@ void Tutorial::UpdatePlay()
 void Tutorial::UpdateGameClear()
 {
 	// UIの格納
-	UIManager::GetInstance().Store();
+	UI::Manager::GetInstance()->Store();
 
 	// 全てのレーザーの削除
 	m_pLaserManager->DeleteAllLaser();
@@ -356,7 +356,7 @@ void Tutorial::UpdateGameClear()
 void Tutorial::UpdateGameOver()
 {
 	// UIの格納
-	UIManager::GetInstance().Store();
+	UI::Manager::GetInstance()->Store();
 
 	// 全てのレーザーの削除
 	m_pLaserManager->DeleteAllLaser();
@@ -431,12 +431,12 @@ void Tutorial::Draw()
 	m_pMeteorManager->Draw();	// 隕石
 	m_pEnemyManager->Draw();	// 敵
 	m_pLaserManager->Draw();	// レーザー
-	m_pPlayer->Draw();								// プレイヤー
-	m_pPlayer->DrawShield();						// シールド
+	m_pPlayer->Draw();									// プレイヤー
+	m_pPlayer->DrawShield();							// シールド
 	Effect::Effekseer3DManager::GetInstance()->Draw();	// エフェクト
-	UIManager::GetInstance().Draw();				// UI
-	m_pTutorialUI->Draw();							// チュートリアルUI
-	Score::Manager::GetInstance()->DrawScore();				// スコア
+	UI::Manager::GetInstance()->Draw();					// UI
+	m_pTutorialUI->Draw();								// チュートリアルUI
+	Score::Manager::GetInstance()->DrawScore();			// スコア
 
 	// リザルト画面が開始されていたら
 	if (m_stateMachine.GetCurrentState() == State::RESULT)

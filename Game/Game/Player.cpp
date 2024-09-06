@@ -11,8 +11,8 @@
 #include "../UI/StatusBack.h"
 #include "../UI/ImageUI.h"
 #include "../UI/UIManager.h"
-#include "../Model.h"
-#include "../ModelHandleManager.h"
+#include "../Game/Model.h"
+#include "../Resource/Model/ModelResourceManager.h"
 #include "../Effect/Effekseer3DEffectManager.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../MyDebug/DebugText.h"
@@ -105,21 +105,21 @@ Player::Player(const std::string& objectDataFileName) :
 
 	// 外部ファイルからパラメータを読み込み
 	LoadParameter(player_param_file_path);
-	m_maxHp = GetParameter(DataType::PlayerParamType::MAX_HP);
+	m_maxHp = GetParameter(Resource::Type::PlayerParam::MAX_HP);
 	m_hp    = m_maxHp;
-	m_boostEffectScale.x = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SCALE_X);
-	m_boostEffectScale.y = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SCALE_Y);
-	m_boostEffectScale.z = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SCALE_Z);
-	m_boostEffectSpeed   = GetParameter(DataType::PlayerParamType::BOOST_EFFECT_SPEED);
-	m_playerSize.x		 = GetParameter(DataType::PlayerParamType::PlAYER_WIDTH);	
-	m_playerSize.y       = GetParameter(DataType::PlayerParamType::PlAYER_HEIGHT);
-	m_collisionRadius	 = GetParameter(DataType::PlayerParamType::COLLISION_RADIUS);
-	m_moveSpeed.x		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
-	m_moveSpeed.y		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_XY);
-	m_moveSpeed.z		 = GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z);
+	m_boostEffectScale.x = GetParameter(Resource::Type::PlayerParam::BOOST_EFFECT_SCALE_X);
+	m_boostEffectScale.y = GetParameter(Resource::Type::PlayerParam::BOOST_EFFECT_SCALE_Y);
+	m_boostEffectScale.z = GetParameter(Resource::Type::PlayerParam::BOOST_EFFECT_SCALE_Z);
+	m_boostEffectSpeed   = GetParameter(Resource::Type::PlayerParam::BOOST_EFFECT_SPEED);
+	m_playerSize.x		 = GetParameter(Resource::Type::PlayerParam::PlAYER_WIDTH);
+	m_playerSize.y       = GetParameter(Resource::Type::PlayerParam::PlAYER_HEIGHT);
+	m_collisionRadius	 = GetParameter(Resource::Type::PlayerParam::COLLISION_RADIUS);
+	m_moveSpeed.x		 = GetParameter(Resource::Type::PlayerParam::MOVE_SPEED_XY);
+	m_moveSpeed.y		 = GetParameter(Resource::Type::PlayerParam::MOVE_SPEED_XY);
+	m_moveSpeed.z		 = GetParameter(Resource::Type::PlayerParam::MOVE_SPEED_Z);
 
 	// プレイヤーモデルのインスタンスの生成
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Player"));
+	m_pModel = std::make_shared<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Player"));
 
 	// モデルの設定
 	m_pModel->SetOpacity(m_opacity);// 不透明度
@@ -147,7 +147,7 @@ Player::~Player()
 void Player::UpdateStart(const Math::Vector3& cameraPos)
 {
 	// Z軸方向に移動
-	m_moveVec.z = GetParameter(DataType::PlayerParamType::START_MOVE_SPEED_Z);
+	m_moveVec.z = GetParameter(Resource::Type::PlayerParam::START_MOVE_SPEED_Z);
 	m_pos.z += m_moveVec.z;
 
 	if (m_pos.z > cameraPos.z + camera_over_range)
@@ -184,7 +184,7 @@ void Player::UpdatePlay(const float cameraHorizon)
 		m_pBackUI = std::make_shared<StatusBack>();
 
 		// UIの登録
-		UIManager::GetInstance().AddUI("PlayerStatusBack", m_pBackUI, 0, { -2, 0 });
+		UI::Manager::GetInstance()->AddUI("PlayerStatusBack", m_pBackUI, 0, { -2, 0 });
 	}
 
 	// スタート演出をしていない場合
@@ -215,8 +215,8 @@ void Player::UpdatePlay(const float cameraHorizon)
 		pHpString->SetScale(hp_string_scale);
 
 		// UIの登録
-		UIManager::GetInstance().AddUI("HPBar", m_pHPbar, 0, { -2, 0 });
-		UIManager::GetInstance().AddUI("HPString", pHpString, 0, { -2, 0 });
+		UI::Manager::GetInstance()->AddUI("HPBar", m_pHPbar, 0, { -2, 0 });
+		UI::Manager::GetInstance()->AddUI("HPString", pHpString, 0, { -2, 0 });
 	}
 
 	const auto& effectManager = Effect::Effekseer3DManager::GetInstance();
@@ -649,10 +649,10 @@ const std::deque<Math::Vector3>& Player::GetPosLogTable() const
 }
 
 // パラメーターの取得
-float Player::GetParameter(const DataType::PlayerParamType type)
+float Player::GetParameter(const Resource::Type::PlayerParam type)
 {
 	// データからキーを取得
-	auto& key = DataType::PlayerParamKey[static_cast<int>(type)];
+	auto& key = Resource::Type::PlayerParamKey[static_cast<int>(type)];
 
 	// キーが存在するか確認
 	if (m_parameterTable.find(key) != m_parameterTable.end())

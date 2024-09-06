@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 
-namespace DataType
+namespace Resource::Type
 {
 	// エフェクトのパラメータの種類
-	enum class EffectType
+	enum class Effect
 	{
 		SCALE_X,
 		SCALE_Y,
@@ -16,7 +16,7 @@ namespace DataType
 	};
 
 	// エフェクトのパラメータのキー
-	static const std::string EffectKey[static_cast<int>(EffectType::NUM)] =
+	static const std::string EffectKey[static_cast<int>(Effect::NUM)] =
 	{
 		"scaleX",
 		"scaleY",

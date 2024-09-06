@@ -2,7 +2,7 @@
 #include <DxLib.h>
 #include <string>
 #include <array>
-#include "Math/Vector3.h"
+#include "../Math/Vector3.h"
 
 /// <summary>
 /// 3D‰æ‘œƒNƒ‰ƒX

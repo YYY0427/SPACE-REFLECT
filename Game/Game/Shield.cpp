@@ -1,7 +1,7 @@
 #include "Shield.h"
 #include "Player.h"
 #include "../Effect/Effekseer3DEffectManager.h"
-#include "../Image3D.h"
+#include "../Game/Image3D.h"
 #include "../UI/Gauge.h"
 #include "../UI/UIManager.h"
 #include "../UI/ImageUI.h"
@@ -94,8 +94,8 @@ Shield::Shield(Player& player) :
 	pEnergyString->SetScale(energy_string_scale);
 
 	// UI‚Ì“o˜^
-	UIManager::GetInstance().AddUI("EnergyGage", m_pEnergyGage, 0, { 0, 1 });
-	UIManager::GetInstance().AddUI("EnergyString", pEnergyString, 0, { 0, 1 });
+	UI::Manager::GetInstance()->AddUI("EnergyGage", m_pEnergyGage, 0, { 0, 1 });
+	UI::Manager::GetInstance()->AddUI("EnergyString", pEnergyString, 0, { 0, 1 });
 
 	// ƒV[ƒ‹ƒh‰æ‘œ‚Ì‰Šú‰»
 	m_pImage->SetPos(m_player.GetPos());		 // ˆÊ’u	

@@ -2,7 +2,7 @@
 #include "Planet.h"
 #include "../Editor/DataReaderFromUnity.h"
 #include "../Util/DrawFunctions.h"
-#include "../ModelHandleManager.h"
+#include "../Resource/Model/ModelResourceManager.h"
 #include "../Math/MathUtil.h"
 #include <string>
 
@@ -25,7 +25,7 @@ PlanetManager::PlanetManager(const std::string& objectDataFileName)
 	auto earthData = dataReader.GetData(objectDataFileName, "Earth");
 	for (auto& earth : earthData)
 	{
-		m_planetData[PlanetType::EARTH].modelHandle = ModelHandleManager::GetInstance().GetHandle("Earth");
+		m_planetData[PlanetType::EARTH].modelHandle = Resource::Model::Manager::GetInstance()->GetHandle("Earth");
 		m_planetData[PlanetType::EARTH].pPlanet = std::make_shared<Planet>(m_planetData[PlanetType::EARTH].modelHandle, earth);
 	}
 
@@ -33,7 +33,7 @@ PlanetManager::PlanetManager(const std::string& objectDataFileName)
 	auto moonData = dataReader.GetData(objectDataFileName, "Moon");
 	for (auto& moon : moonData)
 	{
-		m_planetData[PlanetType::MOON].modelHandle = ModelHandleManager::GetInstance().GetHandle("Moon");
+		m_planetData[PlanetType::MOON].modelHandle = Resource::Model::Manager::GetInstance()->GetHandle("Moon");
 		m_planetData[PlanetType::MOON].pPlanet = std::make_shared<Planet>(m_planetData[PlanetType::MOON].modelHandle, moon);
 	}
 }

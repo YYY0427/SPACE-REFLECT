@@ -1,6 +1,6 @@
 #include "Planet.h"
 #include "../Math/MathUtil.h"
-#include "../Model.h"
+#include "../Game/Model.h"
 #include <DxLib.h>
 
 // コンストラクタ

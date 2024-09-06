@@ -1,5 +1,5 @@
 #include "LaserBase.h"
-#include "../../Model.h"
+#include "../../Game/Model.h"
 #include "../../Effect/Effekseer3DEffectManager.h"
 
 // コンストラクタ

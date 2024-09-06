@@ -1,11 +1,11 @@
 #include "Meteor.h"
-#include "../Model.h"
+#include "../Game/Model.h"
 #include "../Game/Player.h"
 #include "../Application.h"
 #include "../Math/Vector2.h"
 #include "../Math/MathUtil.h"
-#include "../ModelHandleManager.h"
-#include "../DataType/PlayerParamDataType.h"
+#include "../Resource/Model/ModelResourceManager.h"
+#include "../Resource/Type/PlayerParamDataType.h"
 #include <DxLib.h>
 
 namespace
@@ -43,7 +43,7 @@ Meteor::Meteor(const MeteorType type, const std::shared_ptr<Player>& pPlayer, co
 	m_pPlayer(pPlayer)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Meteor"));
+	m_pModel = std::make_unique<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Meteor"));
 
 	// 1フレームに回転する量を0度から～1度の間から取得
 	m_rotVec.x = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
@@ -107,7 +107,7 @@ Meteor::Meteor(const UnityGameObject& data, const std::shared_ptr<Player>& pPlay
 	m_pPlayer(pPlayer)
 {
 	// モデルのインスタンスの作成
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Meteor"));
+	m_pModel = std::make_unique<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Meteor"));
 
 	// 1フレームに回転する量をランダムに取得
 	m_rotVec.x = Math::Util::ToRadian(Math::Util::GetRandFloat(min_delta_rot, max_delta_rot));
@@ -155,7 +155,7 @@ void Meteor::UpdateStart()
 {
 	// 移動
 	m_pos.z += (m_pPlayer->GetMoveVec().z - 
-				m_pPlayer->GetParameter(DataType::PlayerParamType::MOVE_SPEED_Z));
+				m_pPlayer->GetParameter(Resource::Type::PlayerParam::MOVE_SPEED_Z));
 
 	// 回転
 	m_rot += m_rotVec;

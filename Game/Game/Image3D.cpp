@@ -1,5 +1,5 @@
 #include "Image3D.h"
-#include "Util/DrawFunctions.h"
+#include "../Util/DrawFunctions.h"
 #include <cassert>
 
 // コンストラクタ

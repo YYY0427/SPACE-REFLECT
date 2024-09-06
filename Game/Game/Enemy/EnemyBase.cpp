@@ -1,6 +1,6 @@
 #include "EnemyBase.h"
 #include "../../Effect/Effekseer3DEffectManager.h"
-#include "../../Model.h"
+#include "../../Game/Model.h"
 #include "../../Score/ScoreManager.h"
 #include "../../Sound/SoundManager.h"
 

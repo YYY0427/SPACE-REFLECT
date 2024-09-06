@@ -4,9 +4,9 @@
 #include "../../Math/Vector2.h"
 #include "../../Application.h"
 #include "../../Effect/Effekseer3DEffectManager.h"
-#include "../../Model.h"
+#include "../../Game/Model.h"
 #include "../../MyDebug/DebugText.h"
-#include "../../ModelHandleManager.h"
+#include "../../Resource/Model/ModelResourceManager.h"
 #include "../../Sound/SoundManager.h"
 #include <DxLib.h>
 #include <random>
@@ -124,7 +124,7 @@ NormalLaser::NormalLaser(const std::shared_ptr<EnemyBase>& pEnemy,
 	m_stateMachine.SetState(State::CHARGE);
 
 	// 当たり判定に使用するモデルの設定
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("Laser"));	// インスタンス生成
+	m_pModel = std::make_unique<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Laser"));	// インスタンス生成
 	m_pModel->SetUseCollision(true);// 当たり判定設定
 	m_pModel->SetScale(m_scale);	// 拡大率
 	m_pModel->SetRotMtx(m_rotMtx);	// 回転行列

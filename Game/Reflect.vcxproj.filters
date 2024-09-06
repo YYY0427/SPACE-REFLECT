@@ -57,14 +57,20 @@
     <Filter Include="ソース ファイル\String">
       <UniqueIdentifier>{6f9ef78c-7211-4ca9-9e9a-6e38f1e1ee57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DataType">
-      <UniqueIdentifier>{ea788350-b728-447b-8c3f-6721625f17d9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Sound">
       <UniqueIdentifier>{45885f5d-81e5-48b9-80c5-1e2177614bc4}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\Input">
       <UniqueIdentifier>{e3c0b35f-ca5d-458d-b0d2-3dfe3b9fafee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Resource">
+      <UniqueIdentifier>{ea788350-b728-447b-8c3f-6721625f17d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Resource\Type">
+      <UniqueIdentifier>{21a38d29-7531-488d-9d97-4fe14bc8b044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Resource\Model">
+      <UniqueIdentifier>{e2145ccc-3bed-4529-9ab8-116175d4ab05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,9 +78,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SaveData.cpp">
@@ -169,9 +172,6 @@
     </ClCompile>
     <ClCompile Include="UI\UIManager.cpp">
       <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Image3D.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="UI\ImageUI.cpp">
       <Filter>ソース ファイル\UI</Filter>
@@ -269,9 +269,6 @@
     <ClCompile Include="Stage\Stage1.cpp">
       <Filter>ソース ファイル\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="ModelHandleManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="UI\ResultWindow.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
@@ -290,12 +287,18 @@
     <ClCompile Include="Input\InputManager.cpp">
       <Filter>ソース ファイル\Input</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\Model\ModelResourceManager.cpp">
+      <Filter>ソース ファイル\Resource\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Model.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Image3D.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="SaveData.h">
@@ -397,9 +400,6 @@
     <ClInclude Include="UI\UIManager.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Image3D.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="UI\ImageUI.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
@@ -493,9 +493,6 @@
     <ClInclude Include="Stage\Stage1.h">
       <Filter>ソース ファイル\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="ModelHandleManager.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="UI\ResultWindow.h">
       <Filter>ソース ファイル\UI</Filter>
     </ClInclude>
@@ -504,12 +501,6 @@
     </ClInclude>
     <ClInclude Include="Scene\PuseScene.h">
       <Filter>ソース ファイル\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="DataType\PlayerParamDataType.h">
-      <Filter>ソース ファイル\DataType</Filter>
-    </ClInclude>
-    <ClInclude Include="DataType\EffectDataType.h">
-      <Filter>ソース ファイル\DataType</Filter>
     </ClInclude>
     <ClInclude Include="Game\Laser\ReflectLaser.h">
       <Filter>ソース ファイル\Game\Laser</Filter>
@@ -528,6 +519,21 @@
     </ClInclude>
     <ClInclude Include="Util\StateMachine.h">
       <Filter>ソース ファイル\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Type\EffectDataType.h">
+      <Filter>ソース ファイル\Resource\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Type\PlayerParamDataType.h">
+      <Filter>ソース ファイル\Resource\Type</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Model\ModelResourceManager.h">
+      <Filter>ソース ファイル\Resource\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Model.h">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Image3D.h">
+      <Filter>ソース ファイル\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

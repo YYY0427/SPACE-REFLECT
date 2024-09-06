@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
 
-namespace DataType
+namespace Resource::Type
 {
 	// プレイヤーのパラメータの種類
-	enum class PlayerParamType
+	enum class PlayerParam
 	{
 		MAX_HP,
 		BOOST_EFFECT_SCALE_X,
@@ -21,7 +21,7 @@ namespace DataType
 	};
 
 	// プレイヤーのパラメータのキー
-	static const std::string PlayerParamKey[static_cast<int>(PlayerParamType::NUM)] =
+	static const std::string PlayerParamKey[static_cast<int>(PlayerParam::NUM)] =
 	{
 		"maxHp",
 		"boostEffectScaleX",

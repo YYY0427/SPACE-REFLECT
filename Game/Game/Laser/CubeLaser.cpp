@@ -2,9 +2,9 @@
 #include "../Player.h"
 #include "../Camera.h"
 #include "../../Application.h"
-#include "../../Model.h"
+#include "../../Game/Model.h"
 #include "../../Math/MathUtil.h"
-#include "../../ModelHandleManager.h"
+#include "../../Resource/Model/ModelResourceManager.h"
 #include <DxLib.h>
 #include <cassert>
 
@@ -86,7 +86,7 @@ CubeLaser::CubeLaser(const Math::Vector3& firePos,
 	m_gaussScreen = MakeScreen(screenSize.width, screenSize.height);
 
 	// モデル設定
-	m_pModel = std::make_unique<Model>(ModelHandleManager::GetInstance().GetHandle("CubeLaser"));
+	m_pModel = std::make_unique<Model>(Resource::Model::Manager::GetInstance()->GetHandle("CubeLaser"));
 	m_pModel->SetUseCollision(true);	// 当たり判定を使用する
 	m_pModel->SetOpacity(m_opacity);	// 不透明度
 	m_pModel->SetRot(m_rot);			// 回転情報

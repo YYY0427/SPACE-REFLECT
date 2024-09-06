@@ -1,5 +1,5 @@
 #include "BossMatrix.h"
-#include "../../../Model.h"
+#include "../../../Game/Model.h"
 #include "../../../UI/Gauge.h"
 #include "../../../UI/StringUI.h"
 #include "../../../UI/UIManager.h"
@@ -14,7 +14,7 @@
 #include "../../../Input/InputManager.h"
 #include "../../../MyDebug/DebugText.h"
 #include "../../../Score/ScoreManager.h"
-#include "../../../ModelHandleManager.h"
+#include "../../../Resource/Model/ModelResourceManager.h"
 #include "../../../Sound/SoundManager.h"
 #include <random>
 #include <algorithm>
@@ -177,17 +177,17 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 		hp_gauge_pos, hp_gauge_size, hp_gauge_start_anim_frame, hp_gauge_sub_frame, hp_gauge_delay_frame);
 
 	// HPゲージをUIに追加
-	UIManager::GetInstance().AddUI("BossHPGauge", m_pHpGauge, hp_gauge_draw_order, hp_gauge_store_vec);
+	UI::Manager::GetInstance()->AddUI("BossHPGauge", m_pHpGauge, hp_gauge_draw_order, hp_gauge_store_vec);
 
 	// ボス名前の設定
 	m_pBossName = std::make_shared<StringUI>(boss_name_key);
 	m_pBossName->SetPos(boss_name_pos);
 
 	// ボス名前をUIに追加
-	UIManager::GetInstance().AddUI("BossName", m_pBossName, boss_name_ui_draw_order, boss_name_ui_store_vec);
+	UI::Manager::GetInstance()->AddUI("BossName", m_pBossName, boss_name_ui_draw_order, boss_name_ui_store_vec);
 
 	// モデル設定
-	m_pModel = std::make_shared<Model>(ModelHandleManager::GetInstance().GetHandle("Matrix"));	// インスタンス生成
+	m_pModel = std::make_shared<Model>(Resource::Model::Manager::GetInstance()->GetHandle("Matrix"));	// インスタンス生成
 	m_pModel->SetUseCollision(true);					// 当たり判定設定
 	m_pModel->SetOpacity(m_opacity);					// 不透明度	
 	m_pModel->SetScale(model_scale);					// 拡大率
@@ -200,10 +200,10 @@ BossMatrix::BossMatrix(const std::shared_ptr<Player>& pPlayer,
 BossMatrix::~BossMatrix()
 {
 	// HPゲージの削除
-	UIManager::GetInstance().DeleteUI("BossHPGauge");
+	UI::Manager::GetInstance()->DeleteUI("BossHPGauge");
 
 	// ボス名前の削除
-	UIManager::GetInstance().DeleteUI("BossName");
+	UI::Manager::GetInstance()->DeleteUI("BossName");
 }
 
 // 更新
@@ -405,7 +405,7 @@ void BossMatrix::UpdateDie()
 	if (m_dieIdleFrame-- <= 0)
 	{
 		// UIを格納
-		UIManager::GetInstance().Store();
+		UI::Manager::GetInstance()->Store();
 
 		// まだエフェクトが再生されていなかったら
 		if (m_dieEffectHandle == -1)
