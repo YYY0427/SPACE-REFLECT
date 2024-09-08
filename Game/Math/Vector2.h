@@ -47,6 +47,12 @@ namespace Math
 		void operator+= (const Vector2& rval);
 
 		/// <summary>
+		/// Vec2 = (Vec2 += float)
+		/// </summary>
+		/// <param name="rval">‰E•Ó</param>
+		void operator+= (const float rval);
+
+		/// <summary>
 		/// Vec2 = (Vec2 -= Vec2) 
 		/// </summary>
 		/// <param name="rval">‰E•Ó</param>

@@ -78,8 +78,14 @@ private:
 	// シールドの拡大率
 	Math::Vector2 m_scale;
 
+	// シールドの最大拡大率
+	Math::Vector2 m_maxScale;
+
 	// プレイヤーからの相対位置
 	Math::Vector3 m_relativePosToPlayer;
+
+	// シールドの出現演出が終わったか
+	bool m_isEndScaleEffect;
 
 	// 入力されたか
 	bool m_isInput;

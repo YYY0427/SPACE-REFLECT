@@ -71,9 +71,11 @@ Shield::Shield(Player& player) :
 	m_isInput(false),
 	m_effectHandle(-1),
 	m_enerugyGage(max_energy_gage),
-	m_scale({ shield_width, shield_height }),
+	m_scale({ 0.0f, 0.0f}),
+	m_maxScale({ shield_width, shield_height }),
 	m_sinFrame(0),
-	m_alpha(255)
+	m_alpha(255),
+	m_isEndScaleEffect(false)
 {
 	// 3D画像のインスタンスの作成
 	m_pImage = std::make_shared<Image3D>(img_file_path);
@@ -98,7 +100,7 @@ Shield::Shield(Player& player) :
 	UI::Manager::GetInstance()->AddUI("EnergyString", pEnergyString, 0, { 0, 1 });
 
 	// シールド画像の初期化
-	m_pImage->SetPos(m_player.GetPos());		 // 位置	
+	m_pImage->SetPos(m_player.GetPos());	 // 位置	
 	m_pImage->SetImgWidth(m_scale.x);		 // 横幅
 	m_pImage->SetImgHeight(m_scale.y);		 // 縦幅
 }
@@ -172,6 +174,11 @@ void Shield::Update()
 	}
 	else
 	{
+		m_isEndScaleEffect = false;
+
+		// 拡大率を初期化
+		m_scale = { 0.0f, 0.0f };
+
 		// 入力されていないならエネルギーゲージを回復させる
 		m_enerugyGage += energy_recovery_speed;
 	}
@@ -179,10 +186,23 @@ void Shield::Update()
 	// エネルギーゲージの範囲を制限
 	m_enerugyGage = enerugyGageRange.Clamp(m_enerugyGage);
 
-	// シールドの拡縮
-	m_sinFrame++;
-	m_scale.x = shield_width + (sinf(m_sinFrame * scale_speed) * scale_size);
-	m_scale.y = shield_height + (sinf(m_sinFrame * scale_speed) * scale_size);
+	if (!m_isEndScaleEffect)
+	{
+		// シールド出現時の拡大
+		m_scale += 10.0f;
+		m_scale.x = std::clamp(m_scale.x, 0.0f, m_maxScale.x);
+		m_scale.y = std::clamp(m_scale.y, 0.0f, m_maxScale.y);
+
+		// シールドの出現演出が終わったか
+		m_isEndScaleEffect = (m_scale.x >= m_maxScale.x) && (m_scale.y >= m_maxScale.y);
+	}
+	else
+	{
+		// シールドの拡縮
+		m_sinFrame++;
+		m_scale.x = shield_width + (sinf(m_sinFrame * scale_speed) * scale_size);
+		m_scale.y = shield_height + (sinf(m_sinFrame * scale_speed) * scale_size);
+	}
 
 	// 画像の設定
 	m_pImage->SetAlpha(m_alpha);			 // 透明度

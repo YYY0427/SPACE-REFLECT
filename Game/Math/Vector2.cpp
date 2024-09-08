@@ -24,6 +24,13 @@ namespace Math
 		y += rval.y;
 	}
 
+	// Vec2 = (Vec2 += float)
+	void Vector2::operator+=(const float rval)
+	{
+		x += rval;
+		y += rval;
+	}
+
 	// Vec2 = (Vec2 -= Vec2)
 	void Vector2::operator-=(const Vector2& rval)
 	{
